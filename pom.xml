@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>vartas</groupId>
     <artifactId>RedditCrawler</artifactId>
-    <version>1.2</version>
+    <version>1.3</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -99,14 +99,6 @@
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <keepDependenciesWithProvidedScope>true</keepDependenciesWithProvidedScope>
                 </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>

@@ -37,6 +37,7 @@ public class RedditBot {
      */
     public RedditBot(RedditClient client){
         this.client = client;
+        client.setLogHttp(false);
         client.setAutoRenew(true);
     }
     /**
