@@ -29,19 +29,13 @@ import net.dean.jraw.oauth.OAuthHelper;
  */
 public class RedditBot {
     /**
-     * The configuration file for the credentials.
-     */
-    protected final RedditCredentials config;
-    /**
      * The Reddit client.
      */
     protected final RedditClient client;
     /**
-     * @param config the configuration file containing the credentials.
      * @param client the current instance of the reddit client.
      */
-    public RedditBot(RedditCredentials config, RedditClient client){
-        this.config = config;
+    public RedditBot(RedditClient client){
         this.client = client;
         client.setAutoRenew(true);
     }
@@ -51,7 +45,7 @@ public class RedditBot {
      * @param adapter the communicator between Reddit and this program
      */
     public RedditBot(RedditCredentials config, NetworkAdapter adapter){
-        this(config, OAuthHelper.automatic(adapter, 
+        this(OAuthHelper.automatic(adapter, 
                 Credentials.userless(config.getId(), config.getSecret(),UUID.randomUUID())));
     }
     /**
