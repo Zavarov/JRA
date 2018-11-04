@@ -233,7 +233,8 @@ public class PushshiftWrapper extends Wrapper<Void>{
      * @throws IOException if the serial object couldn't be accessed.
      * @throws ClassNotFoundException if the serial object is of an unknown class.
      */
-    protected XMLMultitable<Instant,String,XMLMap<String,String>> _read(String name) throws IOException, ClassNotFoundException{
+    private XMLMultitable<Instant,String,XMLMap<String,String>> _read(String name) throws IOException, ClassNotFoundException{
+        //The Map will be turned into a different datatype in read -> no write will happen
         return XMLMultitable.create(new File(name), 
                 e -> {
                     return XMLStringMap.create((Element)XMLDocument.getNode("document", (Element)e), NODE_TO_STRING, STRING_TO_NODE, Function.identity());
@@ -286,8 +287,8 @@ public class PushshiftWrapper extends Wrapper<Void>{
         local_submissions = XMLMultitable.create(null);
         local_comments = XMLMultitable.create(null);
         
-        local_submissions.put(after, subreddit, XMLList.create(null));
-        local_comments.put(after, subreddit, XMLList.create(null));
+        local_submissions.put(after, subreddit, XMLList.create(e -> e.update().getHead()));
+        local_comments.put(after, subreddit, XMLList.create(e -> e.update().getHead()));
         
         //Go through each submission
         ids.forEach( id -> {

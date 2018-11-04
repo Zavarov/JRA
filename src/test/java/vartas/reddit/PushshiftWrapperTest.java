@@ -40,8 +40,6 @@ import vartas.offlinejraw.OfflineCommentListingResponse;
 import vartas.offlinejraw.OfflineSubmissionListingResponse;
 import vartas.reddit.PushshiftWrapper.CompactComment;
 import vartas.reddit.PushshiftWrapper.CompactSubmission;
-import vartas.xml.collection.XMLMap;
-import vartas.xml.collection.XMLMultitable;
 
 /**
  *
@@ -296,14 +294,25 @@ public class PushshiftWrapperTest {
         assertEquals(Arrays.asList("subreddit"),wrapper.getSubreddits());
     }
     @Test
+    public void storeEmptyStringTest() throws IOException, InterruptedException, ClassNotFoundException{
+        submission.put("link_flair_text", "");
+        PushshiftWrapper.COMMENTS_FILE = "src/test/resources/comments_store.xml";
+        PushshiftWrapper.SUBMISSIONS_FILE = "src/test/resources/submissions_store.xml";
+        wrapper.store();
+        
+        wrapper.read();
+        assertEquals(wrapper.submissions.size(),1);
+        assertTrue(wrapper.submissions.values().stream().flatMap(e -> e.stream()).collect(Collectors.toList()).contains(submission));
+    }
+    @Test
     public void storeTest() throws IOException, InterruptedException, ClassNotFoundException{
         PushshiftWrapper.COMMENTS_FILE = "src/test/resources/comments_store.xml";
         PushshiftWrapper.SUBMISSIONS_FILE = "src/test/resources/submissions_store.xml";
         wrapper.store();
         
-        XMLMultitable<Instant,String,XMLMap<String,String>> table = wrapper._read(PushshiftWrapper.SUBMISSIONS_FILE);
-        assertEquals(table.size(),1);
-        assertTrue(table.values().stream().flatMap(e -> e.stream()).collect(Collectors.toList()).contains(submission));
+        wrapper.read();
+        assertEquals(wrapper.submissions.size(),1);
+        assertTrue(wrapper.submissions.values().stream().flatMap(e -> e.stream()).collect(Collectors.toList()).contains(submission));
     }
     @Test
     public void storeNewTest() throws IOException, InterruptedException, ClassNotFoundException{
@@ -311,9 +320,9 @@ public class PushshiftWrapperTest {
         PushshiftWrapper.SUBMISSIONS_FILE = "src/test/resources/submissions_new.xml";
         wrapper.store();
         
-        XMLMultitable<Instant,String,XMLMap<String,String>> table = wrapper._read(PushshiftWrapper.SUBMISSIONS_FILE);
-        assertEquals(table.size(),1);
-        assertTrue(table.values().stream().flatMap(e -> e.stream()).collect(Collectors.toList()).contains(submission));
+        wrapper.read();
+        assertEquals(wrapper.submissions.size(),1);
+        assertTrue(wrapper.submissions.values().stream().flatMap(e -> e.stream()).collect(Collectors.toList()).contains(submission));
         
         File file;
         file = new File(PushshiftWrapper.COMMENTS_FILE);
@@ -397,5 +406,39 @@ public class PushshiftWrapperTest {
         assertEquals(submissions.size(),1);
         CompactSubmission submission = wrapper.extractData(submissions.get(0));
         assertEquals(submission.getLinkFlairText(),"");
+    }
+    @Test
+    public void requestAndStore() throws IOException, InterruptedException, ClassNotFoundException{
+        PushshiftWrapper.COMMENTS_FILE = "src/test/resources/comments_store.xml";
+        PushshiftWrapper.SUBMISSIONS_FILE = "src/test/resources/submissions_store.xml";
+        wrapper = new PushshiftWrapper(bot){
+            @Override
+            public String requestJsonContent(){
+                return json;
+            }
+        };
+        
+        assertTrue(wrapper.comments.isEmpty());
+        assertTrue(wrapper.submissions.isEmpty());
+        
+        wrapper.parameter("subreddit", Instant.ofEpochSecond(2), Instant.ofEpochSecond(1));
+        wrapper.request();
+        wrapper.store();
+        
+        wrapper.submissions.clear();
+        wrapper.comments.clear();
+        
+        wrapper.read();
+        
+        assertEquals(wrapper.submissions.size(),1);
+        assertEquals(wrapper.comments.values().stream().flatMap(i -> i.stream()).count(),3);
+    
+        Set<String> ids = wrapper.submissions.values().stream().flatMap(e -> e.stream()).map(e -> e.getId()).collect(Collectors.toSet());
+        assertEquals(ids, Sets.newHashSet("id0"));
+        
+        ids = wrapper.comments.values().stream().flatMap(e -> e.stream()).map(e -> e.getId()).collect(Collectors.toSet());
+        assertEquals(ids, Sets.newHashSet("id1","id2","id3"));
+        
+        assertEquals(wrapper.submissions.values().iterator().next().get(0).getLinkFlairText(),"flair");
     }
 }
