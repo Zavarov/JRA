@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import net.dean.jraw.models.Submission;
+import net.dean.jraw.models.SubredditSort;
+import net.dean.jraw.models.TimePeriod;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -68,6 +71,28 @@ public class PushshiftWrapperTest {
             .addDomain("i.redd.it")
             .addDistinguished()
             .addCreatedUtc(1L);
+        
+    OfflineSubmissionListingResponse.OfflineSubmission sub2 = new OfflineSubmissionListingResponse.OfflineSubmission()
+            .addNumComments(0)
+            .addThumbnailHeight(0)
+            .addThumbnailWidth(0)
+            .addThumbnail(null)
+            .addSelftext("selftext")
+            .addLinkFlairText(null)
+            .addOver18(true)
+            .addSpoilerTest(true)
+            .addLikes()
+            .addUrl("sub2.jpg")
+            .addTitle("title")
+            .addSubredditId("subreddit_id")
+            .addSubreddit("subreddit")
+            .addPermalink("permalink")
+            .addId("id1")
+            .addName("submission2")
+            .addAuthor("author")
+            .addDomain("i.redd.it")
+            .addDistinguished()
+            .addCreatedUtc(2L);
 
     OfflineCommentListingResponse.OfflineComment com1 = new OfflineCommentListingResponse.OfflineComment()
             .addNumComments(3)
@@ -162,6 +187,15 @@ public class PushshiftWrapperTest {
                 .addAfter(null)
                 .addAfterRequest(null)
                 .addLimit(1)
+                .addSort("new")
+                .build());
+        
+        bot.adapter.addResponse(new OfflineSubmissionListingResponse()
+                .addSubreddit("subreddit")
+                .addSubmission(sub2)
+                .addLimit(1)
+                .addAfter(null)
+                .addAfterRequest(null)
                 .addSort("new")
                 .build());
         
@@ -349,5 +383,19 @@ public class PushshiftWrapperTest {
         assertEquals(ids, Sets.newHashSet("id1","id2","id3"));
         
         assertEquals(wrapper.submissions.values().iterator().next().get(0).getLinkFlairText(),"flair");
+    }
+    @Test
+    public void requestNullTest() throws IOException{
+        List<Submission> submissions = bot.getClient().subreddit("subreddit")
+                .posts()
+                .limit(1)
+                .sorting(SubredditSort.NEW)
+                .timePeriod(TimePeriod.ALL)
+                .build()
+                .accumulateMerged(1);
+        
+        assertEquals(submissions.size(),1);
+        CompactSubmission submission = wrapper.extractData(submissions.get(0));
+        assertEquals(submission.getLinkFlairText(),"");
     }
 }

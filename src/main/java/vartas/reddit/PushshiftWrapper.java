@@ -344,7 +344,7 @@ public class PushshiftWrapper extends Wrapper<Void>{
         
         data.put("author",submission.getAuthor());
         data.put("id",submission.getId());
-        data.put("link_flair_text",submission.getLinkFlairText());
+        data.put("link_flair_text",submission.getLinkFlairText() == null ? "" : submission.getLinkFlairText());
         data.put("over18",Boolean.toString(submission.isNsfw()));
         data.put("spoiler",Boolean.toString(submission.isSpoiler()));
         data.put("score",Integer.toString(submission.getScore()));
