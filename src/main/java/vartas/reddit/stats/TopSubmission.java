@@ -46,10 +46,10 @@ public class TopSubmission implements BiFunction<Collection<CompactSubmission>,I
      */
     @Override
     public List<CompactSubmission> apply(Collection<CompactSubmission> submissions, Integer size) {
-        List<CompactSubmission> sorted = submissions.stream()
+        return submissions.stream()
                 .filter(e -> !e.getAuthor().equals("[deleted]"))
                 .sorted(SCORE_COMPARATOR)
+                .limit(size)
                 .collect(Collectors.toList());
-        return sorted.subList(0, Math.min(sorted.size(), size));
     }
 }

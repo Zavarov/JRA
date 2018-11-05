@@ -56,13 +56,15 @@ public class TopSubmitter implements BiFunction<Collection<CompactSubmission>,In
     
     /**
      * Searchs for the top submission of each redditor and sorts them by their score.
+     * It then returns a list of all (author,submissions) pairs where the
+     * submissions are sorted by their score.
      * @param submissions all submissions.
      * @param size the amount of top submitters that are returned.
      * @return a list of the top submission from every redditor in ascending order.
      */
     @Override
     public List<Entry<String,List<CompactSubmission>>> apply(Collection<CompactSubmission> submissions, Integer size) {
-        List<Entry<String,List<CompactSubmission>>> sorted = submissions.stream()
+        return submissions.stream()
                 .filter(e -> !e.getAuthor().equals("[deleted]"))
                 .collect(Collectors.groupingBy(
                         CompactSubmission::getAuthor,
@@ -74,7 +76,7 @@ public class TopSubmitter implements BiFunction<Collection<CompactSubmission>,In
                 .entrySet()
                 .stream()
                 .sorted(TOTAL_SCORE_COMPARATOR)
+                .limit(size)
                 .collect(Collectors.toList());
-        return sorted.subList(0, Math.min(sorted.size(), size));
     }
 }

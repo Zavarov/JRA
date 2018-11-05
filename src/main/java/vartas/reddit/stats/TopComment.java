@@ -46,10 +46,10 @@ public class TopComment implements BiFunction<Collection<CompactComment>,Integer
      */
     @Override
     public List<CompactComment> apply(Collection<CompactComment> comments, Integer size) {
-        List<CompactComment> sorted = comments.stream()
+        return comments.stream()
                 .filter(e -> !e.getAuthor().equals("[deleted]"))
                 .sorted(SCORE_COMPARATOR)
+                .limit(size)
                 .collect(Collectors.toList());
-        return sorted.subList(0, Math.min(sorted.size(), size));
     }
 }

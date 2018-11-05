@@ -47,7 +47,7 @@ public class TopCommenter implements BiFunction<Collection<CompactComment>,Integ
      */
     @Override
     public List<Entry<String, List<Long>>> apply(Collection<CompactComment> comments, Integer size) {
-        List<Entry<String,List<Long>>> authors = comments.stream()
+        return comments.stream()
                 .filter(e -> !e.getAuthor().equals("[deleted]"))
                 .collect(Collectors.groupingBy(
                         CompactComment::getAuthor,
@@ -55,8 +55,7 @@ public class TopCommenter implements BiFunction<Collection<CompactComment>,Integ
                 .entrySet()
                 .stream()
                 .sorted(SCORE_COMPARATOR)
+                .limit(size)
                 .collect(Collectors.toList());
-        
-        return authors.subList(0,Math.min(authors.size(), size));
     }
 }
