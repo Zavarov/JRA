@@ -74,7 +74,7 @@ public abstract class DevelopmentChart<T>{
                     .stream()
                     .mapToLong(Instant::toEpochMilli)
                     .max()
-                    .getAsLong())
+                    .orElse(0))
                 .atOffset(ZoneOffset.UTC).plusDays(1);
         OffsetDateTime after = Instant.ofEpochMilli(
                 data
@@ -82,7 +82,8 @@ public abstract class DevelopmentChart<T>{
                     .stream()
                     .mapToLong(Instant::toEpochMilli)
                     .min()
-                .getAsLong()).atOffset(ZoneOffset.UTC);
+                    .orElse(0))
+                .atOffset(ZoneOffset.UTC);
         
         Iterator<OffsetDateTime> iterator = interval.getEntries().apply(before, after);
         OffsetDateTime current = after, next;

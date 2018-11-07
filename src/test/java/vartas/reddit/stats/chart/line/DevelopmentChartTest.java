@@ -26,6 +26,7 @@ import java.util.Map;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.time.TimeSeriesCollection;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import vartas.reddit.PushshiftWrapper.CompactSubmission;
@@ -149,6 +150,15 @@ public class DevelopmentChartTest {
         assertEquals(collection.getSeries(0).getItemCount(),2);
     }
     @Test
+    public void createEmptyTest(){
+        map.clear();
+        JFreeChart plot = chart.create(map, DevelopmentChart.Interval.YEAR);
+        TimeSeriesCollection collection = (TimeSeriesCollection)plot.getXYPlot().getDataset();
+        
+        assertEquals(collection.getSeries(0).getDataItem(0).getValue(),0.0);
+        assertEquals(collection.getSeries(0).getDataItem(0).getPeriod().getStart().getTime(),0);
+    }
+    @Test
     public void collectTest(){
         assertEquals(2,chart.collect(map, t3, t1));
     }
@@ -159,9 +169,5 @@ public class DevelopmentChartTest {
     @Test
     public void getYLabelTest(){
         assertEquals(chart.getXLabel(),"Time");
-    }
-
-    private void assertTrue(int size, int i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
