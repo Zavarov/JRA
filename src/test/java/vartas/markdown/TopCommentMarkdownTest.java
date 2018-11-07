@@ -29,8 +29,8 @@ public class TopCommentMarkdownTest {
     static final String MARKDOWN =
             "| Score | Author | Submission |\n" +
             "| --- | --- | --- |\n" +
-            "| 2 | [author2](https://www.reddit.com/user/author2) | [submission2](https://www.reddit.com/r/subreddit2/comments/submission2/-/id2) |\n" +
-            "| 1 | [author1](https://www.reddit.com/user/author1) | [submission1](https://www.reddit.com/r/subreddit1/comments/submission1/-/id1) |\n";
+            "| 2 | [author2](https://www.reddit.com/user/author2) | [title2](https://www.reddit.com/r/subreddit2/comments/submission2/-/id2) |\n" +
+            "| 1 | [author1](https://www.reddit.com/user/author1) | [title1](https://www.reddit.com/r/subreddit1/comments/submission1/-/id1) |\n";
     CompactData data;
     TopCommentMarkdown top;
     @Before

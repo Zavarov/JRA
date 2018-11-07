@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -258,13 +257,28 @@ public class PushshiftWrapperTest {
         assertEquals(map,wrapper.getSubmissions(instant));
     }
     @Test
+    public void getSubmissionsDateEmptyTest(){
+        wrapper.submissions.clear();
+        assertTrue(wrapper.getSubmissions(instant).isEmpty());
+    }
+    @Test
     public void getSubmissionsSubredditTest(){
         Map<Instant,List<CompactSubmission>> map = Maps.asMap(Sets.newHashSet(instant) , (a) -> Arrays.asList(submission));
         assertEquals(map,wrapper.getSubmissions("subreddit"));
     }
     @Test
+    public void getSubmissionsSubredditEmptyTest(){
+        wrapper.submissions.clear();
+        assertTrue(wrapper.getSubmissions("subreddit").isEmpty());
+    }
+    @Test
     public void getSubmissionsDateSubredditTest(){
         assertEquals(Arrays.asList(submission),wrapper.getSubmissions(instant, "subreddit"));
+    }
+    @Test
+    public void getSubmissionsDateSubredditEmptyTest(){
+        wrapper.submissions.clear();
+        assertTrue(wrapper.getSubmissions(instant, "subreddit").isEmpty());
     }
     @Test
     public void getCommentsDateTest(){
@@ -272,13 +286,28 @@ public class PushshiftWrapperTest {
         assertEquals(map,wrapper.getComments(instant));
     }
     @Test
+    public void getCommentsDateEmptyTest(){
+        wrapper.comments.clear();
+        assertTrue(wrapper.getComments(instant).isEmpty());
+    }
+    @Test
     public void getCommentsSubredditTest(){
         Map<Instant,List<CompactComment>> map = Maps.asMap(Sets.newHashSet(instant) , (a) -> Arrays.asList(comment));
         assertEquals(map,wrapper.getComments("subreddit"));
     }
     @Test
+    public void getCommentsSubredditEmptyTest(){
+        wrapper.comments.clear();
+        assertTrue(wrapper.getComments("subreddit").isEmpty());
+    }
+    @Test
     public void getCommentsDateSubredditTest(){
         assertEquals(Arrays.asList(comment),wrapper.getComments(instant, "subreddit"));
+    }
+    @Test
+    public void getCommentsDateSubredditEmptyTest(){
+        wrapper.comments.clear();
+        assertTrue(wrapper.getComments(instant, "subreddit").isEmpty());
     }
     @Test
     public void createUrlTest(){

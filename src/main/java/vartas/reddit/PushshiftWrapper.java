@@ -17,6 +17,7 @@ package vartas.reddit;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.RateLimiter;
 import java.io.BufferedReader;
@@ -28,6 +29,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.Instant;
 import java.util.ArrayDeque;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -136,6 +138,8 @@ public class PushshiftWrapper extends Wrapper<Void>{
      * @return all (time,submissions) instances in the specified subreddit.
      */
     public Map<Instant,List<CompactSubmission>> getSubmissions(String subreddit){
+        if(!submissions.containsColumn(subreddit))
+            return Collections.unmodifiableMap(Maps.newHashMap());
         Map<Instant,XMLList<CompactSubmission>> map = submissions.column(subreddit);
         return Maps.asMap(map.keySet(), map::get);
     }
@@ -144,6 +148,8 @@ public class PushshiftWrapper extends Wrapper<Void>{
      * @return all (subreddit,submissions) instances at the specified time.
      */
     public Map<String,List<CompactSubmission>> getSubmissions(Instant date){
+        if(!submissions.containsRow(date))
+            return Collections.unmodifiableMap(Maps.newHashMap());
         Map<String,XMLList<CompactSubmission>> map = submissions.row(date);
         return Maps.asMap(map.keySet(), map::get);
     }
@@ -153,6 +159,8 @@ public class PushshiftWrapper extends Wrapper<Void>{
      * @return all submissions at the specified time in the specified subreddit.
      */
     public List<CompactSubmission> getSubmissions(Instant date, String subreddit){
+        if(!submissions.contains(date, subreddit))
+            return Collections.unmodifiableList(Lists.newArrayList());
         return submissions.get(date, subreddit);
     }
     /**
@@ -161,6 +169,8 @@ public class PushshiftWrapper extends Wrapper<Void>{
      * @return all comments in the subreddit at the specified time. 
      */
     public List<CompactComment> getComments(Instant date, String subreddit){
+        if(!comments.contains(date, subreddit))
+            return Collections.unmodifiableList(Lists.newArrayList());
         return comments.get(date, subreddit);
     }
     /**
@@ -168,6 +178,8 @@ public class PushshiftWrapper extends Wrapper<Void>{
      * @return a map of all (time stamp,submissions) instances in the specified subreddit.
      */
     public Map<Instant,List<CompactComment>> getComments(String subreddit){
+        if(!comments.containsColumn(subreddit))
+            return Collections.unmodifiableMap(Maps.newHashMap());
         Map<Instant,XMLList<CompactComment>> map = comments.column(subreddit);
         return Maps.asMap(map.keySet(), map::get);
     }
@@ -176,6 +188,8 @@ public class PushshiftWrapper extends Wrapper<Void>{
      * @return a map of all (subreddit,submissions) instances at the specified date.
      */
     public Map<String,List<CompactComment>> getComments(Instant date){
+        if(!comments.containsRow(date))
+            return Collections.unmodifiableMap(Maps.newHashMap());
         Map<String,XMLList<CompactComment>> map = comments.row(date);
         return Maps.asMap(map.keySet(), map::get);
     }

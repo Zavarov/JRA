@@ -53,7 +53,7 @@ public class TopCommentMarkdown implements BiFunction<Collection<CompactComment>
     private Object[][] getData(Collection<CompactComment> f, int size){
         return comment.apply(f, size)
                 .stream()
-                .map(c -> new Object[]{c.getScore(),getUser(c.getAuthor()),getLink(c.getSubmission(),c.getPermalink())})
+                .map(c -> new Object[]{c.getScore(),getUser(c.getAuthor()),getLink(c.getTitle(),c.getPermalink())})
                 .collect(Collectors.toList()).toArray(new Object[Math.min(f.size(), size)][3]);
     }
     /**
