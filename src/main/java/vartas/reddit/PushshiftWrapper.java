@@ -17,8 +17,10 @@ package vartas.reddit;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import com.google.common.collect.Multimaps;
 import com.google.common.util.concurrent.RateLimiter;
 import java.io.BufferedReader;
 import java.io.File;
@@ -33,12 +35,12 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.tree.CommentNode;
+import org.apache.commons.lang3.tuple.Pair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Element;
@@ -137,21 +139,27 @@ public class PushshiftWrapper extends Wrapper<Void>{
      * @param subreddit the subreddit.
      * @return all (time,submissions) instances in the specified subreddit.
      */
-    public Map<Instant,List<CompactSubmission>> getSubmissions(String subreddit){
-        if(!submissions.containsColumn(subreddit))
-            return Collections.unmodifiableMap(Maps.newHashMap());
-        Map<Instant,XMLList<CompactSubmission>> map = submissions.column(subreddit);
-        return Maps.asMap(map.keySet(), map::get);
+    public ListMultimap<Instant,CompactSubmission> getSubmissions(String subreddit){
+        return submissions.column(subreddit)
+                .entrySet().stream()
+                .flatMap(e -> e.getValue().stream().map(s -> Pair.of(e.getKey(), s)))
+                .collect(Multimaps.toMultimap(
+                        e -> e.getKey(),
+                        e -> e.getValue(),
+                        LinkedListMultimap::create));
     }
     /**
      * @param date the time.
      * @return all (subreddit,submissions) instances at the specified time.
      */
-    public Map<String,List<CompactSubmission>> getSubmissions(Instant date){
-        if(!submissions.containsRow(date))
-            return Collections.unmodifiableMap(Maps.newHashMap());
-        Map<String,XMLList<CompactSubmission>> map = submissions.row(date);
-        return Maps.asMap(map.keySet(), map::get);
+    public ListMultimap<String,CompactSubmission> getSubmissions(Instant date){
+        return submissions.row(date)
+                .entrySet().stream()
+                .flatMap(e -> e.getValue().stream().map(s -> Pair.of(e.getKey(), s)))
+                .collect(Multimaps.toMultimap(
+                        e -> e.getKey(),
+                        e -> e.getValue(),
+                        LinkedListMultimap::create));
     }
     /**
      * @param date the time.
@@ -177,21 +185,27 @@ public class PushshiftWrapper extends Wrapper<Void>{
      * @param subreddit a subreddit.
      * @return a map of all (time stamp,submissions) instances in the specified subreddit.
      */
-    public Map<Instant,List<CompactComment>> getComments(String subreddit){
-        if(!comments.containsColumn(subreddit))
-            return Collections.unmodifiableMap(Maps.newHashMap());
-        Map<Instant,XMLList<CompactComment>> map = comments.column(subreddit);
-        return Maps.asMap(map.keySet(), map::get);
+    public ListMultimap<Instant,CompactComment> getComments(String subreddit){
+        return comments.column(subreddit)
+                .entrySet().stream()
+                .flatMap(e -> e.getValue().stream().map(s -> Pair.of(e.getKey(), s)))
+                .collect(Multimaps.toMultimap(
+                        e -> e.getKey(),
+                        e -> e.getValue(),
+                        LinkedListMultimap::create));
     }
     /**
      * @param date a time stamp.
      * @return a map of all (subreddit,submissions) instances at the specified date.
      */
-    public Map<String,List<CompactComment>> getComments(Instant date){
-        if(!comments.containsRow(date))
-            return Collections.unmodifiableMap(Maps.newHashMap());
-        Map<String,XMLList<CompactComment>> map = comments.row(date);
-        return Maps.asMap(map.keySet(), map::get);
+    public ListMultimap<String,CompactComment> getComments(Instant date){
+        return comments.row(date)
+                .entrySet().stream()
+                .flatMap(e -> e.getValue().stream().map(s -> Pair.of(e.getKey(), s)))
+                .collect(Multimaps.toMultimap(
+                        e -> e.getKey(),
+                        e -> e.getValue(),
+                        LinkedListMultimap::create));
     }
     /**
      * @return a list of all known subreddits. 
@@ -213,10 +227,8 @@ public class PushshiftWrapper extends Wrapper<Void>{
     /**
      * Loads the submission and comment files and adds their content to the
      * current instance, if they exist.
-     * @throws IOException if the serial file couldn't be accessed.
-     * @throws ClassNotFoundException if the serial object belongs to an unknown class.
      */
-    public void read() throws IOException, ClassNotFoundException{
+    public void read(){
         File file;
         
         file = new File(SUBMISSIONS_FILE);
@@ -247,7 +259,7 @@ public class PushshiftWrapper extends Wrapper<Void>{
      * @throws IOException if the serial object couldn't be accessed.
      * @throws ClassNotFoundException if the serial object is of an unknown class.
      */
-    private XMLMultitable<Instant,String,XMLMap<String,String>> _read(String name) throws IOException, ClassNotFoundException{
+    private XMLMultitable<Instant,String,XMLMap<String,String>> _read(String name){
         //The Map will be turned into a different datatype in read -> no write will happen
         return XMLMultitable.create(new File(name), 
                 e -> {

@@ -16,14 +16,13 @@
  */
 package vartas.reddit;
 
-import com.google.common.collect.Maps;
+import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Sets;
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import net.dean.jraw.models.Submission;
@@ -253,7 +252,8 @@ public class PushshiftWrapperTest {
     }
     @Test
     public void getSubmissionsDateTest(){
-        Map<String,List<CompactSubmission>> map = Maps.asMap(Sets.newHashSet("subreddit") , (a) -> Arrays.asList(submission));
+        LinkedListMultimap<String,CompactSubmission> map = LinkedListMultimap.create();
+        map.put("subreddit",submission);
         assertEquals(map,wrapper.getSubmissions(instant));
     }
     @Test
@@ -263,7 +263,8 @@ public class PushshiftWrapperTest {
     }
     @Test
     public void getSubmissionsSubredditTest(){
-        Map<Instant,List<CompactSubmission>> map = Maps.asMap(Sets.newHashSet(instant) , (a) -> Arrays.asList(submission));
+        LinkedListMultimap<Instant,CompactSubmission> map = LinkedListMultimap.create();
+        map.put(instant,submission);
         assertEquals(map,wrapper.getSubmissions("subreddit"));
     }
     @Test
@@ -282,7 +283,8 @@ public class PushshiftWrapperTest {
     }
     @Test
     public void getCommentsDateTest(){
-        Map<String,List<CompactComment>> map = Maps.asMap(Sets.newHashSet("subreddit") , (a) -> Arrays.asList(comment));
+        LinkedListMultimap<String,CompactComment> map = LinkedListMultimap.create();
+        map.put("subreddit",comment);
         assertEquals(map,wrapper.getComments(instant));
     }
     @Test
@@ -292,7 +294,8 @@ public class PushshiftWrapperTest {
     }
     @Test
     public void getCommentsSubredditTest(){
-        Map<Instant,List<CompactComment>> map = Maps.asMap(Sets.newHashSet(instant) , (a) -> Arrays.asList(comment));
+        LinkedListMultimap<Instant,CompactComment> map = LinkedListMultimap.create();
+        map.put(instant,comment);
         assertEquals(map,wrapper.getComments("subreddit"));
     }
     @Test
