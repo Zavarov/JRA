@@ -80,6 +80,28 @@ public class SubmissionWrapperTest {
                 .addDistinguished()
                 .addCreatedUtc(2);
         
+        OfflineSubmissionListingResponse.OfflineSubmission sub3 = new OfflineSubmissionListingResponse.OfflineSubmission()
+                .addNumComments(10)
+                .addThumbnailHeight(10)
+                .addThumbnailWidth(10)
+                .addThumbnail("https://www.reddit.com/thumbnail4.jpg")
+                .addSelftext("selftext")
+                .addLinkFlairText("flair")
+                .addOver18(true)
+                .addSpoilerTest(true)
+                .addLikes()
+                .addUrl("sub3.jpg")
+                .addTitle("title3")
+                .addSubredditId("subreddit_id")
+                .addSubreddit("subreddit")
+                .addPermalink("permalink3")
+                .addId("id3")
+                .addName("submission3")
+                .addAuthor("author3")
+                .addDomain("i.redd.it")
+                .addDistinguished()
+                .addCreatedUtc(3);
+        
         
         bot.adapter.addResponse(new OfflineSubmissionListingResponse()
                 .addSubmission(sub1)
@@ -91,15 +113,16 @@ public class SubmissionWrapperTest {
                 .build());
         bot.adapter.addResponse(new OfflineSubmissionListingResponse()
                 .addSubmission(sub2)
+                .addSubmission(sub3)
                 .addSubreddit("subreddit")
-                .addAfter("submission2")
+                .addAfter("submission3")
                 .addAfterRequest("submission1")
                 .addLimit(Paginator.RECOMMENDED_MAX_LIMIT)
                 .addSort("new")
                 .build());
         bot.adapter.addResponse(new OfflineSubmissionListingResponse()
                 .addSubreddit("subreddit")
-                .addAfterRequest("submission2")
+                .addAfterRequest("submission3")
                 .addLimit(Paginator.RECOMMENDED_MAX_LIMIT)
                 .addSort("new")
                 .build());
@@ -117,14 +140,16 @@ public class SubmissionWrapperTest {
     }
     @Test
     public void requestTest(){
-        wrapper.parameter("subreddit", new Date(0), new Date(3000));
+        wrapper.parameter("subreddit", new Date(0), new Date(4000));
         List<Submission> submissions = wrapper.request();
-        assertEquals(submissions.size(),2);
+        assertEquals(submissions.size(),3);
         Submission submission;
         submission = submissions.get(0);
         assertEquals(submission.getId(),"id1");
         submission = submissions.get(1);
         assertEquals(submission.getId(),"id2");
+        submission = submissions.get(2);
+        assertEquals(submission.getId(),"id3");
     }
     @Test
     public void requestTooMuchTest(){

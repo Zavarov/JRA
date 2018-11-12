@@ -20,7 +20,7 @@ package vartas.reddit;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import net.dean.jraw.models.Listing;
+import java.util.stream.Collectors;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.SubredditSort;
 import net.dean.jraw.models.TimePeriod;
@@ -53,8 +53,8 @@ public class SubmissionWrapper extends Wrapper<List<Submission>>{
     /**
      * Sets the subreddit and the timestamp.
      * @param subreddit the subreddit.
-     * @param start the timestamp at which we start.
-     * @param end the timestamp at which we end.
+     * @param start the exclusive timestamp of the oldest submission.
+     * @param end the exclusive timestamp of the newest submission.
      */
     public void parameter(String subreddit, Date start, Date end){
         this.subreddit = subreddit;
@@ -75,15 +75,19 @@ public class SubmissionWrapper extends Wrapper<List<Submission>>{
                 .timePeriod(TimePeriod.ALL)
                 .build();
         List<Submission> submissions = new LinkedList<>();
-        Listing<Submission> listing;
+        List<Submission> current;
+        Date newest;
         do{
-            listing = paginator.next();
-            listing.stream()
+            //The newest value should be the last one
+            current = paginator.next().stream()
                     .filter(s -> s.getCreated().before(end))
                     .filter(s -> s.getCreated().after(start))
-                    .forEach(submissions::add);
+                    .sorted( (u,v) -> u.getCreated().compareTo(v.getCreated()))
+                    .collect(Collectors.toList());
+            newest = current.isEmpty() ? end : current.get(current.size()-1).getCreated();
+            submissions.addAll(current);
         //Repeat when we haven't found the last submission
-        }while(!listing.isEmpty() && listing.get(listing.size()-1).getCreated().before(end));
+        }while(newest.before(end));
         return submissions;
     }
 }
