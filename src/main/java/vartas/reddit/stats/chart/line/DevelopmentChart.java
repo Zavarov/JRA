@@ -33,6 +33,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.DateAxis;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.Month;
 import org.jfree.data.time.RegularTimePeriod;
@@ -94,6 +95,8 @@ public abstract class DevelopmentChart<T>{
         }
         dataset.addSeries(series);
         JFreeChart chart =  ChartFactory.createTimeSeriesChart(getTitle(), getXLabel(), getYLabel(), dataset,false,false,false);
+        //Set the default language of the months to English.
+        ((DateAxis)chart.getXYPlot().getDomainAxis()).setLocale(Locale.ENGLISH);
         //Normalize the values
         chart.getXYPlot().getRangeAxis().setLowerBound(0);
         return chart;

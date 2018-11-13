@@ -65,7 +65,7 @@ public class CompactData {
         submission.put("id","id1");
         submission.put("score","1");
         submission.put("title","title1");
-        submission.put("link_flair_text",null);
+        submission.put("link_flair_text","");
         submission.put("subreddit","subreddit");
         submission.put("over18", "true");
         submission.put("spoiler","true");

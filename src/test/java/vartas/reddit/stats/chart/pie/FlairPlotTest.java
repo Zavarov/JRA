@@ -73,14 +73,14 @@ public class FlairPlotTest {
         b.put("spoiler","false");
         
         CompactSubmission c = new PushshiftWrapper.CompactSubmission();
-        b.put("author","author3");
-        b.put("id","id3");
-        b.put("score","3");
-        b.put("title","title3");
-        b.put("link_flair_text","c");
-        b.put("subreddit","subreddit");
-        b.put("over18", "false");
-        b.put("spoiler","false");
+        c.put("author","author3");
+        c.put("id","id3");
+        c.put("score","3");
+        c.put("title","title3");
+        c.put("link_flair_text","c");
+        c.put("subreddit","subreddit");
+        c.put("over18", "false");
+        c.put("spoiler","false");
         
         List<CompactSubmission> submissions = new ArrayList<>(102);
         submissions.addAll(Collections.nCopies(100, a));

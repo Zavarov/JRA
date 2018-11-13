@@ -67,7 +67,7 @@ public class FlairPlot implements Function<Collection<CompactSubmission>, JFreeC
     private Map<String,Long> countFlairs(Collection<CompactSubmission> flairs){
         return flairs
                 .stream()
-                .map(s -> s.getLinkFlairText() == null ? "unflaired" : s.getLinkFlairText())
+                .map(s -> s.getLinkFlairText().equals("") ? "unflaired" : s.getLinkFlairText())
                 .collect(Collectors.groupingBy(Function.identity(),Collectors.counting()))
                 .entrySet()
                 .stream()
