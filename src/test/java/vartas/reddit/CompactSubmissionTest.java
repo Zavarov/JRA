@@ -76,4 +76,9 @@ public class CompactSubmissionTest {
     public void getPermalinkTest(){
         assertEquals(submission.getPermalink(),String.format("https://redd.it/%s","id"));
     }
+    @Test
+    public void putNullTest(){
+        submission.put("key", null);
+        assertEquals(submission.get("key"),"");
+    }
 }

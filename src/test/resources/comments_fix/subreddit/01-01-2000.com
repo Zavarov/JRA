@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document>
-  <entry column="subreddit" row="0">
-    <document>
       <entry>
         <document>
           <entry key="author">author</entry>
@@ -12,6 +10,6 @@
           <entry key="title">title</entry>
         </document>
       </entry>
-    </document>
-  </entry>
 </document>
+
+

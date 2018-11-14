@@ -39,6 +39,7 @@ public abstract class Wrapper<T>{
     /**
      * @return the requested item. 
      * @throws java.io.IOException in case a communication error occured.
+     * @throws java.lang.InterruptedException when the request was interrupted.
      */
-    public abstract T request() throws IOException;
+    public abstract T request() throws IOException, InterruptedException;
 }

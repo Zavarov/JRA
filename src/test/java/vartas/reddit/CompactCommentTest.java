@@ -65,4 +65,9 @@ public class CompactCommentTest {
     public void getPermalinkTest(){
         assertEquals(comment.getPermalink(),String.format("https://www.reddit.com/r/%s/comments/%s/-/%s","subreddit","submission","id"));
     }
+    @Test
+    public void putNullTest(){
+        comment.put("key", null);
+        assertEquals(comment.get("key"),"");
+    }
 }

@@ -17,10 +17,9 @@ package vartas.reddit;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.LinkedListMultimap;
-import com.google.common.collect.ListMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Multimaps;
+import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.RateLimiter;
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,18 +28,22 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayDeque;
-import java.util.Collections;
+import java.util.Date;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TimeZone;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.tree.CommentNode;
-import org.apache.commons.lang3.tuple.Pair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Element;
@@ -49,7 +52,6 @@ import static vartas.xml.XMLCollection.STRING_TO_NODE;
 import vartas.xml.XMLDocument;
 import vartas.xml.collection.XMLList;
 import vartas.xml.collection.XMLMap;
-import vartas.xml.collection.XMLMultitable;
 import vartas.xml.strings.XMLStringMap;
 
 /**
@@ -61,19 +63,11 @@ public class PushshiftWrapper extends Wrapper<Void>{
     /**
      * The path to the comments file.
      */
-    protected static String COMMENTS_FILE = "comments.xml";
+    protected static String COMMENTS_FILE = "comments";
     /**
      * The path to the submission file.
      */
-    protected static String SUBMISSIONS_FILE = "submissions.xml";
-    /**
-     * (unix timestamp, subreddit) -> {author,id,link_flair_text,over18,spoiler,score}
-     */
-    protected final XMLMultitable<Instant,String,CompactSubmission> submissions;
-    /**
-     * (submission id, subreddit) -> {author,score,id} 
-     */
-    protected final XMLMultitable<Instant,String,CompactComment> comments;
+    protected static String SUBMISSIONS_FILE = "submissions";
     /**
      * We only allow a single request per second for pushshift.
      */
@@ -91,13 +85,21 @@ public class PushshiftWrapper extends Wrapper<Void>{
      */
     protected Instant before;
     /**
+     * This format is used to generate the files for each entry.
+     */
+    protected static final SimpleDateFormat DATE = new SimpleDateFormat("dd-MM-yyyy");
+    /**
+     * Set the correct timezone.
+     */
+    {
+        DATE.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
+    /**
      * Sets up all the credentials for the Reddit client
      * @param bot the bot that has access to the Reddit API.
      */
     public PushshiftWrapper(RedditBot bot){
         super(bot);
-        submissions = XMLMultitable.create(e -> e.update().getHead());
-        comments = XMLMultitable.create(e -> e.update().getHead());
     }
     /**
      * Sets the subreddit and the timestamp.
@@ -111,55 +113,78 @@ public class PushshiftWrapper extends Wrapper<Void>{
         this.after = after;
     }
     /**
-     * Removes all instances from the specified subreddit at the specified time.
-     * @param date the time.
-     * @param subreddit the subreddit.
+     * @param file the XML file that is going to be loaded.
+     * @return the XML instance containing the content of the file.
      */
-    public void remove(Instant date, String subreddit){
-        submissions.remove(date, subreddit);
-        comments.remove(date, subreddit);
+    private XMLList<XMLMap<String,String>> load(File file){
+        //The list will be transformed by the other load functions
+        //So it'll never be written
+        return XMLList.create(file, 
+                n -> XMLMap.create(
+                        (Element)XMLDocument.getNode("document", (Element)n),
+                        NODE_TO_STRING, 
+                        STRING_TO_NODE,
+                        Function.identity()),
+                null);
     }
     /**
-     * Removes all instances from the specified subreddit from the internal database.
-     * @param subreddit the subreddit.
+     * @param subreddit the subreddit the submissions are in.
+     * @param date the date when the submissions happened.
+     * @return a list of all submissions in the subreddit on that date. 
      */
-    public void removeSubreddit(String subreddit){
-        submissions.columnMap().remove(subreddit);
-        comments.columnMap().remove(subreddit);
+    private List<CompactSubmission> loadSubmission(String subreddit, Instant date){
+        File file = submissionFile(subreddit,date);
+        if(!file.exists())
+            return ImmutableList.of();
+        
+        return load(file).stream()
+                .map(e -> {
+                    CompactSubmission s = new CompactSubmission();
+                    s.putAll(e);
+                    return s;
+                }).collect(Collectors.toList());
     }
     /**
-     * Removes all instances at the specified time from the internal database.
-     * @param date the time.
+     * @param subreddit the subreddit the comments are in.
+     * @param date the date when the comments happened.
+     * @return a list of all comments in the subreddit on that date. 
      */
-    public void removeDate(Instant date){
-        submissions.rowMap().remove(date);
-        comments.rowMap().remove(date);
+    private List<CompactComment> loadComment(String subreddit, Instant date){
+        File file = commentFile(subreddit, date);
+        
+        if(!file.exists())
+            return ImmutableList.of();
+        
+        
+        return load(file).stream()
+                .map(e -> {
+                    CompactComment s = new CompactComment();
+                    s.putAll(e);
+                    return s;
+                }).collect(Collectors.toList());
     }
     /**
-     * @param subreddit the subreddit.
-     * @return all (time,submissions) instances in the specified subreddit.
+     * @param subreddit the subreddit the comments are in.
+     * @param date the date when the comments happened.
+     * @return the file containing all comments from that subreddit on that date 
      */
-    public ListMultimap<Instant,CompactSubmission> getSubmissions(String subreddit){
-        return submissions.column(subreddit)
-                .entrySet().stream()
-                .flatMap(e -> e.getValue().stream().map(s -> Pair.of(e.getKey(), s)))
-                .collect(Multimaps.toMultimap(
-                        e -> e.getKey(),
-                        e -> e.getValue(),
-                        LinkedListMultimap::create));
+    private File commentFile(String subreddit, Instant date){
+        return new File(String.format("%s/%s/%s.com",
+                COMMENTS_FILE,
+                subreddit,
+                DATE.format(Date.from(date))));
     }
     /**
-     * @param date the time.
-     * @return all (subreddit,submissions) instances at the specified time.
+     * 
+     * @param subreddit the subreddit the submissions are in.
+     * @param date the date when the submissions happened.
+     * @return the file containing all submissions from that subreddit on that date 
      */
-    public ListMultimap<String,CompactSubmission> getSubmissions(Instant date){
-        return submissions.row(date)
-                .entrySet().stream()
-                .flatMap(e -> e.getValue().stream().map(s -> Pair.of(e.getKey(), s)))
-                .collect(Multimaps.toMultimap(
-                        e -> e.getKey(),
-                        e -> e.getValue(),
-                        LinkedListMultimap::create));
+    private File submissionFile(String subreddit, Instant date){
+        return new File(String.format("%s/%s/%s.sub",
+                SUBMISSIONS_FILE,
+                subreddit,
+                DATE.format(Date.from(date))));
     }
     /**
      * @param date the time.
@@ -167,9 +192,7 @@ public class PushshiftWrapper extends Wrapper<Void>{
      * @return all submissions at the specified time in the specified subreddit.
      */
     public List<CompactSubmission> getSubmissions(Instant date, String subreddit){
-        if(!submissions.contains(date, subreddit))
-            return Collections.unmodifiableList(Lists.newArrayList());
-        return submissions.get(date, subreddit);
+        return loadSubmission(subreddit, date);
     }
     /**
      * @param date the time.
@@ -177,152 +200,29 @@ public class PushshiftWrapper extends Wrapper<Void>{
      * @return all comments in the subreddit at the specified time. 
      */
     public List<CompactComment> getComments(Instant date, String subreddit){
-        if(!comments.contains(date, subreddit))
-            return Collections.unmodifiableList(Lists.newArrayList());
-        return comments.get(date, subreddit);
-    }
-    /**
-     * @param subreddit a subreddit.
-     * @return a map of all (time stamp,submissions) instances in the specified subreddit.
-     */
-    public ListMultimap<Instant,CompactComment> getComments(String subreddit){
-        return comments.column(subreddit)
-                .entrySet().stream()
-                .flatMap(e -> e.getValue().stream().map(s -> Pair.of(e.getKey(), s)))
-                .collect(Multimaps.toMultimap(
-                        e -> e.getKey(),
-                        e -> e.getValue(),
-                        LinkedListMultimap::create));
-    }
-    /**
-     * @param date a time stamp.
-     * @return a map of all (subreddit,submissions) instances at the specified date.
-     */
-    public ListMultimap<String,CompactComment> getComments(Instant date){
-        return comments.row(date)
-                .entrySet().stream()
-                .flatMap(e -> e.getValue().stream().map(s -> Pair.of(e.getKey(), s)))
-                .collect(Multimaps.toMultimap(
-                        e -> e.getKey(),
-                        e -> e.getValue(),
-                        LinkedListMultimap::create));
-    }
-    /**
-     * @return a list of all known subreddits. 
-     */
-    public List<String> getSubreddits(){
-        return comments.columnKeySet()
-                .stream()
-                .collect(Collectors.toList());
-    }
-    /**
-     * @return a sorted list of all known time stamps.
-     */
-    public List<Instant> getDates(){
-        return comments.rowKeySet()
-                .stream()
-                .sorted()
-                .collect(Collectors.toList());
-    }
-    /**
-     * Loads the submission and comment files and adds their content to the
-     * current instance, if they exist.
-     */
-    public void read(){
-        File file;
-        
-        file = new File(SUBMISSIONS_FILE);
-        if(file.exists()){
-            _read(SUBMISSIONS_FILE).cellSet().forEach(cell -> {
-                cell.getValue().forEach(value -> {
-                    CompactSubmission submission = new CompactSubmission();
-                    submission.putAll(value);
-                    submissions.putSingle(cell.getRowKey(), cell.getColumnKey(), submission);
-                });
-            });
-        }
-        file = new File(COMMENTS_FILE);
-        if(file.exists()){
-            _read(COMMENTS_FILE).cellSet().forEach(cell -> {
-                cell.getValue().forEach(value -> {
-                    CompactComment comment = new CompactComment();
-                    comment.putAll(value);
-                    comments.putSingle(cell.getRowKey(), cell.getColumnKey(), comment);
-                });
-            });
-        }
-    }
-    /**
-     * 
-     * @param name the name of the file.
-     * @return an instance of the serial data.
-     * @throws IOException if the serial object couldn't be accessed.
-     * @throws ClassNotFoundException if the serial object is of an unknown class.
-     */
-    private XMLMultitable<Instant,String,XMLMap<String,String>> _read(String name){
-        //The Map will be turned into a different datatype in read -> no write will happen
-        return XMLMultitable.create(new File(name), 
-                e -> {
-                    return XMLStringMap.create((Element)XMLDocument.getNode("document", (Element)e), NODE_TO_STRING, STRING_TO_NODE, Function.identity());
-                }, 
-                null, 
-                r -> Instant.ofEpochMilli(Long.parseLong(r)), 
-                Function.identity());
-    }
-    /**
-     * Writes the submissions and comments to the hard disk.
-     * @throws IOException if an error occured while writing the data.
-     * @throws InterruptedException if the program was interrupted before the writing process was finished.
-     */
-    public void store() throws IOException, InterruptedException{
-        File file;
-        file = new File(SUBMISSIONS_FILE);
-        if(file.exists()) file.delete();
-        file = new File(COMMENTS_FILE);
-        if(file.exists()) file.delete();        
-        
-        _store(SUBMISSIONS_FILE,submissions);
-        _store(COMMENTS_FILE,comments);
-        
-    }
-    /**
-     * Writes a data structure to a file.
-     * @param name the file name the data is stored in.
-     * @param data the table that is written to the hard disk.
-     * @throws IOException if an error occured while writing the data.
-     * @throws InterruptedException if the program was interrupted before the writing process was finished.
-     */
-    private void _store(String name, XMLMultitable<Instant,String,?> data) throws IOException, InterruptedException{
-        data.update(i -> Long.toString(i.toEpochMilli()),Function.identity())
-            .write(new FileOutputStream(name), null);
+        return loadComment(subreddit, date);
     }
     /**
      * Request all submissions in the previously specified interval and
      * stores them in the internal maps.
      * @throws java.io.IOException when the HTTP request failed
+     * @throws java.lang.InterruptedException when the process of writing to the files was interrupted.
      * @return null
      */
     @Override
-    public Void request() throws IOException{
+    public Void request() throws IOException, InterruptedException{
         String listing = requestJsonContent();
         List<String> ids = extractIds(listing);
         
         //Store temporarily in case of an unexpected error
-        XMLMultitable<Instant,String,CompactSubmission> local_submissions;
-        XMLMultitable<Instant,String,CompactComment> local_comments;
-        local_submissions = XMLMultitable.create(null);
-        local_comments = XMLMultitable.create(null);
-        
-        local_submissions.put(after, subreddit, XMLList.create(e -> e.update().getHead()));
-        local_comments.put(after, subreddit, XMLList.create(e -> e.update().getHead()));
+        XMLList<XMLStringMap<String>> submissions = XMLList.create(e -> e.update().getHead());
+        XMLList<XMLStringMap<String>> comments = XMLList.create(e -> e.update().getHead());
         
         //Go through each submission
         ids.forEach( id -> {
             Submission submission = bot.getClient().submission(id).inspect();
             //Simplify the submission time to the current day
-            local_submissions
-                    .get(after, subreddit)
-                    .add(extractData(submission));
+            submissions.add(extractData(submission));
             
             //Visit all comments iteratively
             Deque<CommentNode<Comment>> deque = new ArrayDeque<>();
@@ -333,14 +233,19 @@ public class PushshiftWrapper extends Wrapper<Void>{
                 node.loadFully(bot.getClient());
                     
                 Comment comment = node.getSubject();
-                local_comments
-                        .get(after,subreddit)
-                        .add(extractData(comment,submission));
+                comments.add(extractData(comment,submission));
                 deque.addAll(node.getReplies());
             }
         });
-        submissions.putAll(local_submissions);
-        comments.putAll(local_comments);
+        //Store all files.
+        File file = submissionFile(subreddit,after);
+        file.getParentFile().mkdirs();
+        file.createNewFile();
+        submissions.update().write(new FileOutputStream(file), null);
+        file = commentFile(subreddit,after);
+        file.getParentFile().mkdirs();
+        file.createNewFile();
+        comments.update().write(new FileOutputStream(file), null);
         return null;
     }
     /**
@@ -349,8 +254,8 @@ public class PushshiftWrapper extends Wrapper<Void>{
      * @param submission the submission this comment is in
      * @return a map containing the most relevant information for us.
      */
-    protected CompactComment extractData(Comment comment, Submission submission){
-        CompactComment data = new CompactComment();
+    protected XMLStringMap<String> extractData(Comment comment, Submission submission){
+        XMLStringMap<String> data = new XMLStringMap<>();
         
         data.put("author",comment.getAuthor());
         data.put("score",Integer.toString(comment.getScore()));
@@ -366,12 +271,12 @@ public class PushshiftWrapper extends Wrapper<Void>{
      * @param submission the source.
      * @return a map containing the most relevant information for us.
      */
-    protected CompactSubmission extractData(Submission submission){
-        CompactSubmission data = new CompactSubmission();
+    protected XMLStringMap<String> extractData(Submission submission){
+        XMLStringMap<String> data = new XMLStringMap<>();
         
         data.put("author",submission.getAuthor());
         data.put("id",submission.getId());
-        data.put("link_flair_text",submission.getLinkFlairText() == null ? "" : submission.getLinkFlairText());
+        data.put("link_flair_text",submission.getLinkFlairText());
         data.put("over18",Boolean.toString(submission.isNsfw()));
         data.put("spoiler",Boolean.toString(submission.isSpoiler()));
         data.put("score",Integer.toString(submission.getScore()));
@@ -439,6 +344,16 @@ public class PushshiftWrapper extends Wrapper<Void>{
          */
         private static final String URL = "https://www.reddit.com/r/%s/comments/%s/-/%s";
         /**
+         * Guarantee that we won't have null as a value.
+         * @param key the key of the entry.
+         * @param value the value of the entry.
+         * @return the possible value that has been removed or null, otherwise.
+         */
+        @Override
+        public String put(String key, String value){
+            return super.put(key, value == null ? "" : value);
+        }
+        /**
          * @return the author of the comment. 
          */
         public String getAuthor(){
@@ -490,6 +405,16 @@ public class PushshiftWrapper extends Wrapper<Void>{
          * The URL frame that will link to the submission.
          */
         private static final String URL = "https://redd.it/%s";
+        /**
+         * Guarantee that we won't have null as a value.
+         * @param key the key of the entry.
+         * @param value the value of the entry.
+         * @return the possible value that has been removed or null, otherwise.
+         */
+        @Override
+        public String put(String key, String value){
+            return super.put(key, value == null ? "" : value);
+        }
         /**
          * @return the author of the submission. 
          */
