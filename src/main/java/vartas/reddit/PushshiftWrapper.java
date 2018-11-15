@@ -184,7 +184,7 @@ public class PushshiftWrapper extends Wrapper<Void>{
      * @param subreddit the subreddit.
      * @return all submissions at the specified time in the specified subreddit.
      */
-    public List<CompactSubmission> getSubmissions(Instant date, String subreddit){
+    public synchronized List<CompactSubmission> getSubmissions(Instant date, String subreddit){
         return loadSubmission(subreddit, date);
     }
     /**
@@ -192,7 +192,7 @@ public class PushshiftWrapper extends Wrapper<Void>{
      * @param subreddit the subreddit.
      * @return all comments in the subreddit at the specified time. 
      */
-    public List<CompactComment> getComments(Instant date, String subreddit){
+    public synchronized List<CompactComment> getComments(Instant date, String subreddit){
         return loadComment(subreddit, date);
     }
     /**
@@ -203,7 +203,7 @@ public class PushshiftWrapper extends Wrapper<Void>{
      * @return null
      */
     @Override
-    public Void request() throws IOException, InterruptedException{
+    public synchronized Void request() throws IOException, InterruptedException{
         String listing = requestJsonContent();
         List<String> ids = extractIds(listing);
         
