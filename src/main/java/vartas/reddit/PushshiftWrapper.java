@@ -18,8 +18,6 @@ package vartas.reddit;
  */
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.LinkedListMultimap;
-import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.RateLimiter;
 import java.io.BufferedReader;
 import java.io.File;
@@ -33,11 +31,8 @@ import java.time.Instant;
 import java.util.ArrayDeque;
 import java.util.Date;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.TimeZone;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -87,7 +82,7 @@ public class PushshiftWrapper extends Wrapper<Void>{
     /**
      * This format is used to generate the files for each entry.
      */
-    protected static final SimpleDateFormat DATE = new SimpleDateFormat("dd-MM-yyyy");
+    public static final SimpleDateFormat DATE = new SimpleDateFormat("dd-MM-yyyy");
     /**
      * Set the correct timezone.
      */
