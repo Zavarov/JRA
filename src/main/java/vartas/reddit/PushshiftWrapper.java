@@ -28,9 +28,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.ArrayDeque;
 import java.util.Date;
-import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
@@ -38,7 +36,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.Submission;
-import net.dean.jraw.tree.CommentNode;
+import net.dean.jraw.tree.RootCommentNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Element;
@@ -86,7 +84,7 @@ public class PushshiftWrapper extends Wrapper<Void>{
     /**
      * Set the correct timezone.
      */
-    {
+    static {
         DATE.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
     /**
@@ -210,19 +208,25 @@ public class PushshiftWrapper extends Wrapper<Void>{
         List<String> ids = extractIds(listing);
         
         //Store temporarily in case of an unexpected error
-        XMLList<XMLStringMap<String>> submissions = XMLList.create(e -> e.update().getHead());
-        XMLList<XMLStringMap<String>> comments = XMLList.create(e -> e.update().getHead());
+        XMLList<CompactSubmission> submissions = XMLList.create(e -> e.update().getHead());
+        XMLList<CompactComment> comments = XMLList.create(e -> e.update().getHead());
         
         //Go through each submission
         ids.forEach( id -> {
-            Submission submission = bot.getClient().submission(id).inspect();
-            //Simplify the submission time to the current day
+            RootCommentNode root = bot.getClient().submission(id).comments();
+            //Acquire all the comments
+            root.loadFully(bot.getClient());
+            
+            Submission submission = root.getSubject();
             submissions.add(extractData(submission));
             
-            //Visit all comments iteratively
-            Deque<CommentNode<Comment>> deque = new ArrayDeque<>();
-            deque.addAll(bot.getClient().submission(id).comments().getReplies());
+            root.walkTree().iterator().forEachRemaining(n ->  {
+                if(n.getSubject() instanceof Comment)
+                   comments.add(extractData((Comment)n.getSubject(), submission));
             
+            });
+            /*
+            deque.addAll(bot.getClient().submission(id).comments().getReplies());
             while(!deque.isEmpty()){
                 CommentNode<Comment> node = deque.pop();
                 node.loadFully(bot.getClient());
@@ -231,6 +235,7 @@ public class PushshiftWrapper extends Wrapper<Void>{
                 comments.add(extractData(comment,submission));
                 deque.addAll(node.getReplies());
             }
+            */
         });
         //Store all files.
         File file = submissionFile(subreddit,after);
@@ -246,11 +251,11 @@ public class PushshiftWrapper extends Wrapper<Void>{
     /**
      * Extracts the relevant parts of the comment.
      * @param comment the source.
-     * @param submission the submission this comment is in
+     * @param submission the submission the comment was made in.
      * @return a map containing the most relevant information for us.
      */
-    protected XMLStringMap<String> extractData(Comment comment, Submission submission){
-        XMLStringMap<String> data = new XMLStringMap<>();
+    protected CompactComment extractData(Comment comment, Submission submission){
+        CompactComment data = new CompactComment();
         
         data.put("author",comment.getAuthor());
         data.put("score",Integer.toString(comment.getScore()));
@@ -266,8 +271,8 @@ public class PushshiftWrapper extends Wrapper<Void>{
      * @param submission the source.
      * @return a map containing the most relevant information for us.
      */
-    protected XMLStringMap<String> extractData(Submission submission){
-        XMLStringMap<String> data = new XMLStringMap<>();
+    protected CompactSubmission extractData(Submission submission){
+        CompactSubmission data = new CompactSubmission();
         
         data.put("author",submission.getAuthor());
         data.put("id",submission.getId());

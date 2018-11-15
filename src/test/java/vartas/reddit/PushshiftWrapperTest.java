@@ -277,8 +277,12 @@ public class PushshiftWrapperTest {
         
         wrapper.parameter("subreddit", instant.plus(1, DAYS), instant);
         
+        try{
         wrapper.request();
-        
+        }catch(Exception e){
+            e.printStackTrace();
+            throw e;
+        }
         assertTrue(new File("src/test/resources/submissions/subreddit/01-01-2000.sub").exists());
         assertTrue(new File("src/test/resources/comments/subreddit/01-01-2000.com").exists());
     }
