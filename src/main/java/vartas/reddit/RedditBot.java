@@ -52,7 +52,7 @@ public class RedditBot {
     /**
      * @return the Reddit client.
      */
-    public final RedditClient getClient(){
+    public RedditClient getClient(){
         return client;
     }
 }

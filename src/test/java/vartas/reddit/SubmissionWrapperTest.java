@@ -16,12 +16,20 @@
  */
 package vartas.reddit;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import net.dean.jraw.ApiException;
+import net.dean.jraw.RedditClient;
+import net.dean.jraw.http.HttpResponse;
+import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.pagination.Paginator;
+import okhttp3.Protocol;
+import org.apache.http.HttpStatus;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import vartas.offlinejraw.OfflineSubmissionListingResponse;
@@ -159,5 +167,85 @@ public class SubmissionWrapperTest {
         Submission submission;
         submission = submissions.get(0);
         assertEquals(submission.getId(),"id1");
+    }
+    @Test
+    public void apiExceptionTest(){
+        okhttp3.Request request = new okhttp3.Request.Builder().url("http://www.test.con").build();
+        okhttp3.Response response = new okhttp3.Response.Builder()
+                .request(request)
+                .protocol(Protocol.HTTP_2)
+                .code(HttpStatus.SC_ACCEPTED)
+                .message("message").build();
+        HttpResponse http = new HttpResponse(response);
+        
+        wrapper = new SubmissionWrapper(new OfflineRedditBot(){
+            @Override
+            public RedditClient getClient(){
+                throw new ApiException(Integer.toString(HttpStatus.SC_ACCEPTED),"",Arrays.asList(),new NetworkException(http));
+            }
+        });
+        
+        wrapper.parameter("subreddit", new Date(0), new Date(1));
+        assertTrue(wrapper.request().isEmpty());
+    }
+    @Test
+    public void networkExceptionTest(){
+        okhttp3.Request request = new okhttp3.Request.Builder().url("http://www.test.con").build();
+        okhttp3.Response response = new okhttp3.Response.Builder()
+                .request(request)
+                .protocol(Protocol.HTTP_2)
+                .code(HttpStatus.SC_ACCEPTED)
+                .message("message").build();
+        HttpResponse http = new HttpResponse(response);
+        
+        wrapper = new SubmissionWrapper(new OfflineRedditBot(){
+            @Override
+            public RedditClient getClient(){
+                throw new NetworkException(http);
+            }
+        });
+        
+        wrapper.parameter("subreddit", new Date(0), new Date(1));
+        assertTrue(wrapper.request().isEmpty());
+    }
+    @Test(expected=InvalidSubredditException.class)
+    public void forbiddenExceptionTest(){
+        okhttp3.Request request = new okhttp3.Request.Builder().url("http://www.test.con").build();
+        okhttp3.Response response = new okhttp3.Response.Builder()
+                .request(request)
+                .protocol(Protocol.HTTP_2)
+                .code(HttpStatus.SC_FORBIDDEN)
+                .message("message").build();
+        HttpResponse http = new HttpResponse(response);
+        
+        wrapper = new SubmissionWrapper(new OfflineRedditBot(){
+            @Override
+            public RedditClient getClient(){
+                throw new NetworkException(http);
+            }
+        });
+        
+        wrapper.parameter("subreddit", new Date(0), new Date(1));
+        wrapper.request();
+    }
+    @Test(expected=InvalidSubredditException.class)
+    public void notFoundExceptionTest(){
+        okhttp3.Request request = new okhttp3.Request.Builder().url("http://www.test.con").build();
+        okhttp3.Response response = new okhttp3.Response.Builder()
+                .request(request)
+                .protocol(Protocol.HTTP_2)
+                .code(HttpStatus.SC_NOT_FOUND)
+                .message("message").build();
+        HttpResponse http = new HttpResponse(response);
+        
+        wrapper = new SubmissionWrapper(new OfflineRedditBot(){
+            @Override
+            public RedditClient getClient(){
+                throw new NetworkException(http);
+            }
+        });
+        
+        wrapper.parameter("subreddit", new Date(0), new Date(1));
+        wrapper.request();
     }
 }

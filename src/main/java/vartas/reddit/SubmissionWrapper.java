@@ -17,15 +17,19 @@
 
 package vartas.reddit;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+import net.dean.jraw.ApiException;
+import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.SubredditSort;
 import net.dean.jraw.models.TimePeriod;
 import net.dean.jraw.pagination.DefaultPaginator;
 import net.dean.jraw.pagination.Paginator;
+import org.apache.http.HttpStatus;
 
 /**
  * An interface to make the interaction between the Reddit API and the Discord API much easier.
@@ -64,30 +68,46 @@ public class SubmissionWrapper extends Wrapper<List<Submission>>{
     /**
      * Reads the latest submissions from the specified updated, that are newer than the specified threshold.
      * @return a list of the most recent submissions in ascending order.
+     * @throws InvalidSubredditException if the request either returned a 404 or a 403.
      */
     @Override
-    public List<Submission> request(){
-        
-        DefaultPaginator<Submission> paginator = bot.getClient().subreddit(subreddit)
-                .posts()
-                .sorting(SubredditSort.NEW)
-                .limit(Paginator.RECOMMENDED_MAX_LIMIT)
-                .timePeriod(TimePeriod.ALL)
-                .build();
-        List<Submission> submissions = new LinkedList<>();
-        List<Submission> current;
-        Date newest;
-        do{
-            //The newest value should be the last one
-            current = paginator.next().stream()
-                    .filter(s -> s.getCreated().before(end))
-                    .filter(s -> s.getCreated().after(start))
-                    .sorted( (u,v) -> u.getCreated().compareTo(v.getCreated()))
-                    .collect(Collectors.toList());
-            newest = current.isEmpty() ? end : current.get(current.size()-1).getCreated();
-            submissions.addAll(current);
-        //Repeat when we haven't found the last submission
-        }while(newest.before(end));
-        return submissions;
+    public List<Submission> request() throws InvalidSubredditException{
+        try{
+            DefaultPaginator<Submission> paginator = bot.getClient().subreddit(subreddit)
+                    .posts()
+                    .sorting(SubredditSort.NEW)
+                    .limit(Paginator.RECOMMENDED_MAX_LIMIT)
+                    .timePeriod(TimePeriod.ALL)
+                    .build();
+            List<Submission> submissions = new LinkedList<>();
+            List<Submission> current;
+            Date newest;
+            do{
+                //The newest value should be the last one
+                current = paginator.next().stream()
+                        .filter(s -> s.getCreated().before(end))
+                        .filter(s -> s.getCreated().after(start))
+                        .sorted( (u,v) -> u.getCreated().compareTo(v.getCreated()))
+                        .collect(Collectors.toList());
+                newest = current.isEmpty() ? end : current.get(current.size()-1).getCreated();
+                submissions.addAll(current);
+            //Repeat when we haven't found the last submission
+            }while(newest.before(end));
+            return submissions;
+        }catch(NetworkException | ApiException e){
+            int error;
+            //extract the error code
+            if(e instanceof NetworkException){
+                error = ((NetworkException)e).getRes().getCode();
+            }else{
+                error = Integer.parseInt(((ApiException)e).getCode());
+            }
+            //The subreddit either doesn't exist anymore or can't be accessed
+            if(error == HttpStatus.SC_FORBIDDEN || error == HttpStatus.SC_NOT_FOUND){
+                throw new InvalidSubredditException(subreddit);
+            }else{
+                return Arrays.asList();
+            }
+        }
     }
 }

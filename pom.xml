@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>vartas</groupId>
     <artifactId>RedditCrawler</artifactId>
-    <version>1.8</version>
+    <version>1.9</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -64,6 +64,11 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.6</version>
         </dependency>
     </dependencies>
     <build>
