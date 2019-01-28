@@ -161,7 +161,7 @@ public class PushshiftWrapper extends Wrapper<Void>{
      * @param date the date when the comments happened.
      * @return the file containing all comments from that subreddit on that date 
      */
-    private File commentFile(String subreddit, Instant date){
+    public File commentFile(String subreddit, Instant date){
         return new File(String.format("%s/%s/%s.com",
                 COMMENTS_FILE,
                 subreddit,
@@ -173,7 +173,7 @@ public class PushshiftWrapper extends Wrapper<Void>{
      * @param date the date when the submissions happened.
      * @return the file containing all submissions from that subreddit on that date 
      */
-    private File submissionFile(String subreddit, Instant date){
+    public File submissionFile(String subreddit, Instant date){
         return new File(String.format("%s/%s/%s.sub",
                 SUBMISSIONS_FILE,
                 subreddit,
