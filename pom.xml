@@ -1,124 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<!--
+  ~ Copyright (c) 2019 Zavarov
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>vartas</groupId>
-    <artifactId>RedditCrawler</artifactId>
-    <version>1.10</version>
-    <packaging>jar</packaging>
+    <artifactId>reddit</artifactId>
+    <packaging>pom</packaging>
+    <version>2.0</version>
+    <modules>
+        <module>api</module>
+        <module>io</module>
+        <module>stats</module>
+        <module>chart</module>
+    </modules>
+
     <properties>
+
+        <!-- .. Libraries ..................................................... -->
+
+        <monticore.version>5.0.5</monticore.version>
+
+        <assertj.version>3.12.2</assertj.version>
+        <junit.version>4.12</junit.version>
+        <httpclient.version>4.5.9</httpclient.version>
+        <commons-text.version>1.7</commons-text.version>
+        <json.version>20180813</json.version>
+        <jraw.version>1.1.0</jraw.version>
+        <guava.version>28.0-jre</guava.version>
+        <jfreechart.version>1.5.0</jfreechart.version>
+
+        <!-- .. Plugins ....................................................... -->
+
+        <assembly.plugin>2.5.3</assembly.plugin>
+        <compiler.plugin>3.2</compiler.plugin>
+        <release.plugin>2.5.1</release.plugin>
+        <source.plugin>2.4</source.plugin>
+        <surefire.plugin>2.18.1</surefire.plugin>
+
+        <!-- Classifiers -->
+
+        <grammars.classifier>grammars</grammars.classifier>
+
+
+        <!-- .. Misc .......................................................... -->
+
+        <java.version>1.8</java.version>
+        <wagon.provider.version>2.6</wagon.provider.version>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
+
+    <!-- == Repositories ==================================================== -->
+
     <repositories>
+        <repository>
+            <id>se-nexus</id>
+            <url>https://nexus.se.rwth-aachen.de/content/groups/public/</url>
+        </repository>
+
         <repository>
             <id>library</id>
             <name>library</name>
             <url>file:${project.basedir}/libs</url>
         </repository>
+
         <repository>
             <id>jcenter</id>
             <name>jcenter-bintray</name>
             <url>http://jcenter.bintray.com</url>
         </repository>
     </repositories>
-    <dependencies>
-        <dependency>
-            <groupId>net.dean.jraw</groupId>
-            <artifactId>JRAW</artifactId>
-            <version>1.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>vartas</groupId>
-            <artifactId>XMLCollections</artifactId>
-            <version>1.18</version>
-        </dependency>
-        <dependency>
-            <groupId>vartas</groupId>
-            <artifactId>OfflineJRAW</artifactId>
-            <version>1.1.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20180813</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jfree</groupId>
-            <artifactId>jfreechart</artifactId>
-            <version>1.5.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.8.1</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.6</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.6</version>
-        </dependency>
-    </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.1</version>
-                <configuration>
-                    <useSystemClassLoader>false</useSystemClassLoader>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.2</version>
-                <executions>
-                    <execution>
-                    <id>pre-unit-test</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>post-unit-test</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
-                    <createDependencyReducedPom>false</createDependencyReducedPom>
-                    <keepDependenciesWithProvidedScope>true</keepDependenciesWithProvidedScope>
-                </configuration>
-            </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.0</version>
-        <configuration>
-          <compilerArgument>-Xlint:all</compilerArgument>
-          <showWarnings>true</showWarnings>
-          <showDeprecation>true</showDeprecation>
-        </configuration>
-      </plugin>
-        </plugins>
-    </build>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>se-nexus</id>
+            <url>https://nexus.se.rwth-aachen.de/content/groups/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
