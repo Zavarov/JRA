@@ -32,7 +32,17 @@ mvn clean install
 
 ## Running the tests
 
-In order to run the tests of the api module, you need to set the Reddit id and secret of your Reddit bot to the [config](api/src/test/resources/config.json) file.
+In order to run the tests of the api module, you need to create the json file containing the credentials for your Reddit bot to in api/src/test/resources/config.json.
+
+The template for the file is
+```
+{
+  "name"     : "NAME",
+  "version"  : "VERSION",
+  "clientId" : "CLIENTID",
+  "secret"   : "SECRET"
+}
+```
 
 ## Built With
 
