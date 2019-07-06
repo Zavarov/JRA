@@ -1,0 +1,31 @@
+package vartas.reddit.api;
+
+grammar Comment extends de.monticore.MCBasicLiterals{
+    CommentArtifact =
+        Comment*;
+
+    scope Comment =
+        "comment" "{"
+            Entry*
+        "}";
+
+    interface Entry;
+
+    symbol AuthorLiteral implements Entry =
+        name:"author" "=" StringLiteral;
+
+    symbol IdLiteral implements Entry =
+        name:"id" "=" StringLiteral;
+
+    symbol SubredditLiteral implements Entry =
+        name:"subreddit" "=" StringLiteral;
+
+    symbol ScoreLiteral implements Entry =
+        name:"score" "=" NatLiteral;
+
+    symbol SubmissionTitleLiteral implements Entry =
+        name:"submissionTitle" "=" StringLiteral;
+
+    symbol SubmissionLiteral implements Entry =
+        name:"submission" "=" StringLiteral;
+}

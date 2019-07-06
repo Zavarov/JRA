@@ -1,0 +1,14 @@
+submission {
+    author = "author"
+    id = "id"
+    linkFlairText = "linkFlairText"
+    subreddit = "subreddit"
+    nsfw = true
+    spoiler = true
+    score = 1
+    title = "title"
+    created = 1L
+    selfText = "selfText"
+    thumbnail = "thumbnail"
+    url = "url"
+}

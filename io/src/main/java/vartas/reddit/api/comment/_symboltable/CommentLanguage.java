@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 u/Zavarov
+ * Copyright (c) 2019 Zavarov
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,19 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package vartas.reddit;
 
-/**
- * This exception is thrown when a subreddit is requested that the bot can't
- * access.
- * @author u/Zavarov
- */
-public class InvalidSubredditException extends RuntimeException{
-    private final static long serialVersionUID = 0L;
-    /**
-     * @param subreddit the subreddit that was requested. 
-     */
-    public InvalidSubredditException(String subreddit){
-        super(String.format("The subreddit %s couldn't be accessed.",subreddit));
+package vartas.reddit.api.comment._symboltable;
+
+public class CommentLanguage extends CommentLanguageTOP{
+    public CommentLanguage(){
+        super("Comment Language", "com");
+
+        setModelNameCalculator(new CommentModelNameCalculator());
+    }
+
+    @Override
+    protected CommentModelLoader provideModelLoader() {
+        return new CommentModelLoader(this);
     }
 }

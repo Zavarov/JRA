@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 u/Zavarov
+ * Copyright (c) 2019 Zavarov
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,24 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package vartas.reddit;
 
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
+package vartas.reddit.api.submission._symboltable;
 
-/**
- *
- * @author u/Zavarov
- */
-public class InvalidSubredditExceptionTest {
-    InvalidSubredditException exception;
-    @Before
-    public void setUp(){
-        exception = new InvalidSubredditException("test");
+public class SubmissionLanguage extends SubmissionLanguageTOP{
+    public SubmissionLanguage(){
+        super("Submission Language", "sub");
+
+        setModelNameCalculator(new SubmissionModelNameCalculator());
     }
-    @Test
-    public void initializationTest(){
-        assertTrue(exception.getMessage().contains("test"));
+
+    @Override
+    protected SubmissionModelLoader provideModelLoader() {
+        return new SubmissionModelLoader(this);
     }
 }
