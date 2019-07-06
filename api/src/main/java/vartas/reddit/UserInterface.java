@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 u/Zavarov
+ * Copyright (c) 2019 Zavarov
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,35 +17,40 @@
 
 package vartas.reddit;
 
-import net.dean.jraw.models.Account;
-
+import java.util.Date;
 /**
- * A helper class that looks for a Reddit user based on the name.
- * @author u/Zavarov
+ * This is the interface for all Reddit users.
  */
-public class UserWrapper extends Wrapper<Account>{
+public interface UserInterface {
     /**
-     * The name of the user.
+     * The URL frame that will link to the subreddit.
      */
-    String user;
+    String USER_URL = "https://www.reddit.com/u/%s";
+
     /**
-     * @param bot the bot instance that contains the Reddit client.
+     * @return the date when the account was created.
      */
-    public UserWrapper(RedditBot bot) {
-        super(bot);
-    }
+    int getCommentKarma();
+
     /**
-     * Sets the name of the user.
-     * @param user the user name.
+     * @return the link karma.
      */
-    public void parameter(String user){
-        this.user=user;
-    }
+    Date getCreated();
+
     /**
-     * @return the account associated with the name.
+     * @return name of the user.
      */
-    @Override
-    public Account request() {
-        return bot.getClient().user(user).query().getAccount();
+    int getLinkKarma();
+
+    /**
+     * @return name of the user.
+     */
+    String getName();
+
+    /**
+     * @return the permalink to the users' page.
+     */
+    default String getPermaLink(){
+        return String.format(USER_URL, getName());
     }
 }

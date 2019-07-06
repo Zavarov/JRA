@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 u/Zavarov
+ * Copyright (c) 2019 Zavarov
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,24 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package vartas.reddit;
 
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
-
 /**
- *
- * @author u/Zavarov
+ * This exception is thrown whenever a request was made that was impossible to resolve.
+ * E.g. when a subreddit was requested that doesn't exist or a submission the bot doesn't have access to.
  */
-public class RedditBotTest {
-    RedditBot bot;
-    @Before
-    public void setUp(){
-        bot = new OfflineRedditBot();
-    }
-    @Test
-    public void getClientTest(){
-        assertEquals(bot.getClient(),bot.client);
+public class UnresolvableRequestException extends RuntimeException{
+    private static final long serialVersionUID = 1L;
+    public static final String ERROR_MESSAGE = "The request failed with the following error code: %d";
+    public UnresolvableRequestException(int errorCode){
+        super(String.format(ERROR_MESSAGE, errorCode));
     }
 }
