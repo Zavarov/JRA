@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 u/Zavarov
+ * Copyright (c) 2019 Zavarov
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,41 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package vartas.reddit.stats.chart.line;
+package vartas.reddit.chart.line;
 
 import com.google.common.collect.AbstractIterator;
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
-import org.jfree.data.time.Day;
-import org.jfree.data.time.Month;
-import org.jfree.data.time.RegularTimePeriod;
-import org.jfree.data.time.TimeSeries;
-import org.jfree.data.time.TimeSeriesCollection;
-import org.jfree.data.time.Week;
-import org.jfree.data.time.Year;
+import org.jfree.data.time.*;
+
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * This class is a frame for all graphs, that show a change over time. <br>
  * This change can be a change over days, months and even years.
- * @author u/Zavarov
  * @param <T> the datatype of all distinct elements
  */
-public abstract class DevelopmentChart<T>{
+public abstract class AbstractChart<T>{
     /**
      * The default timezone that is used in the program.
      */
@@ -58,34 +44,33 @@ public abstract class DevelopmentChart<T>{
      */
     protected TimeSeriesCollection dataset;
     /**
-     * Creates a line chart over the given data.<br>
-     * The chart will contain a line containing the change in entire years,
+     * Creates a chart over the given data.<br>
+     * Thechart will contain a line containing the change in entire years,
      * months and days.
      * @param data the data that is used to fill the dataset.
      * @param interval the interval between each step.
-     * @return a line chart representing the data.
+     * @return a vartas.reddit.chart.line vartas.reddit.chart representing the data.
      */
     public JFreeChart create(Map<Instant, List<T>> data, Interval interval){
         dataset = new TimeSeriesCollection();
         
         TimeSeries series = new TimeSeries(interval.toString());
         OffsetDateTime before = Instant.ofEpochMilli(
-                data
-                    .keySet()
+                data.keySet()
                     .stream()
                     .mapToLong(Instant::toEpochMilli)
                     .max()
                     .orElse(0))
                 .atOffset(ZoneOffset.UTC).plusDays(1);
         OffsetDateTime after = Instant.ofEpochMilli(
-                data
-                    .keySet()
+                data.keySet()
                     .stream()
                     .mapToLong(Instant::toEpochMilli)
                     .min()
                     .orElse(0))
                 .atOffset(ZoneOffset.UTC);
-        
+
+        //Add all timestamps to the series
         Iterator<OffsetDateTime> iterator = interval.getEntries().apply(before, after);
         OffsetDateTime current = after, next;
         while(iterator.hasNext()){
@@ -117,7 +102,7 @@ public abstract class DevelopmentChart<T>{
         return count(accumulated);
     }
     /**
-     * @return the title of the chart. 
+     * @return the title of the vartas.reddit.chart.
      */
     protected abstract String getTitle();
     /**
@@ -134,11 +119,11 @@ public abstract class DevelopmentChart<T>{
      * @param data all elements in the given interval.
      * @return the number representing those elements.
      */
-    protected abstract long count(Collection<T> data);
+    protected abstract long count(Collection<? extends T> data);
     /**
      * The supported intervals.
      */
-    public static enum Interval{
+    public enum Interval{
         /**
          * Step size of a day.
          */
@@ -189,7 +174,7 @@ public abstract class DevelopmentChart<T>{
          * @param next the function that returns the next timestamp that follows from the current one.
          * @param period the function that creates the time periods from each date.
          */
-        private Interval(Function<OffsetDateTime,OffsetDateTime> next, Function<Date,RegularTimePeriod> period){
+        Interval(Function<OffsetDateTime,OffsetDateTime> next, Function<Date,RegularTimePeriod> period){
             this.entries = new EntryFunction(next);
             this.period = period;
         }
@@ -215,17 +200,13 @@ public abstract class DevelopmentChart<T>{
          */
         @Override
         public Iterator<OffsetDateTime> apply(OffsetDateTime before, OffsetDateTime after) {
-            return new DateIterator(
-                    before,
-                    after,
-                    next
-            );
+            return new DateIterator(before, after, next);
         }
     }
     /**
      * This class implements the iterator that will visit all timestamps in a given interval.
      */
-    private static class DateIterator extends AbstractIterator<OffsetDateTime>{
+    private static class DateIterator extends AbstractIterator<OffsetDateTime> {
         /**
          * The function that returns the next timestamp that follows from the current one.
          */
@@ -254,7 +235,7 @@ public abstract class DevelopmentChart<T>{
             this.current = after;
         }
         /**
-         * @return the next timestep or null, if we are already at the end.
+         * @return the next timestep or endOfData(), if we are already at the end.
          */
         @Override
         protected OffsetDateTime computeNext() {

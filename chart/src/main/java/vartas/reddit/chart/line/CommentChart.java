@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 u/Zavarov
+ * Copyright (c) 2019 Zavarov
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,27 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package vartas.reddit.stats.chart.line;
+package vartas.reddit.chart.line;
+
+import vartas.reddit.CommentInterface;
 
 import java.util.Collection;
-import vartas.reddit.PushshiftWrapper.CompactComment;
 
 /**
  * This class creates a plot over the total amount of comments in the given
  * time frame.
- * @author u/Zavarov
  */
-public class CommentChart extends DevelopmentChart<CompactComment>{
+public class CommentChart extends AbstractChart<CommentInterface> {
     /**
      * @param data a collection of all comments in the interval.
      * @return the total number of comments. 
      */
     @Override
-    protected long count(Collection<CompactComment> data) {
+    protected long count(Collection<? extends CommentInterface> data) {
         return data.size();
     }
     /**
-     * @return the title of the chart. 
+     * @return the title of the vartas.reddit.chart.
      */
     @Override
     protected String getTitle() {

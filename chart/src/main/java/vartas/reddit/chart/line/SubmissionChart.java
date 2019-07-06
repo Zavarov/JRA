@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 u/Zavarov
+ * Copyright (c) 2019 Zavarov
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,37 +14,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package vartas.reddit.stats.chart.line;
+package vartas.reddit.chart.line;
+
+import vartas.reddit.SubmissionInterface;
 
 import java.util.Collection;
-import vartas.reddit.PushshiftWrapper.CompactComment;
 
 /**
- * This class creates a plot over all unique redditors that made a comment
- * in one of the submissions in the given time frame.
- * @author u/Zavarov
+ * This class creates a plot over the total amount of submissions in the given
+ * time frame.
  */
-public class CommenterChart extends DevelopmentChart<CompactComment>{
+public class SubmissionChart extends AbstractChart<SubmissionInterface> {
     /**
-     * @param data a collection of all comments in the interval.
-     * @return the number of unique commenters. 
+     * @param data a collection of all submissions in the interval.
+     * @return the number of submissions. 
      */
     @Override
-    protected long count(Collection<CompactComment> data) {
-        return data.stream().map(CompactComment::getAuthor).distinct().count();
+    protected long count(Collection<? extends SubmissionInterface> data) {
+        return data.size();
     }
     /**
-     * @return the title of the chart. 
+     * @return the title of the vartas.reddit.chart.
      */
     @Override
     protected String getTitle() {
-        return "Number of unique commenters";
+        return "Number of submissions";
     }
     /**
      * @return the type of values on the y axis. 
      */
     @Override
     protected String getYLabel() {
-        return "#Commenters";
+        return "#Submissions";
     }
 }

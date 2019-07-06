@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 u/Zavarov
+ * Copyright (c) 2019 Zavarov
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,36 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package vartas.reddit.stats.chart.pie;
+package vartas.reddit.chart.pie;
 
-import java.awt.Color;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.labels.PieSectionLabelGenerator;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
-import vartas.reddit.PushshiftWrapper.CompactSubmission;
+import vartas.reddit.SubmissionInterface;
+
+import java.awt.*;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * This class creates a plot over the specified the submissions, that shows
  * the tags for each posts.
  * A submission can either be tagged as NSFW, as a spoiler, both or neither of
  * them.
- * @author u/Zavarov
  */
-public class TagPlot implements Function<Collection<CompactSubmission>, JFreeChart>{
+public class TagPlot implements Function<Collection<? extends SubmissionInterface>, JFreeChart>{
     /**
-     * The alpha value of all the colors in the chart.
+     * The alpha value of all the colors in the vartas.reddit.chart.
      */
     protected final double alpha;
     /**
@@ -53,16 +48,16 @@ public class TagPlot implements Function<Collection<CompactSubmission>, JFreeCha
         this.alpha = alpha;
     }
     /**
-     * Creates a pie chart showing the tags of all submissions.
+     * Creates a vartas.reddit.chart.pie vartas.reddit.chart showing the tags of all submissions.
      * @param submissions a collection over all submissions.
-     * @return an image containing the pie chart.
+     * @return an image containing the vartas.reddit.chart.pie vartas.reddit.chart.
      */
     @Override
-    public JFreeChart apply(Collection<CompactSubmission> submissions){        
+    public JFreeChart apply(Collection<? extends SubmissionInterface> submissions){
         return createTagChart(
                 countTags(submissions
                     .stream()
-                    .map(s -> getTags(s))), 
+                    .map(this::getTags)),
                     submissions.size());
     }
     
@@ -77,7 +72,7 @@ public class TagPlot implements Function<Collection<CompactSubmission>, JFreeCha
      * @param submission the submission we want to extract the tags from.
      * @return the names describing the tags of the submission.
      */
-    private Set<String> getTags(CompactSubmission submission){
+    private Set<String> getTags(SubmissionInterface submission){
         boolean is_nsfw = submission.isNsfw();
         boolean is_spoiler = submission.isSpoiler();
         if(!is_nsfw && !is_spoiler){
@@ -100,13 +95,13 @@ public class TagPlot implements Function<Collection<CompactSubmission>, JFreeCha
      */
     private Map<String,Long> countTags(Stream<Set<String>> tags){
         return tags
-                .flatMap(o -> o.stream())
+                .flatMap(Collection::stream)
                 .collect(Collectors.groupingBy(Function.identity(),Collectors.counting()));
     }
     /**
      * @param data the data extracted from the submission.
      * @param size the amount of submissions.
-     * @return a pie chart over all tags of the submissions.
+     * @return a vartas.reddit.chart.pie vartas.reddit.chart over all tags of the submissions.
      */
     private JFreeChart createTagChart(Map<String,Long> data, int size){
         long rest = data.computeIfAbsent("untagged", (k) -> 0L);

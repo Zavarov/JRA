@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 u/Zavarov
+ * Copyright (c) 2019 Zavarov
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,39 +14,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package vartas.reddit.stats.chart.line;
+package vartas.reddit.chart.line;
+
+import vartas.reddit.SubmissionInterface;
 
 import java.util.Collection;
-import vartas.reddit.PushshiftWrapper.CompactSubmission;
-
-
 
 /**
- * This class creates a plot over the total amount of submissions in the given
- * time frame that were tagged as Spoiler.
- * @author u/Zavarov
+ * This class creates a plot over all unique redditors that made submissions
+ * in the given time frame.
  */
-public class SpoilerChart extends DevelopmentChart<CompactSubmission>{
+public class SubmitterChart extends AbstractChart<SubmissionInterface> {
     /**
-     * @param data a collection of all NSFW submissions in the interval.
-     * @return the number of submissions. 
+     * @param data a collection of all submissions in the interval.
+     * @return the number of distinct authors. 
      */
     @Override
-    protected long count(Collection<CompactSubmission> data) {
-        return data.stream().filter(CompactSubmission::isSpoiler).count();
+    protected long count(Collection<? extends SubmissionInterface> data) {
+        return data.stream().map(SubmissionInterface::getAuthor).distinct().count();
     }
     /**
-     * @return the title of the chart. 
+     * @return the title of the vartas.reddit.chart.
      */
     @Override
     protected String getTitle() {
-        return "Number of spoiler submissions";
+        return "Number of unique submitters";
     }
     /**
      * @return the type of values on the y axis. 
      */
     @Override
     protected String getYLabel() {
-        return "#Submissions";
+        return "#Submitters";
     }
 }

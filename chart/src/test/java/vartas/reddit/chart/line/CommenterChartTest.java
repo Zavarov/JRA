@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 u/Zavarov
+ * Copyright (c) 2019 Zavarov
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,35 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package vartas.reddit.stats.chart.line;
+package vartas.reddit.chart.line;
 
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
-import vartas.reddit.stats.CompactData;
+import vartas.reddit.chart.AbstractTest;
 
-/**
- *
- * @author u/Zavarov
- */
-public class SubmitterChartTest {
-    CompactData data;
-    SubmitterChart chart;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+public class CommenterChartTest extends AbstractTest {
+    CommenterChart chart;
     @Before
     public void setUp(){
-        data = new CompactData();
-        chart = new SubmitterChart();
+        super.setUp();
+        chart = new CommenterChart();
     }
     @Test
     public void applyTest(){
-        assertEquals(chart.count(data.submissions),5);
+        assertThat(chart.count(comments)).isEqualTo(2);
     }
     @Test
     public void getTitleTest(){
-        assertEquals(chart.getTitle(),"Number of unique submitters");
+        assertThat(chart.getTitle()).isEqualTo("Number of unique commenters");
     }
     @Test
     public void getYLabelTest(){
-        assertEquals(chart.getYLabel(),"#Submitters");
+        assertThat(chart.getYLabel()).isEqualTo("#Commenters");
     }
 }

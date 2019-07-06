@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 u/Zavarov
+ * Copyright (c) 2019 Zavarov
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,35 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package vartas.reddit.stats.chart.line;
+package vartas.reddit.chart.line;
 
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
-import vartas.reddit.stats.CompactData;
+import vartas.reddit.chart.AbstractTest;
 
-/**
- *
- * @author u/Zavarov
- */
-public class SpoilerChartTest {
-    CompactData data;
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class SpoilerChartTest extends AbstractTest {
     SpoilerChart chart;
     @Before
     public void setUp(){
-        data = new CompactData();
+        super.setUp();
         chart = new SpoilerChart();
     }
     @Test
     public void applyTest(){
-        assertEquals(chart.count(data.submissions),3);
+        assertThat(chart.count(submissions)).isEqualTo(3);
     }
     @Test
     public void getTitleTest(){
-        assertEquals(chart.getTitle(),"Number of spoiler submissions");
+        assertThat(chart.getTitle()).isEqualTo("Number of spoiler submissions");
     }
     @Test
     public void getYLabelTest(){
-        assertEquals(chart.getYLabel(),"#Submissions");
+        assertThat(chart.getYLabel()).isEqualTo("#Submissions");
     }
 }

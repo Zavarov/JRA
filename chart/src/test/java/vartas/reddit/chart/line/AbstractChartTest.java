@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 u/Zavarov
+ * Copyright (c) 2019 Zavarov
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package vartas.reddit.stats.chart.line;
+package vartas.reddit.chart.line;
+
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.time.TimeSeriesCollection;
+import org.junit.Before;
+import org.junit.Test;
+import vartas.reddit.SubmissionInterface;
+import vartas.reddit.chart.AbstractTest;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -23,24 +30,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.jfree.chart.JFreeChart;
-import org.jfree.data.time.TimeSeriesCollection;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
-import vartas.reddit.PushshiftWrapper.CompactSubmission;
-import vartas.reddit.stats.CompactData;
 
-/**
- *
- * @author u/Zavarov
- */
-public class DevelopmentChartTest {
+import static org.junit.Assert.assertEquals;
+
+public class AbstractChartTest extends AbstractTest {
     static final long DAY = 24*60*60*1000 , WEEK = 7 * DAY , YEAR = 365 * DAY;
-    CompactData data;
-    DevelopmentChart<CompactSubmission> chart;
-    Map<Instant,List<CompactSubmission>> map;
+    AbstractChart<SubmissionInterface> chart;
+    Map<Instant,List<SubmissionInterface>> map;
         
     OffsetDateTime t1 = OffsetDateTime.ofInstant(Instant.ofEpochMilli(0), ZoneId.of("UTC"));
     OffsetDateTime t2 = OffsetDateTime.ofInstant(Instant.ofEpochMilli(    DAY), ZoneId.of("UTC"));
@@ -49,21 +45,22 @@ public class DevelopmentChartTest {
     OffsetDateTime t5 = OffsetDateTime.ofInstant(Instant.ofEpochMilli(500*DAY), ZoneId.of("UTC"));
     @Before
     public void setUp(){
-        data = new CompactData();
+        super.setUp();
+
         chart = new SubmissionChart();
         
         map = new HashMap<>();
-        map.put(t1.toInstant(),Arrays.asList(data.submissions.get(0)));
-        map.put(t2.toInstant(),Arrays.asList(data.submissions.get(1)));
-        map.put(t3.toInstant(),Arrays.asList(data.submissions.get(2)));
-        map.put(t4.toInstant(),Arrays.asList(data.submissions.get(3)));
-        map.put(t5.toInstant(),Arrays.asList(data.submissions.get(4)));
+        map.put(t1.toInstant(),Arrays.asList(submissions.get(0)));
+        map.put(t2.toInstant(),Arrays.asList(submissions.get(1)));
+        map.put(t3.toInstant(),Arrays.asList(submissions.get(2)));
+        map.put(t4.toInstant(),Arrays.asList(submissions.get(3)));
+        map.put(t5.toInstant(),Arrays.asList(submissions.get(4)));
     }
     @Test
     public void createDayTest(){
         map.remove(t4.toInstant());
         map.remove(t5.toInstant());
-        JFreeChart plot = chart.create(map, DevelopmentChart.Interval.DAY);
+        JFreeChart plot = chart.create(map, AbstractChart.Interval.DAY);
         TimeSeriesCollection collection = (TimeSeriesCollection)plot.getXYPlot().getDataset();
         
         assertEquals(collection.getSeries(0).getDataItem(0).getValue(),1.0);
@@ -79,7 +76,7 @@ public class DevelopmentChartTest {
     @Test
     public void createWeekTest(){
         map.remove(t5.toInstant());
-        JFreeChart plot = chart.create(map, DevelopmentChart.Interval.WEEK);
+        JFreeChart plot = chart.create(map, AbstractChart.Interval.WEEK);
         TimeSeriesCollection collection = (TimeSeriesCollection)plot.getXYPlot().getDataset();
         
         assertEquals(collection.getSeries(0).getDataItem(0).getValue(),3.0);
@@ -98,7 +95,7 @@ public class DevelopmentChartTest {
     }
     @Test
     public void createMonthTest(){
-        JFreeChart plot = chart.create(map, DevelopmentChart.Interval.MONTH);
+        JFreeChart plot = chart.create(map, AbstractChart.Interval.MONTH);
         TimeSeriesCollection collection = (TimeSeriesCollection)plot.getXYPlot().getDataset();
         
         assertEquals(collection.getSeries(0).getDataItem(0).getValue(),3.0);
@@ -140,7 +137,7 @@ public class DevelopmentChartTest {
     }
     @Test
     public void createYearTest(){
-        JFreeChart plot = chart.create(map, DevelopmentChart.Interval.YEAR);
+        JFreeChart plot = chart.create(map, AbstractChart.Interval.YEAR);
         TimeSeriesCollection collection = (TimeSeriesCollection)plot.getXYPlot().getDataset();
         
         assertEquals(collection.getSeries(0).getDataItem(0).getValue(),4.0);
@@ -152,7 +149,7 @@ public class DevelopmentChartTest {
     @Test
     public void createEmptyTest(){
         map.clear();
-        JFreeChart plot = chart.create(map, DevelopmentChart.Interval.YEAR);
+        JFreeChart plot = chart.create(map, AbstractChart.Interval.YEAR);
         TimeSeriesCollection collection = (TimeSeriesCollection)plot.getXYPlot().getDataset();
         
         assertEquals(collection.getSeries(0).getDataItem(0).getValue(),0.0);
