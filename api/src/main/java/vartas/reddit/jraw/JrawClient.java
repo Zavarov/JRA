@@ -190,6 +190,20 @@ public class JrawClient implements ClientInterface {
     }
 
     /**
+     * Requests a single submission.
+     * @param submissionId the id of the submission.
+     * @return the submission instance.
+     * @throws UnresolvableRequestException if the API returned an unresolvable error.
+     */
+    @Override
+    public Optional<SubmissionInterface> requestSubmission(String submissionId) throws UnresolvableRequestException{
+        return request(() -> {
+            Submission submission = client.submission(submissionId).inspect();
+            return Optional.of(new JrawSubmission(submission));
+        });
+    }
+
+    /**
      * A wrapper for the requests that cleans up the messy exceptions from JRAW.
      * @param request the request that is executed.
      * @param <T> the type of the return value.

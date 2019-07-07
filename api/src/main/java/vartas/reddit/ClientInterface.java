@@ -29,12 +29,16 @@ public interface ClientInterface {
     /**
      * Establishes a connection to the Reddit API.
      */
-    void login();
+    default void login(){
+        throw new UnsupportedOperationException("Not implemented for this interface");
+    }
 
     /**
      * Cuts the connection to the Reddit API.
      */
-    void logout();
+    default void logout(){
+        throw new UnsupportedOperationException("Not implemented for this interface");
+    }
 
     /**
      * @param name the name of the user.
@@ -101,6 +105,26 @@ public interface ClientInterface {
         return request(() -> requestSubmission(subreddit, after, before), retries);
     }
 
+    /**
+     * Requests a single submission.
+     * @param submissionId the id of the submission.
+     * @return the submission instance.
+     * @throws UnresolvableRequestException if the API returned an unresolvable error.
+     */
+    default Optional<SubmissionInterface> requestSubmission(String submissionId) throws UnresolvableRequestException{
+        throw new UnsupportedOperationException("Not implemented for this interface");
+    }
+
+    /**
+     * Requests a single submission.
+     * @param submissionId the id of the submission.
+     * @param retries the number of times the request is repeated upon failure.
+     * @return the submission instance.
+     * @throws UnresolvableRequestException if the API returned an unresolvable error.
+     */
+    default Optional<SubmissionInterface> requestSubmission(String submissionId, int retries){
+        return request(() -> requestSubmission(submissionId), retries);
+    }
     /**
      * @param submission the id of the submission.
      * @param retries the number of times the request is repeated upon failure.

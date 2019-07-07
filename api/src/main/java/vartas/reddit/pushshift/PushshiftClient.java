@@ -18,13 +18,9 @@
 package vartas.reddit.pushshift;
 
 import com.google.common.util.concurrent.RateLimiter;
-import net.dean.jraw.references.SubmissionReference;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import vartas.reddit.SubmissionInterface;
-import vartas.reddit.UnresolvableRequestException;
-import vartas.reddit.jraw.JrawClient;
-import vartas.reddit.jraw.JrawSubmission;
+import vartas.reddit.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -41,7 +37,7 @@ import java.util.stream.Collectors;
  * This class implements the Reddit client using both the JRAW library and the Pushshift API to circumvent the 1000
  * submission limit imposed by Reddit.
  */
-public class PushshiftClient extends JrawClient {
+public class PushshiftClient implements ClientInterface {
     /**
      * We only allow a single request per second for pushshift.
      */
@@ -50,16 +46,58 @@ public class PushshiftClient extends JrawClient {
      * A scaling factor to convert the time in milliseconds to the time in seconds.
      */
     protected final static int MILLISECONDS_TO_SECONDS = 1000;
+    /**
+     * The underlying client.
+     */
+    protected ClientInterface client;
 
     /**
      * Initializes the client but doesn't establish a connection to Reddit.
-     * @param redditName the account that created the bot.
-     * @param version this version of the bot.
-     * @param clientId the id of the client.
-     * @param secret the secret of the client.
+     * @param client the underlying client responsible for the communication with the Reddit API.
      */
-    public PushshiftClient(String redditName, String version, String clientId, String secret) {
-        super(redditName, version, clientId, secret);
+    public PushshiftClient(ClientInterface client) {
+        this.client = client;
+    }
+
+    /**
+     * @param name the name of the user.
+     * @return the Reddit user instance with that name.
+     * @throws UnresolvableRequestException if the API returned an unresolvable error.
+     */
+    @Override
+    public Optional<UserInterface> requestUser(String name) throws UnresolvableRequestException {
+        return client.requestUser(name);
+    }
+
+    /**
+     * @param name the name of the subreddit.
+     * @return the subreddit with that name.
+     * @throws UnresolvableRequestException if the API returned an unresolvable error.
+     */
+    @Override
+    public Optional<SubredditInterface> requestSubreddit(String name) throws UnresolvableRequestException {
+        return client.requestSubreddit(name);
+    }
+
+    /**
+     * @param submission the id of the submission.
+     * @return all comments of the submission.
+     * @throws UnresolvableRequestException if the API returned an unresolvable error.
+     */
+    @Override
+    public Optional<List<CommentInterface>> requestComment(String submission) throws UnresolvableRequestException {
+        return client.requestComment(submission);
+    }
+
+    /**
+     * Requests a single submission.
+     * @param submissionId the id of the submission.
+     * @return the submission instance.
+     * @throws UnresolvableRequestException if the API returned an unresolvable error.
+     */
+    @Override
+    public Optional<SubmissionInterface> requestSubmission(String submissionId) throws UnresolvableRequestException{
+        return client.requestSubmission(submissionId);
     }
 
     /**
@@ -74,24 +112,23 @@ public class PushshiftClient extends JrawClient {
      */
     @Override
     public Optional<List<SubmissionInterface>> requestSubmission(String subreddit, Date after, Date before) throws UnresolvableRequestException{
-        return request(() -> {
-            String jsonContent;
-            //Break if the JSON request failed
-            try {
-                jsonContent = requestJsonContent(subreddit, after, before);
-            }catch(IOException e) {
-                return Optional.empty();
-            }
-            List<SubmissionInterface> submissions = extractSubmissions(jsonContent)
-                    .stream()
-                    .map(client::submission)
-                    .map(SubmissionReference::inspect)
-                    .map(JrawSubmission::new)
-                    .collect(Collectors.toList());
+        String jsonContent;
+        //Break if the JSON request failed
+        try {
+            jsonContent = requestJsonContent(subreddit, after, before);
+        }catch(IOException e) {
+            return Optional.empty();
+        }
+        List<SubmissionInterface> submissions = extractSubmissions(jsonContent)
+                .stream()
+                .map(client::requestSubmission)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
 
-            return Optional.of(submissions);
-        });
+        return Optional.of(submissions);
     }
+
     /**
      * Extracts the submissions from the JSON string.
      * @param jsonContent the JSON string.
