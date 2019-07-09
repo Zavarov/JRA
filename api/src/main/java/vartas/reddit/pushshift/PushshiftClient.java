@@ -18,6 +18,7 @@
 package vartas.reddit.pushshift;
 
 import com.google.common.util.concurrent.RateLimiter;
+import net.dean.jraw.models.Submission;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import vartas.reddit.*;
@@ -27,10 +28,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -107,7 +105,7 @@ public class PushshiftClient implements ClientInterface {
      * @param subreddit the name of the subreddit.
      * @param after the (exclusive) minimum age of the submissions.
      * @param before the (exclusive) maximum age of the submissions.
-     * @return all submissions within the given interval.
+     * @return all submissions within the given interval sorted by their creation time.
      * @throws UnresolvableRequestException if the API returned an unresolvable error.
      */
     @Override
@@ -124,6 +122,7 @@ public class PushshiftClient implements ClientInterface {
                 .map(client::requestSubmission)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
+                .sorted(Comparator.comparing(SubmissionInterface::getCreated))
                 .collect(Collectors.toList());
 
         return Optional.of(submissions);

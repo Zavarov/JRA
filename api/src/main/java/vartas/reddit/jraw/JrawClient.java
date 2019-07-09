@@ -128,7 +128,7 @@ public class JrawClient implements ClientInterface {
      * @param subreddit the name of the subreddit.
      * @param after the (exclusive) minimum age of the submissions.
      * @param before the (exclusive) maximum age of the submissions.
-     * @return all submissions within the given interval.
+     * @return all submissions within the given interval sorted by their creation time.
      * @throws UnresolvableRequestException if the API returned an unresolvable error.
      */
     @Override
