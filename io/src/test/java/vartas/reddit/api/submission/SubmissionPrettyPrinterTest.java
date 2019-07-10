@@ -22,6 +22,7 @@ import org.junit.Test;
 import vartas.reddit.SubmissionInterface;
 
 import java.io.File;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,7 +33,7 @@ public class SubmissionPrettyPrinterTest {
         submission = SubmissionHelper.parse("src/test/resources/submission.sub").get(0);
 
         File target = new File("target/test/resources/submission.sub");
-        SubmissionHelper.store(submission, target);
+        SubmissionHelper.store(Collections.singleton(submission), target);
 
         submission = SubmissionHelper.parse("target/test/resources/submission.sub").get(0);
     }

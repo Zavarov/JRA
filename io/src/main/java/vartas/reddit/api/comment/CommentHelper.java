@@ -34,20 +34,23 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 public abstract class CommentHelper {
 
-    public static void store(CommentInterface comment, File target){
+    public static void store(Collection<CommentInterface> comments, File target){
         try {
             CommentPrettyPrinter printer = new CommentPrettyPrinter(new IndentPrinter());
-            String content = printer.prettyprint(comment);
+
+            StringBuilder fileContent = new StringBuilder();
+            comments.stream().map(printer::prettyprint).forEach(fileContent::append);
 
             target.getParentFile().mkdirs();
             target.createNewFile();
 
-            Files.writeToTextFile(new StringReader(content), target);
+            Files.writeToTextFile(new StringReader(fileContent.toString()), target);
         }catch(IOException e){
             throw new IllegalArgumentException(e);
         }

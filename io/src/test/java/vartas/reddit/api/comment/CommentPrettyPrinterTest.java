@@ -22,6 +22,7 @@ import org.junit.Test;
 import vartas.reddit.CommentInterface;
 
 import java.io.File;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,7 +33,7 @@ public class CommentPrettyPrinterTest {
         comment = CommentHelper.parse("src/test/resources/comment.com").get(0);
 
         File target = new File("target/test/resources/comment.com");
-        CommentHelper.store(comment, target);
+        CommentHelper.store(Collections.singleton(comment), target);
 
         comment = CommentHelper.parse("target/test/resources/comment.com").get(0);
     }

@@ -34,20 +34,23 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 public class SubmissionHelper {
 
-    public static void store(SubmissionInterface comment, File target){
+    public static void store(Collection<SubmissionInterface> submissions, File target){
         try {
             SubmissionPrettyPrinter printer = new SubmissionPrettyPrinter(new IndentPrinter());
-            String content = printer.prettyprint(comment);
+
+            StringBuilder fileContent = new StringBuilder();
+            submissions.stream().map(printer::prettyprint).forEach(fileContent::append);
 
             target.getParentFile().mkdirs();
             target.createNewFile();
 
-            Files.writeToTextFile(new StringReader(content), target);
+            Files.writeToTextFile(new StringReader(fileContent.toString()), target);
         }catch(IOException e){
             throw new IllegalArgumentException(e);
         }
