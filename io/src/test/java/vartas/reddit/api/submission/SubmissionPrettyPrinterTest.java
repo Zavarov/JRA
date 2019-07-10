@@ -17,27 +17,24 @@
 
 package vartas.reddit.api.submission;
 
-import de.monticore.prettyprint.IndentPrinter;
 import org.junit.Before;
 import org.junit.Test;
-import vartas.reddit.api.AbstractTest;
-import vartas.reddit.api.submission._ast.ASTSubmission;
-import vartas.reddit.api.submission.prettyprint.SubmissionPrettyPrinter;
+import vartas.reddit.SubmissionInterface;
+
+import java.io.File;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SubmissionPrettyPrinterTest extends AbstractTest {
-    ASTSubmission submission;
-    SubmissionPrettyPrinter prettyprinter;
+public class SubmissionPrettyPrinterTest {
+    SubmissionInterface submission;
     @Before
     public void setUp(){
-        super.setUp();
+        submission = SubmissionHelper.parse("src/test/resources/submission.sub").get(0);
 
-        submission = parseSubmission("src/test/resources/submission.sub").get(0);
+        File target = new File("target/test/resources/submission.sub");
+        SubmissionHelper.store(submission, target);
 
-        prettyprinter = new SubmissionPrettyPrinter(new IndentPrinter());
-        String content = prettyprinter.prettyprint(submission);
-        submission = parseSubmissionString(content).get(0);
+        submission = SubmissionHelper.parse("target/test/resources/submission.sub").get(0);
     }
 
     @Test

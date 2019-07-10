@@ -19,18 +19,15 @@ package vartas.reddit.api.submission;
 
 import org.junit.Before;
 import org.junit.Test;
-import vartas.reddit.api.AbstractTest;
-import vartas.reddit.api.submission._ast.ASTSubmission;
+import vartas.reddit.SubmissionInterface;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SubmissionTest extends AbstractTest {
-    ASTSubmission submission;
+public class SubmissionTest{
+    SubmissionInterface submission;
     @Before
     public void setUp(){
-        super.setUp();
-
-        submission = parseSubmission("src/test/resources/submission.sub").get(0);
+        submission = SubmissionHelper.parse("src/test/resources/submission.sub").get(0);
     }
 
     @Test

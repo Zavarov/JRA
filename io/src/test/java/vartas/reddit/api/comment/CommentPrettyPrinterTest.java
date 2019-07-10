@@ -17,28 +17,24 @@
 
 package vartas.reddit.api.comment;
 
-import de.monticore.prettyprint.IndentPrinter;
 import org.junit.Before;
 import org.junit.Test;
-import vartas.reddit.api.AbstractTest;
-import vartas.reddit.api.comment._ast.ASTComment;
-import vartas.reddit.api.comment.prettyprint.CommentPrettyPrinter;
+import vartas.reddit.CommentInterface;
+
+import java.io.File;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CommentPrettyPrinterTest extends AbstractTest {
-    ASTComment comment;
-    CommentPrettyPrinter prettyprinter;
+public class CommentPrettyPrinterTest {
+    CommentInterface comment;
     @Before
     public void setUp(){
-        super.setUp();
+        comment = CommentHelper.parse("src/test/resources/comment.com").get(0);
 
+        File target = new File("target/test/resources/comment.com");
+        CommentHelper.store(comment, target);
 
-        comment = parseComments("src/test/resources/comment.com").get(0);
-
-        prettyprinter = new CommentPrettyPrinter(new IndentPrinter());
-        String content = prettyprinter.prettyprint(comment);
-        comment = parseCommentsString(content).get(0);
+        comment = CommentHelper.parse("target/test/resources/comment.com").get(0);
     }
 
     @Test

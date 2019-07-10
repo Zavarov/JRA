@@ -19,18 +19,15 @@ package vartas.reddit.api.comment;
 
 import org.junit.Before;
 import org.junit.Test;
-import vartas.reddit.api.AbstractTest;
-import vartas.reddit.api.comment._ast.ASTComment;
+import vartas.reddit.CommentInterface;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CommentTest extends AbstractTest {
-    ASTComment comment;
+public class CommentTest {
+    CommentInterface comment;
     @Before
     public void setUp(){
-        super.setUp();
-
-        comment = parseComments("src/test/resources/comment.com").get(0);
+        comment = CommentHelper.parse("src/test/resources/comment.com").get(0);
     }
 
     @Test
