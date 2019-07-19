@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -56,7 +57,7 @@ public abstract class CommentHelper {
         }
     }
 
-    public static List<? extends CommentInterface> parse(String filePath){
+    public static List<CommentInterface> parse(String filePath){
         try{
             CommentSymbolTableCreator symbolTableCreator = createSymbolTableCreator();
 
@@ -70,7 +71,7 @@ public abstract class CommentHelper {
             ASTCommentArtifact ast = comments.get();
             symbolTableCreator.createFromAST(ast);
 
-            return ast.getCommentList();
+            return new ArrayList<>(ast.getCommentList());
         }catch(IOException e){
             throw new IllegalArgumentException(e);
         }

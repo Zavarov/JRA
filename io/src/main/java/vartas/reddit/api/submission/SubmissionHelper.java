@@ -34,9 +34,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class SubmissionHelper {
 
@@ -56,7 +58,7 @@ public class SubmissionHelper {
         }
     }
 
-    public static List<? extends SubmissionInterface> parse(String filePath){
+    public static List<SubmissionInterface> parse(String filePath){
         try{
             SubmissionSymbolTableCreator symbolTableCreator = createSymbolTableCreator();
 
@@ -70,7 +72,7 @@ public class SubmissionHelper {
             ASTSubmissionArtifact ast = comments.get();
             symbolTableCreator.createFromAST(ast);
 
-            return ast.getSubmissionList();
+            return new ArrayList<>(ast.getSubmissionList());
         }catch(IOException e){
             throw new IllegalArgumentException(e);
         }
