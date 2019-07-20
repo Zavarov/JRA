@@ -76,7 +76,7 @@ public class JrawComment implements CommentInterface{
      * @return the title of the submission, the comment is in.
      */
     public String getSubmissionTitle(){
-        return referee.getSubmissionTitle();
+        return submission.getTitle();
     }
     /**
      * @return a hash code based on the id of the comment.
