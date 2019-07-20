@@ -150,7 +150,7 @@ public class JrawClient implements ClientInterface {
                 //The newest value should be the last one
                 current = paginator.next().stream()
                         .filter(s -> s.getCreated().before(before))
-                        .filter(s -> s.getCreated().after(after))
+                        .filter(s -> !s.getCreated().before(after))
                         .sorted(Comparator.comparing(Submission::getCreated))
                         .map(JrawSubmission::new)
                         .collect(Collectors.toList());
