@@ -117,7 +117,7 @@ public class JrawSubmission implements SubmissionInterface {
      */
     @Override
     public Optional<String> getThumbnail(){
-        return referee.hasThumbnail() ? Optional.empty() : Optional.ofNullable(referee.getThumbnail());
+        return referee.hasThumbnail() ? Optional.ofNullable(referee.getThumbnail()) : Optional.empty();
     }
     /**
      * @return an absolute URL to the comments in a self post, otherwise an URL to the submission content.
