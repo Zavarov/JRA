@@ -110,7 +110,7 @@ public class JrawSubmission implements SubmissionInterface {
         if(referee.getSelfText() == null)
             return Optional.empty();
 
-        return Optional.of(StringEscapeUtils.unescapeHtml4(referee.getSelfText()));
+        return Optional.of(StringEscapeUtils.unescapeHtml4(referee.getSelfText().replaceAll("\"", "\\\"")));
     }
     /**
      * @return the thumbnail of the submission.
