@@ -174,9 +174,9 @@ public class JrawClient implements ClientInterface {
             List<CommentInterface> comments = new LinkedList<>();
 
             SubmissionReference submissionReference = client.submission(submission);
-            Submission submissionInstance = submissionReference.inspect();
 
             RootCommentNode root = submissionReference.comments();
+            Submission submissionInstance = root.getSubject();
             //Acquire all the comments
             root.loadFully(client);
 
