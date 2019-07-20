@@ -18,7 +18,6 @@
 package vartas.reddit.pushshift;
 
 import com.google.common.util.concurrent.RateLimiter;
-import net.dean.jraw.models.Submission;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import vartas.reddit.*;
@@ -99,7 +98,7 @@ public class PushshiftClient implements ClientInterface {
     }
 
     /**
-     * Request submissions within a given interval.
+     * Request submissions within a given interval sorted by their creation date.
      * In order to circumvent the 1000 submissions restriction, they are first requested via the Pushshift API in order
      * to get their ids, then those ids are used for the communication with the Reddit API.
      * @param subreddit the name of the subreddit.
@@ -109,7 +108,7 @@ public class PushshiftClient implements ClientInterface {
      * @throws UnresolvableRequestException if the API returned an unresolvable error.
      */
     @Override
-    public Optional<List<SubmissionInterface>> requestSubmission(String subreddit, Date after, Date before) throws UnresolvableRequestException{
+    public Optional<SortedSet<SubmissionInterface>> requestSubmission(String subreddit, Date after, Date before) throws UnresolvableRequestException{
         String jsonContent;
         //Break if the JSON request failed
         try {
@@ -117,13 +116,13 @@ public class PushshiftClient implements ClientInterface {
         }catch(IOException e) {
             return Optional.empty();
         }
-        List<SubmissionInterface> submissions = extractSubmissions(jsonContent)
+        SortedSet<SubmissionInterface> submissions = extractSubmissions(jsonContent)
                 .stream()
                 .map(client::requestSubmission)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .sorted(Comparator.comparing(SubmissionInterface::getCreated))
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(SubmissionInterface::getCreated))));
 
         return Optional.of(submissions);
     }

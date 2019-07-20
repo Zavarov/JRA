@@ -123,7 +123,7 @@ public class JrawClient implements ClientInterface {
     }
 
     /**
-     * Request submissions within a given interval.
+     * Request submissions within a given interval sorted by their creation date.
      * Note that Reddit will -at most- return the past 1000 submissions.
      * @param subreddit the name of the subreddit.
      * @param after the (exclusive) minimum age of the submissions.
@@ -132,7 +132,7 @@ public class JrawClient implements ClientInterface {
      * @throws UnresolvableRequestException if the API returned an unresolvable error.
      */
     @Override
-    public Optional<List<SubmissionInterface>> requestSubmission(String subreddit, Date after, Date before) throws UnresolvableRequestException{
+    public Optional<SortedSet<SubmissionInterface>> requestSubmission(String subreddit, Date after, Date before) throws UnresolvableRequestException{
         return request(() -> {
             DefaultPaginator<Submission> paginator = client
                     .subreddit(subreddit)
@@ -142,7 +142,7 @@ public class JrawClient implements ClientInterface {
                     .timePeriod(TimePeriod.ALL)
                     .build();
 
-            List<SubmissionInterface> submissions = new LinkedList<>();
+            SortedSet<SubmissionInterface> submissions = new TreeSet<>(Comparator.comparing(SubmissionInterface::getCreated));
             List<SubmissionInterface> current;
             Date newest;
             //We have to do the iterative way because we can't specify an interval
@@ -151,7 +151,6 @@ public class JrawClient implements ClientInterface {
                 current = paginator.next().stream()
                         .filter(s -> s.getCreated().before(before))
                         .filter(s -> !s.getCreated().before(after))
-                        .sorted(Comparator.comparing(Submission::getCreated))
                         .map(JrawSubmission::new)
                         .collect(Collectors.toList());
                 newest = current.isEmpty() ? before : current.get(current.size()-1).getCreated();

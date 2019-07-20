@@ -20,6 +20,7 @@ package vartas.reddit;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.SortedSet;
 import java.util.function.Supplier;
 
 /**
@@ -79,7 +80,7 @@ public interface ClientInterface {
     }
 
     /**
-     * Request submissions within a given interval.
+     * Request submissions within a given interval sorted by their creation date.
      * Note that Reddit will -at most- return the past 1000 submissions.
      * @param subreddit the name of the subreddit.
      * @param after the (exclusive) minimum age of the submissions.
@@ -87,12 +88,12 @@ public interface ClientInterface {
      * @return all submissions within the given interval.
      * @throws UnresolvableRequestException if the API returned an unresolvable error.
      */
-    default Optional<List<SubmissionInterface>> requestSubmission(String subreddit, Date after, Date before) throws UnresolvableRequestException{
+    default Optional<SortedSet<SubmissionInterface>> requestSubmission(String subreddit, Date after, Date before) throws UnresolvableRequestException{
         throw new UnsupportedOperationException("Not implemented for this interface");
     }
 
     /**
-     * Request submissions within a given interval.
+     * Request submissions within a given interval sorted by their creation date.
      * Note that Reddit will -at most- return the past 1000 submissions.
      * @param subreddit the name of the subreddit.
      * @param after the (exclusive) minimum age of the submissions.
@@ -101,7 +102,7 @@ public interface ClientInterface {
      * @return all submissions within the given interval.
      * @throws UnresolvableRequestException if the API returned an unresolvable error.
      */
-    default Optional<List<SubmissionInterface>> requestSubmission(String subreddit, Date after, Date before, int retries) throws UnresolvableRequestException{
+    default Optional<SortedSet<SubmissionInterface>> requestSubmission(String subreddit, Date after, Date before, int retries) throws UnresolvableRequestException{
         return request(() -> requestSubmission(subreddit, after, before), retries);
     }
 
