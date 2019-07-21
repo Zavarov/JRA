@@ -107,7 +107,10 @@ public class JrawSubmission implements SubmissionInterface {
      */
     @Override
     public Optional<String> getSelfText(){
-        return Optional.ofNullable(StringEscapeUtils.unescapeHtml4(referee.getSelfText()));
+        if(referee.getSelfText() == null)
+            return Optional.empty();
+
+        return Optional.of(StringEscapeUtils.unescapeHtml4(StringEscapeUtils.unescapeXSI(referee.getSelfText())).trim());
     }
     /**
      * @return the thumbnail of the submission.
