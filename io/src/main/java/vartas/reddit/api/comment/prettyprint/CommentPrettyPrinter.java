@@ -20,6 +20,8 @@ package vartas.reddit.api.comment.prettyprint;
 import de.monticore.prettyprint.IndentPrinter;
 import vartas.reddit.CommentInterface;
 
+import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
+
 public class CommentPrettyPrinter {
     IndentPrinter printer;
 
@@ -45,15 +47,15 @@ public class CommentPrettyPrinter {
     }
 
     private void addAuthor(CommentInterface comment){
-        printer.addLine(String.format("author = \"%s\"", comment.getAuthor()));
+        printer.addLine(String.format("author = \"%s\"", escapeHtml4(comment.getAuthor())));
     }
 
     private void addId(CommentInterface comment){
-        printer.addLine(String.format("id = \"%s\"", comment.getId()));
+        printer.addLine(String.format("id = \"%s\"", escapeHtml4(comment.getId())));
     }
 
     private void addSubreddit(CommentInterface comment){
-        printer.addLine(String.format("subreddit = \"%s\"", comment.getSubreddit()));
+        printer.addLine(String.format("subreddit = \"%s\"", escapeHtml4(comment.getSubreddit())));
     }
 
     private void addScore(CommentInterface comment){
@@ -61,10 +63,10 @@ public class CommentPrettyPrinter {
     }
 
     private void addSubmissionTitle(CommentInterface comment){
-        printer.addLine(String.format("submissionTitle = \"%s\"", comment.getSubmissionTitle()));
+        printer.addLine(String.format("submissionTitle = \"%s\"", escapeHtml4(comment.getSubmissionTitle())));
     }
 
     private void addSubmission(CommentInterface comment){
-        printer.addLine(String.format("submission = \"%s\"", comment.getSubmission()));
+        printer.addLine(String.format("submission = \"%s\"", escapeHtml4(comment.getSubmission())));
     }
 }

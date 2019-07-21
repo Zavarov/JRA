@@ -20,6 +20,8 @@ package vartas.reddit.api.submission.prettyprint;
 import de.monticore.prettyprint.IndentPrinter;
 import vartas.reddit.SubmissionInterface;
 
+import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
+
 public class SubmissionPrettyPrinter{
     IndentPrinter printer;
 
@@ -51,21 +53,21 @@ public class SubmissionPrettyPrinter{
     }
 
     private void addAuthor(SubmissionInterface submission){
-        printer.addLine(String.format("author = \"%s\"", submission.getAuthor()));
+        printer.addLine(String.format("author = \"%s\"", escapeHtml4(submission.getAuthor())));
     }
 
     private void addId(SubmissionInterface submission){
-        printer.addLine(String.format("id = \"%s\"", submission.getId()));
+        printer.addLine(String.format("id = \"%s\"", escapeHtml4(submission.getId())));
     }
 
     private void addLinkFlairText(SubmissionInterface submission){
         submission.getLinkFlairText().ifPresent(
-                text -> printer.addLine(String.format("linkFlairText = \"%s\"", text))
+                text -> printer.addLine(String.format("linkFlairText = \"%s\"", escapeHtml4(text)))
         );
     }
 
     private void addSubreddit(SubmissionInterface submission){
-        printer.addLine(String.format("subreddit = \"%s\"", submission.getSubreddit()));
+        printer.addLine(String.format("subreddit = \"%s\"", escapeHtml4(submission.getSubreddit())));
     }
 
     private void addNsfw(SubmissionInterface submission){
@@ -81,7 +83,7 @@ public class SubmissionPrettyPrinter{
     }
 
     private void addTitle(SubmissionInterface submission){
-        printer.addLine(String.format("title = \"%s\"", submission.getTitle()));
+        printer.addLine(String.format("title = \"%s\"", escapeHtml4(submission.getTitle())));
     }
 
     private void addCreated(SubmissionInterface submission){
@@ -90,17 +92,17 @@ public class SubmissionPrettyPrinter{
 
     private void addSelfText(SubmissionInterface submission){
         submission.getSelfText().ifPresent(
-                text -> printer.addLine(String.format("selfText = \"%s\"", text))
+                text -> printer.addLine(String.format("selfText = \"%s\"", escapeHtml4(text)))
         );
     }
 
     private void addThumbnail(SubmissionInterface submission){
         submission.getThumbnail().ifPresent(
-                text -> printer.addLine(String.format("thumbnail = \"%s\"", text))
+                text -> printer.addLine(String.format("thumbnail = \"%s\"", escapeHtml4(text)))
         );
     }
 
     private void addUrl(SubmissionInterface submission){
-        printer.addLine(String.format("url = \"%s\"", submission.getUrl()));
+        printer.addLine(String.format("url = \"%s\"", escapeHtml4(submission.getUrl())));
     }
 }
