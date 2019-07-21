@@ -108,7 +108,7 @@ public class PushshiftClient implements ClientInterface {
      * @throws UnresolvableRequestException if the API returned an unresolvable error.
      */
     @Override
-    public Optional<SortedSet<SubmissionInterface>> requestSubmission(String subreddit, Date after, Date before) throws UnresolvableRequestException{
+    public Optional<TreeSet<SubmissionInterface>> requestSubmission(String subreddit, Date after, Date before) throws UnresolvableRequestException{
         String jsonContent;
         //Break if the JSON request failed
         try {
@@ -116,7 +116,7 @@ public class PushshiftClient implements ClientInterface {
         }catch(IOException e) {
             return Optional.empty();
         }
-        SortedSet<SubmissionInterface> submissions = extractSubmissions(jsonContent)
+        TreeSet<SubmissionInterface> submissions = extractSubmissions(jsonContent)
                 .stream()
                 .map(client::requestSubmission)
                 .filter(Optional::isPresent)

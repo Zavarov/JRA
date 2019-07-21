@@ -132,7 +132,7 @@ public class JrawClient implements ClientInterface {
      * @throws UnresolvableRequestException if the API returned an unresolvable error.
      */
     @Override
-    public Optional<SortedSet<SubmissionInterface>> requestSubmission(String subreddit, Date after, Date before) throws UnresolvableRequestException{
+    public Optional<TreeSet<SubmissionInterface>> requestSubmission(String subreddit, Date after, Date before) throws UnresolvableRequestException{
         return request(() -> {
             DefaultPaginator<Submission> paginator = client
                     .subreddit(subreddit)
@@ -142,7 +142,7 @@ public class JrawClient implements ClientInterface {
                     .timePeriod(TimePeriod.ALL)
                     .build();
 
-            SortedSet<SubmissionInterface> submissions = new TreeSet<>(Comparator.comparing(SubmissionInterface::getCreated));
+            TreeSet<SubmissionInterface> submissions = new TreeSet<>(Comparator.comparing(SubmissionInterface::getCreated));
             List<SubmissionInterface> current;
             Date newest;
             //We have to do the iterative way because we can't specify an interval
