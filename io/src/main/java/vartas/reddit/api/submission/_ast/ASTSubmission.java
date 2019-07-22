@@ -17,6 +17,7 @@
 
 package vartas.reddit.api.submission._ast;
 
+import de.monticore.mcbasicliterals._ast.ASTSignedNatLiteral;
 import vartas.reddit.SubmissionInterface;
 import vartas.reddit.api.submission._symboltable.*;
 
@@ -76,7 +77,9 @@ public class ASTSubmission extends ASTSubmissionTOP implements SubmissionInterfa
     public int getScore() {
         Optional<ScoreLiteralSymbol> symbol = getEnclosingScope().resolve("score", ScoreLiteralSymbol.KIND);
 
-        return symbol.get().getScoreLiteralNode().get().getNatLiteral().getValue();
+        ASTSignedNatLiteral ast = symbol.get().getScoreLiteralNode().get().getSignedNatLiteral();
+
+        return Integer.parseInt(ast.isNegative() ? "-" + ast.getDigits() : ast.getDigits());
     }
 
     public String getTitle() {

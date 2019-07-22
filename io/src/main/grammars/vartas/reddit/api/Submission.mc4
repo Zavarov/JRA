@@ -30,7 +30,7 @@ grammar Submission extends de.monticore.MCBasicLiterals{
         name:"spoiler" "=" BooleanLiteral;
 
     symbol ScoreLiteral implements Entry =
-        name:"score" "=" NatLiteral;
+        name:"score" "=" SignedNatLiteral;
 
     symbol TitleLiteral implements Entry =
         name:"title" "=" StringLiteral;

@@ -21,7 +21,7 @@ grammar Comment extends de.monticore.MCBasicLiterals{
         name:"subreddit" "=" StringLiteral;
 
     symbol ScoreLiteral implements Entry =
-        name:"score" "=" NatLiteral;
+        name:"score" "=" SignedNatLiteral;
 
     symbol SubmissionTitleLiteral implements Entry =
         name:"submissionTitle" "=" StringLiteral;

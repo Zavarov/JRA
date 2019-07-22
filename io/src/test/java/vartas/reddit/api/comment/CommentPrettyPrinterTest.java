@@ -55,7 +55,7 @@ public class CommentPrettyPrinterTest {
 
     @Test
     public void testGetScore(){
-        assertThat(comment.getScore()).isEqualTo(1);
+        assertThat(comment.getScore()).isEqualTo(-1);
     }
 
     @Test

@@ -17,6 +17,7 @@
 
 package vartas.reddit.api.comment._ast;
 
+import de.monticore.mcbasicliterals._ast.ASTSignedNatLiteral;
 import vartas.reddit.CommentInterface;
 import vartas.reddit.api.comment._symboltable.*;
 
@@ -54,7 +55,9 @@ public class ASTComment extends ASTCommentTOP implements CommentInterface {
     public int getScore() {
         Optional<ScoreLiteralSymbol> symbol = getEnclosingScope().resolve("score", ScoreLiteralSymbol.KIND);
 
-        return symbol.get().getScoreLiteralNode().get().getNatLiteral().getValue();
+        ASTSignedNatLiteral ast = symbol.get().getScoreLiteralNode().get().getSignedNatLiteral();
+
+        return Integer.parseInt(ast.isNegative() ? "-" + ast.getDigits() : ast.getDigits());
     }
 
     public String getSubmissionTitle() {
