@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static org.apache.commons.text.StringEscapeUtils.unescapeHtml4;
+import static vartas.reddit.MonticoreEscapeUtils.unescapeMonticore;
 
 public class ASTSubmission extends ASTSubmissionTOP implements SubmissionInterface {
     protected  ASTSubmission (){
@@ -37,20 +37,20 @@ public class ASTSubmission extends ASTSubmissionTOP implements SubmissionInterfa
     public String getAuthor() {
         Optional<AuthorLiteralSymbol> symbol = getEnclosingScope().resolve("author", AuthorLiteralSymbol.KIND);
 
-        return unescapeHtml4(symbol.get().getAuthorLiteralNode().get().getStringLiteral().getValue());
+        return unescapeMonticore(symbol.get().getAuthorLiteralNode().get().getStringLiteral().getValue());
     }
 
     public String getId() {
         Optional<IdLiteralSymbol> symbol = getEnclosingScope().resolve("id", IdLiteralSymbol.KIND);
 
-        return unescapeHtml4(symbol.get().getIdLiteralNode().get().getStringLiteral().getValue());
+        return unescapeMonticore(symbol.get().getIdLiteralNode().get().getStringLiteral().getValue());
     }
 
     public Optional<String> getLinkFlairText() {
         Optional<LinkFlairTextLiteralSymbol> symbol = getEnclosingScope().resolve("linkFlairText", LinkFlairTextLiteralSymbol.KIND);
 
         if(symbol.isPresent())
-            return Optional.of(unescapeHtml4(symbol.get().getLinkFlairTextLiteralNode().get().getStringLiteral().getValue()));
+            return Optional.of(unescapeMonticore(symbol.get().getLinkFlairTextLiteralNode().get().getStringLiteral().getValue()));
         else
             return Optional.empty();
     }
@@ -82,7 +82,7 @@ public class ASTSubmission extends ASTSubmissionTOP implements SubmissionInterfa
     public String getTitle() {
         Optional<TitleLiteralSymbol> symbol = getEnclosingScope().resolve("title", TitleLiteralSymbol.KIND);
 
-        return unescapeHtml4(symbol.get().getTitleLiteralNode().get().getStringLiteral().getValue());
+        return unescapeMonticore(symbol.get().getTitleLiteralNode().get().getStringLiteral().getValue());
     }
 
     public Date getCreated() {
@@ -95,7 +95,7 @@ public class ASTSubmission extends ASTSubmissionTOP implements SubmissionInterfa
         Optional<SelfTextLiteralSymbol> symbol = getEnclosingScope().resolve("selfText", SelfTextLiteralSymbol.KIND);
 
         if(symbol.isPresent())
-            return Optional.of(unescapeHtml4(symbol.get().getSelfTextLiteralNode().get().getStringLiteral().getValue()));
+            return Optional.of(unescapeMonticore(symbol.get().getSelfTextLiteralNode().get().getStringLiteral().getValue()));
         else
             return Optional.empty();
     }
@@ -104,7 +104,7 @@ public class ASTSubmission extends ASTSubmissionTOP implements SubmissionInterfa
         Optional<ThumbnailLiteralSymbol> symbol = getEnclosingScope().resolve("thumbnail", ThumbnailLiteralSymbol.KIND);
 
         if(symbol.isPresent())
-            return Optional.of(unescapeHtml4(symbol.get().getThumbnailLiteralNode().get().getStringLiteral().getValue()));
+            return Optional.of(unescapeMonticore(symbol.get().getThumbnailLiteralNode().get().getStringLiteral().getValue()));
         else
             return Optional.empty();
     }
@@ -112,7 +112,7 @@ public class ASTSubmission extends ASTSubmissionTOP implements SubmissionInterfa
     public String getUrl() {
         Optional<UrlLiteralSymbol> symbol = getEnclosingScope().resolve("url", UrlLiteralSymbol.KIND);
 
-        return unescapeHtml4(symbol.get().getUrlLiteralNode().get().getStringLiteral().getValue());
+        return unescapeMonticore(symbol.get().getUrlLiteralNode().get().getStringLiteral().getValue());
     }
     /**
      * @return a hash code based on the id of the submission.

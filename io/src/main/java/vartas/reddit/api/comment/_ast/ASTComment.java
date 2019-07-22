@@ -23,7 +23,7 @@ import vartas.reddit.api.comment._symboltable.*;
 import java.util.List;
 import java.util.Optional;
 
-import static org.apache.commons.text.StringEscapeUtils.unescapeHtml4;
+import static vartas.reddit.MonticoreEscapeUtils.unescapeMonticore;
 
 public class ASTComment extends ASTCommentTOP implements CommentInterface {
     protected  ASTComment (){
@@ -36,19 +36,19 @@ public class ASTComment extends ASTCommentTOP implements CommentInterface {
     public String getAuthor() {
         Optional<AuthorLiteralSymbol> symbol = getEnclosingScope().resolve("author", AuthorLiteralSymbol.KIND);
 
-        return unescapeHtml4(symbol.get().getAuthorLiteralNode().get().getStringLiteral().getValue());
+        return unescapeMonticore(symbol.get().getAuthorLiteralNode().get().getStringLiteral().getValue());
     }
 
     public String getId() {
         Optional<IdLiteralSymbol> symbol = getEnclosingScope().resolve("id", IdLiteralSymbol.KIND);
 
-        return unescapeHtml4(symbol.get().getIdLiteralNode().get().getStringLiteral().getValue());
+        return unescapeMonticore(symbol.get().getIdLiteralNode().get().getStringLiteral().getValue());
     }
 
     public String getSubreddit() {
         Optional<SubredditLiteralSymbol> symbol = getEnclosingScope().resolve("subreddit", SubredditLiteralSymbol.KIND);
 
-        return unescapeHtml4(symbol.get().getSubredditLiteralNode().get().getStringLiteral().getValue());
+        return unescapeMonticore(symbol.get().getSubredditLiteralNode().get().getStringLiteral().getValue());
     }
 
     public int getScore() {
@@ -60,13 +60,13 @@ public class ASTComment extends ASTCommentTOP implements CommentInterface {
     public String getSubmissionTitle() {
         Optional<SubmissionTitleLiteralSymbol> symbol = getEnclosingScope().resolve("submissionTitle", SubmissionTitleLiteralSymbol.KIND);
 
-        return unescapeHtml4(symbol.get().getSubmissionTitleLiteralNode().get().getStringLiteral().getValue());
+        return unescapeMonticore(symbol.get().getSubmissionTitleLiteralNode().get().getStringLiteral().getValue());
     }
 
     public String getSubmission() {
         Optional<SubmissionLiteralSymbol> symbol = getEnclosingScope().resolve("submission", SubmissionLiteralSymbol.KIND);
 
-        return unescapeHtml4(symbol.get().getSubmissionLiteralNode().get().getStringLiteral().getValue());
+        return unescapeMonticore(symbol.get().getSubmissionLiteralNode().get().getStringLiteral().getValue());
     }
     /**
      * @return a hash code based on the id of the comment.
