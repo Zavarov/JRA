@@ -17,17 +17,43 @@
 
 package vartas.reddit;
 
+import org.apache.commons.text.translate.AggregateTranslator;
 import org.apache.commons.text.translate.CharSequenceTranslator;
+import org.apache.commons.text.translate.LookupTranslator;
 
-import static org.apache.commons.text.StringEscapeUtils.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.apache.commons.text.StringEscapeUtils.ESCAPE_HTML4;
+import static org.apache.commons.text.StringEscapeUtils.UNESCAPE_HTML4;
 
 public abstract class MonticoreEscapeUtils {
-    protected static final CharSequenceTranslator MONTICORE_ESCAPE = ESCAPE_HTML4.with(ESCAPE_XSI);
-    protected static final CharSequenceTranslator MONTICORE_UNESCAPE = UNESCAPE_HTML4.with(UNESCAPE_XSI);
+    protected static final CharSequenceTranslator ESCAPE_MONTICORE;
+    static {
+        final Map<CharSequence, CharSequence> escapeMonticoreMap = new HashMap<>();
+        escapeMonticoreMap.put("\"", "\\\"");
+        escapeMonticoreMap.put("\\", "\\\\");
+        ESCAPE_MONTICORE = new AggregateTranslator(
+                ESCAPE_HTML4,
+                new LookupTranslator(Collections.unmodifiableMap(escapeMonticoreMap))
+        );
+    }
+
+    protected static final CharSequenceTranslator MONTICORE_UNESCAPE;
+    static {
+        final Map<CharSequence, CharSequence> unescapeMonticoreMap = new HashMap<>();
+        unescapeMonticoreMap.put("\\\"", "\"");
+        unescapeMonticoreMap.put("\\\\", "\\");
+        MONTICORE_UNESCAPE = new AggregateTranslator(
+                UNESCAPE_HTML4,
+                new LookupTranslator(Collections.unmodifiableMap(unescapeMonticoreMap))
+        );
+    }
 
 
     public static String escapeMonticore(final String input){
-        return MONTICORE_ESCAPE.translate(input);
+        return ESCAPE_MONTICORE.translate(input);
     }
 
     public static String unescapeMonticore(final String input){
