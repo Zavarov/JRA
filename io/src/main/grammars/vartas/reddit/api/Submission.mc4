@@ -46,4 +46,7 @@ grammar Submission extends de.monticore.MCBasicLiterals{
 
     symbol UrlLiteral implements Entry=
         name:"url" "=" StringLiteral;
+
+    symbol PermalinkLiteral implements Entry=
+        name:"permalink" "=" StringLiteral;
 }

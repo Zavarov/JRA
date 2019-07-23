@@ -46,6 +46,7 @@ public class SubmissionPrettyPrinter{
         addSelfText(submission);
         addThumbnail(submission);
         addUrl(submission);
+        addPermalink(submission);
 
         printer.addLine("}");
 
@@ -104,5 +105,9 @@ public class SubmissionPrettyPrinter{
 
     private void addUrl(SubmissionInterface submission){
         printer.addLine(String.format("url = \"%s\"", escapeMonticore(submission.getUrl())));
+    }
+
+    private void addPermalink(SubmissionInterface submission){
+        printer.addLine(String.format("permalink = \"%s\"", escapeMonticore(submission.getPermalink())));
     }
 }

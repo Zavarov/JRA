@@ -148,4 +148,11 @@ public class JrawSubmission implements SubmissionInterface {
             return false;
         }
     }
+    /**
+     * @return the permalink to the submission.
+     */
+    @Override
+    public String getPermalink(){
+        return String.format(PERMALINK_URL, referee.getPermalink());
+    }
 }

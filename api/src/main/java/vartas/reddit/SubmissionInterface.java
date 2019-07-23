@@ -26,7 +26,11 @@ public interface SubmissionInterface {
     /**
      * The URL frame that will link to the submission.
      */
-    String SUBMISSION_URL = "https://redd.it/%s";
+    String SHORT_URL = "https://redd.it/%s";
+    /**
+     * The URL frame that will link to the submission.
+     */
+    String PERMALINK_URL = "https://www.reddit.com";
     /**
      * @return the author of the submission.
      */
@@ -80,7 +84,12 @@ public interface SubmissionInterface {
     /**
      * @return the permalink to the submission.
      */
-    default String getPermalink(){
-        return String.format(SUBMISSION_URL,getId());
+    String getPermalink();
+
+    /**
+     * @return the short link to the submission.
+     */
+    default String getShortLink(){
+        return String.format(SHORT_URL, this.getId());
     }
 }

@@ -89,4 +89,9 @@ public class SubmissionTest{
     public void testGetUrl(){
         assertThat(submission.getUrl()).isEqualTo("url");
     }
+
+    @Test
+    public void testGetPermalink(){
+        assertThat(submission.getPermalink()).isEqualTo("permalink");
+    }
 }

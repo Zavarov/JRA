@@ -11,4 +11,5 @@ submission {
     selfText = "selfText"
     thumbnail = "thumbnail"
     url = "url"
+    permalink = "permalink"
 }

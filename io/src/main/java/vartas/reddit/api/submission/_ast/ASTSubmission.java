@@ -117,6 +117,13 @@ public class ASTSubmission extends ASTSubmissionTOP implements SubmissionInterfa
 
         return unescapeMonticore(symbol.get().getUrlLiteralNode().get().getStringLiteral().getValue());
     }
+
+    @Override
+    public String getPermalink(){
+        Optional<PermalinkLiteralSymbol> symbol = getEnclosingScope().resolve("permalink", PermalinkLiteralSymbol.KIND);
+
+        return unescapeMonticore(symbol.get().getPermalinkLiteralNode().get().getStringLiteral().getValue());
+    }
     /**
      * @return a hash code based on the id of the submission.
      */
