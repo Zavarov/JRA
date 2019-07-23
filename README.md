@@ -6,7 +6,7 @@ This project provides a wrapper for the [JRAW](https://github.com/mattbdean/JRAW
 
 This module implements the wrapper for the [JRAW](https://github.com/mattbdean/JRAW) library.
 It allows to request users, subreddits, comments and submissions.
-Additionally, it is also possible to combine JRAW with the Pushshift API, to circumvent the 1000 submissions limit imposed by Reddit.
+Additionally, it is also possible to combine JRAW with the [Pushshift API](https://pushshift.io/), to circumvent the 1000 submissions limit imposed by Reddit.
 
 #### io
 
