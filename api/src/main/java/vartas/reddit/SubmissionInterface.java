@@ -30,7 +30,7 @@ public interface SubmissionInterface {
     /**
      * The URL frame that will link to the submission.
      */
-    String PERMALINK_URL = "https://www.reddit.com";
+    String PERMALINK_URL = "https://www.reddit.com%s";
     /**
      * @return the author of the submission.
      */
