@@ -142,7 +142,7 @@ public class JrawClient implements ClientInterface {
                     .timePeriod(TimePeriod.ALL)
                     .build();
 
-            TreeSet<SubmissionInterface> submissions = new TreeSet<>(Comparator.comparing(SubmissionInterface::getCreated));
+            TreeSet<SubmissionInterface> submissions = new TreeSet<>();
             List<SubmissionInterface> current;
             Date newest;
             //We have to do the iterative way because we can't specify an interval

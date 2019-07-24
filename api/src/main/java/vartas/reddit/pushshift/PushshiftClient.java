@@ -121,8 +121,7 @@ public class PushshiftClient implements ClientInterface {
                 .map(client::requestSubmission)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .sorted(Comparator.comparing(SubmissionInterface::getCreated))
-                .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(SubmissionInterface::getCreated))));
+                .collect(Collectors.toCollection(TreeSet::new));
 
         return Optional.of(submissions);
     }

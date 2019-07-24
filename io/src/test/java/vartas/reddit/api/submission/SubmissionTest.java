@@ -21,6 +21,10 @@ import org.junit.Before;
 import org.junit.Test;
 import vartas.reddit.SubmissionInterface;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.TreeSet;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SubmissionTest{
@@ -93,5 +97,16 @@ public class SubmissionTest{
     @Test
     public void testGetPermalink(){
         assertThat(submission.getPermalink()).isEqualTo("permalink");
+    }
+
+    @Test
+    public void testOrder(){
+        List<SubmissionInterface> submissions = SubmissionHelper.parse("src/test/resources/ordered.sub");
+        TreeSet<SubmissionInterface> ordered = new TreeSet<>(submissions);
+
+        Iterator<SubmissionInterface> iterator = ordered.iterator();
+        assertThat(iterator.next().getCreated().getTime()).isEqualTo(1L);
+        assertThat(iterator.next().getCreated().getTime()).isEqualTo(2L);
+        assertThat(iterator.next().getCreated().getTime()).isEqualTo(3L);
     }
 }
