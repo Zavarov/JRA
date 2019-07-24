@@ -22,7 +22,7 @@ import java.util.Optional;
 /**
  * This is the interface for all Reddit submissions.
  */
-public interface SubmissionInterface {
+public interface SubmissionInterface extends Comparable<SubmissionInterface> {
     /**
      * The URL frame that will link to the submission.
      */
@@ -91,5 +91,16 @@ public interface SubmissionInterface {
      */
     default String getShortLink(){
         return String.format(SHORT_URL, this.getId());
+    }
+
+    /**
+     * Compares two submissions based on their creation date
+     * @param submission the submission this one is compared to.
+     * @return 0 if the argument submission was created exactly when this submission was.
+     * A negative value if this submission was created before the argument submission and a positive value otherwise.
+     */
+    @Override
+    default int compareTo(SubmissionInterface submission){
+        return getCreated().compareTo(submission.getCreated());
     }
 }
