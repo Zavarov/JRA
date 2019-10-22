@@ -29,6 +29,27 @@
     <artifactId>stats</artifactId>
     <groupId>vartas.reddit</groupId>
 
+    <!-- == DEFAULT BUILD SETTINGS =========================================== -->
+
+    <build>
+        <plugins>
+            <!-- create docs jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${javadoc.plugin}</version>
+                <executions>
+                    <execution>
+                        <id>generate-docs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>vartas</groupId>

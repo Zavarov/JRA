@@ -38,19 +38,13 @@
 
         <assertj.version>3.12.2</assertj.version>
         <junit.version>4.12</junit.version>
-        <httpclient.version>4.5.9</httpclient.version>
-        <commons-text.version>1.7</commons-text.version>
+        <httpclient.version>4.5.10</httpclient.version>
         <json.version>20190722</json.version>
         <jraw.version>1.1.0</jraw.version>
-        <guava.version>28.0-jre</guava.version>
 
         <!-- .. Plugins ....................................................... -->
 
-        <assembly.plugin>2.5.3</assembly.plugin>
-        <compiler.plugin>3.2</compiler.plugin>
-        <release.plugin>2.5.1</release.plugin>
-        <source.plugin>2.4</source.plugin>
-        <surefire.plugin>2.18.1</surefire.plugin>
+        <javadoc.plugin>3.1.1</javadoc.plugin>
 
         <!-- .. Misc .......................................................... -->
 

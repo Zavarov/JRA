@@ -1,26 +1,19 @@
 # Project Title
 
-This project provides a wrapper for the [JRAW](https://github.com/mattbdean/JRAW) library and multiple methods for analyzing both comments and submissions.
+This project implements the Reddit interface specified in [monticore-commons](https://github.com/Zavarov/monticore-commons) using [JRAW](https://github.com/mattbdean/JRAW)
+and via a custom implementation backed by [pushshift.io](https://pushshift.io/), in order to request more than 1000 submissions.
+It then uses the interface for analyzing both comments and submissions.
+Overall, the first implementation is intended to be used in realtime, while the second one is intended for analysis over a long period of time.
 
 #### api
 
-This module implements the wrapper for the [JRAW](https://github.com/mattbdean/JRAW) library.
-It allows to request users, subreddits, comments and submissions.
-Additionally, it is also possible to combine JRAW with the [Pushshift API](https://pushshift.io/), to circumvent the 1000 submissions limit imposed by Reddit.
-
-#### io
-
-This module module implements the ability to store comments and submissions on the hard disk, to repeat analyses on data sets without being bound by the slow communication with Reddit.
-
-#### charts
-
-This module focuses on generating charts over the given datasets.
-As an example, it is possible to create line charts over the number of submissions per day, or the distribution of submission flairs.
+This module implements the different interfaces for the client, submission and comments.
 
 #### stats
 
 This module focuses on a more complex analysis of the data sets.
 As an example, it provides methods to compute the top submitters and top comments.
+In future updates this module will be separated and become an independent project.
 
 ### Installing
 
@@ -53,6 +46,35 @@ The template for the file is
 
 * **Zavarov**
 
+## Dependencies:
+
+This project requires at least **Java 8**.
+ * **Apache Http Client**
+   * Version: **4.5.10**
+   * [Github](https://github.com/apache/httpcomponents-client)
+ * **Apache Maven JavaDoc Plugin**
+   * Version: **3.1.1**
+   * [Github](https://github.com/apache/maven-javadoc-plugin/)
+ * **AssertJ**
+   * Version: **3.12.2**
+   * [Github](https://github.com/joel-costigliola/assertj-core)
+ * **JRAW**
+   * Version: **1.1.0**
+   * [Github](https://github.com/mattbdean/JRAW)
+ * **JSON**
+   * Version: **20190722**
+   * [Github](https://github.com/stleary/JSON-java)
+ * **JUnit**
+   * Version: **4.12**
+   * [Github](https://github.com/junit-team/junit4)
+ * **monticore-commons**
+   * Version: **1.2**
+   * [Github](https://github.com/Zavarov/monticore-commons)
+
 ## License
 
 This project is licensed under the GPLv3 License - see the [LICENSE](LICENSE) file for details
+
+## Acknowledgments
+A big shoutout to all the people involved with [pushshift.io](https://pushshift.io/). They do an awesome job
+and their site was fundamental for my project of analyzing and evaluating the activity in individual subreddits.
