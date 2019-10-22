@@ -26,8 +26,8 @@
     <packaging>pom</packaging>
     <version>2.0.10</version>
     <modules>
-        <module>api</module>
-        <module>stats</module>
+        <module>reddit-api</module>
+        <module>reddit-stats</module>
     </modules>
 
     <properties>

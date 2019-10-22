@@ -16,9 +16,7 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>reddit</artifactId>
         <groupId>vartas</groupId>
@@ -26,8 +24,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>stats</artifactId>
-    <groupId>vartas.reddit</groupId>
+    <artifactId>reddit-api</artifactId>
 
     <!-- == DEFAULT BUILD SETTINGS =========================================== -->
 
@@ -52,11 +49,42 @@
 
     <dependencies>
         <dependency>
+            <groupId>net.dean.jraw</groupId>
+            <artifactId>JRAW</artifactId>
+            <version>${jraw.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>vartas</groupId>
-            <artifactId>monticore-commons</artifactId>
+            <artifactId>monticore-commons-reddit</artifactId>
             <version>${monticore-commons.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>${json.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclient.version}</version>
+        </dependency>
+
+        <!-- Test Libraries         -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-
-
 </project>
