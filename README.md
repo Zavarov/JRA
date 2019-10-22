@@ -1,4 +1,4 @@
-# Project Title
+# reddit
 
 This project implements the Reddit interface specified in [monticore-commons](https://github.com/Zavarov/monticore-commons) using [JRAW](https://github.com/mattbdean/JRAW)
 and via a custom implementation backed by [pushshift.io](https://pushshift.io/), in order to request more than 1000 submissions.
