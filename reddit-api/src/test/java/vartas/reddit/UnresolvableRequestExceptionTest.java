@@ -17,27 +17,19 @@
 
 package vartas.reddit;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static vartas.reddit.MonticoreEscapeUtils.escapeMonticore;
-import static vartas.reddit.MonticoreEscapeUtils.unescapeMonticore;
 
-public class MonticoreEscapeUtilsTest {
-    @Test
-    public void testEscapeQuotation(){
-        assertThat(escapeMonticore("\"")).isEqualTo("&quot;");
+public class UnresolvableRequestExceptionTest {
+    UnresolvableRequestException exception;
+    @Before
+    public void setUp(){
+        exception = new UnresolvableRequestException(123);
     }
     @Test
-    public void testEscapeSlash(){
-        assertThat(escapeMonticore("\\")).isEqualTo("\\\\");
-    }
-    @Test
-    public void testUnscapeQuotation(){
-        assertThat(unescapeMonticore("&quot;")).isEqualTo("\"");
-    }
-    @Test
-    public void testUnescapeSlash(){
-        assertThat(unescapeMonticore("\\\\")).isEqualTo("\\");
+    public void testErrorMessage(){
+        assertThat(exception.getMessage()).isEqualTo("The request failed with the following error code: 123");
     }
 }

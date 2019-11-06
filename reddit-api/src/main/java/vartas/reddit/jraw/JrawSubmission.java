@@ -18,12 +18,11 @@
 package vartas.reddit.jraw;
 
 import net.dean.jraw.models.Submission;
+import org.apache.commons.text.StringEscapeUtils;
 import vartas.reddit.SubmissionInterface;
 
 import java.util.Date;
 import java.util.Optional;
-
-import static vartas.reddit.MonticoreEscapeUtils.unescapeMonticore;
 
 /**
  * This class implements the submissions backed by their respective JRAW submissions.
@@ -111,7 +110,7 @@ public class JrawSubmission implements SubmissionInterface {
         if(referee.getSelfText() == null)
             return Optional.empty();
 
-        return Optional.of(unescapeMonticore(referee.getSelfText()).trim());
+        return Optional.of(StringEscapeUtils.unescapeHtml4(referee.getSelfText()).trim());
     }
     /**
      * @return the thumbnail of the submission.
