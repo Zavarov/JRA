@@ -126,8 +126,8 @@ public class JrawClient implements ClientInterface {
      * Request submissions within a given interval sorted by their creation date.
      * Note that Reddit will -at most- return the past 1000 submissions.
      * @param subreddit the name of the subreddit.
-     * @param after the (exclusive) minimum age of the submissions.
-     * @param before the (exclusive) maximum age of the submissions.
+     * @param after the (inclusive) minimum age of the submissions.
+     * @param before the (inclusive) maximum age of the submissions.
      * @return all submissions within the given interval sorted by their creation time.
      * @throws UnresolvableRequestException if the API returned an unresolvable error.
      */

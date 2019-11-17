@@ -83,8 +83,8 @@ public interface ClientInterface {
      * Request submissions within a given interval sorted by their creation date.
      * Note that Reddit will -at most- return the past 1000 submissions.
      * @param subreddit the name of the subreddit.
-     * @param after the (exclusive) minimum age of the submissions.
-     * @param before the (exclusive) maximum age of the submissions.
+     * @param after the (inclusive) minimum age of the submissions.
+     * @param before the (inclusive) maximum age of the submissions.
      * @return all submissions within the given interval.
      * @throws UnresolvableRequestException if the API returned an unresolvable error.
      */
@@ -96,8 +96,8 @@ public interface ClientInterface {
      * Request submissions within a given interval sorted by their creation date.
      * Note that Reddit will -at most- return the past 1000 submissions.
      * @param subreddit the name of the subreddit.
-     * @param after the (exclusive) minimum age of the submissions.
-     * @param before the (exclusive) maximum age of the submissions.
+     * @param after the (inclusive) minimum age of the submissions.
+     * @param before the (inclusive) maximum age of the submissions.
      * @param retries the number of times the request is repeated upon failure.
      * @return all submissions within the given interval.
      * @throws UnresolvableRequestException if the API returned an unresolvable error.

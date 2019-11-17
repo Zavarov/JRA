@@ -102,8 +102,8 @@ public class PushshiftClient implements ClientInterface {
      * In order to circumvent the 1000 submissions restriction, they are first requested via the Pushshift API in order
      * to get their ids, then those ids are used for the communication with the Reddit API.
      * @param subreddit the name of the subreddit.
-     * @param after the (exclusive) minimum age of the submissions.
-     * @param before the (exclusive) maximum age of the submissions.
+     * @param after the (inclusive) minimum age of the submissions.
+     * @param before the (inclusive) maximum age of the submissions.
      * @return all submissions within the given interval sorted by their creation time.
      * @throws UnresolvableRequestException if the API returned an unresolvable error.
      */
@@ -170,8 +170,9 @@ public class PushshiftClient implements ClientInterface {
     protected String createUrl(String subreddit, Date after, Date before){
         StringBuilder builder = new StringBuilder();
         builder.append("https://api.pushshift.io/reddit/search/submission/?subreddit=").append(subreddit);
-        builder.append("&after=").append(after.getTime()/MILLISECONDS_TO_SECONDS);
-        builder.append("&before=").append(before.getTime()/MILLISECONDS_TO_SECONDS);
+        //Offset by 1 second to make 'after' and 'before' inclusive.
+        builder.append("&after=").append(after.getTime()/MILLISECONDS_TO_SECONDS-1);
+        builder.append("&before=").append(before.getTime()/MILLISECONDS_TO_SECONDS+1);
         builder.append("&sort=desc&size=500");
         return builder.toString();
     }
