@@ -61,11 +61,6 @@ public class PushshiftClientTest extends AbstractTest{
         assertThat(client.requestSubmission("RedditDev", after, before, 1)).isPresent();
     }
     @Test
-    public void requestSingleSubmission(){
-        Date date = new Date(1574107532000L);
-        assertThat(client.requestSubmission("RedditDev",date, date, 1)).isPresent();
-    }
-    @Test
     public void requestComment(){
         //https://www.reddit.com/r/announcements/comments/blev4z/how_to_keep_your_reddit_account_safe/
         assertThat(client.requestComment("blev4z", 1)).isPresent();
