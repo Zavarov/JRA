@@ -127,7 +127,7 @@ public class JrawClient implements ClientInterface {
      * Note that Reddit will -at most- return the past 1000 submissions.
      * @param subreddit the name of the subreddit.
      * @param after the (inclusive) minimum age of the submissions.
-     * @param before the (inclusive) maximum age of the submissions.
+     * @param before the (exclusive) maximum age of the submissions.
      * @return all submissions within the given interval sorted by their creation time.
      * @throws UnresolvableRequestException if the API returned an unresolvable error.
      */
@@ -149,8 +149,8 @@ public class JrawClient implements ClientInterface {
             do{
                 //The newest value should be the last one
                 current = paginator.next().stream()
-                        .filter(s -> !s.getCreated().after(before))   //Not after 'before' -> before or during  'before'
-                        .filter(s -> !s.getCreated().before(after))   //Not before 'after' -> after or during 'after'
+                        .filter(s -> s.getCreated().before(before))   //Before 'before'    -> Exclusive 'before'
+                        .filter(s -> !s.getCreated().before(after))   //Not before 'after' -> Inclusive 'after'
                         .map(JrawSubmission::new)
                         .collect(Collectors.toList());
                 newest = current.isEmpty() ? before : current.get(current.size()-1).getCreated();
