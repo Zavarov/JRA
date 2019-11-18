@@ -176,4 +176,21 @@ public class PushshiftClient implements ClientInterface {
         builder.append("&sort=desc&size=500");
         return builder.toString();
     }
+
+    /**
+     * Establishes a connection to the Reddit API.
+     * @throws IllegalStateException if a connection was already established since the last logout.
+     */
+    @Override
+    public void login() throws IllegalStateException{
+        client.login();
+    }
+
+    /**
+     * Cuts the connection to the Reddit API.
+     */
+    @Override
+    public void logout() {
+        client.logout();
+    }
 }

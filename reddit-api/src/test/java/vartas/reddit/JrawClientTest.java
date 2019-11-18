@@ -50,10 +50,10 @@ public class JrawClientTest extends AbstractTest{
     }
     @Test
     public void requestSubmission(){
-        Date before = Date.from(Instant.now());
-        Date after = Date.from(Instant.now().minus(1, ChronoUnit.HOURS));
-
-        assertThat(client.requestSubmission("RedditDev", before, after, 1)).isPresent();
+        Instant instant = Instant.now();
+        Date before = Date.from(instant);
+        Date after = Date.from(instant.minus(1, ChronoUnit.DAYS));
+        assertThat(client.requestSubmission("RedditDev", after, before, 1)).isPresent();
     }
     @Test
     public void requestComment(){

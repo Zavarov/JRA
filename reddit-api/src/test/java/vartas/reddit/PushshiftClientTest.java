@@ -17,5 +17,62 @@
 
 package vartas.reddit;
 
-public class PushshiftClientTest {
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class PushshiftClientTest extends AbstractTest{
+    @BeforeClass
+    public static void setUpBeforeClass(){
+        client = getPushshiftClient();
+    }
+    @Before
+    public void setUp(){
+        client.login();
+    }
+    @After
+    public void tearDown(){
+        client.logout();
+    }
+    @Test(expected=IllegalStateException.class)
+    public void testLoginTwice(){
+        client.login();
+    }
+    @Test
+    public void requestUser(){
+        assertThat(client.requestUser("Zavarov", 1)).isPresent();
+    }
+    @Test
+    public void requestSubreddit(){
+        assertThat(client.requestSubreddit("RedditDev", 1)).isPresent();
+    }
+    @Test
+    public void requestSubmission(){
+        Instant instant = Instant.now();
+        Date before = Date.from(instant);
+        Date after = Date.from(instant.minus(1, ChronoUnit.DAYS));
+        assertThat(client.requestSubmission("RedditDev", after, before, 1)).isPresent();
+    }
+    @Test
+    public void requestSingleSubmission(){
+        Date date = new Date(1574107532000L);
+        assertThat(client.requestSubmission("RedditDev",date, date, 1)).isPresent();
+    }
+    @Test
+    public void requestComment(){
+        //https://www.reddit.com/r/announcements/comments/blev4z/how_to_keep_your_reddit_account_safe/
+        assertThat(client.requestComment("blev4z", 1)).isPresent();
+    }
+    @Test
+    public void requestSubmissionId(){
+        //https://www.reddit.com/r/announcements/comments/blev4z/how_to_keep_your_reddit_account_safe/
+        assertThat(client.requestSubmission("blev4z", 1)).isPresent();
+    }
 }

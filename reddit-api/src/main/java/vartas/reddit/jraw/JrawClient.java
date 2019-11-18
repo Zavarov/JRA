@@ -149,8 +149,8 @@ public class JrawClient implements ClientInterface {
             do{
                 //The newest value should be the last one
                 current = paginator.next().stream()
-                        .filter(s -> s.getCreated().before(before))
-                        .filter(s -> s.getCreated().after(after))
+                        .filter(s -> !s.getCreated().after(before))   //Not after 'before' -> before or during  'before'
+                        .filter(s -> !s.getCreated().before(after))   //Not before 'after' -> after or during 'after'
                         .map(JrawSubmission::new)
                         .collect(Collectors.toList());
                 newest = current.isEmpty() ? before : current.get(current.size()-1).getCreated();

@@ -20,6 +20,7 @@ package vartas.reddit;
 import org.json.JSONObject;
 import org.junit.BeforeClass;
 import vartas.reddit.jraw.JrawClient;
+import vartas.reddit.pushshift.PushshiftClient;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -30,10 +31,10 @@ public class AbstractTest {
     static ClientInterface client;
     @BeforeClass
     public static void setUpBeforeClass(){
-        client = getClient();
+        client = getJrawClient();
     }
 
-    private static ClientInterface getClient(){
+    protected static ClientInterface getJrawClient(){
         JSONObject config;
         try{
             String content = new String(Files.readAllBytes(Paths.get("src/test/resources/config.json")));
@@ -48,5 +49,9 @@ public class AbstractTest {
         String clientId = config.getString("clientId");
         String secret = config.getString("secret");
         return new JrawClient(name, version, clientId, secret);
+    }
+
+    protected static ClientInterface getPushshiftClient(){
+        return new PushshiftClient(getJrawClient());
     }
 }
