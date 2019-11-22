@@ -62,10 +62,6 @@ public interface SubmissionInterface extends SubredditSnowflake {
      * @return an absolute URL to the comments in a self post, otherwise an URL to the submission content.
      */
     String getUrl();
-    /**
-     * @return the permalink to the submission.
-     */
-    String getPermalink();
 
     /**
      * @return the short link to the submission.

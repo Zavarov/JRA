@@ -24,6 +24,10 @@ import vartas.reddit.visitor.SubredditSnowflakeVisitor;
  */
 public interface SubredditSnowflake extends RedditSnowflake{
     /**
+     * The URL frame that will link to the subreddit.
+     */
+    String SUBREDDIT_URL = "https://www.reddit.com/r/%s";
+    /**
      * @return the author of the snowflake.
      */
     String getAuthor();
@@ -39,6 +43,14 @@ public interface SubredditSnowflake extends RedditSnowflake{
      * @return the name of the subreddit, the snowflake is in.
      */
     String getSubreddit();
+
+    /**
+     * @return the permalink to the users' page.
+     */
+    @Override
+    default String getPermalink(){
+        return String.format(SUBREDDIT_URL, getSubreddit());
+    }
 
     void accept(SubredditSnowflakeVisitor visitor);
 }

@@ -24,6 +24,10 @@ public interface RedditSnowflake extends Comparable<RedditSnowflake>{
      * @return the time in UTC when this snowflake was made
      */
     Instant getCreated();
+    /**
+     * @return the permalink to the snowflake.
+     */
+    String getPermalink();
 
     /**
      * Compares two snowflakes based on their creation date

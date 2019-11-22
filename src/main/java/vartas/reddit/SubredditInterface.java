@@ -55,7 +55,8 @@ public interface SubredditInterface extends RedditSnowflake{
     /**
      * @return the permalink to the subreddit.
      */
-    default String getPermaLink(){
+    @Override
+    default String getPermalink(){
         return String.format(SUBREDDIT_URL, getName());
     }
 }

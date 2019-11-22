@@ -44,7 +44,8 @@ public interface UserInterface extends RedditSnowflake{
     /**
      * @return the permalink to the users' page.
      */
-    default String getPermaLink(){
+    @Override
+    default String getPermalink(){
         return String.format(USER_URL, getName());
     }
 }

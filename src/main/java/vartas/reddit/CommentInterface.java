@@ -38,6 +38,7 @@ public interface CommentInterface extends SubredditSnowflake{
     /**
      * @return a permalink to the comment.
      */
+    @Override
     default String getPermalink(){
         return String.format(COMMENT_URL,getSubreddit(),getSubmission(),getId());
     }
