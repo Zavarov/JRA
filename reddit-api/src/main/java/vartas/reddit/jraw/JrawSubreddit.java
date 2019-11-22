@@ -21,7 +21,7 @@ import net.dean.jraw.models.Subreddit;
 import org.apache.commons.text.StringEscapeUtils;
 import vartas.reddit.SubredditInterface;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.Optional;
 /**
  * This class implements the subreddits backed by their respective JRAW subreddits.
@@ -59,8 +59,8 @@ public class JrawSubreddit implements SubredditInterface {
      * @return the date when the subreddit was created.
      */
     @Override
-    public Date getCreated() {
-        return referee.getCreated();
+    public Instant getCreated() {
+        return referee.getCreated().toInstant();
     }
 
     /**

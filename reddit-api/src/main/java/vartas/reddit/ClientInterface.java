@@ -17,7 +17,7 @@
 
 package vartas.reddit;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.TreeSet;
@@ -88,7 +88,7 @@ public interface ClientInterface {
      * @return all submissions within the given interval.
      * @throws UnresolvableRequestException if the API returned an unresolvable error.
      */
-    default Optional<TreeSet<SubmissionInterface>> requestSubmission(String subreddit, Date after, Date before) throws UnresolvableRequestException{
+    default Optional<TreeSet<SubmissionInterface>> requestSubmission(String subreddit, Instant after, Instant before) throws UnresolvableRequestException{
         throw new UnsupportedOperationException("Not implemented for this interface");
     }
 
@@ -102,7 +102,7 @@ public interface ClientInterface {
      * @return all submissions within the given interval.
      * @throws UnresolvableRequestException if the API returned an unresolvable error.
      */
-    default Optional<TreeSet<SubmissionInterface>> requestSubmission(String subreddit, Date after, Date before, int retries) throws UnresolvableRequestException{
+    default Optional<TreeSet<SubmissionInterface>> requestSubmission(String subreddit, Instant after, Instant before, int retries) throws UnresolvableRequestException{
         return request(() -> requestSubmission(subreddit, after, before), retries);
     }
 

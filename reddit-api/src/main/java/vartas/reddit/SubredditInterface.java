@@ -17,7 +17,7 @@
 
 package vartas.reddit;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.Optional;
 /**
  * This is the interface for all subreddits.
@@ -41,7 +41,7 @@ public interface SubredditInterface {
     /**
      * @return the date when the subreddit was created.
      */
-    Date getCreated();
+    Instant getCreated();
 
     /**
      * @return the name of the subreddit.

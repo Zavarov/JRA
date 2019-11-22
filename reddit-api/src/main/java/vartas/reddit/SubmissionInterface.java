@@ -17,7 +17,7 @@
 
 package vartas.reddit;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.Optional;
 /**
  * This is the interface for all Reddit submissions.
@@ -66,7 +66,7 @@ public interface SubmissionInterface extends Comparable<SubmissionInterface> {
     /**
      * @return the timestamp when this submission was created.
      */
-    Date getCreated();
+    Instant getCreated();
     /**
      * @return the selftext of the submission.
      */

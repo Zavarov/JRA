@@ -24,7 +24,6 @@ import org.junit.Test;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -56,8 +55,8 @@ public class PushshiftClientTest extends AbstractTest{
     @Test
     public void requestSubmission(){
         Instant instant = Instant.now();
-        Date before = Date.from(instant);
-        Date after = Date.from(instant.minus(1, ChronoUnit.DAYS));
+        Instant before = instant;
+        Instant after = instant.minus(1, ChronoUnit.DAYS);
         assertThat(client.requestSubmission("RedditDev", after, before, 1)).isPresent();
     }
     @Test

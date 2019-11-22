@@ -33,6 +33,7 @@ import net.dean.jraw.tree.RootCommentNode;
 import org.apache.http.HttpStatus;
 import vartas.reddit.*;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
@@ -132,7 +133,7 @@ public class JrawClient implements ClientInterface {
      * @throws UnresolvableRequestException if the API returned an unresolvable error.
      */
     @Override
-    public Optional<TreeSet<SubmissionInterface>> requestSubmission(String subreddit, Date after, Date before) throws UnresolvableRequestException{
+    public Optional<TreeSet<SubmissionInterface>> requestSubmission(String subreddit, Instant after, Instant before) throws UnresolvableRequestException{
         return request(() -> {
             DefaultPaginator<Submission> paginator = client
                     .subreddit(subreddit)
@@ -144,19 +145,19 @@ public class JrawClient implements ClientInterface {
 
             TreeSet<SubmissionInterface> submissions = new TreeSet<>();
             List<SubmissionInterface> current;
-            Date newest;
+            Instant newest;
             //We have to do the iterative way because we can't specify an interval
             do{
                 //The newest value should be the last one
                 current = paginator.next().stream()
-                        .filter(s -> s.getCreated().before(before))   //Before 'before'    -> Exclusive 'before'
-                        .filter(s -> !s.getCreated().before(after))   //Not before 'after' -> Inclusive 'after'
+                        .filter(s -> s.getCreated().toInstant().isBefore(before))   //Before 'before'    -> Exclusive 'before'
+                        .filter(s -> !s.getCreated().toInstant().isBefore(after))   //Not before 'after' -> Inclusive 'after'
                         .map(JrawSubmission::new)
                         .collect(Collectors.toList());
                 newest = current.isEmpty() ? before : current.get(current.size()-1).getCreated();
                 submissions.addAll(current);
                 //Repeat when we haven't found the last submission
-            }while(newest.before(before));
+            }while(newest.isBefore(before));
 
             return Optional.of(submissions);
         });

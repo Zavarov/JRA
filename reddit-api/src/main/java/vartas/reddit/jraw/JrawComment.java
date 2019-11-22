@@ -21,6 +21,8 @@ import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.Submission;
 import vartas.reddit.CommentInterface;
 
+import java.time.Instant;
+
 /**
  * This class implements the comments backed by their respective JRAW comments.
  */
@@ -43,38 +45,51 @@ public class JrawComment implements CommentInterface{
         this.submission = submission;
     }
     /**
+     * @return the time in UTC when the comment was made
+     */
+    @Override
+    public Instant getCreated() {
+        return referee.getCreated().toInstant();
+    }
+    /**
      * @return the author of the comment.
      */
+    @Override
     public String getAuthor(){
         return referee.getAuthor();
     }
     /**
      * @return the id of the comment.
      */
+    @Override
     public String getId(){
         return referee.getId();
     }
     /**
      * @return the upvotes minus the downvotes.
      */
+    @Override
     public int getScore(){
         return referee.getScore();
     }
     /**
      * @return the  name of the submission, the comment is in.
      */
+    @Override
     public String getSubmission(){
         return submission.getId();
     }
     /**
      * @return the name of the subreddit, the comment is in.
      */
+    @Override
     public String getSubreddit(){
         return referee.getSubreddit();
     }
     /**
      * @return the title of the submission, the comment is in.
      */
+    @Override
     public String getSubmissionTitle(){
         return submission.getTitle();
     }

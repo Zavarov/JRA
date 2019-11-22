@@ -17,7 +17,7 @@
 
 package vartas.reddit;
 
-import java.util.Date;
+import java.time.Instant;
 /**
  * This is the interface for all Reddit users.
  */
@@ -28,14 +28,14 @@ public interface UserInterface {
     String USER_URL = "https://www.reddit.com/u/%s";
 
     /**
-     * @return the date when the account was created.
+     * @return the link karma.
      */
     int getCommentKarma();
 
     /**
-     * @return the link karma.
+     * @return the date when the account was created.
      */
-    Date getCreated();
+    Instant getCreated();
 
     /**
      * @return name of the user.

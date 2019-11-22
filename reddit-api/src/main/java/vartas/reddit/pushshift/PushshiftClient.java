@@ -27,7 +27,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.*;
+import java.time.Instant;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
@@ -108,7 +112,7 @@ public class PushshiftClient implements ClientInterface {
      * @throws UnresolvableRequestException if the API returned an unresolvable error.
      */
     @Override
-    public Optional<TreeSet<SubmissionInterface>> requestSubmission(String subreddit, Date after, Date before) throws UnresolvableRequestException{
+    public Optional<TreeSet<SubmissionInterface>> requestSubmission(String subreddit, Instant after, Instant before) throws UnresolvableRequestException{
         String jsonContent;
         //Break if the JSON request failed
         try {
@@ -145,7 +149,7 @@ public class PushshiftClient implements ClientInterface {
      * @return A JSON string containing all submissions within the interval.
      * @throws IOException if a communication error occured.
      */
-    protected String requestJsonContent(String subreddit, Date after, Date before) throws IOException{
+    protected String requestJsonContent(String subreddit, Instant after, Instant before) throws IOException{
         rateLimiter.acquire();
         StringBuilder builder = new StringBuilder();
         URL url = new URL(createUrl(subreddit, after, before));
@@ -167,12 +171,12 @@ public class PushshiftClient implements ClientInterface {
      * Generates the URL for the request.
      * @return the URL that represents this request.
      */
-    protected String createUrl(String subreddit, Date after, Date before){
+    protected String createUrl(String subreddit, Instant after, Instant before){
         StringBuilder builder = new StringBuilder();
         builder.append("https://api.pushshift.io/reddit/search/submission/?subreddit=").append(subreddit);
         //Offset by 1 second to make 'after' and 'before' inclusive.
-        builder.append("&after=").append(after.getTime()/MILLISECONDS_TO_SECONDS-1);    //after - 1 -> Inclusive after
-        builder.append("&before=").append(before.getTime()/MILLISECONDS_TO_SECONDS);    //before    -> Exclusive before
+        builder.append("&after=").append(after.toEpochMilli()/MILLISECONDS_TO_SECONDS-1);    //after - 1 -> Inclusive after
+        builder.append("&before=").append(before.toEpochMilli()/MILLISECONDS_TO_SECONDS);    //before    -> Exclusive before
         builder.append("&sort=desc&size=500");
         return builder.toString();
     }
