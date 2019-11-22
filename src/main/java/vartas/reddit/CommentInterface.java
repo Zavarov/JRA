@@ -17,6 +17,8 @@
 
 package vartas.reddit;
 
+import vartas.reddit.visitor.SubredditSnowflakeVisitor;
+
 /**
  * This is the interface for all Reddit comments.
  */
@@ -38,5 +40,9 @@ public interface CommentInterface extends SubredditSnowflake{
      */
     default String getPermalink(){
         return String.format(COMMENT_URL,getSubreddit(),getSubmission(),getId());
+    }
+    @Override
+    default void accept(SubredditSnowflakeVisitor visitor){
+        visitor.handle(this);
     }
 }

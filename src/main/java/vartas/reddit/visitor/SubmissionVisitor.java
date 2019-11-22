@@ -15,30 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package vartas.reddit;
+package vartas.reddit.visitor;
 
-import vartas.reddit.visitor.SubredditSnowflakeVisitor;
+import vartas.reddit.SubmissionInterface;
 
-/**
- * All snowflakes that are inside a subreddit.
- */
-public interface SubredditSnowflake extends RedditSnowflake{
-    /**
-     * @return the author of the snowflake.
-     */
-    String getAuthor();
-    /**
-     * @return the id of the snowflake.
-     */
-    String getId();
-    /**
-     * @return the upvotes minus the downvotes.
-     */
-    int getScore();
-    /**
-     * @return the name of the subreddit, the snowflake is in.
-     */
-    String getSubreddit();
-
-    void accept(SubredditSnowflakeVisitor visitor);
+public interface SubmissionVisitor {
+    default void visit(SubmissionInterface submission){}
+    default void traverse(SubmissionInterface submission){}
+    default void handle(SubmissionInterface submission){
+        visit(submission);
+        traverse(submission);
+    }
 }

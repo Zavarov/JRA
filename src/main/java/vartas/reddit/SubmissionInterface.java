@@ -17,6 +17,8 @@
 
 package vartas.reddit;
 
+import vartas.reddit.visitor.SubredditSnowflakeVisitor;
+
 import java.util.Optional;
 /**
  * This is the interface for all Reddit submissions.
@@ -70,5 +72,9 @@ public interface SubmissionInterface extends SubredditSnowflake {
      */
     default String getShortLink(){
         return String.format(SHORT_URL, this.getId());
+    }
+    @Override
+    default void accept(SubredditSnowflakeVisitor visitor){
+        visitor.handle(this);
     }
 }
