@@ -17,12 +17,11 @@
 
 package vartas.reddit;
 
-import java.time.Instant;
 import java.util.Optional;
 /**
  * This is the interface for all subreddits.
  */
-public interface SubredditInterface {
+public interface SubredditInterface extends RedditSnowflake{
     /**
      * The URL frame that will link to the subreddit.
      */
@@ -37,11 +36,6 @@ public interface SubredditInterface {
      * @return the optional url to the banner image.
      */
     Optional<String> getBannerImage();
-
-    /**
-     * @return the date when the subreddit was created.
-     */
-    Instant getCreated();
 
     /**
      * @return the name of the subreddit.

@@ -18,39 +18,21 @@
 package vartas.reddit;
 
 import java.time.Instant;
-/**
- * This is the interface for all Reddit users.
- */
-public interface UserInterface {
-    /**
-     * The URL frame that will link to the subreddit.
-     */
-    String USER_URL = "https://www.reddit.com/u/%s";
 
+public interface RedditSnowflake extends Comparable<RedditSnowflake>{
     /**
-     * @return the link karma.
-     */
-    int getCommentKarma();
-
-    /**
-     * @return the date when the account was created.
+     * @return the time in UTC when this snowflake was made
      */
     Instant getCreated();
 
     /**
-     * @return name of the user.
+     * Compares two snowflakes based on their creation date
+     * @param snowflake the snowflake this one is compared to.
+     * @return 0 if the argument snowflake was created exactly when this snowflake was.
+     * A negative value if this snowflake was created before the argument snowflake and a positive value otherwise.
      */
-    int getLinkKarma();
-
-    /**
-     * @return name of the user.
-     */
-    String getName();
-
-    /**
-     * @return the permalink to the users' page.
-     */
-    default String getPermaLink(){
-        return String.format(USER_URL, getName());
+    @Override
+    default int compareTo(RedditSnowflake snowflake){
+        return getCreated().compareTo(snowflake.getCreated());
     }
 }

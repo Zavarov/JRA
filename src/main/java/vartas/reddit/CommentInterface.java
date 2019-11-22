@@ -17,40 +17,18 @@
 
 package vartas.reddit;
 
-import java.time.Instant;
-
 /**
  * This is the interface for all Reddit comments.
  */
-public interface CommentInterface {
+public interface CommentInterface extends SubredditSnowflake{
     /**
      * The URL frame that will link to the comment.
      */
     String COMMENT_URL = "https://www.reddit.com/r/%s/comments/%s/-/%s";
     /**
-     * @return the time in UTC when the comment was made
-     */
-    Instant getCreated();
-    /**
-     * @return the author of the comment.
-     */
-    String getAuthor();
-    /**
-     * @return the id of the comment.
-     */
-    String getId();
-    /**
-     * @return the upvotes minus the downvotes.
-     */
-    int getScore();
-    /**
      * @return the  name of the submission, the comment is in.
      */
     String getSubmission();
-    /**
-     * @return the name of the subreddit, the comment is in.
-     */
-    String getSubreddit();
     /**
      * @return the title of the submission, the comment is in.
      */

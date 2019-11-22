@@ -17,12 +17,11 @@
 
 package vartas.reddit;
 
-import java.time.Instant;
 import java.util.Optional;
 /**
  * This is the interface for all Reddit submissions.
  */
-public interface SubmissionInterface extends Comparable<SubmissionInterface> {
+public interface SubmissionInterface extends SubredditSnowflake {
     /**
      * The URL frame that will link to the submission.
      */
@@ -32,21 +31,9 @@ public interface SubmissionInterface extends Comparable<SubmissionInterface> {
      */
     String PERMALINK_URL = "https://www.reddit.com%s";
     /**
-     * @return the author of the submission.
-     */
-    String getAuthor();
-    /**
-     * @return the id of the submission.
-     */
-    String getId();
-    /**
      * @return the flair text, if one exists, or null otherwise.
      */
     Optional<String> getLinkFlairText();
-    /**
-     * @return the subreddit the submission was posted in.
-     */
-    String getSubreddit();
     /**
      * @return true, if the submission is marked as NSFW.
      */
@@ -56,17 +43,9 @@ public interface SubmissionInterface extends Comparable<SubmissionInterface> {
      */
     boolean isSpoiler();
     /**
-     * @return the upvotes minus the downvotes.
-     */
-    int getScore();
-    /**
      * @return the title of the submission.
      */
     String getTitle();
-    /**
-     * @return the timestamp when this submission was created.
-     */
-    Instant getCreated();
     /**
      * @return the selftext of the submission.
      */
@@ -91,16 +70,5 @@ public interface SubmissionInterface extends Comparable<SubmissionInterface> {
      */
     default String getShortLink(){
         return String.format(SHORT_URL, this.getId());
-    }
-
-    /**
-     * Compares two submissions based on their creation date
-     * @param submission the submission this one is compared to.
-     * @return 0 if the argument submission was created exactly when this submission was.
-     * A negative value if this submission was created before the argument submission and a positive value otherwise.
-     */
-    @Override
-    default int compareTo(SubmissionInterface submission){
-        return getCreated().compareTo(submission.getCreated());
     }
 }
