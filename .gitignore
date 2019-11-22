@@ -87,3 +87,4 @@ fabric.properties
 **/target
 **/.idea
 **/*.iml
+/src/test/resources/config.json
