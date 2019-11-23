@@ -1,19 +1,9 @@
 # reddit
 
-This project implements the Reddit interface specified in [monticore-commons](https://github.com/Zavarov/monticore-commons) using [JRAW](https://github.com/mattbdean/JRAW)
+This project implements a Reddit adapter using [JRAW](https://github.com/mattbdean/JRAW)
 and via a custom implementation backed by [pushshift.io](https://pushshift.io/), in order to request more than 1000 submissions.
 It then uses the interface for analyzing both comments and submissions.
 Overall, the first implementation is intended to be used in realtime, while the second one is intended for analysis over a long period of time.
-
-#### api
-
-This module implements the different interfaces for the client, submission and comments.
-
-#### stats
-
-This module focuses on a more complex analysis of the data sets.
-As an example, it provides methods to compute the top submitters and top comments.
-In future updates this module will be separated and become an independent project.
 
 ### Installing
 
@@ -39,7 +29,6 @@ The template for the file is
 
 ## Built With
 
-* [MontiCore](https://github.com/MontiCore/monticore) - The language workbench for the comment and submission grammar in the io module.
 * [Maven](https://maven.apache.org/) - Dependency Management
 
 ## Authors
@@ -48,28 +37,35 @@ The template for the file is
 
 ## Dependencies:
 
-This project requires at least **Java 8**.
+This project requires at least **Java 8**.  
+ * **Apache Commons Text**
+   * Version: **1.8**
+   * [Github](https://github.com/apache/commons-text)
  * **Apache Http Client**
    * Version: **4.5.10**
    * [Github](https://github.com/apache/httpcomponents-client)
- * **Apache Maven JavaDoc Plugin**
-   * Version: **3.1.1**
-   * [Github](https://github.com/apache/maven-javadoc-plugin/)
- * **AssertJ**
-   * Version: **3.12.2**
-   * [Github](https://github.com/joel-costigliola/assertj-core)
+ * **Guava**
+   * Version: **28.1-jre**
+   * [Github](https://github.com/google/guava)
  * **JRAW**
    * Version: **1.1.0**
    * [Github](https://github.com/mattbdean/JRAW)
  * **JSON**
    * Version: **20190722**
    * [Github](https://github.com/stleary/JSON-java)
+
+## Plugins:
+ * **Apache Maven JavaDoc Plugin**
+   * Version: **3.1.1**
+   * [Github](https://github.com/apache/maven-javadoc-plugin)
+
+## Test Dependencies:
+ * **AssertJ**
+   * Version: **3.12.2**
+   * [Github](https://github.com/joel-costigliola/assertj-core)
  * **JUnit**
    * Version: **4.12**
    * [Github](https://github.com/junit-team/junit4)
- * **monticore-commons**
-   * Version: **1.2**
-   * [Github](https://github.com/Zavarov/monticore-commons)
 
 ## License
 
