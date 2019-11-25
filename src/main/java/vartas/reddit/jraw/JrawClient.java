@@ -33,7 +33,7 @@ import net.dean.jraw.tree.RootCommentNode;
 import org.apache.http.HttpStatus;
 import vartas.reddit.*;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
@@ -127,13 +127,13 @@ public class JrawClient implements ClientInterface {
      * Request submissions within a given interval sorted by their creation date.
      * Note that Reddit will -at most- return the past 1000 submissions.
      * @param subreddit the name of the subreddit.
-     * @param after the (inclusive) minimum age of the submissions.
-     * @param before the (exclusive) maximum age of the submissions.
+     * @param start the (inclusive) minimum age of the submissions.
+     * @param end the (exclusive) maximum age of the submissions.
      * @return all submissions within the given interval sorted by their creation time.
      * @throws UnresolvableRequestException if the API returned an unresolvable error.
      */
     @Override
-    public Optional<TreeSet<SubmissionInterface>> requestSubmission(String subreddit, Instant after, Instant before) throws UnresolvableRequestException{
+    public Optional<TreeSet<SubmissionInterface>> requestSubmission(String subreddit, LocalDateTime start, LocalDateTime end) throws UnresolvableRequestException{
         return request(() -> {
             DefaultPaginator<Submission> paginator = client
                     .subreddit(subreddit)
@@ -145,19 +145,19 @@ public class JrawClient implements ClientInterface {
 
             TreeSet<SubmissionInterface> submissions = new TreeSet<>();
             List<SubmissionInterface> current;
-            Instant newest;
+            LocalDateTime newest;
             //We have to do the iterative way because we can't specify an interval
             do{
                 //The newest value should be the last one
                 current = paginator.next().stream()
-                        .filter(s -> s.getCreated().toInstant().isBefore(before))   //Before 'before'    -> Exclusive 'before'
-                        .filter(s -> !s.getCreated().toInstant().isBefore(after))   //Not before 'after' -> Inclusive 'after'
                         .map(JrawSubmission::new)
+                        .filter(s -> s.getCreated().isBefore(end))          //Before 'end'       -> Exclusive 'before'
+                        .filter(s -> !s.getCreated().isBefore(start))       //Not before 'start' -> Inclusive 'after'
                         .collect(Collectors.toList());
-                newest = current.isEmpty() ? before : current.get(current.size()-1).getCreated();
+                newest = current.isEmpty() ? end : current.get(current.size()-1).getCreated();
                 submissions.addAll(current);
                 //Repeat when we haven't found the last submission
-            }while(newest.isBefore(before));
+            }while(newest.isBefore(end));
 
             return Optional.of(submissions);
         });

@@ -27,7 +27,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -43,10 +44,6 @@ public class PushshiftClient implements ClientInterface {
      * We only allow a single request per second for pushshift.
      */
     protected final RateLimiter rateLimiter = RateLimiter.create(1);
-    /**
-     * A scaling factor to convert the time in milliseconds to the time in seconds.
-     */
-    protected final static int MILLISECONDS_TO_SECONDS = 1000;
     /**
      * The underlying client.
      */
@@ -106,17 +103,17 @@ public class PushshiftClient implements ClientInterface {
      * In order to circumvent the 1000 submissions restriction, they are first requested via the Pushshift API in order
      * to get their ids, then those ids are used for the communication with the Reddit API.
      * @param subreddit the name of the subreddit.
-     * @param after the (inclusive) minimum age of the submissions.
-     * @param before the (exclusive) maximum age of the submissions.
+     * @param start the (inclusive) minimum age of the submissions.
+     * @param end the (exclusive) maximum age of the submissions.
      * @return all submissions within the given interval sorted by their creation time.
      * @throws UnresolvableRequestException if the API returned an unresolvable error.
      */
     @Override
-    public Optional<TreeSet<SubmissionInterface>> requestSubmission(String subreddit, Instant after, Instant before) throws UnresolvableRequestException{
+    public Optional<TreeSet<SubmissionInterface>> requestSubmission(String subreddit, LocalDateTime start, LocalDateTime end) throws UnresolvableRequestException{
         String jsonContent;
         //Break if the JSON request failed
         try {
-            jsonContent = requestJsonContent(subreddit, after, before);
+            jsonContent = requestJsonContent(subreddit, start, end);
         }catch(IOException e) {
             return Optional.empty();
         }
@@ -146,13 +143,16 @@ public class PushshiftClient implements ClientInterface {
     /**
      * Creates a request for the submissions between the given interval in
      * ascending order with an upper limit of at most 500 submissions.
+     * @param subreddit the name of the subreddit.
+     * @param start the (inclusive) minimum age of the submissions.
+     * @param end the (exclusive) maximum age of the submissions.
      * @return A JSON string containing all submissions within the interval.
      * @throws IOException if a communication error occured.
      */
-    protected String requestJsonContent(String subreddit, Instant after, Instant before) throws IOException{
+    protected String requestJsonContent(String subreddit, LocalDateTime start, LocalDateTime end) throws IOException{
         rateLimiter.acquire();
         StringBuilder builder = new StringBuilder();
-        URL url = new URL(createUrl(subreddit, after, before));
+        URL url = new URL(createUrl(subreddit, start, end));
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 
         connection.setRequestMethod("GET");
@@ -169,14 +169,17 @@ public class PushshiftClient implements ClientInterface {
     }
     /**
      * Generates the URL for the request.
+     * @param subreddit the name of the subreddit.
+     * @param start the (inclusive) minimum age of the submissions.
+     * @param end the (exclusive) maximum age of the submissions.
      * @return the URL that represents this request.
      */
-    protected String createUrl(String subreddit, Instant after, Instant before){
+    protected String createUrl(String subreddit, LocalDateTime start, LocalDateTime end){
         StringBuilder builder = new StringBuilder();
         builder.append("https://api.pushshift.io/reddit/search/submission/?subreddit=").append(subreddit);
         //Offset by 1 second to make 'after' and 'before' inclusive.
-        builder.append("&after=").append(after.toEpochMilli()/MILLISECONDS_TO_SECONDS-1);    //after - 1 -> Inclusive after
-        builder.append("&before=").append(before.toEpochMilli()/MILLISECONDS_TO_SECONDS);    //before    -> Exclusive before
+        builder.append("&after=").append(start.toEpochSecond(ZoneOffset.UTC)-1);    //after - 1 -> Inclusive after
+        builder.append("&before=").append(end.toEpochSecond(ZoneOffset.UTC));       //before    -> Exclusive before
         builder.append("&sort=desc&size=500");
         return builder.toString();
     }

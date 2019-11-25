@@ -37,7 +37,7 @@ The template for the file is
 
 ## Dependencies:
 
-This project requires at least **Java 8**.  
+This project requires at least **Java 11**.  
  * **Apache Commons Text**
    * Version: **1.8**
    * [Github](https://github.com/apache/commons-text)

@@ -21,7 +21,8 @@ import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.Submission;
 import vartas.reddit.CommentInterface;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 /**
  * This class implements the comments backed by their respective JRAW comments.
@@ -48,8 +49,8 @@ public class JrawComment implements CommentInterface{
      * @return the time in UTC when the comment was made
      */
     @Override
-    public Instant getCreated() {
-        return referee.getCreated().toInstant();
+    public LocalDateTime getCreated() {
+        return LocalDateTime.ofInstant(referee.getCreated().toInstant(), ZoneId.of("UTC"));
     }
     /**
      * @return the author of the comment.

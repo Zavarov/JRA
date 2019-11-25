@@ -20,7 +20,8 @@ package vartas.reddit.jraw;
 import net.dean.jraw.models.Account;
 import vartas.reddit.UserInterface;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
+
 /**
  * This class implements the users backed by their respective JRAW users.
  */
@@ -49,8 +50,8 @@ public class JrawUser implements UserInterface {
      * @return the date when the account was created.
      */
     @Override
-    public Instant getCreated() {
-        return referee.getCreated().toInstant();
+    public LocalDateTime getCreated() {
+        return LocalDateTime.from(referee.getCreated().toInstant());
     }
 
     /**

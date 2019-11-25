@@ -17,7 +17,7 @@
 
 package vartas.reddit;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.TreeSet;
@@ -83,12 +83,12 @@ public interface ClientInterface {
      * Request submissions within a given interval sorted by their creation date.
      * Note that Reddit will -at most- return the past 1000 submissions.
      * @param subreddit the name of the subreddit.
-     * @param after the (inclusive) minimum age of the submissions.
-     * @param before the (exclusive) maximum age of the submissions.
+     * @param start the (inclusive) minimum age of the submissions.
+     * @param end the (exclusive) maximum age of the submissions.
      * @return all submissions within the given interval.
      * @throws UnresolvableRequestException if the API returned an unresolvable error.
      */
-    default Optional<TreeSet<SubmissionInterface>> requestSubmission(String subreddit, Instant after, Instant before) throws UnresolvableRequestException{
+    default Optional<TreeSet<SubmissionInterface>> requestSubmission(String subreddit, LocalDateTime start, LocalDateTime end) throws UnresolvableRequestException{
         throw new UnsupportedOperationException("Not implemented for this interface");
     }
 
@@ -96,14 +96,14 @@ public interface ClientInterface {
      * Request submissions within a given interval sorted by their creation date.
      * Note that Reddit will -at most- return the past 1000 submissions.
      * @param subreddit the name of the subreddit.
-     * @param after the (inclusive) minimum age of the submissions.
-     * @param before the (exclusive) maximum age of the submissions.
+     * @param start the (inclusive) minimum age of the submissions.
+     * @param end the (exclusive) maximum age of the submissions.
      * @param retries the number of times the request is repeated upon failure.
      * @return all submissions within the given interval.
      * @throws UnresolvableRequestException if the API returned an unresolvable error.
      */
-    default Optional<TreeSet<SubmissionInterface>> requestSubmission(String subreddit, Instant after, Instant before, int retries) throws UnresolvableRequestException{
-        return request(() -> requestSubmission(subreddit, after, before), retries);
+    default Optional<TreeSet<SubmissionInterface>> requestSubmission(String subreddit, LocalDateTime start, LocalDateTime end, int retries) throws UnresolvableRequestException{
+        return request(() -> requestSubmission(subreddit, start, end), retries);
     }
 
     /**
@@ -154,7 +154,7 @@ public interface ClientInterface {
      */
     default <T> Optional<T> request(Supplier<Optional<T>> request, int attempts){
         Optional<T> result = Optional.empty();
-        while(attempts > 0 && !result.isPresent()){
+        while(attempts > 0 && result.isEmpty()){
             result = request.get();
             attempts--;
         }

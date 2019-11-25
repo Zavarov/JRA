@@ -21,7 +21,8 @@ import net.dean.jraw.models.Submission;
 import org.apache.commons.text.StringEscapeUtils;
 import vartas.reddit.SubmissionInterface;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 
 /**
@@ -99,8 +100,8 @@ public class JrawSubmission implements SubmissionInterface {
      * @return the timestamp when this submission was created.
      */
     @Override
-    public Instant getCreated(){
-        return referee.getCreated().toInstant();
+    public LocalDateTime getCreated(){
+        return LocalDateTime.ofInstant(referee.getCreated().toInstant(), ZoneId.of("UTC"));
     }
     /**
      * @return the selftext of the submission.

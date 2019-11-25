@@ -17,13 +17,13 @@
 
 package vartas.reddit;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 public interface RedditSnowflake extends Comparable<RedditSnowflake>{
     /**
-     * @return the time in UTC when this snowflake was made
+     * @return the the zone-less date when this snowflake was made
      */
-    Instant getCreated();
+    LocalDateTime getCreated();
     /**
      * @return the permalink to the snowflake.
      */
