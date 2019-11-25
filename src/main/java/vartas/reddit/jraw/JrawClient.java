@@ -175,7 +175,14 @@ public class JrawClient implements ClientInterface {
 
             SubmissionReference submissionReference = client.submission(submission);
 
-            RootCommentNode root = submissionReference.comments();
+            RootCommentNode root;
+            try {
+                //null if the submission doesn't exist -> Not a communication error
+                root = submissionReference.comments();
+            }catch(NullPointerException e){
+                Logger.getGlobal().warning(e.getMessage());
+                return Optional.of(Collections.emptyList());
+            }
             Submission submissionInstance = root.getSubject();
             //Acquire all the comments
             root.loadFully(client);
