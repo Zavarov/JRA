@@ -28,13 +28,13 @@ import java.nio.file.Paths;
 import static org.junit.Assert.fail;
 
 public class AbstractTest {
-    static ClientInterface client;
+    static Client client;
     @BeforeClass
     public static void setUpBeforeClass(){
         client = getJrawClient();
     }
 
-    protected static ClientInterface getJrawClient(){
+    protected static Client getJrawClient(){
         JSONObject config;
         try{
             String content = new String(Files.readAllBytes(Paths.get("src/test/resources/config.json")));
@@ -51,7 +51,7 @@ public class AbstractTest {
         return new JrawClient(name, version, clientId, secret);
     }
 
-    protected static ClientInterface getPushshiftClient(){
+    protected static Client getPushshiftClient(){
         return new PushshiftClient(getJrawClient());
     }
 }

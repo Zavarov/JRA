@@ -17,12 +17,12 @@
 
 package vartas.reddit.visitor;
 
-import vartas.reddit.SubmissionInterface;
+import vartas.reddit.Submission;
 
 public interface SubmissionVisitor {
-    default void visit(SubmissionInterface submission){}
-    default void traverse(SubmissionInterface submission){}
-    default void handle(SubmissionInterface submission){
+    default void visit(Submission submission){}
+    default void traverse(Submission submission){}
+    default void handle(Submission submission){
         visit(submission);
         traverse(submission);
     }

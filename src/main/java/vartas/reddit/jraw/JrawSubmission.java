@@ -17,9 +17,8 @@
 
 package vartas.reddit.jraw;
 
-import net.dean.jraw.models.Submission;
 import org.apache.commons.text.StringEscapeUtils;
-import vartas.reddit.SubmissionInterface;
+import vartas.reddit.Submission;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -28,83 +27,90 @@ import java.util.Optional;
 /**
  * This class implements the submissions backed by their respective JRAW submissions.
  */
-public class JrawSubmission implements SubmissionInterface {
+public class JrawSubmission implements Submission {
+    /**
+     * The URL for to the submission, given its name.
+     */
+    String PERMALINK_URL = "https://www.reddit.com%s";
     /**
      * The underlying submission instance.
      */
-    protected Submission referee;
+    protected net.dean.jraw.models.Submission referee;
     /**
      * Creates a new instance of a submission.
-     * @param referee the underlying JRAW submission .
+     * @param referee The underlying JRAW submission .
      */
-    public JrawSubmission(Submission referee){
+    public JrawSubmission(net.dean.jraw.models.Submission referee){
         this.referee = referee;
     }
     /**
-     * @return the author of the submission.
+     * @return {@link net.dean.jraw.models.Submission#getAuthor()}.
      */
     @Override
     public String getAuthor(){
         return referee.getAuthor();
     }
     /**
-     * @return the id of the submission.
+     * @return {@link net.dean.jraw.models.Submission#getId()}.
      */
     @Override
     public String getId(){
         return referee.getId();
     }
     /**
-     * @return the flair text, if one exists, or null otherwise.
+     * The link flair text might be null, so we wrap it around an {@link Optional}
+     * @return {@link net.dean.jraw.models.Submission#getLinkFlairText()}.
      */
     @Override
     public Optional<String> getLinkFlairText(){
         return Optional.ofNullable(referee.getLinkFlairText());
     }
     /**
-     * @return the subreddit the submission was posted in.
+     * @return {@link net.dean.jraw.models.Submission#getSubreddit()}.
      */
     @Override
     public String getSubreddit(){
         return referee.getSubreddit();
     }
     /**
-     * @return true, if the submission is marked as NSFW.
+     * @return {@link net.dean.jraw.models.Submission#isNsfw()}.
      */
     @Override
     public boolean isNsfw(){
         return referee.isNsfw();
     }
     /**
-     * @return true, if the submission is marked as spoiler.
+     * @return {@link net.dean.jraw.models.Submission#isSpoiler()}.
      */
     @Override
     public boolean isSpoiler(){
         return referee.isSpoiler();
     }
     /**
-     * @return the upvotes minus the downvotes.
+     * @return {@link net.dean.jraw.models.Submission#getScore()}.
      */
     @Override
     public int getScore(){
         return referee.getScore();
     }
     /**
-     * @return the title of the submission.
+     * @return {@link net.dean.jraw.models.Submission#getTitle()}.
      */
     @Override
     public String getTitle(){
         return referee.getTitle();
     }
     /**
-     * @return the timestamp when this submission was created.
+     * Transforms the date into a {@link LocalDateTime} with the GMT zone.
+     * @return {@link net.dean.jraw.models.Submission#getCreated}.
      */
     @Override
     public LocalDateTime getCreated(){
         return LocalDateTime.ofInstant(referee.getCreated().toInstant(), ZoneId.of("UTC"));
     }
     /**
-     * @return the selftext of the submission.
+     * The self text might be null, so we wrap it around an {@link Optional}.
+     * @return {@link net.dean.jraw.models.Submission#getSelfText()}.
      */
     @Override
     public Optional<String> getSelfText(){
@@ -114,21 +120,29 @@ public class JrawSubmission implements SubmissionInterface {
         return Optional.of(StringEscapeUtils.unescapeHtml4(referee.getSelfText()).trim());
     }
     /**
-     * @return the thumbnail of the submission.
+     * The thumbnail might be null, so we wrap it around an {@link Optional}.
+     * @return {@link net.dean.jraw.models.Submission#getThumbnail()}.
      */
     @Override
     public Optional<String> getThumbnail(){
         return referee.hasThumbnail() ? Optional.ofNullable(referee.getThumbnail()) : Optional.empty();
     }
     /**
-     * @return an absolute URL to the comments in a self post, otherwise an URL to the submission content.
+     * @return {@link net.dean.jraw.models.Submission#getUrl}
      */
     @Override
     public String getUrl(){
         return referee.getUrl();
     }
     /**
-     * @return a hash code based on the id of the submission.
+     * @return The permalink to the submission.
+     */
+    @Override
+    public String getPermalink(){
+        return String.format(PERMALINK_URL, referee.getPermalink());
+    }
+    /**
+     * @return a hash code based on {@link #getId()}.
      */
     @Override
     public int hashCode(){
@@ -136,23 +150,16 @@ public class JrawSubmission implements SubmissionInterface {
     }
     /**
      * Two submissions are equal if they have the same id.
-     * @param o an object this submission is compared to.
-     * @return true if the object is a submission with the same id.
+     * @param o An object this submission is compared to.
+     * @return True if the object is a submission with the same id.
      */
     @Override
     public boolean equals(Object o){
-        if(o instanceof SubmissionInterface){
-            SubmissionInterface submission = (SubmissionInterface)o;
+        if(o instanceof Submission){
+            Submission submission = (Submission)o;
             return submission.getId().equals(this.getId());
         }else{
             return false;
         }
-    }
-    /**
-     * @return the permalink to the submission.
-     */
-    @Override
-    public String getPermalink(){
-        return String.format(PERMALINK_URL, referee.getPermalink());
     }
 }

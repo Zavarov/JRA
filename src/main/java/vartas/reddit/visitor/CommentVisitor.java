@@ -17,12 +17,12 @@
 
 package vartas.reddit.visitor;
 
-import vartas.reddit.CommentInterface;
+import vartas.reddit.Comment;
 
 public interface CommentVisitor {
-    default void visit(CommentInterface comment){}
-    default void traverse(CommentInterface comment){}
-    default void handle(CommentInterface comment){
+    default void visit(Comment comment){}
+    default void traverse(Comment comment){}
+    default void handle(Comment comment){
         visit(comment);
         traverse(comment);
     }

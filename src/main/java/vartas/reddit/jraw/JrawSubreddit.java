@@ -17,38 +17,40 @@
 
 package vartas.reddit.jraw;
 
-import net.dean.jraw.models.Subreddit;
 import org.apache.commons.text.StringEscapeUtils;
-import vartas.reddit.SubredditInterface;
+import vartas.reddit.Subreddit;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 /**
  * This class implements the subreddits backed by their respective JRAW subreddits.
  */
-public class JrawSubreddit implements SubredditInterface {
+public class JrawSubreddit implements Subreddit {
     /**
      * The underlying subreddit instance.
      */
-    protected Subreddit referee;
+    protected net.dean.jraw.models.Subreddit referee;
     /**
      * Creates a new instance of a subreddit.
-     * @param referee the underlying JRAW subreddit .
+     * @param referee The underlying JRAW subreddit .
      */
-    public JrawSubreddit(Subreddit referee){
+    public JrawSubreddit(net.dean.jraw.models.Subreddit referee){
         this.referee = referee;
     }
 
     /**
-     * @return the number of currently active accounts
+     * The active accounts might be null, so we wrap it around an {@link Optional}.
+     * @return {@link net.dean.jraw.models.Subreddit#getAccountsActive()}.
      */
     @Override
-    public int getAccountsActive() {
-        return referee.getAccountsActive() == null ? 0 : referee.getAccountsActive();
+    public Optional<Integer> getAccountsActive() {
+        return Optional.ofNullable(referee.getAccountsActive());
     }
 
     /**
-     * @return the optional url to the banner image.
+     * The banner image might be null, so we wrap it around an {@link Optional}.
+     * @return {@link net.dean.jraw.models.Subreddit#getBannerImage()}.
      */
     @Override
     public Optional<String> getBannerImage() {
@@ -56,15 +58,16 @@ public class JrawSubreddit implements SubredditInterface {
     }
 
     /**
-     * @return the date when the subreddit was created.
+     * Transforms the date into a {@link LocalDateTime} with the GMT zone.
+     * @return {@link net.dean.jraw.models.Subreddit#getCreated}.
      */
     @Override
     public LocalDateTime getCreated() {
-        return LocalDateTime.from(referee.getCreated().toInstant());
+        return LocalDateTime.ofInstant(referee.getCreated().toInstant(), ZoneId.of("UTC"));
     }
 
     /**
-     * @return the name of the subreddit.
+     * @return {@link net.dean.jraw.models.Subreddit#getName()}.
      */
     @Override
     public String getName() {
@@ -72,7 +75,9 @@ public class JrawSubreddit implements SubredditInterface {
     }
 
     /**
-     * @return the public description of the subreddit.
+     * The description in the referee still contains HTML4 symbols.<br>
+     * Those are translated into their respective ASCII symbols before the result is returned.
+     * @return {@link net.dean.jraw.models.Subreddit#getPublicDescription()}.
      */
     @Override
     public String getPublicDescription() {
@@ -80,14 +85,14 @@ public class JrawSubreddit implements SubredditInterface {
     }
 
     /**
-     * @return the number of subscribed user or -1 if the bot can't access it.
+     * @return {@link net.dean.jraw.models.Subreddit#getSubscribers()}.
      */
     @Override
     public int getSubscribers() {
         return referee.getSubscribers();
     }
     /**
-     * @return a hash code based on the name of the subreddit.
+     * @return A hash code based on ${@link #getName()}.
      */
     @Override
     public int hashCode(){
@@ -95,13 +100,13 @@ public class JrawSubreddit implements SubredditInterface {
     }
     /**
      * Two subreddits are equal if they have the same name.
-     * @param o an object this subreddit is compared to.
-     * @return true if the object is a subreddit with the same name.
+     * @param o An object this subreddit is compared to.
+     * @return True if the object is a subreddit with the same name.
      */
     @Override
     public boolean equals(Object o){
-        if(o instanceof SubredditInterface){
-            SubredditInterface subreddit = (SubredditInterface)o;
+        if(o instanceof Subreddit){
+            Subreddit subreddit = (Subreddit)o;
             return subreddit.getName().equals(this.getName());
         }else{
             return false;

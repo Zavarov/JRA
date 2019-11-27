@@ -18,28 +18,29 @@
 package vartas.reddit.jraw;
 
 import net.dean.jraw.models.Account;
-import vartas.reddit.UserInterface;
+import vartas.reddit.RedditUser;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 /**
  * This class implements the users backed by their respective JRAW users.
  */
-public class JrawUser implements UserInterface {
+public class JrawUser implements RedditUser {
     /**
      * The underlying user instance.
      */
     protected Account referee;
     /**
      * Creates a new instance of an user.
-     * @param referee the underlying JRAW user .
+     * @param referee The underlying JRAW user .
      */
     public JrawUser(Account referee){
         this.referee = referee;
     }
 
     /**
-     * @return the comment karma of the user.
+     * @return {@link Account#getCommentKarma}.
      */
     @Override
     public int getCommentKarma() {
@@ -47,15 +48,16 @@ public class JrawUser implements UserInterface {
     }
 
     /**
-     * @return the date when the account was created.
+     * Transforms the date into a {@link LocalDateTime} with the GMT zone.
+     * @return {@link Account#getCreated}.
      */
     @Override
     public LocalDateTime getCreated() {
-        return LocalDateTime.from(referee.getCreated().toInstant());
+        return LocalDateTime.ofInstant(referee.getCreated().toInstant(), ZoneId.of("UTC"));
     }
 
     /**
-     * @return the link karma.
+     * @return {@link Account#getLinkKarma}.
      */
     @Override
     public int getLinkKarma() {
@@ -63,14 +65,14 @@ public class JrawUser implements UserInterface {
     }
 
     /**
-     * @return name of the user.
+     * @return {@link Account#getName}.
      */
     @Override
     public String getName() {
         return referee.getName();
     }
     /**
-     * @return a hash code based on the name of the user.
+     * @return A hash code based on {@link #getName}.
      */
     @Override
     public int hashCode(){
@@ -78,13 +80,13 @@ public class JrawUser implements UserInterface {
     }
     /**
      * Two users are equal if they have the same name.
-     * @param o an object this user is compared to.
-     * @return true if the object is a user with the same name.
+     * @param o An object this user is compared to.
+     * @return True if the object is a user with the same name.
      */
     @Override
     public boolean equals(Object o){
-        if(o instanceof UserInterface){
-            UserInterface user = (UserInterface)o;
+        if(o instanceof RedditUser){
+            RedditUser user = (RedditUser)o;
             return user.getName().equals(this.getName());
         }else{
             return false;

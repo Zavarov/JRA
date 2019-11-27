@@ -17,33 +17,35 @@
 
 package vartas.reddit;
 
-import vartas.reddit.visitor.SubredditSnowflakeVisitor;
-
 /**
- * This is the interface for all Reddit comments.
+ * This is the interface for a single Reddit profile.
  */
-public interface CommentInterface extends SubredditSnowflake{
+public interface RedditUser extends RedditSnowflake{
     /**
-     * The URL frame that will link to the comment.
+     * The URL will link to the user page, given its name.
      */
-    String COMMENT_URL = "https://www.reddit.com/r/%s/comments/%s/-/%s";
+    String USER_URL = "https://www.reddit.com/u/%s";
+
     /**
-     * @return the  name of the submission, the comment is in.
+     * @return The comment karma.
      */
-    String getSubmission();
+    int getCommentKarma();
+
     /**
-     * @return the title of the submission, the comment is in.
+     * @return The link karma.
      */
-    String getSubmissionTitle();
+    int getLinkKarma();
+
     /**
-     * @return a permalink to the comment.
+     * @return The user name.
+     */
+    String getName();
+
+    /**
+     * @return The permalink to the users' page.
      */
     @Override
     default String getPermalink(){
-        return String.format(COMMENT_URL,getSubreddit(),getSubmission(),getId());
-    }
-    @Override
-    default void accept(SubredditSnowflakeVisitor visitor){
-        visitor.handle(this);
+        return String.format(USER_URL, getName());
     }
 }

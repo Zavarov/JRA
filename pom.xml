@@ -40,7 +40,9 @@
 
         <!-- .. Plugins ....................................................... -->
 
-        <javadoc.plugin>3.1.1</javadoc.plugin>
+
+        <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
+        <maven-source-plugin.version>3.1.0</maven-source-plugin.version>
 
         <!-- .. Misc .......................................................... -->
 
@@ -68,11 +70,24 @@
 
     <build>
         <plugins>
+            <!-- create sources jar -->
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven-source-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- create docs jar -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${javadoc.plugin}</version>
+                <version>${maven-javadoc-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>generate-docs</id>

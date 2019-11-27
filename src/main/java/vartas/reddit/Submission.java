@@ -21,54 +21,55 @@ import vartas.reddit.visitor.SubredditSnowflakeVisitor;
 
 import java.util.Optional;
 /**
- * This is the interface for all Reddit submissions.
+ * This is the interface for a single submissions.
  */
-public interface SubmissionInterface extends SubredditSnowflake {
+public interface Submission extends SubredditSnowflake {
     /**
-     * The URL frame that will link to the submission.
+     * The shortened URL for the submission, given its id.
      */
     String SHORT_URL = "https://redd.it/%s";
     /**
-     * The URL frame that will link to the submission.
-     */
-    String PERMALINK_URL = "https://www.reddit.com%s";
-    /**
-     * @return the flair text, if one exists, or null otherwise.
+     * @return The flair text, if one exists.
      */
     Optional<String> getLinkFlairText();
     /**
-     * @return true, if the submission is marked as NSFW.
+     * @return True, if the submission is marked as NSFW.
      */
     boolean isNsfw();
     /**
-     * @return true, if the submission is marked as spoiler.
+     * @return True, if the submission is marked as spoiler.
      */
     boolean isSpoiler();
     /**
-     * @return the title of the submission.
+     * @return The title of the submission.
      */
     String getTitle();
     /**
-     * @return the selftext of the submission.
+     * @return The selftext of the submission.
      */
     Optional<String> getSelfText();
 
     /**
-     * @return the thumbnail of the submission.
+     * @return The thumbnail of the submission.
      */
     Optional<String> getThumbnail();
 
     /**
-     * @return an absolute URL to the comments in a self post, otherwise an URL to the submission content.
+     * @return An absolute URL to the comments in a self post, otherwise an URL to the submission content.
      */
     String getUrl();
 
     /**
-     * @return the short link to the submission.
+     * @return The short link to the submission.
      */
     default String getShortLink(){
         return String.format(SHORT_URL, this.getId());
     }
+
+    /**
+     * This method is part of the visitor pattern to visit the individual submissions.
+     * @param visitor The visitor for this snowflake.
+     */
     @Override
     default void accept(SubredditSnowflakeVisitor visitor){
         visitor.handle(this);

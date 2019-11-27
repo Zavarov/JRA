@@ -17,6 +17,7 @@
 
 package vartas.reddit;
 
+import org.apache.http.client.HttpResponseException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,30 +42,53 @@ public class JrawClientTest extends AbstractTest{
         client.login();
     }
     @Test
-    public void requestUser(){
+    public void requestUser() throws HttpResponseException {
         assertThat(client.requestUser("Zavarov", 1)).isPresent();
     }
     @Test
-    public void requestSubreddit(){
+    public void requestSubreddit() throws HttpResponseException {
         assertThat(client.requestSubreddit("RedditDev", 1)).isPresent();
     }
     @Test
-    public void requestSubmission(){
+    public void requestSubmission() throws HttpResponseException {
         LocalDateTime instant = LocalDateTime.now(ZoneId.of("UTC"));
         LocalDateTime before = instant;
         LocalDateTime after = instant.minus(1, ChronoUnit.HOURS);
-        System.out.println(instant);
-        client.requestSubmission("discordapp", after, before, 1).orElseThrow().stream().map(s -> s.getCreated() + ", "+s.getTitle()).forEach(System.out::println);
+        //System.out.println(instant);
+        //client.requestSubmission("discordapp", after, before, 1).orElseThrow().stream().map(s -> s.getCreated() + ", "+s.getTitle()).forEach(System.out::println);
         assertThat(client.requestSubmission("RedditDev", after, before, 1)).isPresent();
     }
     @Test
-    public void requestComment(){
+    public void requestComment() throws HttpResponseException {
         //https://www.reddit.com/r/announcements/comments/blev4z/how_to_keep_your_reddit_account_safe/
         assertThat(client.requestComment("blev4z", 1)).isPresent();
     }
     @Test
-    public void requestSubmissionId(){
+    public void requestSubmissionById() throws HttpResponseException {
         //https://www.reddit.com/r/announcements/comments/blev4z/how_to_keep_your_reddit_account_safe/
         assertThat(client.requestSubmission("blev4z", 1)).isPresent();
+    }
+    @Test
+    public void requestInvalidUser() throws HttpResponseException {
+        assertThat(client.requestUser("#####", 1)).isEmpty();
+    }
+    @Test(expected=HttpResponseException.class)
+    public void requestInvalidSubreddit() throws HttpResponseException {
+        client.requestSubreddit("#####", 1);
+    }
+    @Test(expected=HttpResponseException.class)
+    public void requestInvalidSubmission() throws HttpResponseException {
+        LocalDateTime instant = LocalDateTime.now(ZoneId.of("UTC"));
+        LocalDateTime before = instant;
+        LocalDateTime after = instant.minus(1, ChronoUnit.HOURS);
+        client.requestSubmission("#####", after, before, 1);
+    }
+    @Test(expected=HttpResponseException.class)
+    public void requestInvalidComment() throws HttpResponseException {
+        client.requestComment("#####", 1);
+    }
+    @Test(expected=HttpResponseException.class)
+    public void requestSubmissionByInvalidId() throws HttpResponseException {
+        client.requestSubmission("#####", 1);
     }
 }

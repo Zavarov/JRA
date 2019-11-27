@@ -19,9 +19,13 @@ package vartas.reddit;
 
 import java.time.LocalDateTime;
 
+/**
+ * This interface should be implemented by all Reddit entities.
+ */
 public interface RedditSnowflake extends Comparable<RedditSnowflake>{
     /**
-     * @return the the zone-less date when this snowflake was made
+     * To ensure compatibility, the date has to be in the GMT time zone.
+     * @return The date when this snowflake was made.
      */
     LocalDateTime getCreated();
     /**
@@ -30,10 +34,10 @@ public interface RedditSnowflake extends Comparable<RedditSnowflake>{
     String getPermalink();
 
     /**
-     * Compares two snowflakes based on their creation date
-     * @param snowflake the snowflake this one is compared to.
-     * @return 0 if the argument snowflake was created exactly when this snowflake was.
-     * A negative value if this snowflake was created before the argument snowflake and a positive value otherwise.
+     * Compares two snowflakes based on their creation date.
+     * @param snowflake The snowflake this one is compared to.
+     * @return 0 If the snowflakes where created at exactly the same time,
+     * a negative value if this snowflake was created earlier, otherwise a positive value.
      */
     @Override
     default int compareTo(RedditSnowflake snowflake){

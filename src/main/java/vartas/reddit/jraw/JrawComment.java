@@ -17,9 +17,8 @@
 
 package vartas.reddit.jraw;
 
-import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.Submission;
-import vartas.reddit.CommentInterface;
+import vartas.reddit.Comment;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -27,75 +26,76 @@ import java.time.ZoneId;
 /**
  * This class implements the comments backed by their respective JRAW comments.
  */
-public class JrawComment implements CommentInterface{
+public class JrawComment implements Comment {
     /**
      * The underlying comment instance.
      */
-    protected Comment referee;
+    protected net.dean.jraw.models.Comment referee;
     /**
      * The underlying submission the comment is in.
      */
     protected Submission submission;
     /**
      * Creates a new instance of a comment.
-     * @param referee the underlying JRAW comment.
-     * @param submission the underlying JRAW submission the comment is a part of.
+     * @param referee The underlying JRAW comment.
+     * @param submission The underlying JRAW submission the comment is a part of.
      */
-    public JrawComment(Comment referee, Submission submission){
+    public JrawComment(net.dean.jraw.models.Comment referee, Submission submission){
         this.referee = referee;
         this.submission = submission;
     }
     /**
-     * @return the time in UTC when the comment was made
+     * Transforms the date into a {@link LocalDateTime} with the GMT zone.
+     * @return {@link net.dean.jraw.models.Comment#getCreated()}.
      */
     @Override
     public LocalDateTime getCreated() {
         return LocalDateTime.ofInstant(referee.getCreated().toInstant(), ZoneId.of("UTC"));
     }
     /**
-     * @return the author of the comment.
+     * @return {@link net.dean.jraw.models.Comment#getAuthor()}.
      */
     @Override
     public String getAuthor(){
         return referee.getAuthor();
     }
     /**
-     * @return the id of the comment.
+     * @return {@link net.dean.jraw.models.Comment#getId()}.
      */
     @Override
     public String getId(){
         return referee.getId();
     }
     /**
-     * @return the upvotes minus the downvotes.
+     * @return {@link net.dean.jraw.models.Comment#getScore()}.
      */
     @Override
     public int getScore(){
         return referee.getScore();
     }
     /**
-     * @return the  name of the submission, the comment is in.
+     * @return {@link net.dean.jraw.models.Comment#getId()}.
      */
     @Override
     public String getSubmission(){
         return submission.getId();
     }
     /**
-     * @return the name of the subreddit, the comment is in.
+     * @return {@link net.dean.jraw.models.Comment#getSubreddit()}.
      */
     @Override
     public String getSubreddit(){
         return referee.getSubreddit();
     }
     /**
-     * @return the title of the submission, the comment is in.
+     * @return {@link net.dean.jraw.models.Comment#getSubmissionTitle()}.
      */
     @Override
     public String getSubmissionTitle(){
         return submission.getTitle();
     }
     /**
-     * @return a hash code based on the id of the comment.
+     * @return a hash code based on {@link #getId()}.
      */
     @Override
     public int hashCode(){
@@ -103,13 +103,13 @@ public class JrawComment implements CommentInterface{
     }
     /**
      * Two comments are equal if they have the same id.
-     * @param o an object this comment is compared to.
-     * @return true if the object is a comment with the same id.
+     * @param o An object this comment is compared to.
+     * @return True if the object is a comment with the same id.
      */
     @Override
     public boolean equals(Object o){
-        if(o instanceof CommentInterface){
-            CommentInterface comment = (CommentInterface)o;
+        if(o instanceof Comment){
+            Comment comment = (Comment)o;
             return comment.getId().equals(this.getId());
         }else{
             return false;

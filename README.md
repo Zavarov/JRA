@@ -58,6 +58,9 @@ This project requires at least **Java 11**.
  * **Apache Maven JavaDoc Plugin**
    * Version: **3.1.1**
    * [Github](https://github.com/apache/maven-javadoc-plugin)
+ * **Apache Maven Source Plugin**
+   * Version: **3.1.0**
+   * [Github](https://github.com/apache/maven-source-plugin)
 
 ## Test Dependencies:
  * **AssertJ**

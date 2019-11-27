@@ -17,6 +17,7 @@
 
 package vartas.reddit;
 
+import org.apache.http.client.HttpResponseException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -41,33 +42,11 @@ public class PushshiftClientTest extends AbstractTest{
     public void tearDown(){
         client.logout();
     }
-    @Test(expected=IllegalStateException.class)
-    public void testLoginTwice(){
-        client.login();
-    }
     @Test
-    public void requestUser(){
-        assertThat(client.requestUser("Zavarov", 1)).isPresent();
-    }
-    @Test
-    public void requestSubreddit(){
-        assertThat(client.requestSubreddit("RedditDev", 1)).isPresent();
-    }
-    @Test
-    public void requestSubmission(){
+    public void requestSubmission() throws HttpResponseException {
         LocalDateTime instant = LocalDateTime.now(ZoneId.of("UTC"));
         LocalDateTime before = instant;
         LocalDateTime after = instant.minus(1, ChronoUnit.DAYS);
         assertThat(client.requestSubmission("RedditDev", after, before, 1)).isPresent();
-    }
-    @Test
-    public void requestComment(){
-        //https://www.reddit.com/r/announcements/comments/blev4z/how_to_keep_your_reddit_account_safe/
-        assertThat(client.requestComment("blev4z", 1)).isPresent();
-    }
-    @Test
-    public void requestSubmissionId(){
-        //https://www.reddit.com/r/announcements/comments/blev4z/how_to_keep_your_reddit_account_safe/
-        assertThat(client.requestSubmission("blev4z", 1)).isPresent();
     }
 }

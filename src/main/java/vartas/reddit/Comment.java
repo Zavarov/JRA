@@ -20,43 +20,35 @@ package vartas.reddit;
 import vartas.reddit.visitor.SubredditSnowflakeVisitor;
 
 /**
- * A snowflake inside a subreddit.<br>
- * This can be a {@link Submission} or a {@link Comment}, to name two.
+ * This is the interface for all Reddit comments.
  */
-public interface SubredditSnowflake extends RedditSnowflake{
+public interface Comment extends SubredditSnowflake{
     /**
-     * The URL body that will link to the subreddit, given the name.
+     * The URL for the comment, given the subreddit name, submission name and comment id.
      */
-    String SUBREDDIT_URL = "https://www.reddit.com/r/%s";
+    String COMMENT_URL = "https://www.reddit.com/r/%s/comments/%s/-/%s";
     /**
-     * @return The author of the snowflake.
+     * @return The  name of the submission, the comment is in.
      */
-    String getAuthor();
+    String getSubmission();
     /**
-     * @return The id of the snowflake.
+     * @return The title of the submission, the comment is in.
      */
-    String getId();
+    String getSubmissionTitle();
     /**
-     * @return The upvotes minus the downvotes.
-     */
-    int getScore();
-    /**
-     * @return The name of the subreddit, the snowflake is in.
-     */
-    String getSubreddit();
-
-    /**
-     * @return The permalink to the users' page.
+     * @return A permalink to the comment.
      */
     @Override
     default String getPermalink(){
-        return String.format(SUBREDDIT_URL, getSubreddit());
+        return String.format(COMMENT_URL,getSubreddit(),getSubmission(),getId());
     }
 
     /**
-     * This method is part of the visitor pattern and used to visit the individual snowflakes
-     * without having to rely on reflection.
+     * This method is part of the visitor pattern to visit the individual comments.
      * @param visitor The visitor for this snowflake.
      */
-    void accept(SubredditSnowflakeVisitor visitor);
+    @Override
+    default void accept(SubredditSnowflakeVisitor visitor){
+        visitor.handle(this);
+    }
 }

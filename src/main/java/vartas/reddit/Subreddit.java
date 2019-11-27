@@ -19,41 +19,43 @@ package vartas.reddit;
 
 import java.util.Optional;
 /**
- * This is the interface for all subreddits.
+ * This is the interface for a single subreddit.
  */
-public interface SubredditInterface extends RedditSnowflake{
+public interface Subreddit extends RedditSnowflake{
     /**
-     * The URL frame that will link to the subreddit.
+     * The URL body that will link to the subreddit, given its name.
      */
     String SUBREDDIT_URL = "https://www.reddit.com/%s";
 
     /**
-     * @return the number of currently active accounts
+     * We can't determine the number of active accounts if the subreddit is private.
+     * @return The number of currently active accounts
      */
-    int getAccountsActive();
+    Optional<Integer> getAccountsActive();
 
     /**
-     * @return the optional url to the banner image.
+     * @return The URL to the banner image, if it exists.
      */
     Optional<String> getBannerImage();
 
     /**
-     * @return the name of the subreddit.
+     * @return The name of the subreddit.
      */
     String getName();
 
     /**
-     * @return the public description of the subreddit.
+     * @return The public description of the subreddit.
      */
     String getPublicDescription();
 
     /**
-     * @return the number of subscribed user or -1 if the bot can't access it.
+     * In case the program can't access the subreddit, -1 is returned.
+     * @return The number of users that subscribed to the subreddit.
      */
     int getSubscribers();
 
     /**
-     * @return the permalink to the subreddit.
+     * @return The permalink to the subreddit.
      */
     @Override
     default String getPermalink(){
