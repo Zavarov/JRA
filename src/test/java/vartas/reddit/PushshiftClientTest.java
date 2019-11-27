@@ -23,6 +23,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,7 +55,7 @@ public class PushshiftClientTest extends AbstractTest{
     }
     @Test
     public void requestSubmission(){
-        LocalDateTime instant = LocalDateTime.now();
+        LocalDateTime instant = LocalDateTime.now(ZoneId.of("UTC"));
         LocalDateTime before = instant;
         LocalDateTime after = instant.minus(1, ChronoUnit.DAYS);
         assertThat(client.requestSubmission("RedditDev", after, before, 1)).isPresent();
