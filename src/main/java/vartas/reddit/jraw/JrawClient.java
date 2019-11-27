@@ -231,6 +231,9 @@ public class JrawClient implements Client {
             handle(e.getRes().getCode(), Integer.toString(e.getRes().getCode()));
         } catch(ApiException e){
             handle(Integer.parseInt(e.getCode()), e.getExplanation());
+        } catch(Exception e){
+            //In case JRAW fucks up
+            Logger.getGlobal().severe(e.getMessage());
         }
         return requestOpt;
     }
