@@ -76,7 +76,7 @@ public class PushshiftClient implements Client {
             TreeSet<Submission> submissions = new TreeSet<>();
 
             for(String id : extractSubmissions(jsonContent))
-                submissions.add(client.requestSubmission(id).orElseThrow());
+                client.requestSubmission(id).ifPresent(submissions::add);
 
             return Optional.of(submissions);
         }catch(IOException e) {
