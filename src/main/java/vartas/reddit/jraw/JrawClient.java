@@ -253,6 +253,7 @@ public class JrawClient implements Client {
         switch(errorCode){
             case HttpStatus.SC_UNAUTHORIZED:
                 Logger.getGlobal().warning(explanation);
+                break;
             default:
                 Logger.getGlobal().severe(explanation);
                 throw new HttpResponseException(errorCode, explanation);
