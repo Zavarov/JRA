@@ -20,9 +20,8 @@ package vartas.reddit;
 import org.apache.http.client.HttpResponseException;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
-import java.util.TreeSet;
 
 /**
  * This interface provides the communication between this library and the Reddit API.
@@ -89,7 +88,7 @@ public interface Client {
      * @return All submissions within the given interval.
      * @throws HttpResponseException If the API returned an unresolvable error.
      */
-    default Optional<TreeSet<Submission>> requestSubmission(String subreddit, LocalDateTime start, LocalDateTime end) throws HttpResponseException{
+    default Optional<Collection<Submission>> requestSubmission(String subreddit, LocalDateTime start, LocalDateTime end) throws HttpResponseException{
         throw new UnsupportedOperationException("Not implemented for this interface");
     }
 
@@ -103,7 +102,7 @@ public interface Client {
      * @return All submissions within the given interval.
      * @throws HttpResponseException If the API returned an unresolvable error.
      */
-    default Optional<TreeSet<Submission>> requestSubmission(String subreddit, LocalDateTime start, LocalDateTime end, int retries) throws HttpResponseException{
+    default Optional<Collection<Submission>> requestSubmission(String subreddit, LocalDateTime start, LocalDateTime end, int retries) throws HttpResponseException{
         return request(() -> requestSubmission(subreddit, start, end), retries);
     }
 
@@ -133,7 +132,7 @@ public interface Client {
      * @return All comments of the submission.
      * @throws HttpResponseException If the API returned an unresolvable error.
      */
-    default Optional<List<Comment>> requestComment(String commentId, int retries) throws HttpResponseException{
+    default Optional<Collection<Comment>> requestComment(String commentId, int retries) throws HttpResponseException{
         return request(() -> requestComment(commentId), retries);
     }
 
@@ -142,7 +141,7 @@ public interface Client {
      * @return All comments of the submission.
      * @throws HttpResponseException If the API returned an unresolvable error.
      */
-    default Optional<List<Comment>> requestComment(String commentId) throws HttpResponseException{
+    default Optional<Collection<Comment>> requestComment(String commentId) throws HttpResponseException{
         throw new UnsupportedOperationException("Not implemented for this interface");
     }
 

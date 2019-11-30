@@ -30,10 +30,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * This class implements the Reddit client using both the JRAW library and the Pushshift API to circumvent the 1000
@@ -67,7 +64,7 @@ public class PushshiftClient implements Client {
      * @return All submissions within the given interval.
      */
     @Override
-    public Optional<TreeSet<Submission>> requestSubmission(String subreddit, LocalDateTime start, LocalDateTime end) {
+    public Optional<Collection<Submission>> requestSubmission(String subreddit, LocalDateTime start, LocalDateTime end) {
         String jsonContent;
         //Break if the JSON request failed
         try {

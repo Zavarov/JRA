@@ -134,7 +134,7 @@ public class JrawClient implements Client {
      * @throws HttpResponseException If the API returned an unresolvable error.
      */
     @Override
-    public Optional<TreeSet<Submission>> requestSubmission(String subreddit, LocalDateTime start, LocalDateTime end) throws HttpResponseException{
+    public Optional<Collection<Submission>> requestSubmission(String subreddit, LocalDateTime start, LocalDateTime end) throws HttpResponseException{
         return request(() -> {
             DefaultPaginator<net.dean.jraw.models.Submission> paginator = client
                     .subreddit(subreddit)
@@ -170,7 +170,7 @@ public class JrawClient implements Client {
      * @throws HttpResponseException If the API returned an unresolvable error.
      */
     @Override
-    public Optional<List<Comment>> requestComment(String submissionId) throws HttpResponseException{
+    public Optional<Collection<Comment>> requestComment(String submissionId) throws HttpResponseException{
         return request(() -> {
             List<Comment> comments = new LinkedList<>();
 
