@@ -17,6 +17,7 @@
 
 package vartas.reddit.compact;
 
+import vartas.reddit.Comment;
 import vartas.reddit.Submission;
 
 import java.time.LocalDateTime;
@@ -113,5 +114,20 @@ public class CompactSubmission implements Submission {
     @Override
     public LocalDateTime getCreated() {
         return created;
+    }
+
+    @Override
+    public int hashCode(){
+        return getId().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(o instanceof Comment){
+            Comment comment = (Comment)o;
+            return comment.getId().equals(this.getId());
+        }else{
+            return false;
+        }
     }
 }
