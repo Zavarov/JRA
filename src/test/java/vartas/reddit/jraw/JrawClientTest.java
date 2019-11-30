@@ -15,12 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package vartas.reddit;
+package vartas.reddit.jraw;
 
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpResponseException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import vartas.reddit.AbstractTest;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -28,7 +30,7 @@ import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class JrawClientTest extends AbstractTest{
+public class JrawClientTest extends AbstractTest {
     @Before
     public void setUp(){
         client.login();
@@ -38,19 +40,19 @@ public class JrawClientTest extends AbstractTest{
         client.logout();
     }
     @Test(expected=IllegalStateException.class)
-    public void testLoginTwice(){
+    public void loginTwiceTest(){
         client.login();
     }
     @Test
-    public void requestUser() throws HttpResponseException {
+    public void requestUserTest() throws HttpResponseException {
         assertThat(client.requestUser("Zavarov", 1)).isPresent();
     }
     @Test
-    public void requestSubreddit() throws HttpResponseException {
+    public void requestSubredditTest() throws HttpResponseException {
         assertThat(client.requestSubreddit("RedditDev", 1)).isPresent();
     }
     @Test
-    public void requestSubmission() throws HttpResponseException {
+    public void requestSubmissionTest() throws HttpResponseException {
         LocalDateTime instant = LocalDateTime.now(ZoneId.of("UTC"));
         LocalDateTime before = instant;
         LocalDateTime after = instant.minus(1, ChronoUnit.HOURS);
@@ -59,36 +61,44 @@ public class JrawClientTest extends AbstractTest{
         assertThat(client.requestSubmission("RedditDev", after, before, 1)).isPresent();
     }
     @Test
-    public void requestComment() throws HttpResponseException {
+    public void requestCommentTest() throws HttpResponseException {
         //https://www.reddit.com/r/announcements/comments/blev4z/how_to_keep_your_reddit_account_safe/
         assertThat(client.requestComment("blev4z", 1)).isPresent();
     }
     @Test
-    public void requestSubmissionById() throws HttpResponseException {
+    public void requestSubmissionByIdTest() throws HttpResponseException {
         //https://www.reddit.com/r/announcements/comments/blev4z/how_to_keep_your_reddit_account_safe/
         assertThat(client.requestSubmission("blev4z", 1)).isPresent();
     }
     @Test
-    public void requestInvalidUser() throws HttpResponseException {
+    public void requestInvalidUserTest() throws HttpResponseException {
         assertThat(client.requestUser("#####", 1)).isEmpty();
     }
     @Test(expected=HttpResponseException.class)
-    public void requestInvalidSubreddit() throws HttpResponseException {
+    public void requestInvalidSubredditTest() throws HttpResponseException {
         client.requestSubreddit("#####", 1);
     }
     @Test(expected=HttpResponseException.class)
-    public void requestInvalidSubmission() throws HttpResponseException {
+    public void requestInvalidSubmissionTest() throws HttpResponseException {
         LocalDateTime instant = LocalDateTime.now(ZoneId.of("UTC"));
         LocalDateTime before = instant;
         LocalDateTime after = instant.minus(1, ChronoUnit.HOURS);
         client.requestSubmission("#####", after, before, 1);
     }
     @Test(expected=HttpResponseException.class)
-    public void requestInvalidComment() throws HttpResponseException {
+    public void requestInvalidCommentTest() throws HttpResponseException {
         client.requestComment("#####", 1);
     }
     @Test(expected=HttpResponseException.class)
-    public void requestSubmissionByInvalidId() throws HttpResponseException {
+    public void requestSubmissionByInvalidIdTest() throws HttpResponseException {
         client.requestSubmission("#####", 1);
+    }
+    @Test
+    public void handleUnauthorizedTest() throws HttpResponseException {
+        ((JrawClient)client).handle(HttpStatus.SC_UNAUTHORIZED, "Unauthorized");
+    }
+    @Test(expected=HttpResponseException.class)
+    public void handleTest() throws HttpResponseException {
+        ((JrawClient)client).handle(HttpStatus.SC_NOT_FOUND,"Not Found");
     }
 }

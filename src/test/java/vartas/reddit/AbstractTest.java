@@ -28,7 +28,7 @@ import java.nio.file.Paths;
 import static org.junit.Assert.fail;
 
 public class AbstractTest {
-    static Client client;
+    protected static Client client;
     @BeforeClass
     public static void setUpBeforeClass(){
         client = getJrawClient();

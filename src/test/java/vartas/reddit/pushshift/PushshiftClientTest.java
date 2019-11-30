@@ -15,13 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package vartas.reddit;
+package vartas.reddit.pushshift;
 
 import org.apache.http.client.HttpResponseException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import vartas.reddit.AbstractTest;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -29,7 +30,7 @@ import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PushshiftClientTest extends AbstractTest{
+public class PushshiftClientTest extends AbstractTest {
     @BeforeClass
     public static void setUpBeforeClass(){
         client = getPushshiftClient();
