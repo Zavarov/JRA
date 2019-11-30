@@ -88,7 +88,7 @@ public interface Client {
      * @return All submissions within the given interval.
      * @throws HttpResponseException If the API returned an unresolvable error.
      */
-    default Optional<Collection<Submission>> requestSubmission(String subreddit, LocalDateTime start, LocalDateTime end) throws HttpResponseException{
+    default Optional<? extends Collection<Submission>> requestSubmission(String subreddit, LocalDateTime start, LocalDateTime end) throws HttpResponseException{
         throw new UnsupportedOperationException("Not implemented for this interface");
     }
 
@@ -102,7 +102,7 @@ public interface Client {
      * @return All submissions within the given interval.
      * @throws HttpResponseException If the API returned an unresolvable error.
      */
-    default Optional<Collection<Submission>> requestSubmission(String subreddit, LocalDateTime start, LocalDateTime end, int retries) throws HttpResponseException{
+    default Optional<? extends Collection<Submission>> requestSubmission(String subreddit, LocalDateTime start, LocalDateTime end, int retries) throws HttpResponseException{
         return request(() -> requestSubmission(subreddit, start, end), retries);
     }
 
@@ -132,7 +132,7 @@ public interface Client {
      * @return All comments of the submission.
      * @throws HttpResponseException If the API returned an unresolvable error.
      */
-    default Optional<Collection<Comment>> requestComment(String commentId, int retries) throws HttpResponseException{
+    default Optional<? extends Collection<Comment>> requestComment(String commentId, int retries) throws HttpResponseException{
         return request(() -> requestComment(commentId), retries);
     }
 
@@ -141,7 +141,7 @@ public interface Client {
      * @return All comments of the submission.
      * @throws HttpResponseException If the API returned an unresolvable error.
      */
-    default Optional<Collection<Comment>> requestComment(String commentId) throws HttpResponseException{
+    default Optional<? extends Collection<Comment>> requestComment(String commentId) throws HttpResponseException{
         throw new UnsupportedOperationException("Not implemented for this interface");
     }
 
