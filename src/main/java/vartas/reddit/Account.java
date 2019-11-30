@@ -20,7 +20,7 @@ package vartas.reddit;
 /**
  * This is the interface for a single Reddit profile.
  */
-public interface RedditUser extends RedditSnowflake{
+public interface Account extends RedditSnowflake{
     /**
      * The URL will link to the user page, given its name.
      */

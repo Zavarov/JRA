@@ -107,8 +107,8 @@ public class JrawClient implements Client {
      * @throws HttpResponseException If the API returned an unresolvable error.
      */
     @Override
-    public Optional<RedditUser> requestUser(String name) throws HttpResponseException {
-        return request(() -> Optional.ofNullable(client.user(name).query().getAccount()).map(JrawUser::new));
+    public Optional<Account> requestAccout(String name) throws HttpResponseException {
+        return request(() -> Optional.ofNullable(client.user(name).query().getAccount()).map(JrawAccount::new));
     }
 
     /**
@@ -255,13 +255,11 @@ public class JrawClient implements Client {
      * @throws HttpResponseException If the error code is not {@link HttpStatus#SC_UNAUTHORIZED}.
      */
     protected void handle(int errorCode, String explanation) throws HttpResponseException {
-        switch(errorCode){
-            case HttpStatus.SC_UNAUTHORIZED:
-                Logger.getGlobal().warning(explanation);
-                break;
-            default:
-                Logger.getGlobal().severe(explanation);
-                throw new HttpResponseException(errorCode, explanation);
+        if (errorCode == HttpStatus.SC_UNAUTHORIZED) {
+            Logger.getGlobal().warning(explanation);
+        } else {
+            Logger.getGlobal().severe(explanation);
+            throw new HttpResponseException(errorCode, explanation);
         }
     }
 }

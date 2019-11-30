@@ -45,7 +45,7 @@ public class JrawClientTest extends AbstractTest {
     }
     @Test
     public void requestUserTest() throws HttpResponseException {
-        assertThat(client.requestUser("Zavarov", 1)).isPresent();
+        assertThat(client.requestAccout("Zavarov", 1)).isPresent();
     }
     @Test
     public void requestSubredditTest() throws HttpResponseException {
@@ -53,9 +53,8 @@ public class JrawClientTest extends AbstractTest {
     }
     @Test
     public void requestSubmissionTest() throws HttpResponseException {
-        LocalDateTime instant = LocalDateTime.now(ZoneId.of("UTC"));
-        LocalDateTime before = instant;
-        LocalDateTime after = instant.minus(1, ChronoUnit.HOURS);
+        LocalDateTime before = LocalDateTime.now(ZoneId.of("UTC"));
+        LocalDateTime after = before.minus(1, ChronoUnit.HOURS);
         //System.out.println(instant);
         //client.requestSubmission("discordapp", after, before, 1).orElseThrow().stream().map(s -> s.getCreated() + ", "+s.getTitle()).forEach(System.out::println);
         assertThat(client.requestSubmission("RedditDev", after, before, 1)).isPresent();
@@ -72,7 +71,7 @@ public class JrawClientTest extends AbstractTest {
     }
     @Test
     public void requestInvalidUserTest() throws HttpResponseException {
-        assertThat(client.requestUser("#####", 1)).isEmpty();
+        assertThat(client.requestAccout("#####", 1)).isEmpty();
     }
     @Test(expected=HttpResponseException.class)
     public void requestInvalidSubredditTest() throws HttpResponseException {
@@ -80,9 +79,8 @@ public class JrawClientTest extends AbstractTest {
     }
     @Test(expected=HttpResponseException.class)
     public void requestInvalidSubmissionTest() throws HttpResponseException {
-        LocalDateTime instant = LocalDateTime.now(ZoneId.of("UTC"));
-        LocalDateTime before = instant;
-        LocalDateTime after = instant.minus(1, ChronoUnit.HOURS);
+        LocalDateTime before = LocalDateTime.now(ZoneId.of("UTC"));
+        LocalDateTime after = before.minus(1, ChronoUnit.HOURS);
         client.requestSubmission("#####", after, before, 1);
     }
     @Test(expected=HttpResponseException.class)

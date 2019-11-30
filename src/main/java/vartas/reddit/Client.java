@@ -46,7 +46,7 @@ public interface Client {
      * @return The user corresponding to that name.
      * @throws HttpResponseException If the API returned an unresolvable error.
      */
-    default Optional<RedditUser> requestUser(String user) throws HttpResponseException{
+    default Optional<Account> requestAccout(String user) throws HttpResponseException{
         throw new UnsupportedOperationException("Not implemented for this interface");
     }
 
@@ -56,8 +56,8 @@ public interface Client {
      * @return The user corresponding to that name.
      * @throws HttpResponseException If the API returned an unresolvable error.
      */
-    default Optional<RedditUser> requestUser(String user, int retries) throws HttpResponseException{
-        return request(() -> requestUser(user), retries);
+    default Optional<Account> requestAccout(String user, int retries) throws HttpResponseException{
+        return request(() -> requestAccout(user), retries);
     }
 
     /**

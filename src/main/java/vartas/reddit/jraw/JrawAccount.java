@@ -17,8 +17,7 @@
 
 package vartas.reddit.jraw;
 
-import net.dean.jraw.models.Account;
-import vartas.reddit.RedditUser;
+import vartas.reddit.Account;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -26,21 +25,21 @@ import java.time.ZoneId;
 /**
  * This class implements the users backed by their respective JRAW users.
  */
-public class JrawUser implements RedditUser {
+public class JrawAccount implements Account {
     /**
      * The underlying user instance.
      */
-    protected Account referee;
+    protected net.dean.jraw.models.Account referee;
     /**
      * Creates a new instance of an user.
      * @param referee The underlying JRAW user .
      */
-    public JrawUser(Account referee){
+    public JrawAccount(net.dean.jraw.models.Account referee){
         this.referee = referee;
     }
 
     /**
-     * @return {@link Account#getCommentKarma}.
+     * @return {@link net.dean.jraw.models.Account#getCommentKarma}.
      */
     @Override
     public int getCommentKarma() {
@@ -49,7 +48,7 @@ public class JrawUser implements RedditUser {
 
     /**
      * Transforms the date into a {@link LocalDateTime} with the GMT zone.
-     * @return {@link Account#getCreated}.
+     * @return {@link net.dean.jraw.models.Account#getCreated}.
      */
     @Override
     public LocalDateTime getCreated() {
@@ -57,7 +56,7 @@ public class JrawUser implements RedditUser {
     }
 
     /**
-     * @return {@link Account#getLinkKarma}.
+     * @return {@link net.dean.jraw.models.Account#getLinkKarma}.
      */
     @Override
     public int getLinkKarma() {
@@ -65,7 +64,7 @@ public class JrawUser implements RedditUser {
     }
 
     /**
-     * @return {@link Account#getName}.
+     * @return {@link net.dean.jraw.models.Account#getName}.
      */
     @Override
     public String getName() {
@@ -85,8 +84,8 @@ public class JrawUser implements RedditUser {
      */
     @Override
     public boolean equals(Object o){
-        if(o instanceof RedditUser){
-            RedditUser user = (RedditUser)o;
+        if(o instanceof Account){
+            Account user = (Account)o;
             return user.getName().equals(this.getName());
         }else{
             return false;
