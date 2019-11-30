@@ -125,8 +125,10 @@ public class JrawClient implements Client {
     }
 
     /**
-     * Request submissions within a given interval sorted by their creation date.
-     * Note that Reddit will -at most- return the past 1000 submissions.
+     * Request submissions within a given interval.<br>
+     * Note that Reddit will -at most- return the past 1000 submissions.<br>
+     * This method returns an immutable list of unique submissions
+     * with respect to their {@link Submission#getId() ID}.
      * @param subreddit The subreddit name.
      * @param start The (inclusive) age of the oldest submissions.
      * @param end The (exclusive) age of the newest submissions.
@@ -134,7 +136,7 @@ public class JrawClient implements Client {
      * @throws HttpResponseException If the API returned an unresolvable error.
      */
     @Override
-    public Optional<Collection<Submission>> requestSubmission(String subreddit, LocalDateTime start, LocalDateTime end) throws HttpResponseException{
+    public Optional<List<Submission>> requestSubmission(String subreddit, LocalDateTime start, LocalDateTime end) throws HttpResponseException{
         return request(() -> {
             DefaultPaginator<net.dean.jraw.models.Submission> paginator = client
                     .subreddit(subreddit)
@@ -144,7 +146,7 @@ public class JrawClient implements Client {
                     .timePeriod(TimePeriod.ALL)
                     .build();
 
-            TreeSet<Submission> submissions = new TreeSet<>();
+            Set<Submission> submissions = new HashSet<>();
             List<Submission> current;
             LocalDateTime newest;
             //We have to do the iterative way because we can't specify an interval
@@ -160,17 +162,20 @@ public class JrawClient implements Client {
                 //Repeat when we haven't found the last submission
             }while(newest.isBefore(end));
 
-            return Optional.of(submissions);
+            return Optional.of(List.copyOf(submissions));
         });
     }
 
     /**
+     * Requests the comments of the specified submission.<br>
+     * This method returns an immutable list of unique comments
+     * with respect to their {@link Comment#getId() ID}.
      * @param submissionId the id of the submission.
      * @return All comments of the submission.
      * @throws HttpResponseException If the API returned an unresolvable error.
      */
     @Override
-    public Optional<Collection<Comment>> requestComment(String submissionId) throws HttpResponseException{
+    public Optional<List<Comment>> requestComment(String submissionId) throws HttpResponseException{
         return request(() -> {
             List<Comment> comments = new LinkedList<>();
 
@@ -193,7 +198,7 @@ public class JrawClient implements Client {
                     comments.add(new JrawComment((net.dean.jraw.models.Comment)node.getSubject(), submissionInstance));
             });
 
-            return Optional.of(comments);
+            return Optional.of(List.copyOf(comments));
         });
     }
 

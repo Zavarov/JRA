@@ -55,27 +55,29 @@ public class PushshiftClient implements Client {
     }
 
     /**
-     * Request submissions within a given interval sorted by their creation date.<br>
+     * Request submissions within a given interval.<br>
      * In order to circumvent the 1000 submissions restriction, they are first requested via the Pushshift API in order
-     * to get their ids, then those ids are used for explicitly request them using the Reddit API.
+     * to get their IDs, then those ids are used for explicitly request them using the Reddit API.<br>
+     * This method returns an immutable list of unique submissions
+     * with respect to their {@link Submission#getId() ID}.
      * @param subreddit The subreddit name.
      * @param start The (inclusive) age of the oldest submissions.
      * @param end The (exclusive) age of the newest submissions.
      * @return All submissions within the given interval.
      */
     @Override
-    public Optional<Collection<Submission>> requestSubmission(String subreddit, LocalDateTime start, LocalDateTime end) {
+    public Optional<List<Submission>> requestSubmission(String subreddit, LocalDateTime start, LocalDateTime end) {
         String jsonContent;
         //Break if the JSON request failed
         try {
             jsonContent = requestJsonContent(subreddit, start, end);
 
-            TreeSet<Submission> submissions = new TreeSet<>();
+            Set<Submission> submissions = new HashSet<>();
 
             for(String id : extractSubmissions(jsonContent))
                 client.requestSubmission(id).ifPresent(submissions::add);
 
-            return Optional.of(submissions);
+            return Optional.of(List.copyOf(submissions));
         }catch(IOException e) {
             return Optional.empty();
         }
