@@ -24,20 +24,20 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class CompactSubmission implements Submission {
-    private String linkFlairText;
-    private boolean isNsfw;
-    private boolean isSpoiler;
-    private String title;
-    private String selftext;
-    private String thumbnail;
-    private String url;
-    private String author;
-    private String id;
-    private int score;
-    private String subreddit;
-    private LocalDateTime created;
+    protected String linkFlairText;
+    protected boolean isNsfw;
+    protected boolean isSpoiler;
+    protected String title;
+    protected String selftext;
+    protected String thumbnail;
+    protected String url;
+    protected String author;
+    protected String id;
+    protected int score;
+    protected String subreddit;
+    protected LocalDateTime created;
 
-    private CompactSubmission(){}
+    protected CompactSubmission(){}
 
     public static CompactSubmission copyOf(Submission comment){
         CompactSubmission copy = new CompactSubmission();

@@ -22,15 +22,15 @@ import vartas.reddit.Comment;
 import java.time.LocalDateTime;
 
 public class CompactComment implements Comment{
-    private String submission;
-    private String submissionTitle;
-    private String author;
-    private String id;
-    private String subreddit;
-    private int score;
-    private LocalDateTime created;
+    protected String submission;
+    protected String submissionTitle;
+    protected String author;
+    protected String id;
+    protected String subreddit;
+    protected int score;
+    protected LocalDateTime created;
 
-    private CompactComment(){}
+    protected CompactComment(){}
 
     public static CompactComment copyOf(Comment comment){
         CompactComment copy = new CompactComment();
