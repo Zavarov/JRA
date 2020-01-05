@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Zavarov
+ * Copyright (c) 2020 Zavarov
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,27 +33,34 @@ public class CompactSubmission implements Submission {
     protected String url;
     protected String author;
     protected String id;
+    protected String permalink;
     protected int score;
     protected String subreddit;
     protected LocalDateTime created;
 
     protected CompactSubmission(){}
 
-    public static CompactSubmission copyOf(Submission comment){
+    public static CompactSubmission copyOf(Submission submission){
         CompactSubmission copy = new CompactSubmission();
-        copy.linkFlairText = comment.getLinkFlairText().orElse(null);
-        copy.isNsfw = comment.isNsfw();
-        copy.isSpoiler = comment.isSpoiler();
-        copy.title = comment.getTitle();
-        copy.selftext = comment.getSelfText().orElse(null);
-        copy.thumbnail = comment.getThumbnail().orElse(null);
-        copy.url = comment.getUrl();
-        copy.author = comment.getAuthor();
-        copy.id = comment.getId();
-        copy.score = comment.getScore();
-        copy.subreddit = comment.getSubreddit();
-        copy.created = comment.getCreated();
+        copy.linkFlairText = submission.getLinkFlairText().orElse(null);
+        copy.isNsfw = submission.isNsfw();
+        copy.isSpoiler = submission.isSpoiler();
+        copy.title = submission.getTitle();
+        copy.selftext = submission.getSelfText().orElse(null);
+        copy.thumbnail = submission.getThumbnail().orElse(null);
+        copy.url = submission.getUrl();
+        copy.author = submission.getAuthor();
+        copy.id = submission.getId();
+        copy.score = submission.getScore();
+        copy.subreddit = submission.getSubreddit();
+        copy.created = submission.getCreated();
+        copy.permalink = submission.getPermalink();
         return copy;
+    }
+
+    @Override
+    public String getPermalink(){
+        return permalink;
     }
 
     @Override
