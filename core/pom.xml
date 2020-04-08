@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2020 Zavarov
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>reddit</artifactId>
+        <groupId>vartas.reddit</groupId>
+        <version>3.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>core</artifactId>
+
+    <properties>
+        <!-- .. Generator Arguments ................................................................................ -->
+        <generator.main>vartas.monticore.cd2java.Main</generator.main>
+        <generator.output.directory>${project.basedir}/target/generated-sources/</generator.output.directory>
+        <generator.model.path>${project.basedir}/src/main/models</generator.model.path>
+        <generator.template.path>${project.build.directory}/template-resources</generator.template.path>
+        <generator.sources.directory>${project.basedir}/src/main/java/</generator.sources.directory>
+        <reddit.cd>vartas.reddit.Reddit</reddit.cd>
+    </properties>
+
+    <!-- == DEFAULT BUILD SETTINGS =========================================== -->
+
+    <build>
+        <plugins>
+            <!-- Load the templates for the generator-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven-dependency-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <outputDirectory>${generator.template.path}</outputDirectory>
+                            <classifier>${templates.classifier}</classifier>
+                            <includeGroupIds>vartas.monticore-commons</includeGroupIds>
+                            <includeArtifactIds>cd2code</includeArtifactIds>
+                            <includeTypes>jar</includeTypes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Code Generation -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${maven-exec-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>reddit</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <includeProjectDependencies>false</includeProjectDependencies>
+                            <includePluginDependencies>true</includePluginDependencies>
+                            <mainClass>${generator.main}</mainClass>
+                            <arguments>
+                                <argument>${generator.model.path}</argument>
+                                <argument>${generator.template.path}</argument>
+                                <argument>${generator.output.directory}</argument>
+                                <argument>${generator.sources.directory}</argument>
+                                <argument>${reddit.cd}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>vartas.monticore-commons</groupId>
+                        <artifactId>cd2code</artifactId>
+                        <version>${cd2code.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <!-- Including the generated source files -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>${maven-builder-helper-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${generator.output.directory}</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Include the project version in the executable -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.version}</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

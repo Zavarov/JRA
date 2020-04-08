@@ -21,30 +21,46 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>vartas</groupId>
+    <groupId>vartas.reddit</groupId>
     <artifactId>reddit</artifactId>
-    <packaging>jar</packaging>
-    <version>2.4.1</version>
+    <packaging>pom</packaging>
+    <version>3.0</version>
+    <modules>
+        <module>core</module>
+        <module>jraw</module>
+    </modules>
 
     <properties>
 
-        <!-- .. Libraries ..................................................... -->
+        <!-- .. Libraries .......................................................................................... -->
 
-        <assertj.version>3.12.2</assertj.version>
-        <junit.version>4.12</junit.version>
         <httpclient.version>4.5.10</httpclient.version>
         <json.version>20190722</json.version>
         <jraw.version>1.1.0</jraw.version>
-        <guava.version>28.1-jre</guava.version>
+        <guava.version>28.2-jre</guava.version>
         <commons-text.version>1.8</commons-text.version>
 
-        <!-- .. Plugins ....................................................... -->
+        <!-- .. Generator .......................................................................................... -->
 
+        <cd2code.version>2.0</cd2code.version>
+
+        <!-- Test -->
+        <junit.version>5.6.0</junit.version>
+        <assertj.version>3.12.2</assertj.version>
+
+        <!-- .. Plugins ............................................................................................ -->
 
         <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
+        <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
+        <maven-exec-plugin.version>1.6.0</maven-exec-plugin.version>
         <maven-source-plugin.version>3.1.0</maven-source-plugin.version>
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+        <maven-builder-helper-plugin.version>3.0.0</maven-builder-helper-plugin.version>
+        <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
 
-        <!-- .. Misc .......................................................... -->
+        <!-- .. Misc ............................................................................................... -->
+
+        <templates.classifier>templates</templates.classifier>
 
         <java.version>11</java.version>
         <wagon.provider.version>2.6</wagon.provider.version>
@@ -56,20 +72,73 @@
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
-    <!-- == Repositories ==================================================== -->
+    <!-- == Dependencies =========================================== -->
 
-    <repositories>
-        <repository>
-            <id>jcenter</id>
-            <name>jcenter-bintray</name>
-            <url>https://jcenter.bintray.com</url>
-        </repository>
-    </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>${commons-text.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>${json.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclient.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>vartas.monticore-commons</groupId>
+            <artifactId>cd2code</artifactId>
+            <version>${cd2code.version}</version>
+            <classifier>${templates.classifier}</classifier>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Test Libraries         -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <!-- == DEFAULT BUILD SETTINGS =========================================== -->
 
     <build>
         <plugins>
+            <!-- Newer version required for JUnit5 -->
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+            </plugin>
             <!-- create sources jar -->
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
@@ -88,6 +157,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>${maven-javadoc-plugin.version}</version>
+                <configuration>
+                    <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+                </configuration>
                 <executions>
                     <execution>
                         <id>generate-docs</id>
@@ -96,57 +168,7 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
-                </configuration>
             </plugin>
         </plugins>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-text</artifactId>
-            <version>${commons-text.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.dean.jraw</groupId>
-            <artifactId>JRAW</artifactId>
-            <version>${jraw.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>${json.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>${httpclient.version}</version>
-        </dependency>
-
-        <!-- Test Libraries         -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>${assertj.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 </project>

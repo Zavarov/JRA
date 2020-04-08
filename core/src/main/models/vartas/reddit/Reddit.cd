@@ -1,0 +1,65 @@
+package vartas.reddit;
+
+public classdiagram Reddit {
+    public abstract class Client {
+        <<cached="P1D">>
+        - Cache<String, Subreddit> subreddits;
+        <<cached="P1D">>
+        - Cache<String, Account> accounts;
+    }
+
+    <<json, factory>>
+    public class Account extends Snowflake{
+        - String name;
+        - int linkKarma;
+        - int commentKarma;
+    }
+
+    <<factory>>
+    public class Subreddit extends Snowflake{
+        - String name;
+        - String publicDescription;
+        - int subscribers;
+        - Optional<Integer> activeAccounts;
+        - Optional<String> bannerImage;
+        <<cached="PT1H">>
+        - Cache<String, Submission> submissions;
+    }
+
+    <<json, factory>>
+    public class Submission extends Snowflake{
+        - Optional<String> thumbnail;
+        - Optional<String> linkFlairText;
+        - Optional<String> content;
+        - String author;
+        - String title;
+        - int score;
+        - boolean nsfw;
+        - boolean spoiler;
+        - List<Comment> comments;
+    }
+
+    <<json, factory>>
+    public class Comment extends Snowflake{
+        - String author;
+        - String content;
+        - int score;
+    }
+
+    public abstract class Snowflake{
+        - String id;
+        - Instant created;
+    }
+
+    /**
+     * This exception is thrown whenever a request couldn't be completed due to an internal error.
+     */
+    public class UnsuccessfulRequestException extends Exception{}
+
+    /**
+     * This exception is thrown whenever the communication with the Reddit API failed due to a lack of response.
+     * Usually, this in an indicator for the service to be temporarily unavailable and thus represents an error
+     * outside of the programs scope.
+     */
+    public class TimeoutException extends Exception{}
+}
