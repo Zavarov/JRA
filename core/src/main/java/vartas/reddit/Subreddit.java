@@ -48,23 +48,10 @@ public class Subreddit extends SubredditTOP{
      * @return A list of all submissions within the specified interval.
      */
     public List<Submission> getSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
-        return getSubmissions(inclusiveFrom, exclusiveTo, true);
-    }
-
-    /**
-     * Returns a list of all cached submissions.<br>
-     * This means that it is not possible, to retrieve submissions before
-     * this object was initialized or submissions that have already been
-     * removed from the cache. Instead you can only access the most recent submissions.
-     * @param inclusiveFrom the (inclusive) minimum age of valid submissions.
-     * @param exclusiveTo the (exclusive) maximum age of valid submissions.
-     * @param shouldRequest indicates whether the latest submissions should be fetched.
-     * @return A list of all submissions within the specified interval.
-     */
-    public List<Submission> getSubmissions(Instant inclusiveFrom, Instant exclusiveTo, boolean shouldRequest) throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
-        //Update the cache
-        if(shouldRequest)
+        //Update the cache if there might be new submissions.
+        if(now.isBefore(exclusiveTo))
             request();
+
         //Get cached submissions.
         return valuesSubmissions()
                 .stream()
