@@ -72,11 +72,11 @@ public class JrawSubreddit extends Subreddit{
 
     @Override
     protected void request() throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
-        Instant inclusiveStart = Instant.now();
-        Instant exclusiveTo = now;
-        now = inclusiveStart;
+        Instant inclusiveFrom = super.now;
+        Instant exclusiveTo = Instant.now();
+        super.now = inclusiveFrom;
 
-        for(Submission submission : requestSubmissions(inclusiveStart, exclusiveTo))
+        for(Submission submission : requestSubmissions(inclusiveFrom, exclusiveTo))
             putSubmissions(submission.getId(), submission);
     }
     private Submission requestSubmissions(String key) throws TimeoutException, UnsuccessfulRequestException, HttpResponseException {
