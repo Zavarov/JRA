@@ -22,7 +22,7 @@
     <parent>
         <artifactId>reddit</artifactId>
         <groupId>vartas.reddit</groupId>
-        <version>3.0</version>
+        <version>3.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -33,8 +33,8 @@
         <generator.main>vartas.monticore.cd4analysis.Main</generator.main>
         <generator.output.directory>${project.basedir}/target/generated-sources/</generator.output.directory>
         <generator.model.path>${project.basedir}/src/main/models</generator.model.path>
-        <generator.template.path>${project.build.directory}/template-resources</generator.template.path>
         <generator.sources.directory>${project.basedir}/src/main/java/</generator.sources.directory>
+        <generator.template.path>${project.build.directory}/template-resources</generator.template.path>
         <generator.classes.path>${project.build.directory}/classes-resources</generator.classes.path>
         <reddit.cd>vartas.reddit.Reddit</reddit.cd>
     </properties>

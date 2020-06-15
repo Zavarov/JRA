@@ -24,7 +24,7 @@
     <groupId>vartas.reddit</groupId>
     <artifactId>reddit</artifactId>
     <packaging>pom</packaging>
-    <version>3.0</version>
+    <version>3.1-SNAPSHOT</version>
     <modules>
         <module>core</module>
         <module>jraw</module>
