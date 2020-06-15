@@ -23,7 +23,7 @@ import org.junit.jupiter.api.BeforeAll;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public abstract class AbstractTest {
+public class AbstractTest {
     protected static Client client;
 
     @BeforeAll
@@ -41,6 +41,6 @@ public abstract class AbstractTest {
         String clientId = config.getString("clientId");
         String secret = config.getString("secret");
 
-        client = new JrawClient(name, version, clientId, secret);
+        client = new PushshiftClient(name, version, clientId, secret);
     }
 }

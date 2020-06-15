@@ -30,11 +30,12 @@
 
     <properties>
         <!-- .. Generator Arguments ................................................................................ -->
-        <generator.main>vartas.monticore.cd2java.Main</generator.main>
+        <generator.main>vartas.monticore.cd4analysis.Main</generator.main>
         <generator.output.directory>${project.basedir}/target/generated-sources/</generator.output.directory>
         <generator.model.path>${project.basedir}/src/main/models</generator.model.path>
         <generator.template.path>${project.build.directory}/template-resources</generator.template.path>
         <generator.sources.directory>${project.basedir}/src/main/java/</generator.sources.directory>
+        <generator.classes.path>${project.build.directory}/classes-resources</generator.classes.path>
         <reddit.cd>vartas.reddit.Reddit</reddit.cd>
     </properties>
 
@@ -49,6 +50,7 @@
                 <version>${maven-dependency-plugin.version}</version>
                 <executions>
                     <execution>
+                        <id>unpack-templates</id>
                         <goals>
                             <goal>unpack-dependencies</goal>
                         </goals>
@@ -57,7 +59,21 @@
                             <outputDirectory>${generator.template.path}</outputDirectory>
                             <classifier>${templates.classifier}</classifier>
                             <includeGroupIds>vartas.monticore-commons</includeGroupIds>
-                            <includeArtifactIds>cd2code</includeArtifactIds>
+                            <includeArtifactIds>cd4code</includeArtifactIds>
+                            <includeTypes>jar</includeTypes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack-models</id>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <outputDirectory>${generator.classes.path}</outputDirectory>
+                            <classifier>${models.classifier}</classifier>
+                            <includeGroupIds>vartas.monticore-commons</includeGroupIds>
+                            <includeArtifactIds>cd4code</includeArtifactIds>
                             <includeTypes>jar</includeTypes>
                         </configuration>
                     </execution>
@@ -84,6 +100,7 @@
                                 <argument>${generator.template.path}</argument>
                                 <argument>${generator.output.directory}</argument>
                                 <argument>${generator.sources.directory}</argument>
+                                <argument>${generator.classes.path}</argument>
                                 <argument>${reddit.cd}</argument>
                             </arguments>
                         </configuration>
@@ -92,8 +109,8 @@
                 <dependencies>
                     <dependency>
                         <groupId>vartas.monticore-commons</groupId>
-                        <artifactId>cd2code</artifactId>
-                        <version>${cd2code.version}</version>
+                        <artifactId>cd4code</artifactId>
+                        <version>${cd4code.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>

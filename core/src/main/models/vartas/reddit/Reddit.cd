@@ -1,32 +1,35 @@
 package vartas.reddit;
 
+import com.google.common.cache.Cache.Cache;
+import java.lang.Exception.Exception;
+import java.time.Instant.Instant;
+import java.util.List.List;
+import java.util.Optional.Optional;
+
 public classdiagram Reddit {
     public abstract class Client {
-        <<cached="P1D">>
+        <<initializer="P1D">>
         - Cache<String, Subreddit> subreddits;
-        <<cached="P1D">>
+        <<initializer="P1D">>
         - Cache<String, Account> accounts;
     }
 
-    <<json, factory>>
     public class Account extends Snowflake{
         - String name;
         - int linkKarma;
         - int commentKarma;
     }
 
-    <<factory>>
     public class Subreddit extends Snowflake{
         - String name;
         - String publicDescription;
         - int subscribers;
         - Optional<Integer> activeAccounts;
         - Optional<String> bannerImage;
-        <<cached="PT1H">>
+        <<initializer="PT1H">>
         - Cache<String, Submission> submissions;
     }
 
-    <<json, factory>>
     public class Submission extends Snowflake{
         - Optional<String> thumbnail;
         - Optional<String> linkFlairText;
@@ -39,7 +42,6 @@ public classdiagram Reddit {
         - List<Comment> comments;
     }
 
-    <<json, factory>>
     public class Comment extends Snowflake{
         - String author;
         - String content;

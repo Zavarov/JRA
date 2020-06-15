@@ -44,14 +44,15 @@ public class JrawSubreddit extends Subreddit{
      */
     private final Logger log = LoggerFactory.getLogger(getClass().getSimpleName());
 
-    private final RedditClient jrawClient;
+    protected final RedditClient jrawClient;
 
     public JrawSubreddit(RedditClient jrawClient){
         this.jrawClient = jrawClient;
     }
-    public static Subreddit create(net.dean.jraw.models.Subreddit jrawSubreddit, RedditClient jrawClient){
+
+    public static Subreddit create(Supplier<? extends Subreddit> supplier, net.dean.jraw.models.Subreddit jrawSubreddit, RedditClient jrawClient){
         Subreddit subreddit = SubredditFactory.create(
-                () -> new JrawSubreddit(jrawClient),
+                supplier,
                 jrawSubreddit.getName(),
                 jrawSubreddit.getPublicDescription(),
                 jrawSubreddit.getSubscribers(),
@@ -63,6 +64,10 @@ public class JrawSubreddit extends Subreddit{
         subreddit.setActiveAccounts(Optional.ofNullable(jrawSubreddit.getAccountsActive()));
         subreddit.setBannerImage(Optional.ofNullable(jrawSubreddit.getBannerImage()));
         return subreddit;
+    }
+
+    public static Subreddit create(net.dean.jraw.models.Subreddit jrawSubreddit, RedditClient jrawClient){
+        return create(() -> new JrawSubreddit(jrawClient), jrawSubreddit, jrawClient);
     }
 
     @Override
@@ -87,7 +92,7 @@ public class JrawSubreddit extends Subreddit{
         return JrawClient.request(supplier, 0);
     }
 
-    private List<Submission> requestSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws TimeoutException, UnsuccessfulRequestException, HttpResponseException {
+    protected List<Submission> requestSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws TimeoutException, UnsuccessfulRequestException, HttpResponseException {
         return JrawClient.request(() -> {
                     DefaultPaginator<net.dean.jraw.models.Submission> paginator = jrawClient
                             .subreddit(getName())

@@ -17,30 +17,26 @@
 
 package vartas.reddit;
 
-import org.json.JSONObject;
+import org.apache.http.client.HttpResponseException;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 
-public abstract class AbstractTest {
-    protected static Client client;
-
+public class PushshiftSubredditTest extends AbstractTest{
+    public static Subreddit subreddit;
     @BeforeAll
     public static void setUpAll(){
-        JSONObject config;
-        try{
-            String content = new String(Files.readAllBytes(Paths.get("src/test/resources/config.json")));
-            config = new JSONObject(content);
-        }catch(Exception e){
-            throw new RuntimeException(e);
-        }
+        AbstractTest.setUpAll();
+        subreddit = client.getUncheckedSubreddits("RedditDev");
+    }
 
-        String name = config.getString("name");
-        String version = config.getString("version");
-        String clientId = config.getString("clientId");
-        String secret = config.getString("secret");
-
-        client = new JrawClient(name, version, clientId, secret);
+    @Test
+    public void testGetSubmissions() throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
+        Instant inclusiveFrom = Instant.now().minus(1, ChronoUnit.DAYS);
+        Instant exclusiveTo = Instant.now();
+        List<Submission> submissions = subreddit.getSubmissions(inclusiveFrom, exclusiveTo);
     }
 }
