@@ -31,11 +31,12 @@
     <properties>
         <!-- .. Generator Arguments ................................................................................ -->
         <generator.main>vartas.monticore.cd4analysis.Main</generator.main>
-        <generator.output.directory>${project.basedir}/target/generated-sources/</generator.output.directory>
-        <generator.model.path>${project.basedir}/src/main/models</generator.model.path>
+        <generator.models.path>${project.build.directory}/models-resources</generator.models.path>
+        <generator.local-models.path>${project.basedir}/src/main/models</generator.local-models.path>
+        <generator.templates.path>${project.build.directory}/template-resources</generator.templates.path>
+        <generator.local-templates.path>${project.basedir}/src/main/resources/templates</generator.local-templates.path>
         <generator.sources.directory>${project.basedir}/src/main/java/</generator.sources.directory>
-        <generator.template.path>${project.build.directory}/template-resources</generator.template.path>
-        <generator.classes.path>${project.build.directory}/classes-resources</generator.classes.path>
+        <generator.output.directory>${project.basedir}/target/generated-sources/</generator.output.directory>
         <reddit.cd>vartas.reddit.Reddit</reddit.cd>
     </properties>
 
@@ -56,7 +57,7 @@
                         </goals>
                         <phase>initialize</phase>
                         <configuration>
-                            <outputDirectory>${generator.template.path}</outputDirectory>
+                            <outputDirectory>${generator.templates.path}</outputDirectory>
                             <classifier>${templates.classifier}</classifier>
                             <includeGroupIds>vartas.monticore-commons</includeGroupIds>
                             <includeArtifactIds>cd4code</includeArtifactIds>
@@ -70,7 +71,7 @@
                         </goals>
                         <phase>initialize</phase>
                         <configuration>
-                            <outputDirectory>${generator.classes.path}</outputDirectory>
+                            <outputDirectory>${generator.models.path}</outputDirectory>
                             <classifier>${models.classifier}</classifier>
                             <includeGroupIds>vartas.monticore-commons</includeGroupIds>
                             <includeArtifactIds>cd4code</includeArtifactIds>
@@ -96,11 +97,12 @@
                             <includePluginDependencies>true</includePluginDependencies>
                             <mainClass>${generator.main}</mainClass>
                             <arguments>
-                                <argument>${generator.model.path}</argument>
-                                <argument>${generator.template.path}</argument>
-                                <argument>${generator.output.directory}</argument>
+                                <argument>${generator.models.path}</argument>
+                                <argument>${generator.local-models.path}</argument>
+                                <argument>${generator.templates.path}</argument>
+                                <argument>${generator.local-templates.path}</argument>
                                 <argument>${generator.sources.directory}</argument>
-                                <argument>${generator.classes.path}</argument>
+                                <argument>${generator.output.directory}</argument>
                                 <argument>${reddit.cd}</argument>
                             </arguments>
                         </configuration>
