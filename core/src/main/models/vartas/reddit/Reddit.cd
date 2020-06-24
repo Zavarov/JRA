@@ -44,6 +44,11 @@ public classdiagram Reddit {
         + abstract String getPermaLink();
         + abstract String getShortLink();
         + abstract String getQualifiedTitle();
+        /**
+         * The effective link to the submission. This can either be a link to the submission itself
+         * or a reference to the submitted instance (e.g. an image).
+         */
+        + abstract String getUrl();
     }
 
     public class Comment extends Snowflake{

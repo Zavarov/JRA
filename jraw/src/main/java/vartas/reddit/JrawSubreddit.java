@@ -81,6 +81,7 @@ public class JrawSubreddit extends Subreddit{
         Instant exclusiveTo = Instant.now();
         super.now = inclusiveFrom;
 
+        log.info("Requesting submissions from r/{} from {} to {}.", getName(), inclusiveFrom, exclusiveTo);
         for(Submission submission : requestSubmissions(inclusiveFrom, exclusiveTo))
             putSubmissions(submission.getId(), submission);
     }

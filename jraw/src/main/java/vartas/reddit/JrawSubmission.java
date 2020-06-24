@@ -21,17 +21,22 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 import vartas.reddit.factory.SubmissionFactory;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
 
+@Nonnull
 public class JrawSubmission extends Submission {
+    @Nonnull
     private static final String REDDIT_ROOT_NODE = "https://www.reddit.com";
+    @Nonnull
     private final net.dean.jraw.models.Submission jrawSubmission;
 
-    public JrawSubmission(net.dean.jraw.models.Submission jrawSubmission){
+    public JrawSubmission(@Nonnull net.dean.jraw.models.Submission jrawSubmission){
         this.jrawSubmission = jrawSubmission;
     }
 
-    public static Submission create(net.dean.jraw.models.Submission jrawSubmission){
+    @Nonnull
+    public static Submission create(@Nonnull net.dean.jraw.models.Submission jrawSubmission){
         Submission submission = SubmissionFactory.create(
                 () -> new JrawSubmission(jrawSubmission),
                 jrawSubmission.getAuthor(),
@@ -53,8 +58,15 @@ public class JrawSubmission extends Submission {
         return submission;
     }
 
+    @Nonnull
     @Override
     public String getPermaLink(){
         return REDDIT_ROOT_NODE + jrawSubmission.getPermalink();
+    }
+
+    @Nonnull
+    @Override
+    public String getUrl(){
+        return jrawSubmission.getUrl();
     }
 }
