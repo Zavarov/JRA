@@ -50,7 +50,7 @@ public class JrawSubreddit extends Subreddit{
         this.jrawClient = jrawClient;
     }
 
-    public static Subreddit create(Supplier<? extends Subreddit> supplier, net.dean.jraw.models.Subreddit jrawSubreddit, RedditClient jrawClient){
+    public static Subreddit create(Supplier<? extends Subreddit> supplier, net.dean.jraw.models.Subreddit jrawSubreddit){
         Subreddit subreddit = SubredditFactory.create(
                 supplier,
                 jrawSubreddit.getName(),
@@ -67,7 +67,7 @@ public class JrawSubreddit extends Subreddit{
     }
 
     public static Subreddit create(net.dean.jraw.models.Subreddit jrawSubreddit, RedditClient jrawClient){
-        return create(() -> new JrawSubreddit(jrawClient), jrawSubreddit, jrawClient);
+        return create(() -> new JrawSubreddit(jrawClient), jrawSubreddit);
     }
 
     @Override

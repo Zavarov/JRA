@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,7 +49,7 @@ public class JrawSubredditTest extends AbstractTest{
     public void testGetSubmissions() throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
         Instant inclusiveFrom = Instant.now().minus(1, ChronoUnit.MINUTES);
         Instant exclusiveTo = Instant.now();
-        List<Submission> submission = subreddit.getSubmissions(inclusiveFrom, exclusiveTo);
+        subreddit.getSubmissions(inclusiveFrom, exclusiveTo);
     }
 
     @Test

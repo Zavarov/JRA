@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 public class PushshiftSubredditTest extends AbstractTest{
     public static Subreddit subreddit;
@@ -37,6 +36,6 @@ public class PushshiftSubredditTest extends AbstractTest{
     public void testGetSubmissions() throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
         Instant inclusiveFrom = Instant.now().minus(1, ChronoUnit.DAYS);
         Instant exclusiveTo = Instant.now();
-        List<Submission> submissions = subreddit.getSubmissions(inclusiveFrom, exclusiveTo);
+        subreddit.getSubmissions(inclusiveFrom, exclusiveTo);
     }
 }
