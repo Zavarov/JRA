@@ -53,7 +53,7 @@ public class JrawSubmission extends Submission {
             submission.setThumbnail(jrawSubmission.getThumbnail());
 
         submission.setLinkFlairText(Optional.ofNullable(jrawSubmission.getLinkFlairText()));
-        submission.setContent(Optional.ofNullable(jrawSubmission.getSelfText()).map(StringEscapeUtils::escapeHtml4));
+        submission.setContent(Optional.ofNullable(jrawSubmission.getSelfText()).map(StringEscapeUtils::unescapeHtml4));
 
         return submission;
     }
