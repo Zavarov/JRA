@@ -24,9 +24,16 @@ import vartas.reddit.factory.SubmissionFactory;
 import java.util.Optional;
 
 public class JrawSubmission extends Submission {
+    private static final String REDDIT_ROOT_NODE = "https://www.reddit.com";
+    private final net.dean.jraw.models.Submission jrawSubmission;
+
+    public JrawSubmission(net.dean.jraw.models.Submission jrawSubmission){
+        this.jrawSubmission = jrawSubmission;
+    }
+
     public static Submission create(net.dean.jraw.models.Submission jrawSubmission){
         Submission submission = SubmissionFactory.create(
-                JrawSubmission::new,
+                () -> new JrawSubmission(jrawSubmission),
                 jrawSubmission.getAuthor(),
                 jrawSubmission.getTitle(),
                 jrawSubmission.getScore(),
@@ -44,5 +51,10 @@ public class JrawSubmission extends Submission {
         submission.setContent(Optional.ofNullable(jrawSubmission.getSelfText()).map(StringEscapeUtils::escapeHtml4));
 
         return submission;
+    }
+
+    @Override
+    public String getPermaLink(){
+        return REDDIT_ROOT_NODE + jrawSubmission.getPermalink();
     }
 }
