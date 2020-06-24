@@ -27,9 +27,13 @@ public abstract class Submission extends SubmissionTOP{
 
     @Override
     public String getQualifiedTitle(){
-        String flair = orElseLinkFlairText("");
-        String title = getTitle();
+        StringBuilder titleBuilder = new StringBuilder();
 
-        return (flair.isEmpty() ? "" : "[" + flair + "]") + title;
+        ifPresentLinkFlairText(flair  -> titleBuilder.append("[").append(flair).append("] "));
+        titleBuilder.append(getTitle());
+        if(getSpoiler()) titleBuilder.append(" [Spoiler]");
+        if(getNsfw()) titleBuilder.append(" [NSFW]");
+
+        return titleBuilder.toString();
     }
 }
