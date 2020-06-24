@@ -18,7 +18,10 @@
 package vartas.reddit;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.apache.commons.validator.routines.UrlValidator;
 import vartas.reddit.factory.SubmissionFactory;
+
+import java.util.Optional;
 
 public class JrawSubmission extends Submission {
     public static Submission create(net.dean.jraw.models.Submission jrawSubmission){
@@ -33,11 +36,12 @@ public class JrawSubmission extends Submission {
                 jrawSubmission.getCreated().toInstant()
         );
 
-        if(jrawSubmission.getSelfText() != null)
-            submission.setContent(StringEscapeUtils.unescapeHtml4(jrawSubmission.getThumbnail()));
-
-        if(jrawSubmission.hasThumbnail())
+        //Reddit likes to put stuff like "self" into the thumbnail
+        if(jrawSubmission.hasThumbnail() && UrlValidator.getInstance().isValid(jrawSubmission.getThumbnail()))
             submission.setThumbnail(jrawSubmission.getThumbnail());
+
+        submission.setLinkFlairText(Optional.ofNullable(jrawSubmission.getLinkFlairText()));
+        submission.setContent(Optional.ofNullable(jrawSubmission.getSelfText()).map(StringEscapeUtils::escapeHtml4));
 
         return submission;
     }
