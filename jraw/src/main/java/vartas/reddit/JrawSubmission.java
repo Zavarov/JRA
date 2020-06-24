@@ -44,7 +44,7 @@ public class JrawSubmission extends Submission {
                 jrawSubmission.getScore(),
                 jrawSubmission.isNsfw(),
                 jrawSubmission.isSpoiler(),
-                jrawSubmission.getUniqueId(),
+                jrawSubmission.getId(),
                 jrawSubmission.getCreated().toInstant()
         );
 
