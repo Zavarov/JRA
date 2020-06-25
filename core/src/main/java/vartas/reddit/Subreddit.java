@@ -49,8 +49,10 @@ public class Subreddit extends SubredditTOP{
      */
     public List<Submission> getSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
         //Update the cache if there might be new submissions.
-        if(now.isBefore(exclusiveTo))
+        if(now.isBefore(exclusiveTo)) {
             request();
+            now = exclusiveTo;
+        }
 
         //Get cached submissions.
         return valuesSubmissions()
