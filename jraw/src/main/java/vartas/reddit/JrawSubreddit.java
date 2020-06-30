@@ -30,10 +30,7 @@ import org.slf4j.LoggerFactory;
 import vartas.reddit.factory.SubredditFactory;
 
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -103,25 +100,31 @@ public class JrawSubreddit extends Subreddit{
                             .timePeriod(TimePeriod.ALL)
                             .build();
 
-                    Set<Submission> submissions = new HashSet<>();
-                    List<Submission> current;
+                    Set<Submission> submissions = new TreeSet<>(Comparator.comparing(Submission::getCreated));
+                    //Contains submissions sorted by their creaton date. The oldest submission will be the first element.
+                    Deque<Submission> current;
                     Instant newest;
                     //We have to do the iterative way because we can't specify an interval
                     do{
                         //The newest value should be the last one
                         current = paginator.next()
                                 .stream()
-                                //Filter before transforming to avoid requesting comments
+                                //Filter before transforming to avoid unnecessary comment requests
                                 //Ignore submissions after #exclusiveTo
                                 .filter(s -> s.getCreated().toInstant().isBefore(exclusiveTo))
                                 //Ignore submissions before #inclusiveFrom
                                 .filter(s -> !s.getCreated().toInstant().isBefore(inclusiveFrom))
                                 .map(this::createAndLoad)
-                                .collect(Collectors.toList());
-                        newest = current.isEmpty() ? exclusiveTo : current.get(current.size()-1).getCreated();
-                        submissions.addAll(current);
+                                .sorted(Comparator.comparing(Submission::getCreated))
+                                .collect(Collectors.toCollection(LinkedList::new));
 
-                        //Repeat when we haven't found the last submission
+                        //No new submissions retrieved
+                        if(!submissions.addAll(current))
+                            newest = exclusiveTo;
+                        //Take the latest submission
+                        else
+                            newest = current.getLast().getCreated();
+                    //Repeat when we haven't found the last submission
                     }while(newest.isBefore(exclusiveTo));
 
                     return Optional.of(List.copyOf(submissions));
@@ -154,7 +157,7 @@ public class JrawSubreddit extends Subreddit{
 
     //TODO Optimize
     private Submission createAndLoad(net.dean.jraw.models.Submission jrawSubmission){
-        log.info("Received submission '{}'", jrawSubmission.getTitle());
+        log.info("Received submission '{}'[{}] @ {}", jrawSubmission.getTitle(), jrawSubmission.getId(), getName());
         Submission submission = JrawSubmission.create(jrawSubmission);
         requestComments(jrawSubmission, submission);
         return submission;
