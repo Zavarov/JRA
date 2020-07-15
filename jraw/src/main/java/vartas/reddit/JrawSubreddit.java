@@ -78,7 +78,7 @@ public class JrawSubreddit extends Subreddit{
         Instant inclusiveFrom = super.now;
         Instant exclusiveTo = Instant.now();
 
-        log.info("Requesting submissions from r/{} from {} to {}.", getName(), inclusiveFrom, exclusiveTo);
+        log.debug("Requesting submissions from r/{} from {} to {}.", getName(), inclusiveFrom, exclusiveTo);
         for(Submission submission : requestSubmissions(inclusiveFrom, exclusiveTo))
             putSubmissions(submission.getId(), submission);
     }
@@ -157,7 +157,7 @@ public class JrawSubreddit extends Subreddit{
 
     //TODO Optimize
     private Submission createAndLoad(net.dean.jraw.models.Submission jrawSubmission){
-        log.info("Received submission '{}'[{}] @ {}", jrawSubmission.getTitle(), jrawSubmission.getId(), getName());
+        log.debug("Received submission '{}'[{}] @ {}", jrawSubmission.getTitle(), jrawSubmission.getId(), getName());
         Submission submission = JrawSubmission.create(jrawSubmission);
         requestComments(jrawSubmission, submission);
         return submission;

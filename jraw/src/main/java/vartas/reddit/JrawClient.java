@@ -60,25 +60,25 @@ public class JrawClient extends Client {
 
     @Override
     public Subreddit getSubreddits(String key) throws ExecutionException {
-        log.info("Accessing subreddit {}.", key);
+        log.debug("Accessing subreddit {}.", key);
         return getSubreddits(key, () -> requestSubreddit(key));
     }
 
     @Override
     public Account getAccounts(String key) throws ExecutionException {
-        log.info("Accessing account {}.", key);
+        log.debug("Accessing account {}.", key);
         return getAccounts(key, () -> requestAccount(key));
     }
 
     public Account requestAccount(String accountName) throws TimeoutException, UnsuccessfulRequestException, HttpResponseException {
-        log.info("Requesting account {}", accountName);
+        log.debug("Requesting account {}", accountName);
         return JrawAccount.create(
                 request(() -> Optional.ofNullable(jrawClient.user(accountName).query().getAccount()), 0)
         );
     }
 
     public Subreddit requestSubreddit(String subredditName) throws TimeoutException, UnsuccessfulRequestException, HttpResponseException {
-        log.info("Requesting subreddit {}", subredditName);
+        log.debug("Requesting subreddit {}", subredditName);
         return JrawSubreddit.create(
                 request(() -> Optional.of(jrawClient.subreddit(subredditName).about()), 0),
                 jrawClient
@@ -112,7 +112,7 @@ public class JrawClient extends Client {
     }
 
     public static <T> T request(Supplier<Optional<T>> supplier, int attempt) throws HttpResponseException, TimeoutException, UnsuccessfulRequestException{
-        LoggerFactory.getLogger(RedditClient.class.getSimpleName()).info("Processing request. Attempt {}/{}", attempt, MAX_RETRY);
+        LoggerFactory.getLogger(RedditClient.class.getSimpleName()).debug("Processing request. Attempt {}/{}", attempt, MAX_RETRY);
         if(attempt == MAX_RETRY)
             throw new UnsuccessfulRequestException();
 

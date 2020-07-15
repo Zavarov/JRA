@@ -34,7 +34,7 @@ public class PushshiftClient extends JrawClient{
     }
 
     public Subreddit requestSubreddit(String subredditName) throws TimeoutException, UnsuccessfulRequestException, HttpResponseException {
-        log.info("Requesting subreddit {}", subredditName);
+        log.debug("Requesting subreddit {}", subredditName);
         return PushshiftSubreddit.create(
                 () -> new PushshiftSubreddit(jrawClient),
                 request(() -> Optional.of(jrawClient.subreddit(subredditName).about()), 0)
