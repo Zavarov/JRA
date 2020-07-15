@@ -28,13 +28,15 @@ public class Subreddit extends SubredditTOP{
      * The instant indicating the last time, submissions from the associated {@link Subreddit}
      * have been requested.
      */
-    protected Instant now = Instant.now();
+    private Instant now = Instant.now();
 
     /**
      * Reddit's API is a huge mess, so we can't request submissions within a specific interval.<br>
      * Instead we cache all submissions up to {@link #now}.
+     * @param inclusiveFrom the (inclusive) minimum age of valid submissions.
+     * @param exclusiveTo the (exclusive) maximum age of valid submissions.
      */
-    protected void request() throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
+    protected void request(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
         throw new UnsupportedOperationException();
     }
 
@@ -50,7 +52,7 @@ public class Subreddit extends SubredditTOP{
     public List<Submission> getSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
         //Update the cache if there might be new submissions.
         if(now.isBefore(exclusiveTo)) {
-            request();
+            request(now, exclusiveTo);
             now = exclusiveTo;
         }
 

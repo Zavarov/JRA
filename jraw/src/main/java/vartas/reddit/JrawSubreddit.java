@@ -73,11 +73,7 @@ public class JrawSubreddit extends Subreddit{
     }
 
     @Override
-    protected void request() throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
-        //Start from the end of the last interval
-        Instant inclusiveFrom = super.now;
-        Instant exclusiveTo = Instant.now();
-
+    protected void request(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
         log.debug("Requesting submissions from r/{} from {} to {}.", getName(), inclusiveFrom, exclusiveTo);
         for(Submission submission : requestSubmissions(inclusiveFrom, exclusiveTo))
             putSubmissions(submission.getId(), submission);
