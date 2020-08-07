@@ -153,7 +153,7 @@ public class JrawSubreddit extends Subreddit{
 
     //TODO Optimize
     private Submission createAndLoad(net.dean.jraw.models.Submission jrawSubmission){
-        log.info("Received submission '{}'[{}] @ {}", jrawSubmission.getTitle(), jrawSubmission.getId(), getName());
+        log.debug("Received submission '{}'[{}] @ {}", jrawSubmission.getTitle(), jrawSubmission.getId(), getName());
         Submission submission = JrawSubmission.create(jrawSubmission);
         requestComments(jrawSubmission, submission);
         return submission;
