@@ -144,7 +144,7 @@ public class JSONSubreddit extends Subreddit {
         return ContiguousSet.create(range, domain);
     }
 
-    private static class DiscreteLocalDateDomain extends DiscreteDomain<LocalDate>{
+    public static class DiscreteLocalDateDomain extends DiscreteDomain<LocalDate>{
         @Override
         public LocalDate minValue(){
             return LocalDate.MIN;
