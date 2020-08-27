@@ -47,8 +47,8 @@ public class JrawSubredditTest extends AbstractTest{
 
     @Test
     public void testGetSubmissions() throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
-        Instant inclusiveFrom = Instant.now().minus(1, ChronoUnit.MINUTES);
         Instant exclusiveTo = Instant.now();
+        Instant inclusiveFrom = exclusiveTo.minus(1, ChronoUnit.DAYS);
         subreddit.getSubmissions(inclusiveFrom, exclusiveTo);
     }
 

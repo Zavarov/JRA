@@ -40,6 +40,10 @@ public class PushshiftSubreddit extends JrawSubreddit{
     private static final String URL = "https://api.pushshift.io";
     private static final String SUBMISSION_ENDPOINT = "/reddit/submission/search";
 
+    private static final String DATA = "data";
+    private static final String CREATED = "created_utc";
+    private static final String ID = "id";
+
     public PushshiftSubreddit(RedditClient jrawClient){
         super(jrawClient);
     }
@@ -55,7 +59,7 @@ public class PushshiftSubreddit extends JrawSubreddit{
             List<Submission> submissions = new ArrayList<>();
 
             for(JSONObject submission : requestAllPushshiftSubmissions(inclusiveFrom, exclusiveTo))
-                submissions.add(getSubmissions(submission.getString("id")));
+                submissions.add(getSubmissions(submission.getString(ID)));
 
             return Optional.of(submissions);
         }catch(Exception e){
@@ -68,7 +72,7 @@ public class PushshiftSubreddit extends JrawSubreddit{
 
         JSONArray submissions;
         do{
-            submissions = executePushshiftRequest(inclusiveFrom, exclusiveTo).getJSONArray("data");
+            submissions = executePushshiftRequest(inclusiveFrom, exclusiveTo).getJSONArray(DATA);
 
             for(int i = 0 ; i < submissions.length() ; ++i)
                 allSubmissions.add(submissions.getJSONObject(i));
@@ -107,7 +111,7 @@ public class PushshiftSubreddit extends JrawSubreddit{
     }
 
     private Instant getCreated(JSONObject submission){
-        return Instant.ofEpochSecond(submission.getLong("created_utc"));
+        return Instant.ofEpochSecond(submission.getLong(CREATED));
     }
 
     private boolean hasNext(JSONArray submissions, Instant inclusiveFrom){
@@ -133,16 +137,12 @@ public class PushshiftSubreddit extends JrawSubreddit{
     }
 
     private String buildSubmissionRequest(Instant inclusiveFrom, Instant exclusiveTo){
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(URL);
-        builder.append(SUBMISSION_ENDPOINT);
-        builder.append("/?subreddit=").append(getName());
-        builder.append("&after=").append(inclusiveFrom.getEpochSecond() - 1);
-        builder.append("&before=").append(exclusiveTo.getEpochSecond());
-        builder.append("&sort=desc");
-        builder.append("&size=500");
-
-        return builder.toString();
+        return URL +
+                SUBMISSION_ENDPOINT +
+                "/?subreddit=" + getName() +
+                "&after=" + (inclusiveFrom.getEpochSecond() - 1) +
+                "&before=" + exclusiveTo.getEpochSecond() +
+                "&sort=" + "desc" +
+                "&size=" + 500;
     }
 }

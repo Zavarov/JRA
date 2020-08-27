@@ -17,25 +17,20 @@
 
 package vartas.reddit;
 
-import org.apache.http.client.HttpResponseException;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Range;
 
+import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
-public class PushshiftSubredditTest extends AbstractTest{
-    public static Subreddit subreddit;
-    @BeforeAll
-    public static void setUpAll(){
-        AbstractTest.setUpAll();
-        subreddit = client.getUncheckedSubreddits("RedditDev");
-    }
-
-    @Test
-    public void testGetSubmissions() throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
-        Instant exclusiveTo = Instant.now();
-        Instant inclusiveFrom = exclusiveTo.minus(1, ChronoUnit.DAYS);
-        subreddit.getSubmissions(inclusiveFrom, exclusiveTo);
-    }
+public abstract class Subreddit extends SubredditTOP{
+    /**
+     * This cache serves as a buffer for previous requests. In order to minimize the communication with the Reddit
+     * API, requests over the same range should only be done once. All further requests should reuse the cached data.
+     * Subranges are treated as independent entities.
+     */
+    protected Cache<Range<Instant>, Range<Instant>> memory = CacheBuilder.newBuilder()
+            .expireAfterWrite(Duration.ofMinutes(5))
+            .build();
 }
