@@ -24,11 +24,12 @@
     <groupId>vartas.reddit</groupId>
     <artifactId>reddit</artifactId>
     <packaging>pom</packaging>
-    <version>3.1</version>
+    <version>3.2-SNAPSHOT</version>
     <modules>
         <module>core</module>
         <module>jraw</module>
         <module>pushshift</module>
+        <module>json</module>
     </modules>
 
     <properties>

@@ -5,6 +5,8 @@ import java.lang.Exception.Exception;
 import java.time.Instant.Instant;
 import java.util.List.List;
 import java.util.Optional.Optional;
+import org.apache.http.client.HttpResponseException.HttpResponseException;
+
 
 public classdiagram Reddit {
     public abstract class Client {
@@ -20,7 +22,7 @@ public classdiagram Reddit {
         - int commentKarma;
     }
 
-    public class Subreddit extends Snowflake{
+    public abstract class Subreddit extends Snowflake{
         - String name;
         - String publicDescription;
         - int subscribers;
@@ -28,6 +30,8 @@ public classdiagram Reddit {
         - Optional<String> bannerImage;
         <<initializer="PT1H">>
         - Cache<String, Submission> submissions;
+
+        public abstract List<Submission> getSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, TimeoutException, HttpResponseException;
     }
 
     public abstract class Submission extends Snowflake{

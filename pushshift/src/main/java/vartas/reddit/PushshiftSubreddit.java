@@ -45,13 +45,9 @@ public class PushshiftSubreddit extends JrawSubreddit{
     }
 
     @Override
-    public List<Submission> getSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
-        return requestSubmissions(inclusiveFrom, exclusiveTo);
-    }
-
-    @Override
-    protected List<Submission> requestSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws TimeoutException, UnsuccessfulRequestException, HttpResponseException {
-        return JrawClient.request(() -> requestPushshiftSubmissions(inclusiveFrom, exclusiveTo),0);
+    protected void requestSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws TimeoutException, UnsuccessfulRequestException, HttpResponseException {
+        for(Submission submission : JrawClient.request(() -> requestPushshiftSubmissions(inclusiveFrom, exclusiveTo),0))
+            putSubmissions(submission.getId(), submission);
     }
 
     private Optional<List<Submission>> requestPushshiftSubmissions(Instant inclusiveFrom, Instant exclusiveTo){
