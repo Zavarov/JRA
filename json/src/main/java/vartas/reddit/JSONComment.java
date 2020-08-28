@@ -17,6 +17,7 @@
 
 package vartas.reddit;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import vartas.reddit.factory.CommentFactory;
 
@@ -31,6 +32,7 @@ public class JSONComment extends Comment{
     private static final String SCORE = "score";
     private static final String ID = "id";
     private static final String CREATED = "created";
+    private static final String CHILDREN = "children";
 
     public static Comment of(Path guildPath) throws IOException {
         return of(Files.readString(guildPath));
@@ -41,7 +43,7 @@ public class JSONComment extends Comment{
     }
 
     public static Comment of(JSONObject jsonObject){
-        return CommentFactory.create(
+        Comment comment = CommentFactory.create(
                 JSONComment::new,
                 jsonObject.getString(AUTHOR),
                 jsonObject.getString(CONTENT),
@@ -49,6 +51,12 @@ public class JSONComment extends Comment{
                 jsonObject.getString(ID),
                 Instant.ofEpochMilli(jsonObject.getLong(CREATED))
         );
+
+        JSONArray children = jsonObject.getJSONArray(CHILDREN);
+        for(int i = 0 ; i < children.length() ; ++i)
+            comment.addChildren(of(children.getJSONObject(i)));
+
+        return comment;
     }
 
     public static JSONObject of(Comment comment){
@@ -59,6 +67,11 @@ public class JSONComment extends Comment{
         jsonObject.put(SCORE, comment.getScore());
         jsonObject.put(ID, comment.getId());
         jsonObject.put(CREATED, comment.getCreated().toEpochMilli());
+
+        JSONArray children = new JSONArray();
+        for(Comment child : comment.getChildren())
+            children.put(of(child));
+        jsonObject.put(CHILDREN, children);
 
         return jsonObject;
     }

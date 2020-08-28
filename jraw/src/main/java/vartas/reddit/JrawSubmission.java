@@ -19,6 +19,7 @@ package vartas.reddit;
 
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.references.SubmissionReference;
+import net.dean.jraw.tree.CommentNode;
 import net.dean.jraw.tree.RootCommentNode;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -60,7 +61,7 @@ public class JrawSubmission extends Submission {
 
         submission.setLinkFlairText(Optional.ofNullable(jrawSubmission.getLinkFlairText()));
         submission.setContent(Optional.ofNullable(jrawSubmission.getSelfText()).map(StringEscapeUtils::unescapeHtml4));
-        submission.addAllComments(requestComments(jrawSubmission, jrawClient));
+        submission.addAllRootComments(requestComments(jrawSubmission, jrawClient));
 
         return submission;
     }
@@ -73,14 +74,13 @@ public class JrawSubmission extends Submission {
 
         try {
             root = submissionReference.comments();
+
             //Acquire all the comments
             root.loadFully(jrawClient);
 
-            root.walkTree().iterator().forEachRemaining(node -> {
-                if(node.getSubject() instanceof net.dean.jraw.models.Comment)
-                    comments.add(JrawComment.create((net.dean.jraw.models.Comment)node.getSubject()));
-            });
-
+            //Add all root comments
+            for(CommentNode<net.dean.jraw.models.Comment> node : root.getReplies())
+                comments.add(JrawComment.create(node));
         }catch(NullPointerException e){
             //null if the submission doesn't exist -> Not a communication error
             LoggerFactory.getLogger(JrawSubmission.class.getSimpleName()).warn(e.getMessage(), e);

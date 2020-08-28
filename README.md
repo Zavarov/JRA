@@ -1,12 +1,24 @@
 # reddit
 
-This project implements a Reddit adapter using [JRAW](https://github.com/mattbdean/JRAW)
-and via a custom implementation backed by [pushshift.io](https://pushshift.io/), in order to request more than 1000 submissions.
-It then uses the interface for analyzing both comments and submissions.
-Overall, we suggest using the first implementation in realtime, and the second one for analysis over a long time frame.
+This project implements a Reddit wrapper, allowing an user to access subreddits, submissions and comments.
+Currently, it is only possible to read those instances.
+The backend implementation is done via [JRAW](https://github.com/mattbdean/JRAW), a custom implementation using 
+[pushshift.io](https://pushshift.io/) and via serialization using [JSON](https://en.wikipedia.org/wiki/JSON).
 
-We use Class diagrams to describe the underlying architecture of the program, which are then,
-in combination with [MontiCore](http://www.monticore.de/), to generate the corresponding source code.
+Class diagrams describe the architecture of the program, which are used in combination with [MontiCore](http://www.monticore.de/),
+to generate the corresponding source code.
+
+### Getting started
+
+The Client class provides the interface the Reddit API and allows access both subreddits and user accounts.
+Each subreddit consists of a collection of submission. It is possible to either request individual submissions by their
+id or several via a time interval. 
+
+Each submission has a list of comments. We preserve the tree structure of the comments, which can be
+accessed using the visitor pattern. However, for simplicity, we also provide access to all comments
+at once via an unordered list.
+
+For code examples of the different functions, please visit the [Wiki](https://github.com/Zavarov/reddit/wiki).
 
 ### Installing
 
@@ -29,6 +41,9 @@ The template for the file is
   "secret"   : "SECRET"
 }
 ```
+
+The tests are done over [r/redditdev](https://www.reddit.com/r/redditdev/) and the submissions over the past day.
+Since those are live values, the results of the tests after every execution may differ.
 
 ## Built With
 

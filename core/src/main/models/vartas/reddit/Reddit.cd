@@ -43,8 +43,9 @@ public classdiagram Reddit {
         - int score;
         - boolean nsfw;
         - boolean spoiler;
-        - List<Comment> comments;
+        - List<Comment> rootComments;
 
+        + abstract List<Comment> getComments();
         + abstract String getPermaLink();
         + abstract String getShortLink();
         + abstract String getQualifiedTitle();
@@ -59,6 +60,7 @@ public classdiagram Reddit {
         - String author;
         - String content;
         - int score;
+        - List<Comment> children;
     }
 
     public abstract class Snowflake{

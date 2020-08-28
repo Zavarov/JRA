@@ -61,7 +61,7 @@ public class JSONSubmission extends Submission{
         submission.setCreated(Instant.ofEpochMilli(jsonObject.getLong(CREATED)));
 
         for(int i = 0 ; i < jsonObject.getJSONArray(COMMENTS).length() ; ++i)
-            submission.addComments(JSONComment.of(jsonObject.getJSONArray(COMMENTS).getJSONObject(i)));
+            submission.addRootComments(JSONComment.of(jsonObject.getJSONArray(COMMENTS).getJSONObject(i)));
 
         return submission;
     }
@@ -81,7 +81,7 @@ public class JSONSubmission extends Submission{
         jsonObject.put(CREATED, submission.getCreated().toEpochMilli());
 
         JSONArray comments = new JSONArray();
-        for(Comment comment : submission.getComments())
+        for(Comment comment : submission.getRootComments())
             comments.put(JSONComment.of(comment));
         jsonObject.put(COMMENTS, comments);
 

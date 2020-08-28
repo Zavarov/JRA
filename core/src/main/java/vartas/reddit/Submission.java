@@ -17,6 +17,12 @@
 
 package vartas.reddit;
 
+import vartas.reddit.visitor.RedditVisitor;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Submission extends SubmissionTOP{
     private static final String SHORT_LINK = "https://redd.it/%s";
 
@@ -35,5 +41,21 @@ public abstract class Submission extends SubmissionTOP{
         if(getNsfw()) titleBuilder.append(" [NSFW]");
 
         return titleBuilder.toString();
+    }
+
+    @Override
+    public List<Comment> getComments(){
+        List<Comment> comments = new ArrayList<>();
+
+        RedditVisitor commentVisitor = new RedditVisitor(){
+            @Override
+            public void visit(@Nonnull Comment comment){
+                comments.add(comment);
+            }
+        };
+
+        accept(commentVisitor);
+
+        return comments;
     }
 }

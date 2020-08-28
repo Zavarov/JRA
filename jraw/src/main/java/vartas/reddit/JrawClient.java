@@ -49,8 +49,8 @@ public class JrawClient extends Client {
      */
     protected final RedditClient jrawClient;
 
-    public JrawClient(String redditName, String version, String clientId, String secret){
-        UserAgent userAgent = new UserAgent("bot", getClass().getPackage().getName(), version, redditName);
+    public JrawClient(String userName, String version, String clientId, String secret){
+        UserAgent userAgent = new UserAgent("bot", getClass().getPackage().getName(), version, userName);
         OkHttpNetworkAdapter adapter = new OkHttpNetworkAdapter(userAgent);
 
         jrawClient = OAuthHelper.automatic(adapter, Credentials.userless(clientId, secret, UUID.randomUUID()));

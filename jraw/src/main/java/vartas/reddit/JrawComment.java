@@ -17,6 +17,7 @@
 
 package vartas.reddit;
 
+import net.dean.jraw.tree.CommentNode;
 import org.apache.commons.text.StringEscapeUtils;
 import vartas.reddit.factory.CommentFactory;
 
@@ -24,8 +25,10 @@ import vartas.reddit.factory.CommentFactory;
  * This class implements the comments backed by their respective JRAW comments.
  */
 public class JrawComment extends Comment {
-    public static Comment create(net.dean.jraw.models.Comment jrawComment){
-        return CommentFactory.create(
+    public static Comment create(CommentNode<net.dean.jraw.models.Comment> jrawNode){
+        net.dean.jraw.models.Comment jrawComment = jrawNode.getSubject();
+
+        Comment comment = CommentFactory.create(
                 JrawComment::new,
                 jrawComment.getAuthor(),
                 StringEscapeUtils.escapeHtml4(jrawComment.getBody()),
@@ -33,5 +36,10 @@ public class JrawComment extends Comment {
                 jrawComment.getUniqueId(),
                 jrawComment.getCreated().toInstant()
         );
+
+        for(CommentNode<net.dean.jraw.models.Comment> jrawChild : jrawNode.getReplies())
+            comment.addChildren(create(jrawChild));
+
+        return comment;
     }
 }
