@@ -63,6 +63,7 @@ public classdiagram Reddit {
         - int score;
         - List<Comment> children;
 
+        + abstract Submission getSubmission();
         + abstract String getPermaLink();
     }
 

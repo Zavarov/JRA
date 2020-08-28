@@ -26,18 +26,18 @@ import vartas.reddit.factory.CommentFactory;
  */
 public class JrawComment extends Comment {
     private static final String PERMALINK = "https://www.reddit.com/comments/%s/-/%s/";
-    private final String submissionId;
+    private final Submission root;
 
-    public JrawComment(String submissionId){
+    public JrawComment(Submission root){
         super();
-        this.submissionId = submissionId;
+        this.root = root;
     }
 
-    public static Comment create(CommentNode<net.dean.jraw.models.Comment> jrawNode){
+    public static Comment create(Submission submission, CommentNode<net.dean.jraw.models.Comment> jrawNode){
         net.dean.jraw.models.Comment jrawComment = jrawNode.getSubject();
 
         Comment comment = CommentFactory.create(
-                () -> new JrawComment(jrawNode.getSettings().getSubmissionId()),
+                () -> new JrawComment(submission),
                 jrawComment.getAuthor(),
                 StringEscapeUtils.escapeHtml4(jrawComment.getBody()),
                 jrawComment.getScore(),
@@ -46,13 +46,18 @@ public class JrawComment extends Comment {
         );
 
         for(CommentNode<net.dean.jraw.models.Comment> jrawChild : jrawNode.getReplies())
-            comment.addChildren(create(jrawChild));
+            comment.addChildren(create(submission, jrawChild));
 
         return comment;
     }
 
     @Override
+    public Submission getSubmission(){
+        return root;
+    }
+
+    @Override
     public String getPermaLink(){
-        return String.format(PERMALINK, submissionId, getId());
+        return String.format(PERMALINK, getSubmission().getId(), getId());
     }
 }

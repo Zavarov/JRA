@@ -61,7 +61,7 @@ public class JSONSubmission extends Submission{
         submission.setCreated(Instant.ofEpochMilli(jsonObject.getLong(CREATED)));
 
         for(int i = 0 ; i < jsonObject.getJSONArray(COMMENTS).length() ; ++i)
-            submission.addRootComments(JSONComment.of(submission.getId(), jsonObject.getJSONArray(COMMENTS).getJSONObject(i)));
+            submission.addRootComments(JSONComment.of(submission, jsonObject.getJSONArray(COMMENTS).getJSONObject(i)));
 
         return submission;
     }

@@ -61,12 +61,12 @@ public class JrawSubmission extends Submission {
 
         submission.setLinkFlairText(Optional.ofNullable(jrawSubmission.getLinkFlairText()));
         submission.setContent(Optional.ofNullable(jrawSubmission.getSelfText()).map(StringEscapeUtils::unescapeHtml4));
-        submission.addAllRootComments(requestComments(jrawSubmission, jrawClient));
+        submission.addAllRootComments(requestComments(submission, jrawSubmission, jrawClient));
 
         return submission;
     }
 
-    private static List<Comment> requestComments(net.dean.jraw.models.Submission jrawSubmission, RedditClient jrawClient){
+    private static List<Comment> requestComments(Submission submission, net.dean.jraw.models.Submission jrawSubmission, RedditClient jrawClient){
         List<Comment> comments = new ArrayList<>();
 
         RootCommentNode root;
@@ -80,7 +80,7 @@ public class JrawSubmission extends Submission {
 
             //Add all root comments
             for(CommentNode<net.dean.jraw.models.Comment> node : root.getReplies())
-                comments.add(JrawComment.create(node));
+                comments.add(JrawComment.create(submission, node));
         }catch(NullPointerException e){
             //null if the submission doesn't exist -> Not a communication error
             LoggerFactory.getLogger(JrawSubmission.class.getSimpleName()).warn(e.getMessage(), e);

@@ -32,16 +32,16 @@ public class JSONComment extends Comment{
     private static final String CREATED = "created";
     private static final String CHILDREN = "children";
 
-    private final String submissionId;
+    private final Submission root;
 
-    public JSONComment(String submissionId){
+    public JSONComment(Submission root){
         super();
-        this.submissionId = submissionId;
+        this.root = root;
     }
 
-    public static Comment of(String submissionId, JSONObject jsonObject){
+    public static Comment of(Submission root, JSONObject jsonObject){
         Comment comment = CommentFactory.create(
-                () -> new JSONComment(submissionId),
+                () -> new JSONComment(root),
                 jsonObject.getString(AUTHOR),
                 jsonObject.getString(CONTENT),
                 jsonObject.getInt(SCORE),
@@ -51,7 +51,7 @@ public class JSONComment extends Comment{
 
         JSONArray children = jsonObject.getJSONArray(CHILDREN);
         for(int i = 0 ; i < children.length() ; ++i)
-            comment.addChildren(of(submissionId, children.getJSONObject(i)));
+            comment.addChildren(of(root, children.getJSONObject(i)));
 
         return comment;
     }
@@ -74,7 +74,12 @@ public class JSONComment extends Comment{
     }
 
     @Override
+    public Submission getSubmission(){
+        return root;
+    }
+
+    @Override
     public String getPermaLink(){
-        return String.format(PERMALINK, submissionId, getId());
+        return String.format(PERMALINK, getSubmission().getId(), getId());
     }
 }
