@@ -32,6 +32,7 @@ public classdiagram Reddit {
         - Cache<String, Submission> submissions;
 
         public abstract List<Submission> getSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, TimeoutException, HttpResponseException;
+        public abstract List<Submission> getUncheckedSubmissions(Instant inclusiveFrom, Instant exclusiveTo);
     }
 
     public abstract class Submission extends Snowflake{
@@ -56,11 +57,13 @@ public classdiagram Reddit {
         + abstract String getUrl();
     }
 
-    public class Comment extends Snowflake{
+    public abstract class Comment extends Snowflake{
         - String author;
         - String content;
         - int score;
         - List<Comment> children;
+
+        + abstract String getPermaLink();
     }
 
     public abstract class Snowflake{

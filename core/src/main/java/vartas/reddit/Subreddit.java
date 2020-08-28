@@ -20,9 +20,13 @@ package vartas.reddit;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Range;
+import com.google.common.util.concurrent.UncheckedExecutionException;
+import org.apache.http.client.HttpResponseException;
 
+import javax.annotation.Nonnull;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 
 public abstract class Subreddit extends SubredditTOP{
     /**
@@ -33,4 +37,14 @@ public abstract class Subreddit extends SubredditTOP{
     protected Cache<Range<Instant>, Range<Instant>> memory = CacheBuilder.newBuilder()
             .expireAfterWrite(Duration.ofMinutes(5))
             .build();
+
+    @Nonnull
+    @Override
+    public List<Submission> getUncheckedSubmissions(@Nonnull Instant inclusiveFrom, @Nonnull Instant exclusiveTo){
+        try{
+            return getSubmissions(inclusiveFrom, exclusiveTo);
+        }catch(UnsuccessfulRequestException | TimeoutException | HttpResponseException e){
+            throw new UncheckedExecutionException(e);
+        }
+    }
 }

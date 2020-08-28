@@ -21,12 +21,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import vartas.reddit.factory.CommentFactory;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.Instant;
 
 public class JSONComment extends Comment{
+    private static final String PERMALINK = "https://www.reddit.com/comments/%s/-/%s/";
     private static final String AUTHOR = "author";
     private static final String CONTENT = "content";
     private static final String SCORE = "score";
@@ -34,17 +32,16 @@ public class JSONComment extends Comment{
     private static final String CREATED = "created";
     private static final String CHILDREN = "children";
 
-    public static Comment of(Path guildPath) throws IOException {
-        return of(Files.readString(guildPath));
+    private final String submissionId;
+
+    public JSONComment(String submissionId){
+        super();
+        this.submissionId = submissionId;
     }
 
-    public static Comment of(String content){
-        return of(new JSONObject(content));
-    }
-
-    public static Comment of(JSONObject jsonObject){
+    public static Comment of(String submissionId, JSONObject jsonObject){
         Comment comment = CommentFactory.create(
-                JSONComment::new,
+                () -> new JSONComment(submissionId),
                 jsonObject.getString(AUTHOR),
                 jsonObject.getString(CONTENT),
                 jsonObject.getInt(SCORE),
@@ -54,7 +51,7 @@ public class JSONComment extends Comment{
 
         JSONArray children = jsonObject.getJSONArray(CHILDREN);
         for(int i = 0 ; i < children.length() ; ++i)
-            comment.addChildren(of(children.getJSONObject(i)));
+            comment.addChildren(of(submissionId, children.getJSONObject(i)));
 
         return comment;
     }
@@ -74,5 +71,10 @@ public class JSONComment extends Comment{
         jsonObject.put(CHILDREN, children);
 
         return jsonObject;
+    }
+
+    @Override
+    public String getPermaLink(){
+        return String.format(PERMALINK, submissionId, getId());
     }
 }

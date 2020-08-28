@@ -25,15 +25,23 @@ import vartas.reddit.factory.CommentFactory;
  * This class implements the comments backed by their respective JRAW comments.
  */
 public class JrawComment extends Comment {
+    private static final String PERMALINK = "https://www.reddit.com/comments/%s/-/%s/";
+    private final String submissionId;
+
+    public JrawComment(String submissionId){
+        super();
+        this.submissionId = submissionId;
+    }
+
     public static Comment create(CommentNode<net.dean.jraw.models.Comment> jrawNode){
         net.dean.jraw.models.Comment jrawComment = jrawNode.getSubject();
 
         Comment comment = CommentFactory.create(
-                JrawComment::new,
+                () -> new JrawComment(jrawNode.getSettings().getSubmissionId()),
                 jrawComment.getAuthor(),
                 StringEscapeUtils.escapeHtml4(jrawComment.getBody()),
                 jrawComment.getScore(),
-                jrawComment.getUniqueId(),
+                jrawComment.getId(),
                 jrawComment.getCreated().toInstant()
         );
 
@@ -41,5 +49,10 @@ public class JrawComment extends Comment {
             comment.addChildren(create(jrawChild));
 
         return comment;
+    }
+
+    @Override
+    public String getPermaLink(){
+        return String.format(PERMALINK, submissionId, getId());
     }
 }
