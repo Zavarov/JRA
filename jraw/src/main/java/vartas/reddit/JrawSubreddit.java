@@ -94,6 +94,7 @@ public class JrawSubreddit extends Subreddit {
     }
 
     private Submission requestSubmissions(String key) throws TimeoutException, UnsuccessfulRequestException, HttpResponseException {
+        log.debug("Request submission {}", key);
         Supplier<Optional<Submission>> supplier = () -> Optional.of(
                 JrawSubmission.create(jrawClient.submission(key).inspect(), jrawClient)
         );
@@ -112,6 +113,7 @@ public class JrawSubreddit extends Subreddit {
      */
     @Override
     public List<Submission> getSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
+        log.debug("Request submissions for [{}, {})", inclusiveFrom, exclusiveTo);
         Range<Instant> range = Range.closedOpen(inclusiveFrom, exclusiveTo);
 
         //Range hasn't been requested before
@@ -131,16 +133,17 @@ public class JrawSubreddit extends Subreddit {
     /**
      * Reddit's API is a huge mess, so we can't request submissions within a specific interval.
      * Instead we request all submissions from now until the lower bound specified in inclusiveFrom.
-     * @param inclusiveFrom the (inclusive) minimum age of valid submissions.
-     * @param exclusiveTo the (exclusive) maximum age of valid submissions.
+     * @param inclusiveFrom the (inclusive) maximum age of valid submissions.
+     * @param exclusiveTo the (exclusive) minimum age of valid submissions.
      */
     protected void requestSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
-        log.debug("Requesting submissions from r/{} from {} to {}.", getName(), inclusiveFrom, exclusiveTo);
-        for(Submission submission : requestJrawSubmissions(inclusiveFrom, exclusiveTo))
+        log.debug("Request submissions for [{}, {})", inclusiveFrom, exclusiveTo);
+        for(Submission submission : requestJrawSubmissions(inclusiveFrom))
             putSubmissions(submission.getId(), submission);
     }
 
-    private List<Submission> requestJrawSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws TimeoutException, UnsuccessfulRequestException, HttpResponseException {
+    private List<Submission> requestJrawSubmissions(Instant inclusiveFrom) throws TimeoutException, UnsuccessfulRequestException, HttpResponseException {
+        log.debug("Request submissions until {}", inclusiveFrom);
         return JrawClient.request(() -> {
                     DefaultPaginator<net.dean.jraw.models.Submission> paginator = jrawClient
                             .subreddit(getName())

@@ -26,6 +26,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
@@ -43,6 +44,7 @@ public class PushshiftSubreddit extends JrawSubreddit{
     private static final String DATA = "data";
     private static final String CREATED = "created_utc";
     private static final String ID = "id";
+    private final Logger log = LoggerFactory.getLogger(getClass().getSimpleName());
 
     public PushshiftSubreddit(RedditClient jrawClient){
         super(jrawClient);
@@ -50,12 +52,14 @@ public class PushshiftSubreddit extends JrawSubreddit{
 
     @Override
     protected void requestSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws TimeoutException, UnsuccessfulRequestException, HttpResponseException {
+        log.debug("Request submissions for [{}, {})", inclusiveFrom, exclusiveTo);
         for(Submission submission : JrawClient.request(() -> requestPushshiftSubmissions(inclusiveFrom, exclusiveTo),0))
             putSubmissions(submission.getId(), submission);
     }
 
     private Optional<List<Submission>> requestPushshiftSubmissions(Instant inclusiveFrom, Instant exclusiveTo){
         try{
+            log.debug("Request submissions for [{}, {})", inclusiveFrom, exclusiveTo);
             List<Submission> submissions = new ArrayList<>();
 
             for(JSONObject submission : requestAllPushshiftSubmissions(inclusiveFrom, exclusiveTo))
@@ -72,6 +76,7 @@ public class PushshiftSubreddit extends JrawSubreddit{
 
         JSONArray submissions;
         do{
+            log.debug("Request submissions for [{}, {})", inclusiveFrom, exclusiveTo);
             submissions = executePushshiftRequest(inclusiveFrom, exclusiveTo).getJSONArray(DATA);
 
             for(int i = 0 ; i < submissions.length() ; ++i)

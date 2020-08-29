@@ -21,6 +21,8 @@ import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.DiscreteDomain;
 import com.google.common.collect.Range;
 import org.apache.http.client.HttpResponseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.FileWriter;
@@ -38,6 +40,8 @@ import java.util.stream.Collectors;
 
 public class JSONSubreddit extends Subreddit {
     @Nonnull
+    private final Logger log = LoggerFactory.getLogger(getClass().getSimpleName());
+    @Nonnull
     private final Path path;
     @Nonnull
     private final Subreddit subreddit;
@@ -53,6 +57,7 @@ public class JSONSubreddit extends Subreddit {
 
     @Override
     public List<Submission> getSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
+        log.debug("Request submissions for [{}, {})", inclusiveFrom, exclusiveTo);
         List<Submission> submissions = new ArrayList<>();
 
         for(LocalDate date : createContiguousSet(inclusiveFrom, exclusiveTo))
@@ -65,8 +70,10 @@ public class JSONSubreddit extends Subreddit {
         List<Submission> submissions;
 
         if(hasJsonSubmissions(date)) {
+            log.debug("JSON files found for {}", date);
             submissions = loadJsonSubmissions(date);
         }else {
+            log.debug("Request submissions for {}", date);
             submissions = requestRedditSubmissions(date);
             storeSubmissions(submissions);
         }
