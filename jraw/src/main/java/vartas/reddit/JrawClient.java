@@ -170,14 +170,7 @@ public class JrawClient extends Client {
 
         @Override
         public Response intercept(Chain chain) throws IOException {
-            Response response = chain.proceed(chain.request());
-            return updateResponse(response);
-        }
-
-        String cleanJson(String jsonString){
-            return JsonPath.parse(jsonString)
-                    .delete(oembedElements, whereTypeIsNull)
-                    .jsonString();
+            return updateResponse(chain.proceed(chain.request()));
         }
 
         Response updateResponse(Response previous) throws IOException {
@@ -187,9 +180,19 @@ public class JrawClient extends Client {
                 return previous;
 
             MediaType contentType = previousBody.contentType();
-            String newContent = cleanJson(previousBody.string());
-            ResponseBody newBody = ResponseBody.create(contentType, newContent);
-            return previous.newBuilder().body(newBody).build();
+            String content = cleanJson(previousBody.string());
+            ResponseBody body = ResponseBody.create(contentType, content);
+            return previous.newBuilder().body(body).build();
+        }
+
+        String cleanJson(String jsonString){
+            try {
+                return JsonPath.parse(jsonString)
+                        .delete(oembedElements, whereTypeIsNull)
+                        .jsonString();
+            }catch(Exception e){
+                return jsonString;
+            }
         }
     }
 }
