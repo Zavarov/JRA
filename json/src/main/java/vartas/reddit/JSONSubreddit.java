@@ -59,9 +59,13 @@ public class JSONSubreddit extends Subreddit {
     public List<Submission> getSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
         log.debug("Request submissions for [{}, {})", inclusiveFrom, exclusiveTo);
         List<Submission> submissions = new ArrayList<>();
+        Range<Instant> range = Range.closedOpen(inclusiveFrom, exclusiveTo);
 
-        for(LocalDate date : createContiguousSet(inclusiveFrom, exclusiveTo))
-            submissions.addAll(requestSubmission(date));
+        //The bounds of createContiguousSet are inclusive
+        for(LocalDate date : createContiguousSet(inclusiveFrom, exclusiveTo.minus(1, ChronoUnit.DAYS)))
+            for(Submission submission : requestSubmission(date))
+                if(range.contains(submission.getCreated()))
+                    submissions.add(submission);
 
         return submissions;
     }
