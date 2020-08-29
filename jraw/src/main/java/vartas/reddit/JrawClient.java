@@ -104,9 +104,6 @@ public class JrawClient extends Client {
             handle(e.getRes().getCode(), Integer.toString(e.getRes().getCode()));
         } catch(ApiException e){
             handle(Integer.parseInt(e.getCode()), e.getExplanation());
-        } catch(Exception e){
-            //In case JRAW fucks up
-            LoggerFactory.getLogger(RedditClient.class.getSimpleName()).error(e.getMessage(), e);
         }
         return requestOpt;
     }
