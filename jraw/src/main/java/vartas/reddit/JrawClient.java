@@ -17,6 +17,8 @@
 
 package vartas.reddit;
 
+import com.jayway.jsonpath.Filter;
+import com.jayway.jsonpath.JsonPath;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
@@ -24,15 +26,20 @@ import net.dean.jraw.http.OkHttpNetworkAdapter;
 import net.dean.jraw.http.UserAgent;
 import net.dean.jraw.oauth.Credentials;
 import net.dean.jraw.oauth.OAuthHelper;
+import okhttp3.*;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
+
+import static com.jayway.jsonpath.Criteria.where;
+import static com.jayway.jsonpath.Filter.filter;
 
 public class JrawClient extends Client {
     /**
@@ -51,7 +58,9 @@ public class JrawClient extends Client {
 
     public JrawClient(String userName, String version, String clientId, String secret){
         UserAgent userAgent = new UserAgent("bot", getClass().getPackage().getName(), version, userName);
-        OkHttpNetworkAdapter adapter = new OkHttpNetworkAdapter(userAgent);
+
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new MalformedJsonInterceptor()).build();
+        OkHttpNetworkAdapter adapter = new OkHttpNetworkAdapter(userAgent, client);
 
         jrawClient = OAuthHelper.automatic(adapter, Credentials.userless(clientId, secret, UUID.randomUUID()));
         jrawClient.setLogHttp(false);
@@ -148,6 +157,39 @@ public class JrawClient extends Client {
             default:
                 LoggerFactory.getLogger(RedditClient.class.getSimpleName()).error(explanation);
                 throw new HttpResponseException(errorCode, explanation);
+        }
+    }
+
+    /**
+     * Copied and slightly modified hotfix for NullPointerExceptions caused by JRAW.
+     * @link https://github.com/mattbdean/JRAW/issues/300
+     */
+    private static class MalformedJsonInterceptor implements Interceptor {
+        static final String oembedElements = "$..oembed[?]";
+        static final Filter whereTypeIsNull = filter(where("type").exists(false));
+
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Response response = chain.proceed(chain.request());
+            return updateResponse(response);
+        }
+
+        String cleanJson(String jsonString){
+            return JsonPath.parse(jsonString)
+                    .delete(oembedElements, whereTypeIsNull)
+                    .jsonString();
+        }
+
+        Response updateResponse(Response previous) throws IOException {
+            ResponseBody previousBody = previous.body();
+
+            if(previousBody == null)
+                return previous;
+
+            MediaType contentType = previousBody.contentType();
+            String newContent = cleanJson(previousBody.string());
+            ResponseBody newBody = ResponseBody.create(contentType, newContent);
+            return previous.newBuilder().body(newBody).build();
         }
     }
 }

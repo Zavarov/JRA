@@ -42,6 +42,7 @@
         <guava.version>28.2-jre</guava.version>
         <commons-text.version>1.8</commons-text.version>
         <commons-validator.version>1.6</commons-validator.version>
+        <json-path.version>2.4.0</json-path.version>
 
         <!-- .. Generator .......................................................................................... -->
 
