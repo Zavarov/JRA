@@ -99,7 +99,7 @@ public class JrawSubreddit extends Subreddit {
                 JrawSubmission.create(jrawClient.submission(key).inspect(), jrawClient)
         );
 
-        return JrawClient.request(supplier, 0);
+        return JrawClient.request(jrawClient, supplier, 0);
     }
 
     /**
@@ -144,7 +144,7 @@ public class JrawSubreddit extends Subreddit {
 
     private List<Submission> requestJrawSubmissions(Instant inclusiveFrom) throws TimeoutException, UnsuccessfulRequestException, HttpResponseException {
         log.debug("Request submissions until {}", inclusiveFrom);
-        return JrawClient.request(() -> {
+        return JrawClient.request(jrawClient, () -> {
                     DefaultPaginator<net.dean.jraw.models.Submission> paginator = jrawClient
                             .subreddit(getName())
                             .posts()

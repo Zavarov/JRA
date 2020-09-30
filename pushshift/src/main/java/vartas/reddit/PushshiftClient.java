@@ -37,7 +37,7 @@ public class PushshiftClient extends JrawClient{
         log.debug("Requesting subreddit {}", subredditName);
         return PushshiftSubreddit.create(
                 () -> new PushshiftSubreddit(jrawClient),
-                request(() -> Optional.of(jrawClient.subreddit(subredditName).about()), 0)
+                request(jrawClient, () -> Optional.of(jrawClient.subreddit(subredditName).about()), 0)
         );
     }
 }
