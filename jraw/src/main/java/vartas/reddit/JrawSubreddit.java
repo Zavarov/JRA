@@ -93,7 +93,7 @@ public class JrawSubreddit extends Subreddit {
         return getSubmissions(key, () -> requestSubmissions(key));
     }
 
-    private Submission requestSubmissions(String key) throws TimeoutException, UnsuccessfulRequestException, HttpResponseException {
+    private Submission requestSubmissions(String key) throws UnsuccessfulRequestException, HttpResponseException {
         log.debug("Request submission {}", key);
         Supplier<Optional<Submission>> supplier = () -> Optional.of(
                 JrawSubmission.create(jrawClient.submission(key).inspect(), jrawClient)
@@ -112,7 +112,7 @@ public class JrawSubreddit extends Subreddit {
      * @return A list containing all requested submissions.
      */
     @Override
-    public List<Submission> getSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
+    public List<Submission> getSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, HttpResponseException {
         log.debug("Request submissions for [{}, {})", inclusiveFrom, exclusiveTo);
         Range<Instant> range = Range.closedOpen(inclusiveFrom, exclusiveTo);
 
@@ -136,13 +136,13 @@ public class JrawSubreddit extends Subreddit {
      * @param inclusiveFrom the (inclusive) maximum age of valid submissions.
      * @param exclusiveTo the (exclusive) minimum age of valid submissions.
      */
-    protected void requestSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
+    protected void requestSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, HttpResponseException {
         log.debug("Request submissions for [{}, {})", inclusiveFrom, exclusiveTo);
         for(Submission submission : requestJrawSubmissions(inclusiveFrom))
             putSubmissions(submission.getId(), submission);
     }
 
-    private List<Submission> requestJrawSubmissions(Instant inclusiveFrom) throws TimeoutException, UnsuccessfulRequestException, HttpResponseException {
+    private List<Submission> requestJrawSubmissions(Instant inclusiveFrom) throws UnsuccessfulRequestException, HttpResponseException {
         log.debug("Request submissions until {}", inclusiveFrom);
         return JrawClient.request(jrawClient, () -> {
                     DefaultPaginator<net.dean.jraw.models.Submission> paginator = jrawClient

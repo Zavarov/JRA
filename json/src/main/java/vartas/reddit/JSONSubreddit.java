@@ -56,7 +56,7 @@ public class JSONSubreddit extends Subreddit {
     }
 
     @Override
-    public List<Submission> getSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
+    public List<Submission> getSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, HttpResponseException {
         log.debug("Request submissions for [{}, {})", inclusiveFrom, exclusiveTo);
         List<Submission> submissions = new ArrayList<>();
         Range<Instant> range = Range.closedOpen(inclusiveFrom, exclusiveTo);
@@ -70,7 +70,7 @@ public class JSONSubreddit extends Subreddit {
         return submissions;
     }
 
-    private List<Submission> requestSubmission(LocalDate date) throws UnsuccessfulRequestException, TimeoutException, HttpResponseException{
+    private List<Submission> requestSubmission(LocalDate date) throws UnsuccessfulRequestException, HttpResponseException{
         List<Submission> submissions;
 
         if(hasJsonSubmissions(date)) {
@@ -105,7 +105,7 @@ public class JSONSubreddit extends Subreddit {
         }
     }
 
-    private List<Submission> requestRedditSubmissions(LocalDate date) throws UnsuccessfulRequestException, TimeoutException, HttpResponseException{
+    private List<Submission> requestRedditSubmissions(LocalDate date) throws UnsuccessfulRequestException, HttpResponseException{
         return subreddit.getSubmissions(
                 date.atStartOfDay(ZoneOffset.UTC).toInstant(),
                 date.atStartOfDay(ZoneOffset.UTC).plusDays(1).toInstant()

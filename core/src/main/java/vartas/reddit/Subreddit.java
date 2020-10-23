@@ -43,7 +43,7 @@ public abstract class Subreddit extends SubredditTOP{
     public List<Submission> getUncheckedSubmissions(@Nonnull Instant inclusiveFrom, @Nonnull Instant exclusiveTo){
         try{
             return getSubmissions(inclusiveFrom, exclusiveTo);
-        }catch(UnsuccessfulRequestException | TimeoutException | HttpResponseException e){
+        }catch(UnsuccessfulRequestException | HttpResponseException e){
             throw new UncheckedExecutionException(e);
         }
     }

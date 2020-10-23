@@ -46,7 +46,7 @@ public class JrawSubredditTest extends AbstractTest{
     }
 
     @Test
-    public void testGetSubmissions() throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
+    public void testGetSubmissions() throws UnsuccessfulRequestException, HttpResponseException {
         Instant exclusiveTo = Instant.now();
         Instant inclusiveFrom = exclusiveTo.minus(1, ChronoUnit.DAYS);
         subreddit.getSubmissions(inclusiveFrom, exclusiveTo);
@@ -58,11 +58,7 @@ public class JrawSubredditTest extends AbstractTest{
                 ExecutionException.class ,
                 () -> subreddit.getSubmissions("#####")
         );
-        assertThat(exception.getCause()).isInstanceOf(HttpResponseException.class);
-
-        HttpResponseException response = (HttpResponseException)exception.getCause();
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SC_NOT_FOUND);
+        assertThat(exception.getCause()).isInstanceOf(ClientException.class);
     }
 
 

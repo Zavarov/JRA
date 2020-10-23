@@ -51,7 +51,7 @@ public class PushshiftSubreddit extends JrawSubreddit{
     }
 
     @Override
-    protected void requestSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws TimeoutException, UnsuccessfulRequestException, HttpResponseException {
+    protected void requestSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, HttpResponseException {
         log.debug("Request submissions for [{}, {})", inclusiveFrom, exclusiveTo);
         for(Submission submission : JrawClient.request(jrawClient, () -> requestPushshiftSubmissions(inclusiveFrom, exclusiveTo),0))
             putSubmissions(submission.getId(), submission);
@@ -71,7 +71,7 @@ public class PushshiftSubreddit extends JrawSubreddit{
         }
     }
 
-    private List<JSONObject> requestAllPushshiftSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws HttpResponseException, TimeoutException, UnsuccessfulRequestException{
+    private List<JSONObject> requestAllPushshiftSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws HttpResponseException, UnsuccessfulRequestException{
         List<JSONObject> allSubmissions = new ArrayList<>();
 
         JSONArray submissions;
@@ -90,7 +90,7 @@ public class PushshiftSubreddit extends JrawSubreddit{
         return allSubmissions;
     }
 
-    private JSONObject executePushshiftRequest(Instant inclusiveFrom, Instant exclusiveTo) throws HttpResponseException, TimeoutException, UnsuccessfulRequestException{
+    private JSONObject executePushshiftRequest(Instant inclusiveFrom, Instant exclusiveTo) throws HttpResponseException, UnsuccessfulRequestException{
         try {
             HttpClient httpClient = HttpClientBuilder.create().setUserAgent(jrawClient.getHttp().getUserAgent().getValue()).build();
             HttpGet httpGet = new HttpGet(buildSubmissionRequest(inclusiveFrom, exclusiveTo));
@@ -127,14 +127,14 @@ public class PushshiftSubreddit extends JrawSubreddit{
             return getCreated(submissions.getJSONObject(submissions.length() - 1)).isBefore(inclusiveFrom);
     }
 
-    private void handle(int errorCode, String explanation) throws HttpResponseException, TimeoutException {
+    private void handle(int errorCode, String explanation) throws HttpResponseException, UnsuccessfulRequestException {
         switch(errorCode){
             case HttpStatus.SC_OK:
                 break;
             case HttpStatus.SC_GATEWAY_TIMEOUT:
             case HttpStatus.SC_SERVICE_UNAVAILABLE:
                 LoggerFactory.getLogger(RedditClient.class.getSimpleName()).warn(explanation);
-                throw new TimeoutException();
+                throw new ServerException();
             default:
                 LoggerFactory.getLogger(RedditClient.class.getSimpleName()).error(explanation);
                 throw new HttpResponseException(errorCode, explanation);

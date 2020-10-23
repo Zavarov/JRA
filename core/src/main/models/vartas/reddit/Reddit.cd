@@ -31,7 +31,7 @@ public classdiagram Reddit {
         <<initializer="PT1H">>
         - Cache<String, Submission> submissions;
 
-        public abstract List<Submission> getSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, TimeoutException, HttpResponseException;
+        public abstract List<Submission> getSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, HttpResponseException;
         public abstract List<Submission> getUncheckedSubmissions(Instant inclusiveFrom, Instant exclusiveTo);
     }
 
@@ -73,14 +73,18 @@ public classdiagram Reddit {
     }
 
     /**
-     * This exception is thrown whenever a request couldn't be completed due to an internal error.
+     * This exception is thrown whenever a request couldn't be completed.
      */
     public class UnsuccessfulRequestException extends Exception{}
-
     /**
-     * This exception is thrown whenever the communication with the Reddit API failed due to a lack of response.
-     * Usually, this in an indicator for the service to be temporarily unavailable and thus represents an error
-     * outside of the programs scope.
+     * This exception is thrown whenever a request was rejected by the server. Possible examples are the access of a
+     * private subreddit without the necessary permissions. In any case, those exceptions have to be resolved, otherwise
+     * the application may be blocked.
      */
-    public class TimeoutException extends Exception{}
+    public class ClientException extends UnsuccessfulRequestException{}
+    /**
+     * This exception is thrown whenever a request failed due to a server error. Those may be triggered when the server
+     * is unavailable or under high stress, in which case the request ought to be repeated.
+     */
+    public class ServerException extends UnsuccessfulRequestException{}
 }

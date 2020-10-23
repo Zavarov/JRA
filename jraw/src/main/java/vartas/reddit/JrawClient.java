@@ -79,14 +79,14 @@ public class JrawClient extends Client {
         return getAccounts(key, () -> requestAccount(key));
     }
 
-    public Account requestAccount(String accountName) throws TimeoutException, UnsuccessfulRequestException, HttpResponseException {
+    public Account requestAccount(String accountName) throws UnsuccessfulRequestException, HttpResponseException {
         log.debug("Requesting account {}", accountName);
         return JrawAccount.create(
                 request(jrawClient, () -> Optional.ofNullable(jrawClient.user(accountName).query().getAccount()), 0)
         );
     }
 
-    public Subreddit requestSubreddit(String subredditName) throws TimeoutException, UnsuccessfulRequestException, HttpResponseException {
+    public Subreddit requestSubreddit(String subredditName) throws UnsuccessfulRequestException, HttpResponseException {
         log.debug("Requesting subreddit {}", subredditName);
         return JrawSubreddit.create(
                 request(jrawClient, () -> Optional.of(jrawClient.subreddit(subredditName).about()), 0),
@@ -101,11 +101,10 @@ public class JrawClient extends Client {
      * @param request The request.
      * @param <T> The expected return type.
      * @return The requested entity.
-     * @throws HttpResponseException If the server returned an unknown error.
-     * @throws TimeoutException In case the server returned {@link HttpStatus#SC_GATEWAY_TIMEOUT}
-     *                          or {@link HttpStatus#SC_SERVICE_UNAVAILABLE}.
+     * @throws UnsuccessfulRequestException In case the request was rejected.
+     * @throws HttpResponseException In case the request was rejected due to an unknown error.
      */
-    public static <T> Optional<T> request(RedditClient client, Supplier<Optional<T>> request) throws HttpResponseException, TimeoutException{
+    public static <T> Optional<T> request(RedditClient client, Supplier<Optional<T>> request) throws HttpResponseException, UnsuccessfulRequestException{
         Optional<T> requestOpt = Optional.empty();
         try{
             requestOpt = request.get();
@@ -117,7 +116,7 @@ public class JrawClient extends Client {
         return requestOpt;
     }
 
-    public static <T> T request(RedditClient client, Supplier<Optional<T>> supplier, int attempt) throws HttpResponseException, TimeoutException, UnsuccessfulRequestException{
+    public static <T> T request(RedditClient client, Supplier<Optional<T>> supplier, int attempt) throws HttpResponseException, UnsuccessfulRequestException{
         LoggerFactory.getLogger(RedditClient.class.getSimpleName()).debug("Processing request. Attempt {}/{}", attempt, MAX_RETRY);
         if(attempt == MAX_RETRY)
             throw new UnsuccessfulRequestException();
@@ -141,25 +140,36 @@ public class JrawClient extends Client {
      *
      * @param errorCode The error code returned by the Reddit API.
      * @param explanation The reason for the error.
-     * @throws HttpResponseException If the server returned an unknown error.
-     * @throws TimeoutException In case the server returned {@link HttpStatus#SC_GATEWAY_TIMEOUT},
-     *                          {@link HttpStatus#SC_BAD_GATEWAY} or {@link HttpStatus#SC_SERVICE_UNAVAILABLE}.
+     * @throws UnsuccessfulRequestException In case the request was rejected.
+     * @throws HttpResponseException In case the request was rejected due to an unknown error.
      */
-    public static void handle(RedditClient client, int errorCode, String explanation) throws HttpResponseException, TimeoutException {
-        switch(errorCode){
-            case HttpStatus.SC_UNAUTHORIZED:
+    public static void handle(RedditClient client, int errorCode, String explanation) throws HttpResponseException, UnsuccessfulRequestException {
+        HttpResponseException cause = new HttpResponseException(errorCode, explanation);
+
+        if(isClientError(errorCode)){
+            //In case the token has expired, simply renew it instead of throwing an error.
+            if(errorCode == HttpStatus.SC_UNAUTHORIZED){
                 LoggerFactory.getLogger(RedditClient.class.getSimpleName()).warn(explanation);
                 client.getAuthManager().renew();
-                break;
-            case HttpStatus.SC_BAD_GATEWAY:
-            case HttpStatus.SC_GATEWAY_TIMEOUT:
-            case HttpStatus.SC_SERVICE_UNAVAILABLE:
-                LoggerFactory.getLogger(RedditClient.class.getSimpleName()).warn(explanation);
-                throw new TimeoutException();
-            default:
+            }else {
                 LoggerFactory.getLogger(RedditClient.class.getSimpleName()).error(explanation);
-                throw new HttpResponseException(errorCode, explanation);
+                throw new ClientException(cause);
+            }
+        }else if(isServerError(errorCode)){
+            LoggerFactory.getLogger(RedditClient.class.getSimpleName()).warn(explanation);
+            throw new ServerException(cause);
+        }else{
+            LoggerFactory.getLogger(RedditClient.class.getSimpleName()).warn(explanation);
+            throw cause;
         }
+    }
+
+    private static boolean isClientError(int errorCode){
+        return errorCode >= 400 && errorCode < 500;
+    }
+
+    private static boolean isServerError(int errorCode){
+        return errorCode >= 500 && errorCode < 600;
     }
 
     /**

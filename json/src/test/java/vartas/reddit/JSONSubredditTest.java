@@ -33,7 +33,7 @@ public class JSONSubredditTest extends AbstractTest{
     }
 
     @Test
-    public void testGetSubmissions() throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
+    public void testGetSubmissions() throws UnsuccessfulRequestException, HttpResponseException {
         Instant exclusiveTo = Instant.now();
         Instant inclusiveFrom = exclusiveTo.minus(1, ChronoUnit.DAYS);
         subreddit.getSubmissions(inclusiveFrom, exclusiveTo);
