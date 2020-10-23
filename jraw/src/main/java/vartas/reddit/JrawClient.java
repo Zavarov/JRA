@@ -142,8 +142,8 @@ public class JrawClient extends Client {
      * @param errorCode The error code returned by the Reddit API.
      * @param explanation The reason for the error.
      * @throws HttpResponseException If the server returned an unknown error.
-     * @throws TimeoutException In case the server returned {@link HttpStatus#SC_GATEWAY_TIMEOUT}
-     *                          or {@link HttpStatus#SC_SERVICE_UNAVAILABLE}.
+     * @throws TimeoutException In case the server returned {@link HttpStatus#SC_GATEWAY_TIMEOUT},
+     *                          {@link HttpStatus#SC_BAD_GATEWAY} or {@link HttpStatus#SC_SERVICE_UNAVAILABLE}.
      */
     public static void handle(RedditClient client, int errorCode, String explanation) throws HttpResponseException, TimeoutException {
         switch(errorCode){
@@ -151,6 +151,7 @@ public class JrawClient extends Client {
                 LoggerFactory.getLogger(RedditClient.class.getSimpleName()).warn(explanation);
                 client.getAuthManager().renew();
                 break;
+            case HttpStatus.SC_BAD_GATEWAY:
             case HttpStatus.SC_GATEWAY_TIMEOUT:
             case HttpStatus.SC_SERVICE_UNAVAILABLE:
                 LoggerFactory.getLogger(RedditClient.class.getSimpleName()).warn(explanation);
