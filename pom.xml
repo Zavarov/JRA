@@ -109,7 +109,7 @@
             <artifactId>cd4code</artifactId>
             <version>${cd4code.version}</version>
             <classifier>${templates.classifier}</classifier>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Test Libraries         -->
