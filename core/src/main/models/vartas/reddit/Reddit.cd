@@ -2,6 +2,7 @@ package vartas.reddit;
 
 import com.google.common.cache.Cache.Cache;
 import java.lang.Exception.Exception;
+import java.lang.String.String;
 import java.time.Instant.Instant;
 import java.util.List.List;
 import java.util.Optional.Optional;
@@ -75,16 +76,24 @@ public classdiagram Reddit {
     /**
      * This exception is thrown whenever a request couldn't be completed.
      */
-    public class UnsuccessfulRequestException extends Exception{}
+    public class UnsuccessfulRequestException extends Exception{
+    }
+    /**
+     * This exception is thrown whenever the Http response contained an error.
+     */
+    public abstract class ApiException extends UnsuccessfulRequestException{
+        - int errorCode;
+        - String explanation;
+    }
     /**
      * This exception is thrown whenever a request was rejected by the server. Possible examples are the access of a
      * private subreddit without the necessary permissions. In any case, those exceptions have to be resolved, otherwise
      * the application may be blocked.
      */
-    public class ClientException extends UnsuccessfulRequestException{}
+    public class ClientException extends ApiException{}
     /**
      * This exception is thrown whenever a request failed due to a server error. Those may be triggered when the server
      * is unavailable or under high stress, in which case the request ought to be repeated.
      */
-    public class ServerException extends UnsuccessfulRequestException{}
+    public class ServerException extends ApiException{}
 }

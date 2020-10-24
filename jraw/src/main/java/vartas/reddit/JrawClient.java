@@ -144,8 +144,6 @@ public class JrawClient extends Client {
      * @throws HttpResponseException In case the request was rejected due to an unknown error.
      */
     public static void handle(RedditClient client, int errorCode, String explanation) throws HttpResponseException, UnsuccessfulRequestException {
-        HttpResponseException cause = new HttpResponseException(errorCode, explanation);
-
         if(isClientError(errorCode)){
             //In case the token has expired, simply renew it instead of throwing an error.
             if(errorCode == HttpStatus.SC_UNAUTHORIZED){
@@ -153,14 +151,14 @@ public class JrawClient extends Client {
                 client.getAuthManager().renew();
             }else {
                 LoggerFactory.getLogger(RedditClient.class.getSimpleName()).error(explanation);
-                throw new ClientException(cause);
+                throw new ClientException(errorCode, explanation);
             }
         }else if(isServerError(errorCode)){
             LoggerFactory.getLogger(RedditClient.class.getSimpleName()).warn(explanation);
-            throw new ServerException(cause);
+            throw new ServerException(errorCode, explanation);
         }else{
             LoggerFactory.getLogger(RedditClient.class.getSimpleName()).warn(explanation);
-            throw cause;
+            throw new HttpResponseException(errorCode, explanation);
         }
     }
 
