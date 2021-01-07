@@ -19,7 +19,7 @@ package vartas.reddit;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import vartas.reddit.factory.CommentFactory;
+import vartas.reddit.$factory.CommentFactory;
 
 import java.time.Instant;
 

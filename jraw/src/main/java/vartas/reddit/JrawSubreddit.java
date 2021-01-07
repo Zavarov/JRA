@@ -26,7 +26,7 @@ import net.dean.jraw.pagination.Paginator;
 import org.apache.http.client.HttpResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vartas.reddit.factory.SubredditFactory;
+import vartas.reddit.$factory.SubredditFactory;
 
 import java.time.Instant;
 import java.util.ArrayList;

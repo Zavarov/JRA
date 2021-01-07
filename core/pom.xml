@@ -30,7 +30,7 @@
 
     <properties>
         <!-- .. Generator Arguments ................................................................................ -->
-        <generator.main>vartas.monticore.cd4analysis.Main</generator.main>
+        <generator.main>vartas.monticore.cd4code.Main</generator.main>
         <generator.models.path>${project.build.directory}/models-resources</generator.models.path>
         <generator.local-models.path>${project.basedir}/src/main/models</generator.local-models.path>
         <generator.templates.path>${project.build.directory}/template-resources</generator.templates.path>

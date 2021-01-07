@@ -15,4 +15,9 @@ public class ServerException extends ServerExceptionTOP {
         setErrorCode(errorCode);
         setExplanation(explanation);
     }
+
+    @Override
+    public ServerException getRealThis() {
+        return this;
+    }
 }

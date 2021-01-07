@@ -9,4 +9,9 @@ public class UnsuccessfulRequestException extends UnsuccessfulRequestExceptionTO
         this();
         initCause(cause);
     }
+
+    @Override
+    public UnsuccessfulRequestException getRealThis() {
+        return this;
+    }
 }

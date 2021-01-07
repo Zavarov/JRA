@@ -47,4 +47,9 @@ public abstract class Subreddit extends SubredditTOP{
             throw new UncheckedExecutionException(e);
         }
     }
+
+    @Override
+    public Subreddit getRealThis() {
+        return this;
+    }
 }

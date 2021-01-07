@@ -17,7 +17,7 @@
 
 package vartas.reddit;
 
-import vartas.reddit.visitor.RedditVisitor;
+import vartas.reddit.$visitor.RedditVisitor;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -57,5 +57,10 @@ public abstract class Submission extends SubmissionTOP{
         accept(commentVisitor);
 
         return comments;
+    }
+
+    @Override
+    public Submission getRealThis() {
+        return this;
     }
 }

@@ -15,4 +15,9 @@ public class ClientException extends ClientExceptionTOP {
         setErrorCode(errorCode);
         setExplanation(explanation);
     }
+
+    @Override
+    public ClientException getRealThis() {
+        return this;
+    }
 }

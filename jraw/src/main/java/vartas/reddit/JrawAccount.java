@@ -17,7 +17,7 @@
 
 package vartas.reddit;
 
-import vartas.reddit.factory.AccountFactory;
+import vartas.reddit.$factory.AccountFactory;
 
 public class JrawAccount extends Account {
     public static Account create(net.dean.jraw.models.Account jrawAccount){

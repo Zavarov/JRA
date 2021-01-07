@@ -19,7 +19,7 @@ package vartas.reddit;
 
 import net.dean.jraw.tree.CommentNode;
 import org.apache.commons.text.StringEscapeUtils;
-import vartas.reddit.factory.CommentFactory;
+import vartas.reddit.$factory.CommentFactory;
 
 /**
  * This class implements the comments backed by their respective JRAW comments.

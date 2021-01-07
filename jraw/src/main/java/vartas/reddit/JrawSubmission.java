@@ -24,7 +24,7 @@ import net.dean.jraw.tree.RootCommentNode;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.slf4j.LoggerFactory;
-import vartas.reddit.factory.SubmissionFactory;
+import vartas.reddit.$factory.SubmissionFactory;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
