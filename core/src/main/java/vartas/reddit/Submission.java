@@ -23,14 +23,26 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Submission extends SubmissionTOP{
+public class Submission extends SubmissionTOP{
+    @Nonnull
+    private static final String QUALIFIED_PERMALINK = "https://www.reddit.com/comments/%s/-/";
+
+    @Nonnull
     private static final String SHORT_LINK = "https://redd.it/%s";
 
+    @Nonnull
+    @Override
+    public String getQualifiedPermaLink(){
+        return String.format(QUALIFIED_PERMALINK, getId());
+    }
+
+    @Nonnull
     @Override
     public String getShortLink(){
         return String.format(SHORT_LINK, getId());
     }
 
+    @Nonnull
     @Override
     public String getQualifiedTitle(){
         StringBuilder titleBuilder = new StringBuilder();
@@ -43,8 +55,9 @@ public abstract class Submission extends SubmissionTOP{
         return titleBuilder.toString();
     }
 
+    @Nonnull
     @Override
-    public List<Comment> getComments(){
+    public List<Comment> getAllComments(){
         List<Comment> comments = new ArrayList<>();
 
         RedditVisitor commentVisitor = new RedditVisitor(){

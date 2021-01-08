@@ -29,7 +29,6 @@
         <module>core</module>
         <module>jraw</module>
         <module>pushshift</module>
-        <module>json</module>
     </modules>
 
     <properties>

@@ -55,9 +55,4 @@ public class JrawComment extends Comment {
     public Submission getSubmission(){
         return root;
     }
-
-    @Override
-    public String getPermaLink(){
-        return String.format(PERMALINK, getSubmission().getId(), getId());
-    }
 }

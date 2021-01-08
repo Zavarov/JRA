@@ -34,8 +34,6 @@ import java.util.Optional;
 @Nonnull
 public class JrawSubmission extends Submission {
     @Nonnull
-    private static final String REDDIT_ROOT_NODE = "https://www.reddit.com";
-    @Nonnull
     private final net.dean.jraw.models.Submission jrawSubmission;
 
     public JrawSubmission(@Nonnull net.dean.jraw.models.Submission jrawSubmission){
@@ -48,6 +46,7 @@ public class JrawSubmission extends Submission {
                 () -> new JrawSubmission(jrawSubmission),
                 jrawSubmission.getAuthor(),
                 jrawSubmission.getTitle(),
+                jrawSubmission.getUrl(),
                 jrawSubmission.getScore(),
                 jrawSubmission.isNsfw(),
                 jrawSubmission.isSpoiler(),
@@ -87,17 +86,5 @@ public class JrawSubmission extends Submission {
         }
 
         return comments;
-    }
-
-    @Nonnull
-    @Override
-    public String getPermaLink(){
-        return REDDIT_ROOT_NODE + jrawSubmission.getPermalink();
-    }
-
-    @Nonnull
-    @Override
-    public String getUrl(){
-        return jrawSubmission.getUrl();
     }
 }

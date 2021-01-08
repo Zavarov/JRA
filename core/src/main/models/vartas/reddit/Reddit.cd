@@ -42,20 +42,16 @@ public classdiagram Reddit {
         - Optional<String> content;
         - String author;
         - String title;
+        - String url;
         - int score;
         - boolean nsfw;
         - boolean spoiler;
         - List<Comment> rootComments;
 
-        + abstract List<Comment> getComments();
-        + abstract String getPermaLink();
+        + abstract List<Comment> getAllComments();
         + abstract String getShortLink();
         + abstract String getQualifiedTitle();
-        /**
-         * The effective link to the submission. This can either be a link to the submission itself
-         * or a reference to the submitted instance (e.g. an image).
-         */
-        + abstract String getUrl();
+        + abstract String getQualifiedPermaLink();
     }
 
     public abstract class Comment extends Snowflake{
@@ -65,7 +61,7 @@ public classdiagram Reddit {
         - List<Comment> children;
 
         + abstract Submission getSubmission();
-        + abstract String getPermaLink();
+        + abstract String getQualifiedPermaLink();
     }
 
     public abstract class Snowflake{
