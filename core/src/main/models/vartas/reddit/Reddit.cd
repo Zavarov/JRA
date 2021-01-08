@@ -2,9 +2,12 @@ package vartas.reddit;
 
 import com.google.common.cache.Cache.Cache;
 import java.lang.Exception.Exception;
+import java.lang.String.String;
 import java.time.Instant.Instant;
 import java.util.List.List;
 import java.util.Optional.Optional;
+import org.apache.http.client.HttpResponseException.HttpResponseException;
+
 
 public classdiagram Reddit {
     public abstract class Client {
@@ -20,7 +23,7 @@ public classdiagram Reddit {
         - int commentKarma;
     }
 
-    public class Subreddit extends Snowflake{
+    public abstract class Subreddit extends Snowflake{
         - String name;
         - String publicDescription;
         - int subscribers;
@@ -28,6 +31,9 @@ public classdiagram Reddit {
         - Optional<String> bannerImage;
         <<initializer="PT1H">>
         - Cache<String, Submission> submissions;
+
+        public abstract List<Submission> getSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, HttpResponseException;
+        public abstract List<Submission> getUncheckedSubmissions(Instant inclusiveFrom, Instant exclusiveTo);
     }
 
     public abstract class Submission extends Snowflake{
@@ -36,25 +42,26 @@ public classdiagram Reddit {
         - Optional<String> content;
         - String author;
         - String title;
+        - String url;
         - int score;
         - boolean nsfw;
         - boolean spoiler;
-        - List<Comment> comments;
+        - List<Comment> rootComments;
 
-        + abstract String getPermaLink();
+        + abstract List<Comment> getAllComments();
         + abstract String getShortLink();
         + abstract String getQualifiedTitle();
-        /**
-         * The effective link to the submission. This can either be a link to the submission itself
-         * or a reference to the submitted instance (e.g. an image).
-         */
-        + abstract String getUrl();
+        + abstract String getQualifiedPermaLink();
     }
 
-    public class Comment extends Snowflake{
+    public abstract class Comment extends Snowflake{
         - String author;
         - String content;
         - int score;
+        - List<Comment> children;
+
+        + abstract Submission getSubmission();
+        + abstract String getQualifiedPermaLink();
     }
 
     public abstract class Snowflake{
@@ -63,14 +70,26 @@ public classdiagram Reddit {
     }
 
     /**
-     * This exception is thrown whenever a request couldn't be completed due to an internal error.
+     * This exception is thrown whenever a request couldn't be completed.
      */
-    public class UnsuccessfulRequestException extends Exception{}
-
+    public class UnsuccessfulRequestException extends Exception{
+    }
     /**
-     * This exception is thrown whenever the communication with the Reddit API failed due to a lack of response.
-     * Usually, this in an indicator for the service to be temporarily unavailable and thus represents an error
-     * outside of the programs scope.
+     * This exception is thrown whenever the Http response contained an error.
      */
-    public class TimeoutException extends Exception{}
+    public abstract class ApiException extends UnsuccessfulRequestException{
+        - int errorCode;
+        - String explanation;
+    }
+    /**
+     * This exception is thrown whenever a request was rejected by the server. Possible examples are the access of a
+     * private subreddit without the necessary permissions. In any case, those exceptions have to be resolved, otherwise
+     * the application may be blocked.
+     */
+    public class ClientException extends ApiException{}
+    /**
+     * This exception is thrown whenever a request failed due to a server error. Those may be triggered when the server
+     * is unavailable or under high stress, in which case the request ought to be repeated.
+     */
+    public class ServerException extends ApiException{}
 }

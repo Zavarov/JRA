@@ -1,0 +1,37 @@
+{
+  "score": 123,
+  "comments": [
+    {
+      "score": 2,
+      "children": [
+        {
+          "score": 2,
+          "children": [],
+          "author": "Author",
+          "created": 1529931460000,
+          "id": "c",
+          "content": "Content"
+        }
+      ],
+      "author": "Author",
+      "created": 1529931460000,
+      "id": "c",
+      "content": "Content"
+    },
+    {
+      "score": 2,
+      "children": [],
+      "author": "Author",
+      "created": 1529931460000,
+      "id": "c",
+      "content": "Content"
+    }
+  ],
+  "nsfw": false,
+  "author": "Author",
+  "created": 1000000000000,
+  "spoiler": false,
+  "id": "s",
+  "title": "Title",
+  "url": "Url"
+}

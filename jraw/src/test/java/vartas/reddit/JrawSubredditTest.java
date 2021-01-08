@@ -17,7 +17,6 @@
 
 package vartas.reddit;
 
-import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpResponseException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -42,13 +41,13 @@ public class JrawSubredditTest extends AbstractTest{
         //https://www.reddit.com/r/announcements/comments/blev4z/how_to_keep_your_reddit_account_safe/
         Submission submission = subreddit.getUncheckedSubmissions("blev4z");
 
-        assertThat(submission.getComments()).isNotEmpty();
+        assertThat(submission.getAllComments()).isNotEmpty();
     }
 
     @Test
-    public void testGetSubmissions() throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
-        Instant inclusiveFrom = Instant.now().minus(1, ChronoUnit.MINUTES);
+    public void testGetSubmissions() throws UnsuccessfulRequestException, HttpResponseException {
         Instant exclusiveTo = Instant.now();
+        Instant inclusiveFrom = exclusiveTo.minus(1, ChronoUnit.DAYS);
         subreddit.getSubmissions(inclusiveFrom, exclusiveTo);
     }
 
@@ -58,54 +57,6 @@ public class JrawSubredditTest extends AbstractTest{
                 ExecutionException.class ,
                 () -> subreddit.getSubmissions("#####")
         );
-        assertThat(exception.getCause()).isInstanceOf(HttpResponseException.class);
-
-        HttpResponseException response = (HttpResponseException)exception.getCause();
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SC_NOT_FOUND);
+        assertThat(exception.getCause()).isInstanceOf(ClientException.class);
     }
-
-
-    /*
-    @Test
-    public void requestSubmissionTest() throws HttpResponseException {
-        LocalDateTime before = LocalDateTime.now(ZoneId.of("UTC"));
-        LocalDateTime after = before.minus(1, ChronoUnit.HOURS);
-        //System.out.println(instant);
-        //client.requestSubmission("discordapp", after, before, 1).orElseThrow().stream().map(s -> s.getCreated() + ", "+s.getTitle()).forEach(System.out::println);
-        Assertions.assertThat(client.requestSubmission("RedditDev", after, before, 1)).isPresent();
-    }
-    @Test
-    public void requestCommentTest() throws HttpResponseException {
-        //https://www.reddit.com/r/announcements/comments/blev4z/how_to_keep_your_reddit_account_safe/
-        Assertions.assertThat(client.requestComment("blev4z", 1)).isPresent();
-    }
-    @Test
-    public void requestSubmissionByIdTest() throws HttpResponseException {
-        //https://www.reddit.com/r/announcements/comments/blev4z/how_to_keep_your_reddit_account_safe/
-        Assertions.assertThat(client.requestSubmission("blev4z", 1)).isPresent();
-    }
-    @Test(expected=HttpResponseException.class)
-    public void requestInvalidSubmissionTest() throws HttpResponseException {
-        LocalDateTime before = LocalDateTime.now(ZoneId.of("UTC"));
-        LocalDateTime after = before.minus(1, ChronoUnit.HOURS);
-        client.requestSubmission("#####", after, before, 1);
-    }
-    @Test(expected=HttpResponseException.class)
-    public void requestInvalidCommentTest() throws HttpResponseException {
-        client.requestComment("#####", 1);
-    }
-    @Test(expected=HttpResponseException.class)
-    public void requestSubmissionByInvalidIdTest() throws HttpResponseException {
-        client.requestSubmission("#####", 1);
-    }
-    @Test
-    public void handleUnauthorizedTest() throws HttpResponseException {
-        ((JrawClient)client).handle(HttpStatus.SC_UNAUTHORIZED, "Unauthorized");
-    }
-    @Test(expected=HttpResponseException.class)
-    public void handleTest() throws HttpResponseException {
-        ((JrawClient)client).handle(HttpStatus.SC_NOT_FOUND,"Not Found");
-    }
-    */
 }

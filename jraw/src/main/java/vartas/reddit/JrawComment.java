@@ -17,21 +17,42 @@
 
 package vartas.reddit;
 
+import net.dean.jraw.tree.CommentNode;
 import org.apache.commons.text.StringEscapeUtils;
-import vartas.reddit.factory.CommentFactory;
+import vartas.reddit.$factory.CommentFactory;
 
 /**
  * This class implements the comments backed by their respective JRAW comments.
  */
 public class JrawComment extends Comment {
-    public static Comment create(net.dean.jraw.models.Comment jrawComment){
-        return CommentFactory.create(
-                JrawComment::new,
+    private static final String PERMALINK = "https://www.reddit.com/comments/%s/-/%s/";
+    private final Submission root;
+
+    public JrawComment(Submission root){
+        super();
+        this.root = root;
+    }
+
+    public static Comment create(Submission submission, CommentNode<net.dean.jraw.models.Comment> jrawNode){
+        net.dean.jraw.models.Comment jrawComment = jrawNode.getSubject();
+
+        Comment comment = CommentFactory.create(
+                () -> new JrawComment(submission),
                 jrawComment.getAuthor(),
                 StringEscapeUtils.escapeHtml4(jrawComment.getBody()),
                 jrawComment.getScore(),
-                jrawComment.getUniqueId(),
+                jrawComment.getId(),
                 jrawComment.getCreated().toInstant()
         );
+
+        for(CommentNode<net.dean.jraw.models.Comment> jrawChild : jrawNode.getReplies())
+            comment.addChildren(create(submission, jrawChild));
+
+        return comment;
+    }
+
+    @Override
+    public Submission getSubmission(){
+        return root;
     }
 }

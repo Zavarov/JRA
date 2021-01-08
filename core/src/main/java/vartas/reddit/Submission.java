@@ -17,14 +17,32 @@
 
 package vartas.reddit;
 
-public abstract class Submission extends SubmissionTOP{
+import vartas.reddit.$visitor.RedditVisitor;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Submission extends SubmissionTOP{
+    @Nonnull
+    private static final String QUALIFIED_PERMALINK = "https://www.reddit.com/comments/%s/-/";
+
+    @Nonnull
     private static final String SHORT_LINK = "https://redd.it/%s";
 
+    @Nonnull
+    @Override
+    public String getQualifiedPermaLink(){
+        return String.format(QUALIFIED_PERMALINK, getId());
+    }
+
+    @Nonnull
     @Override
     public String getShortLink(){
         return String.format(SHORT_LINK, getId());
     }
 
+    @Nonnull
     @Override
     public String getQualifiedTitle(){
         StringBuilder titleBuilder = new StringBuilder();
@@ -35,5 +53,27 @@ public abstract class Submission extends SubmissionTOP{
         if(getNsfw()) titleBuilder.append(" [NSFW]");
 
         return titleBuilder.toString();
+    }
+
+    @Nonnull
+    @Override
+    public List<Comment> getAllComments(){
+        List<Comment> comments = new ArrayList<>();
+
+        RedditVisitor commentVisitor = new RedditVisitor(){
+            @Override
+            public void visit(@Nonnull Comment comment){
+                comments.add(comment);
+            }
+        };
+
+        accept(commentVisitor);
+
+        return comments;
+    }
+
+    @Override
+    public Submission getRealThis() {
+        return this;
     }
 }

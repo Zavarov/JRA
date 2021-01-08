@@ -33,11 +33,11 @@ public class PushshiftClient extends JrawClient{
         super(redditName, version, clientId, secret);
     }
 
-    public Subreddit requestSubreddit(String subredditName) throws TimeoutException, UnsuccessfulRequestException, HttpResponseException {
+    public Subreddit requestSubreddit(String subredditName) throws UnsuccessfulRequestException, HttpResponseException {
         log.debug("Requesting subreddit {}", subredditName);
         return PushshiftSubreddit.create(
                 () -> new PushshiftSubreddit(jrawClient),
-                request(() -> Optional.of(jrawClient.subreddit(subredditName).about()), 0)
+                request(jrawClient, () -> Optional.of(jrawClient.subreddit(subredditName).about()), 0)
         );
     }
 }

@@ -17,17 +17,22 @@
 
 package vartas.reddit;
 
+import net.dean.jraw.RedditClient;
+import net.dean.jraw.references.SubmissionReference;
+import net.dean.jraw.tree.CommentNode;
+import net.dean.jraw.tree.RootCommentNode;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.validator.routines.UrlValidator;
-import vartas.reddit.factory.SubmissionFactory;
+import org.slf4j.LoggerFactory;
+import vartas.reddit.$factory.SubmissionFactory;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Nonnull
 public class JrawSubmission extends Submission {
-    @Nonnull
-    private static final String REDDIT_ROOT_NODE = "https://www.reddit.com";
     @Nonnull
     private final net.dean.jraw.models.Submission jrawSubmission;
 
@@ -36,11 +41,12 @@ public class JrawSubmission extends Submission {
     }
 
     @Nonnull
-    public static Submission create(@Nonnull net.dean.jraw.models.Submission jrawSubmission){
+    public static Submission create(@Nonnull net.dean.jraw.models.Submission jrawSubmission, RedditClient jrawClient){
         Submission submission = SubmissionFactory.create(
                 () -> new JrawSubmission(jrawSubmission),
                 jrawSubmission.getAuthor(),
                 jrawSubmission.getTitle(),
+                jrawSubmission.getUrl(),
                 jrawSubmission.getScore(),
                 jrawSubmission.isNsfw(),
                 jrawSubmission.isSpoiler(),
@@ -54,19 +60,31 @@ public class JrawSubmission extends Submission {
 
         submission.setLinkFlairText(Optional.ofNullable(jrawSubmission.getLinkFlairText()));
         submission.setContent(Optional.ofNullable(jrawSubmission.getSelfText()).map(StringEscapeUtils::unescapeHtml4));
+        submission.addAllRootComments(requestComments(submission, jrawSubmission, jrawClient));
 
         return submission;
     }
 
-    @Nonnull
-    @Override
-    public String getPermaLink(){
-        return REDDIT_ROOT_NODE + jrawSubmission.getPermalink();
-    }
+    private static List<Comment> requestComments(Submission submission, net.dean.jraw.models.Submission jrawSubmission, RedditClient jrawClient){
+        List<Comment> comments = new ArrayList<>();
 
-    @Nonnull
-    @Override
-    public String getUrl(){
-        return jrawSubmission.getUrl();
+        RootCommentNode root;
+        SubmissionReference submissionReference = jrawSubmission.toReference(jrawClient);
+
+        try {
+            root = submissionReference.comments();
+
+            //Acquire all the comments
+            root.loadFully(jrawClient);
+
+            //Add all root comments
+            for(CommentNode<net.dean.jraw.models.Comment> node : root.getReplies())
+                comments.add(JrawComment.create(submission, node));
+        }catch(NullPointerException e){
+            //null if the submission doesn't exist -> Not a communication error
+            LoggerFactory.getLogger(JrawSubmission.class.getSimpleName()).warn(e.getMessage(), e);
+        }
+
+        return comments;
     }
 }

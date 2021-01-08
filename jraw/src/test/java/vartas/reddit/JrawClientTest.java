@@ -53,10 +53,6 @@ public class JrawClientTest extends AbstractTest {
                 ExecutionException.class ,
                 () -> client.getSubreddits("#####")
         );
-        assertThat(exception.getCause()).isInstanceOf(HttpResponseException.class);
-
-        HttpResponseException response = (HttpResponseException)exception.getCause();
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SC_NOT_FOUND);
+        assertThat(exception.getCause()).isInstanceOf(ClientException.class);
     }
 }

@@ -17,36 +17,50 @@
 
 package vartas.reddit;
 
+import com.google.common.collect.Range;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.SubredditSort;
 import net.dean.jraw.models.TimePeriod;
 import net.dean.jraw.pagination.DefaultPaginator;
 import net.dean.jraw.pagination.Paginator;
-import net.dean.jraw.references.SubmissionReference;
-import net.dean.jraw.tree.RootCommentNode;
 import org.apache.http.client.HttpResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vartas.reddit.factory.SubredditFactory;
+import vartas.reddit.$factory.SubredditFactory;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class JrawSubreddit extends Subreddit{
+public class JrawSubreddit extends Subreddit {
     /**
      * This classes logger.
      */
     private final Logger log = LoggerFactory.getLogger(getClass().getSimpleName());
-
+    /**
+     * The interface with the Reddit API.
+     */
     protected final RedditClient jrawClient;
 
+    /**
+     * Creates a new subreddit instance.
+     * @param jrawClient the interface with the Reddit API.
+     */
     public JrawSubreddit(RedditClient jrawClient){
         this.jrawClient = jrawClient;
     }
 
+    /**
+     * Creates a new subreddit instance.
+     * @param supplier the generator class for the created class instance.
+     * @param jrawSubreddit the interface with the Reddit API
+     * @return a new subreddit instance.
+     */
     public static Subreddit create(Supplier<? extends Subreddit> supplier, net.dean.jraw.models.Subreddit jrawSubreddit){
         Subreddit subreddit = SubredditFactory.create(
                 supplier,
@@ -63,6 +77,13 @@ public class JrawSubreddit extends Subreddit{
         return subreddit;
     }
 
+
+    /**
+     * Transforms the JRAW subreddit instance into one that can be used by this program.
+     * @param jrawSubreddit the JRAW subreddit.
+     * @param jrawClient the interface with the Reddit API
+     * @return a new subreddit instance.
+     */
     public static Subreddit create(net.dean.jraw.models.Subreddit jrawSubreddit, RedditClient jrawClient){
         return create(() -> new JrawSubreddit(jrawClient), jrawSubreddit);
     }
@@ -72,22 +93,58 @@ public class JrawSubreddit extends Subreddit{
         return getSubmissions(key, () -> requestSubmissions(key));
     }
 
-    @Override
-    protected void request(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
-        log.debug("Requesting submissions from r/{} from {} to {}.", getName(), inclusiveFrom, exclusiveTo);
-        for(Submission submission : requestSubmissions(inclusiveFrom, exclusiveTo))
-            putSubmissions(submission.getId(), submission);
-    }
-    private Submission requestSubmissions(String key) throws TimeoutException, UnsuccessfulRequestException, HttpResponseException {
+    private Submission requestSubmissions(String key) throws UnsuccessfulRequestException, HttpResponseException {
+        log.debug("Request submission {}", key);
         Supplier<Optional<Submission>> supplier = () -> Optional.of(
-                createAndLoad(jrawClient.submission(key).inspect())
+                JrawSubmission.create(jrawClient.submission(key).inspect(), jrawClient)
         );
 
-        return JrawClient.request(supplier, 0);
+        return JrawClient.request(jrawClient, supplier, 0);
     }
 
-    protected List<Submission> requestSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws TimeoutException, UnsuccessfulRequestException, HttpResponseException {
-        return JrawClient.request(() -> {
+    /**
+     * Returns a list of all cached submissions within the specified interval in ascending order.<br>
+     * This means that it is not possible, to retrieve submissions before
+     * this object was initialized or submissions that have already been
+     * removed from the cache. Instead you can only access the most recent submissions.
+     * @param inclusiveFrom the (inclusive) minimum age of valid submissions.
+     * @param exclusiveTo the (exclusive) maximum age of valid submissions.
+     * @return A list containing all requested submissions.
+     */
+    @Override
+    public List<Submission> getSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, HttpResponseException {
+        log.debug("Request submissions for [{}, {})", inclusiveFrom, exclusiveTo);
+        Range<Instant> range = Range.closedOpen(inclusiveFrom, exclusiveTo);
+
+        //Range hasn't been requested before
+        if(memory.getIfPresent(range) == null){
+            requestSubmissions(inclusiveFrom, exclusiveTo);
+            memory.put(range, range);
+        }
+
+        //Get cached submissions.
+        return valuesSubmissions()
+                .stream()
+                .filter(submission -> range.contains(submission.getCreated()))
+                .sorted(Comparator.comparing(Submission::getCreated))
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    /**
+     * Reddit's API is a huge mess, so we can't request submissions within a specific interval.
+     * Instead we request all submissions from now until the lower bound specified in inclusiveFrom.
+     * @param inclusiveFrom the (inclusive) maximum age of valid submissions.
+     * @param exclusiveTo the (exclusive) minimum age of valid submissions.
+     */
+    protected void requestSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, HttpResponseException {
+        log.debug("Request submissions for [{}, {})", inclusiveFrom, exclusiveTo);
+        for(Submission submission : requestJrawSubmissions(inclusiveFrom))
+            putSubmissions(submission.getId(), submission);
+    }
+
+    private List<Submission> requestJrawSubmissions(Instant inclusiveFrom) throws UnsuccessfulRequestException, HttpResponseException {
+        log.debug("Request submissions until {}", inclusiveFrom);
+        return JrawClient.request(jrawClient, () -> {
                     DefaultPaginator<net.dean.jraw.models.Submission> paginator = jrawClient
                             .subreddit(getName())
                             .posts()
@@ -96,66 +153,26 @@ public class JrawSubreddit extends Subreddit{
                             .timePeriod(TimePeriod.ALL)
                             .build();
 
-                    Set<Submission> submissions = new TreeSet<>(Comparator.comparing(Submission::getCreated));
-                    //Contains submissions sorted by their creaton date. The oldest submission will be the first element.
-                    Deque<Submission> current;
-                    Instant newest;
+                    //Contains submissions over all pages
+                    List<Submission> submissions = new ArrayList<>();
+                    //Contains submissions over the current page
+                    List<Submission> current;
                     //We have to do the iterative way because we can't specify an interval
                     do{
-                        //The newest value should be the last one
                         current = paginator.next()
                                 .stream()
-                                //Filter before transforming to avoid unnecessary comment requests
-                                //Ignore submissions after #exclusiveTo
-                                .filter(s -> s.getCreated().toInstant().isBefore(exclusiveTo))
-                                //Ignore submissions before #inclusiveFrom
-                                .filter(s -> !s.getCreated().toInstant().isBefore(inclusiveFrom))
-                                .map(this::createAndLoad)
-                                .sorted(Comparator.comparing(Submission::getCreated))
-                                .collect(Collectors.toCollection(LinkedList::new));
+                                //Ignore all submissions that are older than the lower bound
+                                .filter(jrawSubmission -> !jrawSubmission.getCreated().toInstant().isBefore(inclusiveFrom))
+                                //Filter before creating the instances to avoid loading unnecessary comments
+                                .map(jrawSubmission -> getUncheckedSubmissions(jrawSubmission.getId()))
+                                .collect(Collectors.toCollection(ArrayList::new));
+                    //Continue until either the 1000 submission limit has been reached
+                    //or all further submissions are older than the lower bound.
+                    }while(submissions.addAll(current));
 
-                        //No new submissions retrieved
-                        if(!submissions.addAll(current))
-                            newest = exclusiveTo;
-                        //Take the latest submission
-                        else
-                            newest = current.getLast().getCreated();
-                    //Repeat when we haven't found the last submission
-                    }while(newest.isBefore(exclusiveTo));
-
-                    return Optional.of(List.copyOf(submissions));
+                    return Optional.of(submissions);
                 },
                 0
         );
-    }
-
-    private void requestComments(net.dean.jraw.models.Submission jrawSubmission, Submission submission){
-        RootCommentNode root;
-        SubmissionReference submissionReference = jrawSubmission.toReference(jrawClient);
-
-        try {
-            root = submissionReference.comments();
-            //Acquire all the comments
-            root.loadFully(jrawClient);
-
-            root.walkTree().iterator().forEachRemaining(node -> {
-                if(node.getSubject() instanceof net.dean.jraw.models.Comment)
-                    submission.addComments(
-                            JrawComment.create((net.dean.jraw.models.Comment)node.getSubject())
-                    );
-            });
-
-        }catch(NullPointerException e){
-            //null if the submission doesn't exist -> Not a communication error
-            LoggerFactory.getLogger(getClass().getSimpleName()).warn(e.getMessage(), e);
-        }
-    }
-
-    //TODO Optimize
-    private Submission createAndLoad(net.dean.jraw.models.Submission jrawSubmission){
-        log.debug("Received submission '{}'[{}] @ {}", jrawSubmission.getTitle(), jrawSubmission.getId(), getName());
-        Submission submission = JrawSubmission.create(jrawSubmission);
-        requestComments(jrawSubmission, submission);
-        return submission;
     }
 }

@@ -26,6 +26,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
@@ -40,26 +41,29 @@ public class PushshiftSubreddit extends JrawSubreddit{
     private static final String URL = "https://api.pushshift.io";
     private static final String SUBMISSION_ENDPOINT = "/reddit/submission/search";
 
+    private static final String DATA = "data";
+    private static final String CREATED = "created_utc";
+    private static final String ID = "id";
+    private final Logger log = LoggerFactory.getLogger(getClass().getSimpleName());
+
     public PushshiftSubreddit(RedditClient jrawClient){
         super(jrawClient);
     }
 
     @Override
-    public List<Submission> getSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, TimeoutException, HttpResponseException {
-        return requestSubmissions(inclusiveFrom, exclusiveTo);
-    }
-
-    @Override
-    protected List<Submission> requestSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws TimeoutException, UnsuccessfulRequestException, HttpResponseException {
-        return JrawClient.request(() -> requestPushshiftSubmissions(inclusiveFrom, exclusiveTo),0);
+    protected void requestSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, HttpResponseException {
+        log.debug("Request submissions for [{}, {})", inclusiveFrom, exclusiveTo);
+        for(Submission submission : JrawClient.request(jrawClient, () -> requestPushshiftSubmissions(inclusiveFrom, exclusiveTo),0))
+            putSubmissions(submission.getId(), submission);
     }
 
     private Optional<List<Submission>> requestPushshiftSubmissions(Instant inclusiveFrom, Instant exclusiveTo){
         try{
+            log.debug("Request submissions for [{}, {})", inclusiveFrom, exclusiveTo);
             List<Submission> submissions = new ArrayList<>();
 
             for(JSONObject submission : requestAllPushshiftSubmissions(inclusiveFrom, exclusiveTo))
-                submissions.add(getSubmissions(submission.getString("id")));
+                submissions.add(getSubmissions(submission.getString(ID)));
 
             return Optional.of(submissions);
         }catch(Exception e){
@@ -67,12 +71,13 @@ public class PushshiftSubreddit extends JrawSubreddit{
         }
     }
 
-    private List<JSONObject> requestAllPushshiftSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws HttpResponseException, TimeoutException, UnsuccessfulRequestException{
+    private List<JSONObject> requestAllPushshiftSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws HttpResponseException, UnsuccessfulRequestException{
         List<JSONObject> allSubmissions = new ArrayList<>();
 
         JSONArray submissions;
         do{
-            submissions = executePushshiftRequest(inclusiveFrom, exclusiveTo).getJSONArray("data");
+            log.debug("Request submissions for [{}, {})", inclusiveFrom, exclusiveTo);
+            submissions = executePushshiftRequest(inclusiveFrom, exclusiveTo).getJSONArray(DATA);
 
             for(int i = 0 ; i < submissions.length() ; ++i)
                 allSubmissions.add(submissions.getJSONObject(i));
@@ -85,7 +90,7 @@ public class PushshiftSubreddit extends JrawSubreddit{
         return allSubmissions;
     }
 
-    private JSONObject executePushshiftRequest(Instant inclusiveFrom, Instant exclusiveTo) throws HttpResponseException, TimeoutException, UnsuccessfulRequestException{
+    private JSONObject executePushshiftRequest(Instant inclusiveFrom, Instant exclusiveTo) throws HttpResponseException, UnsuccessfulRequestException{
         try {
             HttpClient httpClient = HttpClientBuilder.create().setUserAgent(jrawClient.getHttp().getUserAgent().getValue()).build();
             HttpGet httpGet = new HttpGet(buildSubmissionRequest(inclusiveFrom, exclusiveTo));
@@ -111,7 +116,7 @@ public class PushshiftSubreddit extends JrawSubreddit{
     }
 
     private Instant getCreated(JSONObject submission){
-        return Instant.ofEpochSecond(submission.getLong("created_utc"));
+        return Instant.ofEpochSecond(submission.getLong(CREATED));
     }
 
     private boolean hasNext(JSONArray submissions, Instant inclusiveFrom){
@@ -122,14 +127,14 @@ public class PushshiftSubreddit extends JrawSubreddit{
             return getCreated(submissions.getJSONObject(submissions.length() - 1)).isBefore(inclusiveFrom);
     }
 
-    private void handle(int errorCode, String explanation) throws HttpResponseException, TimeoutException {
+    private void handle(int errorCode, String explanation) throws HttpResponseException, UnsuccessfulRequestException {
         switch(errorCode){
             case HttpStatus.SC_OK:
                 break;
             case HttpStatus.SC_GATEWAY_TIMEOUT:
             case HttpStatus.SC_SERVICE_UNAVAILABLE:
                 LoggerFactory.getLogger(RedditClient.class.getSimpleName()).warn(explanation);
-                throw new TimeoutException();
+                throw new ServerException();
             default:
                 LoggerFactory.getLogger(RedditClient.class.getSimpleName()).error(explanation);
                 throw new HttpResponseException(errorCode, explanation);
@@ -137,16 +142,12 @@ public class PushshiftSubreddit extends JrawSubreddit{
     }
 
     private String buildSubmissionRequest(Instant inclusiveFrom, Instant exclusiveTo){
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(URL);
-        builder.append(SUBMISSION_ENDPOINT);
-        builder.append("/?subreddit=").append(getName());
-        builder.append("&after=").append(inclusiveFrom.getEpochSecond() - 1);
-        builder.append("&before=").append(exclusiveTo.getEpochSecond());
-        builder.append("&sort=desc");
-        builder.append("&size=500");
-
-        return builder.toString();
+        return URL +
+                SUBMISSION_ENDPOINT +
+                "/?subreddit=" + getName() +
+                "&after=" + (inclusiveFrom.getEpochSecond() - 1) +
+                "&before=" + exclusiveTo.getEpochSecond() +
+                "&sort=" + "desc" +
+                "&size=" + 500;
     }
 }

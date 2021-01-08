@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-public class PushshiftSubredditTest extends AbstractTest{
+public class JSONSubredditTest extends AbstractTest{
     public static Subreddit subreddit;
     @BeforeAll
     public static void setUpAll(){

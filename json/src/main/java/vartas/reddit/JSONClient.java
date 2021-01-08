@@ -17,17 +17,27 @@
 
 package vartas.reddit;
 
-import vartas.reddit.$factory.AccountFactory;
+import javax.annotation.Nonnull;
+import java.nio.file.Path;
+import java.util.concurrent.ExecutionException;
 
-public class JrawAccount extends Account {
-    public static Account create(net.dean.jraw.models.Account jrawAccount){
-        return AccountFactory.create(
-                JrawAccount::new,
-                jrawAccount.getName(),
-                jrawAccount.getLinkKarma(),
-                jrawAccount.getCommentKarma(),
-                jrawAccount.getUniqueId(),
-                jrawAccount.getCreated().toInstant()
-        );
+public class JSONClient extends Client{
+    @Nonnull
+    private final Client client;
+    @Nonnull
+    private final Path rootPath;
+
+    public JSONClient(@Nonnull Client client, @Nonnull Path rootPath){
+        this.client = client;
+        this.rootPath = rootPath;
+    }
+
+    @Override
+    public Subreddit getSubreddits(String key) throws ExecutionException {
+        return getSubreddits(key, () -> requestSubreddit(key));
+    }
+
+    private Subreddit requestSubreddit(String key) throws ExecutionException{
+        return JSONSubreddit.of(client.getSubreddits(key), rootPath.resolve(key));
     }
 }
