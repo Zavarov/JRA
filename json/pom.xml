@@ -26,17 +26,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>jraw</artifactId>
-
-    <!-- == Repositories ==================================================== -->
-
-    <repositories>
-        <repository>
-            <id>jcenter</id>
-            <name>jcenter-bintray</name>
-            <url>https://jcenter.bintray.com</url>
-        </repository>
-    </repositories>
+    <artifactId>json</artifactId>
 
     <dependencies>
         <dependency>
@@ -46,21 +36,11 @@
         </dependency>
 
         <dependency>
-            <groupId>net.dean.jraw</groupId>
-            <artifactId>JRAW</artifactId>
-            <version>${jraw.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-validator</groupId>
-            <artifactId>commons-validator</artifactId>
-            <version>${commons-validator.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path</artifactId>
-            <version>${json-path.version}</version>
+            <groupId>vartas.reddit</groupId>
+            <artifactId>pushshift</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
+
 </project>
