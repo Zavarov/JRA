@@ -20,11 +20,6 @@ public class JSONSubmissionTest {
     }
 
     @Test
-    public void testGetAllComments(){
-        assertThat(submission.getAllComments()).hasSize(3);
-    }
-
-    @Test
     public void testGetShortLink(){
         assertThat(submission.getShortLink()).isEqualTo("https://redd.it/s");
     }

@@ -41,7 +41,7 @@ public class JrawSubredditTest extends AbstractTest{
         //https://www.reddit.com/r/announcements/comments/blev4z/how_to_keep_your_reddit_account_safe/
         Submission submission = subreddit.getUncheckedSubmissions("blev4z");
 
-        assertThat(submission.getAllComments()).isNotEmpty();
+        assertThat(submission.getComments()).isNotEmpty();
     }
 
     @Test

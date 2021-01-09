@@ -36,7 +36,7 @@ public class JrawComment extends Comment {
     public static Comment create(Submission submission, CommentNode<net.dean.jraw.models.Comment> jrawNode){
         net.dean.jraw.models.Comment jrawComment = jrawNode.getSubject();
 
-        Comment comment = CommentFactory.create(
+        return CommentFactory.create(
                 () -> new JrawComment(submission),
                 jrawComment.getAuthor(),
                 StringEscapeUtils.escapeHtml4(jrawComment.getBody()),
@@ -44,11 +44,6 @@ public class JrawComment extends Comment {
                 jrawComment.getId(),
                 jrawComment.getCreated().toInstant()
         );
-
-        for(CommentNode<net.dean.jraw.models.Comment> jrawChild : jrawNode.getReplies())
-            comment.addChildren(create(submission, jrawChild));
-
-        return comment;
     }
 
     @Override

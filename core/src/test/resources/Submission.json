@@ -3,16 +3,6 @@
   "comments": [
     {
       "score": 2,
-      "children": [
-        {
-          "score": 2,
-          "children": [],
-          "author": "Author",
-          "created": 1529931460000,
-          "id": "c",
-          "content": "Content"
-        }
-      ],
       "author": "Author",
       "created": 1529931460000,
       "id": "c",
@@ -20,7 +10,6 @@
     },
     {
       "score": 2,
-      "children": [],
       "author": "Author",
       "created": 1529931460000,
       "id": "c",

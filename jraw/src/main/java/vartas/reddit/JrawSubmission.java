@@ -27,9 +27,7 @@ import org.slf4j.LoggerFactory;
 import vartas.reddit.$factory.SubmissionFactory;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Nonnull
 public class JrawSubmission extends Submission {
@@ -60,7 +58,7 @@ public class JrawSubmission extends Submission {
 
         submission.setLinkFlairText(Optional.ofNullable(jrawSubmission.getLinkFlairText()));
         submission.setContent(Optional.ofNullable(jrawSubmission.getSelfText()).map(StringEscapeUtils::unescapeHtml4));
-        submission.addAllRootComments(requestComments(submission, jrawSubmission, jrawClient));
+        submission.addAllComments(requestComments(submission, jrawSubmission, jrawClient));
 
         return submission;
     }
@@ -77,9 +75,15 @@ public class JrawSubmission extends Submission {
             //Acquire all the comments
             root.loadFully(jrawClient);
 
-            //Add all root comments
-            for(CommentNode<net.dean.jraw.models.Comment> node : root.getReplies())
-                comments.add(JrawComment.create(submission, node));
+            //Add all comments
+            Deque<CommentNode<net.dean.jraw.models.Comment>> unvisited = new LinkedList<>(root.getReplies());
+            while(!unvisited.isEmpty()){
+                CommentNode<net.dean.jraw.models.Comment> comment = unvisited.removeFirst();
+
+                comments.add(JrawComment.create(submission, comment));
+
+                unvisited.addAll(comment.getReplies());
+            }
         }catch(NullPointerException e){
             //null if the submission doesn't exist -> Not a communication error
             LoggerFactory.getLogger(JrawSubmission.class.getSimpleName()).warn(e.getMessage(), e);

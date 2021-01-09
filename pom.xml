@@ -24,7 +24,7 @@
     <groupId>vartas.reddit</groupId>
     <artifactId>reddit</artifactId>
     <packaging>pom</packaging>
-    <version>3.3</version>
+    <version>3.3.1</version>
     <modules>
         <module>core</module>
         <module>jraw</module>
@@ -46,7 +46,7 @@
 
         <!-- .. Generator .......................................................................................... -->
 
-        <cd4code.version>2.3</cd4code.version>
+        <cd4code.version>2.4-SNAPSHOT</cd4code.version>
 
         <!-- Test -->
         <junit.version>5.6.0</junit.version>

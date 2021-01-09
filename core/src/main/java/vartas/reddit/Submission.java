@@ -17,11 +17,7 @@
 
 package vartas.reddit;
 
-import vartas.reddit.$visitor.RedditVisitor;
-
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Submission extends SubmissionTOP{
     @Nonnull
@@ -53,23 +49,6 @@ public class Submission extends SubmissionTOP{
         if(getNsfw()) titleBuilder.append(" [NSFW]");
 
         return titleBuilder.toString();
-    }
-
-    @Nonnull
-    @Override
-    public List<Comment> getAllComments(){
-        List<Comment> comments = new ArrayList<>();
-
-        RedditVisitor commentVisitor = new RedditVisitor(){
-            @Override
-            public void visit(@Nonnull Comment comment){
-                comments.add(comment);
-            }
-        };
-
-        accept(commentVisitor);
-
-        return comments;
     }
 
     @Override
