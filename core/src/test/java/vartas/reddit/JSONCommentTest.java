@@ -1,12 +1,11 @@
 package vartas.reddit;
 
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import vartas.reddit.$json.$JSONComment;
-import vartas.reddit.$json.JSONComment;
-import vartas.reddit.$json.JSONSubmission;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -19,13 +18,13 @@ public class JSONCommentTest {
     static Comment comment;
     @BeforeAll
     public static void setUpAll() throws IOException {
-        submission = JSONSubmission.fromJson(new Submission(), submissionPath);
-        comment = JSONComment.fromJson(new $JSONComment(submission), commentPath);
+        submission = new Submission(new JSONObject(Files.readString(submissionPath)));
+        comment = new Comment(submission.getId(), new JSONObject(Files.readString(commentPath)));
     }
 
     @Test
     public void testGetSubmission(){
-        assertThat(comment.getSubmission()).isEqualTo(submission);
+        assertThat(comment.getSubmission()).isEqualTo(submission.getId());
     }
 
     @Test

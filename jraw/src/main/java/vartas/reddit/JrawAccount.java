@@ -17,17 +17,23 @@
 
 package vartas.reddit;
 
-import vartas.reddit.$factory.AccountFactory;
+import org.json.JSONObject;
 
 public class JrawAccount extends Account {
+    public JrawAccount(JSONObject source) {
+        super(source);
+    }
+
     public static Account create(net.dean.jraw.models.Account jrawAccount){
-        return AccountFactory.create(
-                JrawAccount::new,
-                jrawAccount.getName(),
-                jrawAccount.getLinkKarma(),
-                jrawAccount.getCommentKarma(),
-                jrawAccount.getUniqueId(),
-                jrawAccount.getCreated().toInstant()
-        );
+        JSONObject source = new JSONObject();
+
+        source.put(NAME, jrawAccount.getName());
+        source.put(LINK_KARMA, jrawAccount.getLinkKarma());
+        source.put(COMMENT_KARMA, jrawAccount.getCommentKarma());
+        source.put(CREATED_UTC, jrawAccount.getCreated().getTime()/1000);
+        source.put(HAS_SUBSCRIBED, jrawAccount.getHasSubscribed());
+        source.put(HAS_VERIFIED_MAIL, jrawAccount.getHasVerifiedEmail());
+
+        return new JrawAccount(source);
     }
 }

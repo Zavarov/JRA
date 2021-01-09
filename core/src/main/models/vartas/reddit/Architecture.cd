@@ -1,0 +1,12 @@
+package vartas.reddit;
+
+public classdiagram Reddit {
+    public abstract class Client {
+        <<initializer="P1D">>
+        - Cache<String, Subreddit> subreddits;
+        <<initializer="P1D">>
+        - Cache<String, Account> accounts;
+    }
+
+    public
+}

@@ -62,6 +62,7 @@ public class JrawClient extends Client {
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new MalformedJsonInterceptor()).build();
         OkHttpNetworkAdapter adapter = new OkHttpNetworkAdapter(userAgent, client);
 
+
         jrawClient = OAuthHelper.automatic(adapter, Credentials.userless(clientId, secret, UUID.randomUUID()));
         jrawClient.setLogHttp(false);
         jrawClient.setAutoRenew(true);
@@ -81,6 +82,7 @@ public class JrawClient extends Client {
 
     public Account requestAccount(String accountName) throws UnsuccessfulRequestException, HttpResponseException {
         log.debug("Requesting account {}", accountName);
+
         return JrawAccount.create(
                 request(jrawClient, () -> Optional.ofNullable(jrawClient.user(accountName).query().getAccount()), 0)
         );

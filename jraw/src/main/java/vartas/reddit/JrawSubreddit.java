@@ -17,6 +17,8 @@
 
 package vartas.reddit;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Range;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.SubredditSort;
@@ -28,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vartas.reddit.$factory.SubredditFactory;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -38,6 +41,15 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class JrawSubreddit extends Subreddit {
+    /**
+     * This cache serves as a buffer for previous requests. In order to minimize the communication with the Reddit
+     * API, requests over the same range should only be done once. All further requests should reuse the cached data.
+     * Subranges are treated as independent entities.
+     */
+    protected Cache<Range<Instant>, Range<Instant>> memory = CacheBuilder.newBuilder()
+            .expireAfterWrite(Duration.ofMinutes(5))
+            .build();
+
     /**
      * This classes logger.
      */

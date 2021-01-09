@@ -1,0 +1,27 @@
+package vartas.reddit;
+
+public classdiagram Exceptions {
+    /**
+     * This exception is thrown whenever a request couldn't be completed.
+     */
+    public class UnsuccessfulRequestException extends Exception{
+    }
+    /**
+     * This exception is thrown whenever the Http response contained an error.
+     */
+    public abstract class ApiException extends UnsuccessfulRequestException{
+        - int errorCode;
+        - String explanation;
+    }
+    /**
+     * This exception is thrown whenever a request was rejected by the server. Possible examples are the access of a
+     * private subreddit without the necessary permissions. In any case, those exceptions have to be resolved, otherwise
+     * the application may be blocked.
+     */
+    public class ClientException extends ApiException{}
+    /**
+     * This exception is thrown whenever a request failed due to a server error. Those may be triggered when the server
+     * is unavailable or under high stress, in which case the request ought to be repeated.
+     */
+    public class ServerException extends ApiException{}
+}

@@ -1,10 +1,11 @@
 package vartas.reddit;
 
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import vartas.reddit.$json.JSONSubmission;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -16,7 +17,7 @@ public class JSONSubmissionTest {
 
     @BeforeEach
     public void setUp() throws IOException {
-        submission = JSONSubmission.fromJson(new Submission(), path);
+        submission = new Submission(new JSONObject(Files.readString(path)));
     }
 
     @Test
@@ -32,10 +33,6 @@ public class JSONSubmissionTest {
     @Test
     public void testGetQualifiedTitle(){
         assertThat(submission.getQualifiedTitle()).isEqualTo("Title");
-        submission.setNsfw(true);
-        assertThat(submission.getQualifiedTitle()).isEqualTo("Title [NSFW]");
-        submission.setSpoiler(true);
-        assertThat(submission.getQualifiedTitle()).isEqualTo("Title [Spoiler] [NSFW]");
     }
 
     @Test

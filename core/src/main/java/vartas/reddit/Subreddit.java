@@ -17,26 +17,51 @@
 
 package vartas.reddit;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.collect.Range;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import org.apache.http.client.HttpResponseException;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.annotation.Nonnull;
-import java.time.Duration;
+import java.awt.*;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class Subreddit extends SubredditTOP{
-    /**
-     * This cache serves as a buffer for previous requests. In order to minimize the communication with the Reddit
-     * API, requests over the same range should only be done once. All further requests should reuse the cached data.
-     * Subranges are treated as independent entities.
-     */
-    protected Cache<Range<Instant>, Range<Instant>> memory = CacheBuilder.newBuilder()
-            .expireAfterWrite(Duration.ofMinutes(5))
-            .build();
+    public static final String ACCOUNTS_ACTIVE = "accounts_active";
+    public static final String BANNER_IMG = "banner_img";
+    public static final String COMMENT_SCORE_HIDE_MINS = "comment_score_hide_mins";
+    public static final String DESCRIPTION = "description";
+    public static final String DESCRIPTION_HTML = "description_html";
+    public static final String DISPLAY_NAME = "display_name";
+    public static final String HEADER_IMG = "header_img";
+    public static final String HEADER_SIZE = "header_size";
+    public static final String HEADER_TITLE = "header_title";
+    public static final String OVER_18 = "over18";
+    public static final String PUBLIC_DESCRIPTION = "public_description";
+    public static final String PUBLIC_TRAFFIC = "public_traffic";
+    public static final String SUBSCRIBERS = "subscribers";
+    public static final String SUBMISSION_TYPE = "submission_type";
+    public static final String SUBMIT_LINK_LABEL = "submit_link_label";
+    public static final String SUBMIT_TEXT_LABEL = "submit_text_label";
+    public static final String SUBREDDIT_TYPE = "subreddit_type";
+    public static final String TITLE = "title";
+    public static final String URL = "url";
+    public static final String USER_IS_BANNED = "user_is_banned";
+    public static final String USER_IS_CONTRIBUTOR = "user_is_contributor";
+    public static final String USER_IS_MODERATOR = "user_is_moderator";
+    public static final String USER_IS_SUBSCRIBER = "user_is_subscriber";
+
+    protected final JSONObject source;
+
+    public Subreddit(JSONObject source){
+        this.source = source;
+    }
+
+    protected JSONObject getSource(){
+        return source;
+    }
 
     @Nonnull
     @Override
@@ -48,8 +73,138 @@ public abstract class Subreddit extends SubredditTOP{
         }
     }
 
+    //---------------------------------------------------------------------------------------------------------------
+    //
+    //  Accessing JSON attributes
+    //
+    //---------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public Optional<Integer> getAccountsActive() {
+        if(getSource().has(ACCOUNTS_ACTIVE))
+            return Optional.of(getSource().getInt(ACCOUNTS_ACTIVE));
+        else
+            return Optional.empty();
+    }
+
+    @Override
+    public int getCommentScoreHideMinutes() {
+        return getSource().getInt(COMMENT_SCORE_HIDE_MINS);
+    }
+
+    @Override
+    public String getDescription() {
+        return getSource().getString(DESCRIPTION);
+    }
+
+    @Override
+    public String getDescriptionHtml() {
+        return getSource().getString(DESCRIPTION_HTML);
+    }
+
+    @Override
+    public String getDisplayName() {
+        return getSource().getString(DISPLAY_NAME);
+    }
+
+    @Override
+    public Optional<String> getBannerImage() {
+        return Optional.ofNullable(getSource().optString(BANNER_IMG));
+    }
+
+    @Override
+    public Optional<String> getHeaderImage() {
+        return Optional.ofNullable(getSource().optString(HEADER_IMG, null));
+    }
+
+    @Override
+    public Optional<Dimension> getHeaderSize() {
+        JSONArray bounds = getSource().optJSONArray(HEADER_SIZE);
+        if(bounds == null)
+            return Optional.empty();
+        else
+            return Optional.of(new Dimension(bounds.getInt(0), bounds.getInt(1)));
+    }
+
+    @Override
+    public Optional<String> getHeaderTitle() {
+        return Optional.ofNullable(getSource().optString(HEADER_TITLE, null));
+    }
+
+    @Override
+    public boolean isNsfw() {
+        return getSource().getBoolean(OVER_18);
+    }
+
+    @Override
+    public String getPublicDescription() {
+        return getSource().getString(PUBLIC_DESCRIPTION);
+    }
+
+    @Override
+    public boolean isPublicTraffic() {
+        return getSource().getBoolean(PUBLIC_TRAFFIC);
+    }
+
+    @Override
+    public long getSubscribers() {
+        return getSource().getLong(SUBSCRIBERS);
+    }
+
+    @Override
+    public String getSubmissionType() {
+        return getSource().getString(SUBMISSION_TYPE);
+    }
+
+    @Override
+    public String getSubmitLinkLabel() {
+        return getSource().getString(SUBMIT_LINK_LABEL);
+    }
+
+    @Override
+    public String getSubmitTextLabel() {
+        return getSource().getString(SUBMIT_TEXT_LABEL);
+    }
+
+    @Override
+    public String getSubredditType() {
+        return getSource().getString(SUBREDDIT_TYPE);
+    }
+
+    @Override
+    public String getTitle() {
+        return getSource().getString(TITLE);
+    }
+
+    @Override
+    public String getUrl() {
+        return getSource().getString(URL);
+    }
+
+    @Override
+    public boolean isUserBanned() {
+        return getSource().getBoolean(USER_IS_BANNED);
+    }
+
+    @Override
+    public boolean isUserContributor() {
+        return getSource().getBoolean(USER_IS_CONTRIBUTOR);
+    }
+
+    @Override
+    public boolean isUserModerator() {
+        return getSource().getBoolean(USER_IS_MODERATOR);
+    }
+
+    @Override
+    public boolean isUserSubscriber() {
+        return getSource().getBoolean(USER_IS_SUBSCRIBER);
+    }
+
     @Override
     public Subreddit getRealThis() {
         return this;
     }
+
+
 }

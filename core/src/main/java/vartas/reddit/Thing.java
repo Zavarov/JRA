@@ -17,22 +17,36 @@
 
 package vartas.reddit;
 
-import java.util.Objects;
+import org.json.JSONObject;
 
-public abstract class Snowflake extends SnowflakeTOP {
+public abstract class Thing extends ThingTOP {
+    public static final String ID = "id";
+    public static final String NAME = "name";
+    public static final String KIND = "kind";
+    public static final String DATA = "data";
+
     @Override
-    public boolean equals(Object o){
-        if(o instanceof SnowflakeTOP){
-            SnowflakeTOP snowflake = (SnowflakeTOP)o;
-            //We assume IDs to be unique
-            return snowflake.getId().equals(this.getId());
-        }else{
-            return false;
-        }
+    public String getId() {
+        return getSource().getString(ID);
     }
 
     @Override
-    public int hashCode(){
-        return Objects.hashCode(getId());
+    public String getName() {
+        return getSource().getString(NAME);
+    }
+
+    @Override
+    public String getKind() {
+        return getSource().getString(KIND);
+    }
+
+    @Override
+    public JSONObject getData() {
+        return getSource().getJSONObject(DATA);
+    }
+
+    @Override
+    public Thing getRealThis() {
+        return this;
     }
 }

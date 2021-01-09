@@ -1,37 +1,20 @@
 {
-  "score": 123,
+  "name" : "Submission",
+  "id": "s",
+  "title" : "Title",
+  "spoiler": false,
+  "over_18": false,
   "comments": [
     {
-      "score": 2,
-      "children": [
+      "name" : "Comment@1",
+      "replies": [
         {
-          "score": 2,
-          "children": [],
-          "author": "Author",
-          "created": 1529931460000,
-          "id": "c",
-          "content": "Content"
+          "name" : "Comment@1.1"
         }
-      ],
-      "author": "Author",
-      "created": 1529931460000,
-      "id": "c",
-      "content": "Content"
+      ]
     },
     {
-      "score": 2,
-      "children": [],
-      "author": "Author",
-      "created": 1529931460000,
-      "id": "c",
-      "content": "Content"
+      "name" : "Comment@2"
     }
-  ],
-  "nsfw": false,
-  "author": "Author",
-  "created": 1000000000000,
-  "spoiler": false,
-  "id": "s",
-  "title": "Title",
-  "url": "Url"
+  ]
 }

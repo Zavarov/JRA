@@ -1,0 +1,559 @@
+package vartas.reddit;
+
+/**
+ * The Reddit API according to their specification
+ * @ https://github.com/reddit-archive/reddit/wiki/JSON
+ */
+public classdiagram Reddit {
+    /**
+     * The base class for all Reddit objects.
+     */
+    public abstract class Thing{
+        # abstract JSONObject getSource();
+        /**
+         * This item's identifier, e.g. "8xwlg"
+         */
+        + abstract String getId();
+        /**
+         * Fullname of comment, e.g. "t1_c3v7f8u"
+         */
+        + abstract String getName();
+        /**
+         * All things have a kind. The kind is a String identifier that denotes the object's type.
+         * Some examples: Listing, more, t1, t2
+         */
+        + abstract String getKind();
+        /**
+         * A custom data structure used to hold valuable information. This object's format will follow the data
+         * structure respective of its kind.
+         */
+        + abstract JSONObject getData();
+    }
+
+    /**
+     * Used to paginate content that is too long to display in one go. Add the query argument before or after with the
+     * value given to get the previous or next page. This is usually used in conjunction with a count argument.
+     * Exception: Unlike the other classes documented on this page, Listing is not a thing subclass, as it inherits
+     * directly from Object. Although it does have data and kind as parameters, it does not have id and name.
+     * A listing's kind will always be Listing and its data will be a List of things.
+     */
+    public abstract class Listing{
+        /**
+         * The fullname of the listing that follows before this page. Empty if there is no previous page.
+         */
+        + abstract Optional<String> getBefore();
+        /**
+         * The fullname of the listing that follows after this page. Empty if there is no next page.
+         */
+        + abstract Optional<String> getAfter();
+        /**
+         * This modhash is not the same modhash provided upon login. You do not need to update your user's modhash
+         * everytime you get a new modhash. You can reuse the modhash given upon login.
+         */
+        + abstract String getModhash();
+        /**
+         * A list of 'things' that this Listing wraps.
+         */
+        + abstract List<Thing> getChildren();
+    }
+
+    /**
+     * All things that implement votable have these attributes:
+     */
+    public interface Votable{
+        abstract JSONObject getSource();
+        /**
+         * The number of upvotes. (includes own)
+         */
+        abstract int getUpvotes();
+        /**
+         * The number of downvotes. (includes own)
+         */
+        abstract int getDownvotes();
+        /**
+         * true if thing is liked by the user, false if thing is disliked, empty if the user has not voted or you are
+         * not logged in.
+         */
+        abstract Optional<Boolean> getLikes();
+    }
+
+    /**
+     * All things that implement created have these attributes:
+     */
+    public interface Created{
+        abstract JSONObject getSource();
+        /**
+         * The time of creation in local epoch-second format. ex: 1331042771.0
+         */
+        abstract Instant getCreated();
+        /**
+         * The time of creation in UTC epoch-second format. Note that neither of these ever have a non-zero fraction.
+         */
+        abstract Instant getCreatedUtc();
+    }
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    //
+    // Data Structures
+    //
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    public abstract class Comment extends Thing implements Votable, Created{
+        + abstract String getSubmission();
+        + abstract String getQualifiedPermaLink();
+
+        /**
+         * Who approved this comment. Empty if nobody or you are not a mod.
+         */
+        + abstract Optional<String> getApprovedBy();
+        /**
+         * The account name of the poster.
+         */
+        + abstract String getAuthor();
+        /**
+         * The CSS class of the author's flair. Subreddit specific.
+         */
+        + abstract String getAuthorFlairCssClass();
+        /**
+         * The text of the author's flair. Subreddit specific.
+         */
+        + abstract String getAuthorFlairText();
+        /**
+         * Who removed this comment. Empty if nobody or you are not a mod.
+         */
+        + abstract Optional<String> getBannedBy();
+        /**
+         * The raw text. This is the unformatted text which includes the raw markup characters such as ** for bold.
+         * <, >, and & are escaped.
+         */
+        + abstract String getBody();
+        /**
+         * The formatted HTML text as displayed on Reddit. For example, text that is emphasised by * will now have <em>
+         * tags wrapping it. Additionally, bullets and numbered lists will now be in HTML list format.
+         * NOTE: The HTML string will be escaped. You must unescape to get the raw HTML.
+         */
+        + abstract String getBodyHtml();
+        /**
+         * Empty if not edited, edit date in UTC epoch-seconds otherwise.
+         */
+        + abstract Optional<Instant> getEdited();
+        /**
+         * The number of times this comment received Reddit gold.
+         */
+        + abstract int getGilded();
+        /**
+         * Present if the comment is being displayed outside its thread (user pages, /r/subreddit/comments/.json, etc.).
+         * Contains the author of the parent link.
+         */
+        + abstract String getLinkAuthor();
+        /**
+         * ID of the link this comment is in.
+         */
+        + abstract String getLinkId();
+        /**
+         * Present if the comment is being displayed outside its thread (user pages, /r/subreddit/comments/.json, etc.).
+         * Contains the title of the parent link.
+         */
+        + abstract String getLinkTitle();
+        /**
+         * Present if the comment is being displayed outside its thread (user pages, /r/subreddit/comments/.json, etc.).
+         * Contains the URL of the parent link.
+         */
+        + abstract String getLinkUrl();
+        /**
+         * How many times this comment has been reported, empty if not a mod.
+         */
+        + abstract Optional<Integer> getNumberOfReports();
+        /**
+         * ID of the thing this comment is a reply to, either the link or a comment in it.
+         */
+        + abstract String getParentId();
+        /**
+         * A list of replies to this comment.
+         */
+        + abstract List<Comment> getReplies();
+        /**
+         * true if this post is saved by the logged in user.
+         */
+        + abstract boolean isSaved();
+        /**
+         * The net-score of the comment.
+         */
+        + abstract int getScore();
+        /**
+         * Whether the comment's score is currently hidden.
+         */
+        + abstract boolean isScoreHidden();
+        /**
+         * Subreddit of thing excluding the /r/ prefix. e.g. "pics".
+         */
+        + abstract String getSubreddit();
+        /**
+         * The id of the subreddit in which the thing is located.
+         */
+        + abstract String getSubredditId();
+        /**
+         * To allow determining whether they have been distinguished by moderators/admins.
+         * Empty = not distinguished.
+         * Moderator = the green [M].
+         * Admin = the red [A].
+         * Special = various other special distinguishes
+         * http://redd.it/19ak1b
+         */
+        + abstract Optional<String> getDistinguished();
+    }
+
+    public abstract class Submission extends Thing implements Votable, Created{
+        + abstract String getQualifiedPermaLink();
+        + abstract String getShortLink();
+        + abstract String getQualifiedTitle();
+        + abstract List<Comment> getAllComments();
+        + abstract List<Comment> getRootComments();
+
+        /**
+         * The account name of the poster. Empty if this is a promotional link
+         */
+        + abstract Optional<String> getAuthor();
+        /**
+         * The CSS class of the author's flair. Subreddit specific.
+         */
+        + abstract String getAuthorFlairCssClass();
+        /**
+         * The text of the author's flair. Subreddit specific
+         */
+        + abstract String getAuthorFlairText();
+        /**
+         * Probably always returns false.
+         */
+        + abstract boolean isClicked();
+        /**
+         * The domain of this link. Self posts will be self.<subreddit> while other examples include
+         * en.wikipedia.org and s3.amazon.com.
+         */
+        + abstract String getDomain();
+        /**
+         * true if the post is hidden by the logged in user. false if not logged in or not hidden.
+         */
+        + abstract boolean isHidden();
+        /**
+         * true if this link is a selfpost.
+         */
+        + abstract boolean isSelf();
+        /**
+         * The CSS class of the link's flair.
+         */
+        + abstract String getLinkFlairCssClass();
+        /**
+         * The text of the link's flair.
+         * Empty if link is unflaired.
+         */
+        + abstract Optional<String> getLinkFlairText();
+        /**
+         * Whether the link is locked (closed to new comments) or not.
+         */
+        + abstract boolean isLocked();
+        /**
+         * Used for streaming video. Detailed information about the video and it's origins are placed here.
+         */
+        + abstract Object getMedia();
+        /**
+         * Used for streaming video. Technical embed specific information is found here.
+         */
+        + abstract Object getMediaEmbed();
+        /**
+         * The number of comments that belong to this link. includes removed comments.
+         */
+        + abstract int getNumberOfComments();
+        /**
+         * true if the post is tagged as NSFW. false if otherwise.
+         */
+        + abstract boolean isNsfw();
+        /**
+         * Relative URL of the permanent link for this link.
+         */
+        + abstract String getPermalink();
+        /**
+         * true if this post is saved by the logged in user.
+         */
+        + abstract boolean isSaved();
+        /**
+         * The net-score of the link.
+         * Note: A submission's score is simply the number of upvotes minus the number of downvotes. If five users like
+         * the submission and three users don't it will have a score of 2. Please note that the vote numbers are not
+         * "real" numbers, they have been "fuzzed" to prevent spam bots etc. So taking the above example, if five users
+         * upvoted the submission, and three users downvote it, the upvote/downvote numbers may say 23 upvotes and 21
+         * downvotes, or 12 upvotes, and 10 downvotes. The points score is correct, but the vote totals are "fuzzed".
+         */
+        + abstract int getScore();
+        /**
+         * The raw text. This is the unformatted text which includes the raw markup characters such as ** for bold.
+         * <, >, and & are escaped. Empty if not present.
+         */
+        + abstract Optional<String> getSelftext();
+        /**
+         * The formatted escaped HTML text. This is the HTML formatted version of the marked up text. Items that are
+         * boldened by ** or *** will now have <em> or *** tags on them. Additionally, bullets and numbered lists will
+         * now be in HTML list format. NOTE: The HTML string will be escaped. You must unescape to get the raw HTML.
+         * Empty if not present.
+         */
+        + abstract Optional<String> getSelftextHtml();
+        /**
+         * Subreddit of thing excluding the /r/ prefix. e.g. "pics".
+         */
+        + abstract String getSubreddit();
+        /**
+         * The id of the subreddit in which the thing is located.
+         */
+        + abstract String getSubredditId();
+        /**
+         * Full URL to the thumbnail for this link. Empty if the link doesn't have a thumbnail.
+         */
+        + abstract Optional<String> getThumbnail();
+        /**
+         * The title of the link. may contain newlines for some reason.
+         */
+        + abstract String getTitle();
+        /**
+         * The link of this post. the permalink if this is a self-post.
+         */
+        + abstract String getUrl();
+        /**
+         * Indicates if link has been edited.
+         * Will be the edit timestamp if the link has been edited and return empty otherwise.
+         * https://github.com/reddit/reddit/issues/581
+         */
+        + abstract Optional<Instant> getEdited();
+        /**
+         * To allow determining whether they have been distinguished by moderators/admins.
+         * Empty = not distinguished.
+         * Moderator = the green [M].
+         * Admin = the red [A].
+         * Special = various other special distinguishes
+         * http://redd.it/19ak1b
+         */
+        + abstract Optional<String> getDistinguished();
+        /**
+         * true if the post is set as the sticky in its subreddit.
+         */
+        + abstract boolean isStickied();
+        /**
+         * true if the post is marked as spoiler.
+         */
+         + abstract boolean isSpoiler();
+    }
+
+    public abstract class Subreddit extends Thing{
+        <<initializer="PT1H">>
+        - Cache<String, Submission> submissions;
+        + abstract List<Submission> getSubmissions(Instant inclusiveFrom, Instant exclusiveTo) throws UnsuccessfulRequestException, HttpResponseException;
+        + abstract List<Submission> getUncheckedSubmissions(Instant inclusiveFrom, Instant exclusiveTo);
+
+        /**
+         * Number of users active in last 15 minutes.
+         */
+        + abstract Optional<Integer> getAccountsActive();
+        /**
+         * Number of minutes the subreddit initially hides comment scores.
+         */
+        + abstract int getCommentScoreHideMinutes();
+        /**
+         * Sidebar text.
+         */
+        + abstract String getDescription();
+        /**
+         * Sidebar text, escaped HTML format.
+         */
+        + abstract String getDescriptionHtml();
+        /**
+         * Human name of the subreddit
+         */
+        + abstract String getDisplayName();
+        /**
+         * Full URL to the banner image, or empty.
+         */
+        + abstract Optional<String> getBannerImage();
+        /**
+         * Full URL to the header image, or empty.
+         */
+        + abstract Optional<String> getHeaderImage();
+        /**
+         * Width and height of the header image, or empty.
+         */
+        + abstract Optional<Dimension> getHeaderSize();
+        /**
+         * Description of header image shown on hover, or empty.
+         */
+        + abstract Optional<String> getHeaderTitle();
+        /**
+         * Whether the subreddit is marked as NSFW.
+         */
+        + abstract boolean isNsfw();
+        /**
+         * Description shown in subreddit search results?
+         */
+        + abstract String getPublicDescription();
+        /**
+         * Whether the subreddit's traffic page is publicly-accessible.
+         */
+        + abstract boolean isPublicTraffic();
+        /**
+         * The number of redditors subscribed to this subreddit.
+         */
+        + abstract long getSubscribers();
+        /**
+         * The type of submissions the subreddit allows - one of "any", "link" or "self".
+         */
+        + abstract String getSubmissionType();
+        /**
+         * The subreddit's custom label for the submit link button, if any.
+         */
+        + abstract String getSubmitLinkLabel();
+        /**
+         * The subreddit's custom label for the submit text button, if any.
+         */
+        + abstract String getSubmitTextLabel();
+        /**
+         * The subreddit's type - one of "public", "private", "restricted", or in very special cases "gold_restricted"
+         * or "archived".
+         */
+        + abstract String getSubredditType();
+        /**
+         * Title of the main page.
+         */
+        + abstract String getTitle();
+        /**
+         * The relative URL of the subreddit. Ex: "/r/pics/".
+         */
+        + abstract String getUrl();
+        /**
+         * Whether the logged-in user is banned from the subreddit.
+         */
+        + abstract boolean isUserBanned();
+        /**
+         * Whether the logged-in user is an approved submitter in the subreddit.
+         */
+        + abstract boolean isUserContributor();
+        /**
+         * Whether the logged-in user is a moderator of the subreddit.
+         */
+        + abstract boolean isUserModerator();
+        /**
+         * Whether the logged-in user is subscribed to the subreddit.
+         */
+        + abstract boolean isUserSubscriber();
+    }
+
+    public abstract class Message extends Thing implements Created{
+        + abstract String getAuthor();
+        /**
+         * The message itself.
+         */
+        + abstract String getBody();
+        /**
+         * The message itself with HTML formatting.
+         */
+        + abstract String getBodyHtml();
+        /**
+         * if the message is a comment, then the permalink to the comment with ?context=3 appended to the end,
+         * otherwise an empty string.
+         */
+        + abstract String getContext();
+        /**
+         * Either empty or the first message's ID represented as base 10 (wtf).
+         */
+        + abstract Optional<Message> getFirstMessage();
+        /**
+         * Either empty or the first message's fullname
+         */
+        + abstract Optional<String> getFirstMessageName();
+        /**
+         * If the message is actually a comment, contains the title of the thread it was posted in.
+         */
+        + abstract String getLinkTitle();
+        /**
+         * ex: "t4_8xwlg"
+         */
+        + abstract String getName();
+        /**
+         * unread? not sure
+         */
+        + abstract String getNew();
+        /**
+         * Empty if no parent is attached
+         */
+        + abstract Optional<String> getParentId();
+        /**
+         * Again, an empty string if there are no replies.
+         */
+        + abstract String getReplies();
+        /**
+         * Subject of message.
+         */
+        + abstract String getSubject();
+        /**
+         * Empty if not a comment.
+         */
+        + abstract Optional<String> getSubreddit();
+
+        + abstract boolean wasComment();
+    }
+
+    public abstract class Account extends Thing implements Created{
+        /**
+         * User's comment karma.
+         */
+        + abstract int getCommentKarma();
+        /**
+         * User has unread mail? Empty if not your account.
+         */
+        + abstract Optional<Boolean> hasMail();
+        /**
+         * User has unread mod mail? Empty if not your account.
+         */
+        + abstract Optional<Boolean> hasModMail();
+        /**
+         * User has provided an email address and got it verified?
+         */
+        + abstract boolean hasVerifiedEmail();
+        /**
+         * ID of the account; prepend t2_ to get fullname.
+         */
+        + abstract String getId();
+        /**
+         * Number of unread messages in the inbox. Empty if not your account.
+         */
+        + abstract Optional<Integer> getInboxCount();
+        /**
+         * Whether the logged-in user has this user set as a friend.
+         */
+        + abstract boolean isFriend();
+        /**
+         * Reddit gold status.
+         */
+        + abstract boolean isGoldMember();
+        /**
+         * Whether this account moderates any subreddits.
+         */
+        + abstract boolean isModerator();
+        /**
+         * User's link karma.
+         */
+        + abstract int getLinkKarma();
+        /**
+         * Current modhash. Empty if not your account.
+         */
+        + abstract Optional<String> getModHash();
+        /**
+         * The username of the account in question. This attribute overrides the superclass's name attribute.
+         * Do not confuse an account's name which is the account's username with a thing's name which is the thing's
+         * FULLNAME. See API: Glossary for details on what FULLNAMEs are.
+         */
+        + abstract String getName();
+        /**
+         * Whether this account is set to be over 18.
+         */
+        + abstract boolean isNsfw();
+
+        + abstract boolean hasSubscribed();
+    }
+}

@@ -18,41 +18,33 @@
 package vartas.reddit;
 
 import net.dean.jraw.tree.CommentNode;
-import org.apache.commons.text.StringEscapeUtils;
-import vartas.reddit.$factory.CommentFactory;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * This class implements the comments backed by their respective JRAW comments.
  */
 public class JrawComment extends Comment {
-    private static final String PERMALINK = "https://www.reddit.com/comments/%s/-/%s/";
-    private final Submission root;
-
-    public JrawComment(Submission root){
-        super();
-        this.root = root;
+    public JrawComment(String submission, JSONObject source){
+        super(submission, source);
     }
 
     public static Comment create(Submission submission, CommentNode<net.dean.jraw.models.Comment> jrawNode){
         net.dean.jraw.models.Comment jrawComment = jrawNode.getSubject();
-
-        Comment comment = CommentFactory.create(
-                () -> new JrawComment(submission),
-                jrawComment.getAuthor(),
-                StringEscapeUtils.escapeHtml4(jrawComment.getBody()),
-                jrawComment.getScore(),
-                jrawComment.getId(),
-                jrawComment.getCreated().toInstant()
-        );
+        JSONArray replies = new JSONArray();
 
         for(CommentNode<net.dean.jraw.models.Comment> jrawChild : jrawNode.getReplies())
-            comment.addChildren(create(submission, jrawChild));
+            replies.put(create(submission, jrawChild).getSource());
 
-        return comment;
-    }
+        JSONObject source = new JSONObject();
 
-    @Override
-    public Submission getSubmission(){
-        return root;
+        source.put(AUTHOR, jrawComment.getAuthor());
+        source.put(BODY, jrawComment.getBody());
+        source.put(SCORE, jrawComment.getScore());
+        source.put(ID, jrawComment.getId());
+        source.put(CREATED, jrawComment.getCreated().getTime() / 1000);
+        source.put(REPLIES, replies);
+
+        return new JrawComment(submission.getId(), source);
     }
 }
