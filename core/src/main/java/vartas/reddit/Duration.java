@@ -1,13 +1,16 @@
 package vartas.reddit;
 
-import java.util.Locale;
-
 public enum Duration {
-    PERMANENT,
-    TEMPORARY;
+    PERMANENT("permanent"),
+    TEMPORARY("temporary");
+
+    private final String name;
+    Duration(String name){
+        this.name = name;
+    }
 
     @Override
     public String toString(){
-        return name().toLowerCase(Locale.ENGLISH);
+        return name;
     }
 }

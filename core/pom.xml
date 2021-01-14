@@ -37,7 +37,9 @@
         <generator.local-templates.path>${project.basedir}/src/main/resources/templates</generator.local-templates.path>
         <generator.sources.directory>${project.basedir}/src/main/java/</generator.sources.directory>
         <generator.output.directory>${project.basedir}/target/generated-sources/</generator.output.directory>
-        <reddit.cd>vartas.reddit.Reddit</reddit.cd>
+        <client.cd>vartas.reddit.Client</client.cd>
+        <types.cd>vartas.reddit.types.Types</types.cd>
+        <exceptions.cd>vartas.reddit.exceptions.Exceptions</exceptions.cd>
     </properties>
 
     <!-- == DEFAULT BUILD SETTINGS =========================================== -->
@@ -86,8 +88,9 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>${maven-exec-plugin.version}</version>
                 <executions>
+                    <!-- Generate client classes -->
                     <execution>
-                        <id>reddit</id>
+                        <id>client</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>java</goal>
@@ -103,7 +106,51 @@
                                 <argument>${generator.local-templates.path}</argument>
                                 <argument>${generator.sources.directory}</argument>
                                 <argument>${generator.output.directory}</argument>
-                                <argument>${reddit.cd}</argument>
+                                <argument>${client.cd}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <!-- Generate datatypes -->
+                    <execution>
+                        <id>types</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <includeProjectDependencies>false</includeProjectDependencies>
+                            <includePluginDependencies>true</includePluginDependencies>
+                            <mainClass>${generator.main}</mainClass>
+                            <arguments>
+                                <argument>${generator.models.path}</argument>
+                                <argument>${generator.local-models.path}</argument>
+                                <argument>${generator.templates.path}</argument>
+                                <argument>${generator.local-templates.path}</argument>
+                                <argument>${generator.sources.directory}</argument>
+                                <argument>${generator.output.directory}</argument>
+                                <argument>${types.cd}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <!-- Generate exceptions -->
+                    <execution>
+                        <id>exceptions</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <includeProjectDependencies>false</includeProjectDependencies>
+                            <includePluginDependencies>true</includePluginDependencies>
+                            <mainClass>${generator.main}</mainClass>
+                            <arguments>
+                                <argument>${generator.models.path}</argument>
+                                <argument>${generator.local-models.path}</argument>
+                                <argument>${generator.templates.path}</argument>
+                                <argument>${generator.local-templates.path}</argument>
+                                <argument>${generator.sources.directory}</argument>
+                                <argument>${generator.output.directory}</argument>
+                                <argument>${exceptions.cd}</argument>
                             </arguments>
                         </configuration>
                     </execution>

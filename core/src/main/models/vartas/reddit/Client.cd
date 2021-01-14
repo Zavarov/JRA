@@ -1,0 +1,53 @@
+package vartas.reddit;
+
+import java.io.IOException.IOException;
+import java.lang.String.String;
+import java.lang.InterruptedException.InterruptedException;
+import java.time.Instant.Instant;
+import java.time.LocalDateTime.LocalDateTime;
+import java.util.Optional.Optional;
+import java.util.List.List;
+import org.json.JSONObject.JSONObject;
+import vartas.reddit.types.Types.SubredditType;
+import vartas.reddit.types.Types.LinkType;
+import vartas.reddit.types.Types.CommentType;
+import vartas.reddit.exceptions.Exceptions.HttpException;
+import vartas.reddit.exceptions.Exceptions.RateLimiterException;
+
+public classdiagram Client {
+    public abstract class Client {
+        + abstract void login() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract void logout() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        # abstract void refresh() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract Optional<Subreddit> getSubreddit(String name) throws IOException, HttpException, InterruptedException;
+    }
+
+    public abstract class Subreddit extends SubredditType{
+    }
+
+    public abstract class Link extends LinkType{
+
+    }
+
+    public abstract class Comment extends CommentType{
+
+    }
+
+    public class Token{
+        <<key="access_token">>
+        - String accessToken;
+        <<key="refresh_token">>
+        - Optional<String> refreshToken;
+        <<key="expires_in">>
+        - int expiresIn;
+        <<key="device_id">>
+        - String deviceId;
+    }
+
+    public class UserAgent{
+        - String platform;
+        - String name;
+        - String version;
+        - String author;
+    }
+}

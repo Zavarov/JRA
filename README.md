@@ -10,7 +10,7 @@ to generate the corresponding source code.
 
 ### Getting started
 
-The Client class provides the interface the Reddit API and allows access both subreddits and user accounts.
+The vartas.reddit.Client class provides the interface the Reddit API and allows access both subreddits and user accounts.
 Each subreddit consists of a collection of submission. It is possible to either request individual submissions by their
 id or several via a time interval. 
 
