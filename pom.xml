@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>vartas.reddit</groupId>
-    <artifactId>reddit</artifactId>
+    <artifactId>JRA</artifactId>
     <packaging>pom</packaging>
     <version>3.4-SNAPSHOT</version>
     <modules>
