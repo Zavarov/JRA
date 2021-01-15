@@ -43,7 +43,7 @@ public class Subreddit extends SubredditTOP{
 
     @Override
     public Link getRandom() throws IOException, HttpException, InterruptedException {
-        JSONArray response = new JSONArray(client.get(Endpoint.GET_SUBREDDIT_RANDOM, getDisplayName()));
+        JSONArray response = new JSONArray(client.get(Endpoint.GET_RANDOM, getDisplayName()));
         Thing thing;
 
         //For some reasons we get two JSON objects.
@@ -73,7 +73,7 @@ public class Subreddit extends SubredditTOP{
 
     @Override
     public List<Link> getRising() throws IOException, HttpException, InterruptedException {
-        JSONObject response = new JSONObject(client.get(Endpoint.GET_SUBREDDIT_RISING, getDisplayName()));
+        JSONObject response = new JSONObject(client.get(Endpoint.GET_RISING, getDisplayName()));
 
         Thing thing = ThingFactory.create(Thing::new, response);
 

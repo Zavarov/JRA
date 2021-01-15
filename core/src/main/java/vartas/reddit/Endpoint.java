@@ -86,13 +86,13 @@ public enum Endpoint {
      * TODO see also /api/comment
      * @see <a href="https://www.reddit.com/dev/api#GET_comments_{article}">here</a>
      */
-    GET_SUBREDDIT_COMMENTS("r","{subreddit}","comments","{article}"),
+    GET_COMMENTS("r","{subreddit}","comments","{article}"),
     /**
      * TODO What does it do?
-     * @see #GET_SUBREDDIT_SORT
+     * @see #GET_SORT
      * @see <a href="https://www.reddit.com/dev/api#GET_controversial">here</a>
      */
-    GET_SUBREDDIT_CONTROVERSIAL("r","{subreddit}","controversial"),
+    GET_CONTROVERSIAL("r","{subreddit}","controversial"),
     /**
      * Return a list of other submissions of the same URL
      *
@@ -105,7 +105,7 @@ public enum Endpoint {
      * @see #GET_SUBREDDITS_WHERE
      * @see <a href="https://www.reddit.com/dev/api#GET_hot">here</a>
      */
-    GET_SUBREDDIT_HOT("r","{subreddit}","hot"),
+    GET_HOT("r","{subreddit}","hot"),
     /**
      * Get all subreddits.<p>
      *
@@ -113,28 +113,28 @@ public enum Endpoint {
      * @see #GET_SUBREDDITS_WHERE
      * @see <a href="https://www.reddit.com/dev/api#GET_new">here</a>
      */
-    GET_SUBREDDIT_NEW("r", "{subreddit}","new"),
+    GET_NEW("r", "{subreddit}","new"),
     /**
      * The Serendipity button. I.e. it fetches a random link from the subreddit.
      * @see <a href="https://www.reddit.com/dev/api#GET_random">here</a>
      */
-    GET_SUBREDDIT_RANDOM("r", "{subreddit}", "random"),
+    GET_RANDOM("r", "{subreddit}", "random"),
     /**
      * TODO What does it do?
      * @see <a href="https://www.reddit.com/dev/api#GET_rising">here</a>
      */
-    GET_SUBREDDIT_RISING("r", "{subreddit}", "rising"),
+    GET_RISING("r", "{subreddit}", "rising"),
     /**
      * TODO What does it do?
-     * @see #GET_SUBREDDIT_SORT
+     * @see #GET_SORT
      * @see <a href="https://www.reddit.com/dev/api#GET_top">here</a>
      */
-    GET_SUBREDDIT_TOP("r","{subreddit}","top"),
+    GET_TOP("r","{subreddit}","top"),
     /**
      * TODO What does it do?
      * @see <a href="https://www.reddit.com/dev/api#GET_{sort}">here</a>
      */
-    GET_SUBREDDIT_SORT("r","{subreddit}","{sort}"),
+    GET_SORT("r","{subreddit}","{sort}"),
 
     //----------------------------------------------------------------------------------------------------------------//
     //                                                                                                                //

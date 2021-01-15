@@ -1,8 +1,8 @@
 package vartas.reddit.query;
 
-public class QueryTop extends QuerySort<QueryTop>{
+public class QueryTop<T> extends QuerySort<T,QueryTop<T>>{
     @Override
-    protected QueryTop getRealThis() {
+    protected QueryTop<T> getRealThis() {
         return this;
     }
 }

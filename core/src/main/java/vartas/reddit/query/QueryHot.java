@@ -2,15 +2,15 @@ package vartas.reddit.query;
 
 import javax.annotation.Nonnull;
 
-public class QueryHot extends QueryLink<QueryHot> {
+public class QueryHot<T> extends QueryThing<T,QueryHot<T>> {
     private static final String REGION = "g";
 
     @Override
-    protected QueryHot getRealThis() {
+    protected QueryHot<T> getRealThis() {
         return this;
     }
 
-    public QueryHot setRegion(@Nonnull Region region){
+    public QueryHot<T> setRegion(@Nonnull Region region){
         args.put(REGION, region);
         return this;
     }

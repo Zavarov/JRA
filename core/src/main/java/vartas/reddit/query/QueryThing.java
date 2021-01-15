@@ -1,13 +1,12 @@
 package vartas.reddit.query;
 
-import vartas.reddit.Link;
 import vartas.reddit.Query;
 import vartas.reddit.types.Thing;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class QueryLink<Q extends QueryLink<Q>> extends Query<Link, Q> {
+public abstract class QueryThing<T, Q extends QueryThing<T,Q>> extends Query<T, Q> {
     /**
      * The full name of the last {@link Thing} before the first element in the query.<p>
      * Default is {@code null}.
@@ -72,7 +71,7 @@ public abstract class QueryLink<Q extends QueryLink<Q>> extends Query<Link, Q> {
     }
 
     @Override
-    public List<Link> query() {
+    public List<T> query() {
         throw new UnsupportedOperationException();
     }
 }

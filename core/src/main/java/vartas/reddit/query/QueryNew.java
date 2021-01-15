@@ -1,8 +1,8 @@
 package vartas.reddit.query;
 
-public class QueryNew extends QueryLink<QueryNew> {
+public class QueryNew<T> extends QueryThing<T, QueryNew<T>> {
     @Override
-    protected QueryNew getRealThis() {
+    protected QueryNew<T> getRealThis() {
         return this;
     }
 }

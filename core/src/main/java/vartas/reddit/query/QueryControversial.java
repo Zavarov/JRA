@@ -1,8 +1,8 @@
 package vartas.reddit.query;
 
-public class QueryControversial extends QuerySort<QueryControversial>{
+public class QueryControversial<T> extends QuerySort<T,QueryControversial<T>>{
     @Override
-    protected QueryControversial getRealThis() {
+    protected QueryControversial<T> getRealThis() {
         return this;
     }
 }

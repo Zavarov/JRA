@@ -2,33 +2,33 @@ package vartas.reddit.query;
 
 import javax.annotation.Nonnull;
 
-public class QueryDuplicates extends QueryLink<QueryDuplicates> {
+public class QueryDuplicates<T> extends QueryThing<T,QueryDuplicates<T>> {
     private static final String ARTICLE = "article";
     private static final String CROSSPOSTS_ONLY = "crossposts_only";
     private static final String SORT = "sort";
     private static final String SUBREDDIT = "sr";
 
     @Override
-    protected QueryDuplicates getRealThis() {
+    protected QueryDuplicates<T> getRealThis() {
         return this;
     }
 
-    public QueryDuplicates setArticle(@Nonnull String article){
+    public QueryDuplicates<T> setArticle(@Nonnull String article){
         args.put(ARTICLE, article);
         return this;
     }
 
-    public QueryDuplicates setCrossPostsOnly(boolean state){
+    public QueryDuplicates<T> setCrossPostsOnly(boolean state){
         args.put(CROSSPOSTS_ONLY, state);
         return this;
     }
 
-    public QueryDuplicates setSort(@Nonnull Sort sort){
+    public QueryDuplicates<T> setSort(@Nonnull Sort sort){
         args.put(SORT, sort);
         return this;
     }
 
-    public QueryDuplicates setSubreddit(@Nonnull String subreddit){
+    public QueryDuplicates<T> setSubreddit(@Nonnull String subreddit){
         args.put(SUBREDDIT, subreddit);
         return this;
     }

@@ -17,6 +17,16 @@ import vartas.reddit.exceptions.Exceptions.RateLimiterException;
 import vartas.reddit.Client.Client.Duration;
 //Bug, should be Client.Subreddit.Query
 import vartas.reddit.Subreddit.Subreddit.Query;
+import vartas.reddit.query.Query.QueryBest;
+import vartas.reddit.query.Query.QueryById;
+import vartas.reddit.query.Query.QueryComments;
+import vartas.reddit.query.Query.QueryControversial;
+import vartas.reddit.query.Query.QueryDuplicates;
+import vartas.reddit.query.Query.QueryHot;
+import vartas.reddit.query.Query.QueryNew;
+import vartas.reddit.query.Query.QueryRising;
+import vartas.reddit.query.Query.QuerySort;
+import vartas.reddit.query.Query.QueryTop;
 
 public classdiagram Client {
     public abstract class Client {
@@ -28,6 +38,19 @@ public classdiagram Client {
         + abstract void logout() throws IOException, HttpException, RateLimiterException, InterruptedException;
         # abstract void refresh() throws IOException, HttpException, RateLimiterException, InterruptedException;
         + abstract Optional<Subreddit> getSubreddit(String name) throws IOException, HttpException, InterruptedException;
+        //Listings
+        + abstract List<Subreddit> getTrendingSubreddits() throws IOException, HttpException, InterruptedException;
+        + abstract QueryBest<Subreddit> getBestSubreddits() throws IOException, HttpException, InterruptedException;
+        + abstract QueryById getSubmissionsById() throws IOException, HttpException, InterruptedException;
+        + abstract QueryComments getComments() throws IOException, HttpException, InterruptedException;
+        + abstract QueryControversial<Subreddit> getControversialSubreddits() throws IOException, HttpException, InterruptedException;
+        + abstract QueryDuplicates getDuplicates() throws IOException, HttpException, InterruptedException;
+        + abstract QueryHot<Subreddit> getHotSubreddits() throws IOException, HttpException, InterruptedException;
+        + abstract QueryNew<Subreddit> getNewSubreddits() throws IOException, HttpException, InterruptedException;
+        + abstract Subreddit getRandomSubreddit() throws IOException, HttpException, InterruptedException;
+        + abstract QueryRising<Subreddit> getRisingSubreddits() throws IOException, HttpException, InterruptedException;
+        + abstract QueryTop<Subreddit> getTopSubreddits() throws IOException, HttpException, InterruptedException;
+        + abstract QuerySort<Subreddit> getSortedSubreddits() throws IOException, HttpException, InterruptedException;
     }
 
     public abstract class Subreddit extends SubredditType{
@@ -37,6 +60,15 @@ public classdiagram Client {
         + abstract Query getSearch();
         + abstract String getSidebar() throws IOException, HttpException, RateLimiterException, InterruptedException;
         + abstract Link getSticky(int index) throws IOException, HttpException, RateLimiterException, InterruptedException;
+        //Listings
+        + abstract QueryComments getComments() throws IOException, HttpException, InterruptedException;
+        + abstract QueryControversial<Link> getControversialLinks() throws IOException, HttpException, InterruptedException;
+        + abstract QueryHot<Link> getHotLinks() throws IOException, HttpException, InterruptedException;
+        + abstract QueryNew<Link> getNewLinks() throws IOException, HttpException, InterruptedException;
+        + abstract Link getRandomLink() throws IOException, HttpException, InterruptedException;
+        + abstract QueryRising<Link> getRisingLinks() throws IOException, HttpException, InterruptedException;
+        + abstract QueryTop<Link> getTopLinks() throws IOException, HttpException, InterruptedException;
+        + abstract QuerySort<Link> getSortedLinks() throws IOException, HttpException, InterruptedException;
     }
 
     public abstract class Link extends LinkType{
