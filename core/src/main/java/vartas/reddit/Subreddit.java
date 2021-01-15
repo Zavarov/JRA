@@ -5,6 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import vartas.reddit.$factory.LinkFactory;
 import vartas.reddit.exceptions.HttpException;
+import vartas.reddit.query.*;
 import vartas.reddit.types.$factory.ListingFactory;
 import vartas.reddit.types.$factory.RulesFactory;
 import vartas.reddit.types.$factory.ThingFactory;
@@ -31,18 +32,47 @@ public class Subreddit extends SubredditTOP{
 
     //----------------------------------------------------------------------------------------------------------------//
     //                                                                                                                //
-    //    API Calls                                                                                                   //
+    //    Listings                                                                                                    //
     //                                                                                                                //
     //----------------------------------------------------------------------------------------------------------------//
 
     @Override
-    public Rules getRules() throws InterruptedException, IOException, HttpException {
-        JSONObject data = new JSONObject(client.get(Endpoint.GET_SUBREDDIT_ABOUT_RULES, getDisplayName()));
-        return RulesFactory.create(Rules::new, data);
+    public QueryComments getComments(){
+        return new QueryComments();
     }
 
     @Override
-    public Link getRandom() throws IOException, HttpException, InterruptedException {
+    public QueryControversial<Link> getControversialLinks(){
+        return new QueryControversial<>(
+                Thing.THING2LINK,
+                client,
+                Endpoint.GET_SUBREDDIT_CONTROVERSIAL,
+                getDisplayName()
+        );
+    }
+
+    @Override
+    public QueryHot<Link> getHotLinks(){
+        return new QueryHot<>(
+                Thing.THING2LINK,
+                client,
+                Endpoint.GET_SUBREDDIT_HOT,
+                getDisplayName()
+        );
+    }
+
+    @Override
+    public QueryNew<Link> getNewLinks(){
+        return new QueryNew<>(
+                Thing.THING2LINK,
+                client,
+                Endpoint.GET_SUBREDDIT_NEW,
+                getDisplayName()
+        );
+    }
+
+    @Override
+    public Link getRandomLink() throws IOException, HttpException, InterruptedException {
         JSONArray response = new JSONArray(client.get(Endpoint.GET_RANDOM, getDisplayName()));
         Thing thing;
 
@@ -72,25 +102,31 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public List<Link> getRising() throws IOException, HttpException, InterruptedException {
-        JSONObject response = new JSONObject(client.get(Endpoint.GET_RISING, getDisplayName()));
+    public QueryRising<Link> getRisingLinks(){
+        return new QueryRising<>(
+                Thing.THING2LINK,
+                client,
+                Endpoint.GET_SUBREDDIT_RISING,
+                getDisplayName()
+        );
+    }
 
-        Thing thing = ThingFactory.create(Thing::new, response);
+    @Override
+    public QueryTop<Link> getTopLinks(){
+        return new QueryTop<>(
+                Thing.THING2LINK,
+                client,
+                Endpoint.GET_SUBREDDIT_TOP,
+                getDisplayName()
+        );
+    }
 
-        //We should've received a listing of up to 25 submissions
-        assert Thing.Kind.Listing.matches(thing);
+    //------------------------------------------------------------------------------------------------------------------
 
-        Listing listing = ListingFactory.create(Listing::new, thing.getData());
-        List<Link> result = new ArrayList<>(listing.getChildren().size());
-
-        for(Thing child : listing.getChildren()) {
-            //Are all children *really* submissions?
-            assert Thing.Kind.Link.matches(child);
-
-            result.add(LinkFactory.create(Link::new, child.getData()));
-        }
-
-        return Collections.unmodifiableList(result);
+    @Override
+    public Rules getRules() throws InterruptedException, IOException, HttpException {
+        JSONObject data = new JSONObject(client.get(Endpoint.GET_SUBREDDIT_ABOUT_RULES, getDisplayName()));
+        return RulesFactory.create(Rules::new, data);
     }
 
     @Override

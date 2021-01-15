@@ -18,14 +18,18 @@
 package vartas.reddit.types;
 
 import org.json.JSONObject;
+import vartas.reddit.$factory.LinkFactory;
+import vartas.reddit.Link;
 
 import java.util.Objects;
+import java.util.function.Function;
 
 public class Thing extends ThingTOP {
-    public static final String ID = "id";
-    public static final String NAME = "name";
-    public static final String KIND = "kind";
-    public static final String DATA = "data";
+    public static final Function<Thing,Link> THING2LINK = new Thing2Link();
+    private static final String ID = "id";
+    private static final String NAME = "name";
+    private static final String KIND = "kind";
+    private static final String DATA = "data";
 
     @Override
     public String getId() {
@@ -73,6 +77,14 @@ public class Thing extends ThingTOP {
 
         public boolean matches(String kind){
             return Objects.equals(name, kind);
+        }
+    }
+
+    private static class Thing2Link implements Function<Thing, Link> {
+        @Override
+        public Link apply(Thing thing) {
+            assert Thing.Kind.Link.matches(thing);
+            return LinkFactory.create(Link::new, thing.getData());
         }
     }
 }

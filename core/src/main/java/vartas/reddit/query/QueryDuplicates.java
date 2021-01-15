@@ -1,12 +1,21 @@
 package vartas.reddit.query;
 
+import vartas.reddit.Client;
+import vartas.reddit.Endpoint;
+import vartas.reddit.types.Thing;
+
 import javax.annotation.Nonnull;
+import java.util.function.Function;
 
 public class QueryDuplicates<T> extends QueryThing<T,QueryDuplicates<T>> {
     private static final String ARTICLE = "article";
     private static final String CROSSPOSTS_ONLY = "crossposts_only";
     private static final String SORT = "sort";
     private static final String SUBREDDIT = "sr";
+
+    public QueryDuplicates(Function<Thing, T> transformer, Client client, Endpoint endpoint, Object... args) {
+        super(transformer, client, endpoint, args);
+    }
 
     @Override
     protected QueryDuplicates<T> getRealThis() {

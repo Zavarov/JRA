@@ -40,35 +40,33 @@ public classdiagram Client {
         + abstract Optional<Subreddit> getSubreddit(String name) throws IOException, HttpException, InterruptedException;
         //Listings
         + abstract List<Subreddit> getTrendingSubreddits() throws IOException, HttpException, InterruptedException;
-        + abstract QueryBest<Subreddit> getBestSubreddits() throws IOException, HttpException, InterruptedException;
-        + abstract QueryById getSubmissionsById() throws IOException, HttpException, InterruptedException;
-        + abstract QueryComments getComments() throws IOException, HttpException, InterruptedException;
-        + abstract QueryControversial<Subreddit> getControversialSubreddits() throws IOException, HttpException, InterruptedException;
-        + abstract QueryDuplicates getDuplicates() throws IOException, HttpException, InterruptedException;
-        + abstract QueryHot<Subreddit> getHotSubreddits() throws IOException, HttpException, InterruptedException;
-        + abstract QueryNew<Subreddit> getNewSubreddits() throws IOException, HttpException, InterruptedException;
+        + abstract QueryBest<Subreddit> getBestSubreddits();
+        + abstract QueryById getSubmissionsById();
+        + abstract QueryComments getComments();
+        + abstract QueryControversial<Subreddit> getControversialSubreddits();
+        + abstract QueryDuplicates getDuplicates();
+        + abstract QueryHot<Subreddit> getHotSubreddits();
+        + abstract QueryNew<Subreddit> getNewSubreddits();
         + abstract Subreddit getRandomSubreddit() throws IOException, HttpException, InterruptedException;
-        + abstract QueryRising<Subreddit> getRisingSubreddits() throws IOException, HttpException, InterruptedException;
-        + abstract QueryTop<Subreddit> getTopSubreddits() throws IOException, HttpException, InterruptedException;
-        + abstract QuerySort<Subreddit> getSortedSubreddits() throws IOException, HttpException, InterruptedException;
+        + abstract QueryRising<Subreddit> getRisingSubreddits();
+        + abstract QueryTop<Subreddit> getTopSubreddits();
+        //+ abstract QuerySort<Subreddit> getSortedSubreddits();
     }
 
     public abstract class Subreddit extends SubredditType{
         + abstract Rules getRules() throws IOException, HttpException, RateLimiterException, InterruptedException;
-        + abstract Link getRandom() throws IOException, HttpException, RateLimiterException, InterruptedException;
-        + abstract List<Link> getRising() throws IOException, HttpException, RateLimiterException, InterruptedException;
         + abstract Query getSearch();
         + abstract String getSidebar() throws IOException, HttpException, RateLimiterException, InterruptedException;
         + abstract Link getSticky(int index) throws IOException, HttpException, RateLimiterException, InterruptedException;
         //Listings
-        + abstract QueryComments getComments() throws IOException, HttpException, InterruptedException;
-        + abstract QueryControversial<Link> getControversialLinks() throws IOException, HttpException, InterruptedException;
-        + abstract QueryHot<Link> getHotLinks() throws IOException, HttpException, InterruptedException;
-        + abstract QueryNew<Link> getNewLinks() throws IOException, HttpException, InterruptedException;
+        + abstract QueryComments getComments();
+        + abstract QueryControversial<Link> getControversialLinks();
+        + abstract QueryHot<Link> getHotLinks();
+        + abstract QueryNew<Link> getNewLinks();
         + abstract Link getRandomLink() throws IOException, HttpException, InterruptedException;
-        + abstract QueryRising<Link> getRisingLinks() throws IOException, HttpException, InterruptedException;
-        + abstract QueryTop<Link> getTopLinks() throws IOException, HttpException, InterruptedException;
-        + abstract QuerySort<Link> getSortedLinks() throws IOException, HttpException, InterruptedException;
+        + abstract QueryRising<Link> getRisingLinks();
+        + abstract QueryTop<Link> getTopLinks();
+        //+ abstract QuerySort<Link> getSortedLinks();
     }
 
     public abstract class Link extends LinkType{

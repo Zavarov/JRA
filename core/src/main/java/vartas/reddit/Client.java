@@ -81,11 +81,11 @@ public abstract class Client extends ClientTOP{
                 .build();
     }
 
-    protected String get(Endpoint endpoint, Object... args) throws InterruptedException, IOException, HttpException {
+    public String get(Endpoint endpoint, Object... args) throws InterruptedException, IOException, HttpException {
         return get(Collections.emptyMap(), endpoint, args);
     }
 
-    protected String get(Map<?, ?> query, Endpoint endpoint, Object... args) throws InterruptedException, IOException, HttpException {
+    public String get(Map<?, ?> query, Endpoint endpoint, Object... args) throws InterruptedException, IOException, HttpException {
         Request request = buildGet(query, endpoint, args);
         Response response = request(request);
         ResponseBody body = response.body();

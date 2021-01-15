@@ -1,5 +1,8 @@
 package vartas.reddit;
 
+import vartas.reddit.exceptions.HttpException;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,5 +20,5 @@ public abstract class Query <T, Q extends Query<T,Q>> {
 
     protected abstract Q getRealThis();
 
-    public abstract List<T> query();
+    public abstract List<T> query() throws IOException, HttpException, InterruptedException;
 }

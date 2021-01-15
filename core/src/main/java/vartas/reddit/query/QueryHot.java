@@ -1,9 +1,17 @@
 package vartas.reddit.query;
 
+import vartas.reddit.Client;
+import vartas.reddit.Endpoint;
+import vartas.reddit.types.Thing;
+
 import javax.annotation.Nonnull;
+import java.util.function.Function;
 
 public class QueryHot<T> extends QueryThing<T,QueryHot<T>> {
     private static final String REGION = "g";
+    public QueryHot(Function<Thing, T> transformer, Client client, Endpoint endpoint, Object... args) {
+        super(transformer, client, endpoint, args);
+    }
 
     @Override
     protected QueryHot<T> getRealThis() {
