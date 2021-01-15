@@ -74,7 +74,7 @@ public enum Endpoint {
      */
     GET_BY_ID("by_id","{names}"),
     /**
-     * Get the comment tree for a given Link article.<p>
+     * Get the comment tree for a given Link {@code article}.<p>
      *
      * If supplied, {@code comment} is the ID36 of a comment in the comment tree for {@code article}. This comment will
      * be the (highlighted) focal point of the returned view and context will be the number of parents shown.<p>
@@ -84,15 +84,37 @@ public enum Endpoint {
      *
      * TODO see also /api/morechildren
      * TODO see also /api/comment
+     * @see #GET_SUBREDDIT_COMMENTS
      * @see <a href="https://www.reddit.com/dev/api#GET_comments_{article}">here</a>
      */
-    GET_COMMENTS("r","{subreddit}","comments","{article}"),
+    GET_COMMENTS("comments","{article}"),
+    /**
+     * Get the comment tree for a given Link {@code article}.<p>
+     *
+     * If supplied, {@code comment} is the ID36 of a comment in the comment tree for {@code article}. This comment will
+     * be the (highlighted) focal point of the returned view and context will be the number of parents shown.<p>
+     *
+     * {@code depth} is the maximum depth of subtrees in the thread.<p>
+     * {@code limit} is the maximum number of comments to return.<p>
+     *
+     * TODO see also /api/morechildren
+     * TODO see also /api/comment
+     * @see #GET_COMMENTS
+     * @see <a href="https://www.reddit.com/dev/api#GET_comments_{article}">here</a>
+     */
+    GET_SUBREDDIT_COMMENTS("r","{subreddit}","comments","{article}"),
     /**
      * TODO What does it do?
      * @see #GET_SORT
      * @see <a href="https://www.reddit.com/dev/api#GET_controversial">here</a>
      */
-    GET_CONTROVERSIAL("r","{subreddit}","controversial"),
+    GET_CONTROVERSIAL("controversial"),
+    /**
+     * TODO What does it do?
+     * @see #GET_SUBREDDIT_SORT
+     * @see <a href="https://www.reddit.com/dev/api#GET_controversial">here</a>
+     */
+    GET_SUBREDDIT_CONTROVERSIAL("r","{subreddit}","controversial"),
     /**
      * Return a list of other submissions of the same URL
      *
@@ -102,39 +124,72 @@ public enum Endpoint {
     /**
      * Get all subreddits.
      *
-     * @see #GET_SUBREDDITS_WHERE
      * @see <a href="https://www.reddit.com/dev/api#GET_hot">here</a>
      */
-    GET_HOT("r","{subreddit}","hot"),
+    GET_HOT("hot"),
+    /**
+     * Get all submissions.
+     *
+     * @see <a href="https://www.reddit.com/dev/api#GET_hot">here</a>
+     */
+    GET_SUBREDDIT_HOT("r","{subreddit}","hot"),
     /**
      * Get all subreddits.<p>
      *
      * {@code new} sorts the subreddits based on their creation date, newest first.
+     * @see <a href="https://www.reddit.com/dev/api#GET_new">here</a>
+     */
+    GET_NEW("new"),
+    /**
+     * Get all submissions.<p>
+     *
+     * {@code new} sorts the submissions based on their creation date, newest first.
      * @see #GET_SUBREDDITS_WHERE
      * @see <a href="https://www.reddit.com/dev/api#GET_new">here</a>
      */
-    GET_NEW("r", "{subreddit}","new"),
+    GET_SUBREDDIT_NEW("r", "{subreddit}","new"),
     /**
-     * The Serendipity button. I.e. it fetches a random link from the subreddit.
+     * The Serendipity button. I.e. it fetches a random {@link Subreddit}.
      * @see <a href="https://www.reddit.com/dev/api#GET_random">here</a>
      */
-    GET_RANDOM("r", "{subreddit}", "random"),
+    GET_RANDOM("random"),
+    /**
+     * The Serendipity button. I.e. it fetches a random {@link Link} from the {@link Subreddit}.
+     * @see <a href="https://www.reddit.com/dev/api#GET_random">here</a>
+     */
+    GET_SUBREDDIT_RANDOM("r", "{subreddit}", "random"),
     /**
      * TODO What does it do?
      * @see <a href="https://www.reddit.com/dev/api#GET_rising">here</a>
      */
-    GET_RISING("r", "{subreddit}", "rising"),
+    GET_RISING("rising"),
+    /**
+     * TODO What does it do?
+     * @see <a href="https://www.reddit.com/dev/api#GET_rising">here</a>
+     */
+    GET_SUBREDDIT_RISING("r", "{subreddit}", "rising"),
     /**
      * TODO What does it do?
      * @see #GET_SORT
      * @see <a href="https://www.reddit.com/dev/api#GET_top">here</a>
      */
-    GET_TOP("r","{subreddit}","top"),
+    GET_TOP("top"),
+    /**
+     * TODO What does it do?
+     * @see #GET_SUBREDDIT_SORT
+     * @see <a href="https://www.reddit.com/dev/api#GET_top">here</a>
+     */
+    GET_SUBREDDIT_TOP("r","{subreddit}","top"),
     /**
      * TODO What does it do?
      * @see <a href="https://www.reddit.com/dev/api#GET_{sort}">here</a>
      */
-    GET_SORT("r","{subreddit}","{sort}"),
+    GET_SORT("{sort}"),
+    /**
+     * TODO What does it do?
+     * @see <a href="https://www.reddit.com/dev/api#GET_{sort}">here</a>
+     */
+    GET_SUBREDDIT_SORT("r","{subreddit}","{sort}"),
 
     //----------------------------------------------------------------------------------------------------------------//
     //                                                                                                                //
@@ -354,6 +409,9 @@ public enum Endpoint {
                 result.add(args[i++].toString());
             else
                 result.add(entry);
+
+        //All arguments have to be consumed
+        assert i == args.length - 1;
 
         return Collections.unmodifiableList(result);
     }
