@@ -30,7 +30,6 @@
         <!-- <module>jraw</module> -->
         <!-- <module>pushshift</module> -->
         <!-- <module>json</module> -->
-        <module>jra</module>
     </modules>
 
     <properties>

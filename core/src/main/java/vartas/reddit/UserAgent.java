@@ -1,5 +1,9 @@
 package vartas.reddit;
 
+/**
+ * The user agent is used by Reddit to identify this application consisting of the target platform,
+ * a unique application identifier, a version string, and the username as contact information.
+ */
 public class UserAgent extends UserAgentTOP{
     @Override
     public UserAgent getRealThis() {

@@ -10,11 +10,14 @@ import org.json.JSONObject.JSONObject;
  * See more at: https://github.com/reddit-archive/reddit/wiki/JSON
  */
 public classdiagram Types {
+    public abstract class JsonType{
+        # JSONObject source;
+    }
+
     /**
      * The base class for all Reddit objects.
      */
-    public abstract class Thing{
-        # JSONObject source;
+    public abstract class Thing extends JsonType{
         /**
          * This item's identifier, e.g. "8xwlg"
          */
@@ -42,7 +45,7 @@ public classdiagram Types {
      * directly from Object. Although it does have data and kind as parameters, it does not have id and name.
      * A listing's kind will always be Listing and its data will be a List of things.
      */
-    public abstract class Listing{
+    public abstract class Listing extends JsonType{
         /**
          * The fullname of the listing that follows before this page. Empty if there is no previous page.
          */
@@ -103,8 +106,7 @@ public classdiagram Types {
     //
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    public abstract class CommentType implements Votable, Created{
-        # JSONObject source;
+    public abstract class CommentType extends JsonType implements Votable, Created{
         /**
          * Who approved this comment. Empty if nobody or you are not a mod.
          */
@@ -206,8 +208,7 @@ public classdiagram Types {
         + abstract Optional<String> getDistinguished();
     }
 
-    public abstract class LinkType implements Votable, Created{
-        # JSONObject source;
+    public abstract class LinkType extends JsonType implements Votable, Created{
         /**
          * The account name of the poster. Empty if this is a promotional link
          */
@@ -340,9 +341,7 @@ public classdiagram Types {
          + abstract boolean isSpoiler();
     }
 
-    public abstract class SubredditType {
-        # JSONObject source;
-
+    public abstract class SubredditType extends JsonType {
         /**
          * Number of users active in last 15 minutes.
          */
@@ -442,8 +441,7 @@ public classdiagram Types {
         + abstract Optional<String> getIconImage();
     }
 
-    public abstract class MessageType implements Created{
-        # JSONObject source;
+    public abstract class MessageType extends JsonType implements Created{
         /**
          * The author of the message.
          */
@@ -501,8 +499,7 @@ public classdiagram Types {
         + abstract boolean wasComment();
     }
 
-    public abstract class AccountType implements Created{
-        # JSONObject source;
+    public abstract class AccountType extends JsonType implements Created{
         /**
          * User's comment karma.
          */
@@ -559,5 +556,21 @@ public classdiagram Types {
         + abstract boolean isNsfw();
 
         + abstract boolean hasSubscribed();
+    }
+
+    public abstract class Rules extends JsonType{
+        + abstract List<Rule> getRules();
+        + abstract List<String> getSiteRules();
+        + abstract List<NextStepReason> getSiteRulesFlow();
+    }
+
+    public abstract class Rule extends JsonType{
+        + abstract OffsetDateTime getCreatedUtc();
+        + abstract String getDescription();
+        + abstract String getDescriptionHtml();
+        + abstract String getKind();
+        + abstract int getPriority();
+        + abstract String getShortName();
+        + abstract String getViolationReason();
     }
 }

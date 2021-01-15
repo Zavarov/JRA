@@ -11,8 +11,9 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Optional;
 
-public class UserlessClient extends JraClient{
+public class UserlessClient extends Client{
     @Nonnull
     private final String id;
     @Nonnull
@@ -30,13 +31,13 @@ public class UserlessClient extends JraClient{
         this.secret = secret;
     }
 
-    protected Request build(Endpoint endpoint, RequestBody body){
-        String credentials =Base64.getEncoder().encodeToString((id+":"+secret).getBytes(StandardCharsets.UTF_8));
+    protected Request build(String url, RequestBody body){
+        String credentials = Base64.getEncoder().encodeToString((id+":"+secret).getBytes(StandardCharsets.UTF_8));
 
         return new Request.Builder()
-                .url(endpoint.toString())
+                .url(url)
                 .addHeader(HttpHeaders.AUTHORIZATION, "Basic "+credentials)
-                .addHeader(HttpHeaders.USER_AGENT, userAgent.toString())
+                .addHeader(HttpHeaders.USER_AGENT, getUserAgent().toString())
                 .post(body)
                 .build();
     }
@@ -48,14 +49,15 @@ public class UserlessClient extends JraClient{
     //----------------------------------------------------------------------------------------------------------------//
 
     @Override
-    public synchronized void login() throws IOException, HttpException, RateLimiterException, InterruptedException {
+    public synchronized void login(Duration duration) throws IOException, HttpException, RateLimiterException, InterruptedException {
         RequestBody body = new FormBody.Builder()
                 .add("grant_type", GrantType.USERLESS.toString())
-                .add("device_id", deviceId)
-                .add("duration", Duration.PERMANENT.toString())
+                .add("device_id", uuid)
+                .add("duration", duration.toString())
                 .build();
 
-        Request request = build(Endpoint.ACCESS_TOKEN, body);
+        Request request = build(ACCESS_TOKEN, body);
+        //Call execute directly to avoid checking the non-existent token for validity
         Response response = execute(request);
         ResponseBody data = response.body();
 
@@ -63,7 +65,7 @@ public class UserlessClient extends JraClient{
         assert data != null;
 
         //data.string() automatically closes the response
-        token = JSONToken.fromJson(new Token(), new JSONObject(data.string()));
+        setToken(JSONToken.fromJson(new Token(), new JSONObject(data.string())));
     }
 
     //----------------------------------------------------------------------------------------------------------------//
@@ -74,36 +76,36 @@ public class UserlessClient extends JraClient{
 
     @Override
     public synchronized void logout() throws IOException, HttpException, InterruptedException, RateLimiterException {
-        assert token != null;
+        assert isPresentToken();
 
         revokeRefreshToken();
         revokeAccessToken();
-        token = null;
+        setToken(Optional.empty());
     }
 
     private void revokeRefreshToken() throws IOException, HttpException, InterruptedException, RateLimiterException {
-        assert token != null;
+        assert isPresentToken();
 
-        if(token.isEmptyRefreshToken())
+        if(orElseThrowToken().isEmptyRefreshToken())
             return;
 
         RequestBody body = new FormBody.Builder()
-                .add("token", token.orElseThrowRefreshToken())
+                .add("token", orElseThrowToken().orElseThrowRefreshToken())
                 .add("token_type_hint", TokenType.REFRESH_TOKEN.toString())
                 .build();
 
-        request(build(Endpoint.REVOKE_TOKEN, body)).close();
+        request(build(REVOKE_TOKEN, body)).close();
     }
 
     private void revokeAccessToken() throws IOException, HttpException, InterruptedException, RateLimiterException {
-        assert token != null;
+        assert isPresentToken();
 
         RequestBody body = new FormBody.Builder()
-                .add("token", token.getAccessToken())
+                .add("token", orElseThrowToken().getAccessToken())
                 .add("token_type_hint", TokenType.ACCESS_TOKEN.toString())
                 .build();
 
-        request(build(Endpoint.REVOKE_TOKEN, body)).close();
+        request(build(REVOKE_TOKEN, body)).close();
     }
 
     //----------------------------------------------------------------------------------------------------------------//
@@ -114,14 +116,14 @@ public class UserlessClient extends JraClient{
 
     @Override
     protected synchronized void refresh() throws IOException, HttpException, RateLimiterException, InterruptedException {
-        assert token != null && token.isPresentRefreshToken();
+        assert isPresentToken() && orElseThrowToken().isPresentRefreshToken();
 
         RequestBody body = new FormBody.Builder()
                 .add("grant_type", GrantType.REFRESH.toString())
-                .add("refresh_token", token.orElseThrowRefreshToken())
+                .add("refresh_token", orElseThrowToken().orElseThrowRefreshToken())
                 .build();
 
-        Response response = request(build(Endpoint.ACCESS_TOKEN, body));
+        Response response = request(build(ACCESS_TOKEN, body));
         ResponseBody data = response.body();
 
         assert data != null;
@@ -129,11 +131,11 @@ public class UserlessClient extends JraClient{
         //On February 15th 2021, the refresh response will contain a new refresh token.
         //Until then, we reuse the initial token.
         //@see https://redd.it/kvzaot
-        String refreshToken = token.orElseThrowRefreshToken();
+        String refreshToken = orElseThrowToken().orElseThrowRefreshToken();
 
-        token = JSONToken.fromJson(new Token(), new JSONObject(data.string()));
+        setToken(JSONToken.fromJson(new Token(), new JSONObject(data.string())));
         //#TODO Remove after February 15th 2021
-        if(token.isEmptyRefreshToken())
-            token.setRefreshToken(refreshToken);
+        if(orElseThrowToken().isEmptyRefreshToken())
+            orElseThrowToken().setRefreshToken(refreshToken);
     }
 }

@@ -11,11 +11,19 @@ import org.json.JSONObject.JSONObject;
 import vartas.reddit.types.Types.SubredditType;
 import vartas.reddit.types.Types.LinkType;
 import vartas.reddit.types.Types.CommentType;
+import vartas.reddit.types.Subreddit.Rules;
 import vartas.reddit.exceptions.Exceptions.HttpException;
 import vartas.reddit.exceptions.Exceptions.RateLimiterException;
+import vartas.reddit.Client.Client.Duration;
+//Bug, should be Client.Subreddit.Query
+import vartas.reddit.Subreddit.Subreddit.Query;
 
 public classdiagram Client {
     public abstract class Client {
+        - Optional<Token> token;
+        - UserAgent userAgent;
+
+        + abstract void login(Duration duration) throws IOException, HttpException, RateLimiterException, InterruptedException;
         + abstract void login() throws IOException, HttpException, RateLimiterException, InterruptedException;
         + abstract void logout() throws IOException, HttpException, RateLimiterException, InterruptedException;
         # abstract void refresh() throws IOException, HttpException, RateLimiterException, InterruptedException;
@@ -23,6 +31,12 @@ public classdiagram Client {
     }
 
     public abstract class Subreddit extends SubredditType{
+        + abstract Rules getRules() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract Link getRandom() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract List<Link> getRising() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract Query getSearch();
+        + abstract String getSidebar() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract Link getSticky(int index) throws IOException, HttpException, RateLimiterException, InterruptedException;
     }
 
     public abstract class Link extends LinkType{

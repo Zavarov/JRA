@@ -19,6 +19,8 @@ package vartas.reddit.types;
 
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 public class Thing extends ThingTOP {
     public static final String ID = "id";
     public static final String NAME = "name";
@@ -48,5 +50,29 @@ public class Thing extends ThingTOP {
     @Override
     public Thing getRealThis() {
         return this;
+    }
+
+    public enum Kind {
+        Comment("t1"),
+        Account("t2"),
+        Link("t3"),
+        Message("t4"),
+        Subreddit("t5"),
+        Award("t6"),
+        Listing("Listing");
+
+        private final String name;
+
+        Kind(String name){
+            this.name = name;
+        }
+
+        public boolean matches(Thing thing){
+            return matches(thing.getKind());
+        }
+
+        public boolean matches(String kind){
+            return Objects.equals(name, kind);
+        }
     }
 }

@@ -13,10 +13,18 @@ public classdiagram Exceptions {
     public class RateLimiterException extends RuntimeException{
     }
     /**
-     * This exception is thrown whenever the Http response contained an error.
+     * This exception is thrown whenever the Reddit server rejected a request.
      */
     public class HttpException extends Exception{
         - int errorCode;
         - String explanation;
+    }
+
+    /**
+     * This exception is thrown whenever whenever a request failed due to a 404.
+     * It indicates that the request is not necessarily invalid, but rather that the requested
+     * resources doesn't exist.
+     */
+    public class NotFoundException extends HttpException{
     }
 }

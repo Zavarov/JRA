@@ -39,11 +39,19 @@
         <generator.output.directory>${project.basedir}/target/generated-sources/</generator.output.directory>
         <client.cd>vartas.reddit.Client</client.cd>
         <types.cd>vartas.reddit.types.Types</types.cd>
+        <subreddit.cd>vartas.reddit.types.Subreddit</subreddit.cd>
         <exceptions.cd>vartas.reddit.exceptions.Exceptions</exceptions.cd>
     </properties>
 
-    <!-- == DEFAULT BUILD SETTINGS =========================================== -->
+    <dependencies>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp.version}</version>
+        </dependency>
+    </dependencies>
 
+    <!-- == DEFAULT BUILD SETTINGS =========================================== -->
     <build>
         <plugins>
             <!-- Load the templates for the generator-->
@@ -129,6 +137,28 @@
                                 <argument>${generator.sources.directory}</argument>
                                 <argument>${generator.output.directory}</argument>
                                 <argument>${types.cd}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <!-- Generate subreddit types -->
+                    <execution>
+                        <id>subreddit</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <includeProjectDependencies>false</includeProjectDependencies>
+                            <includePluginDependencies>true</includePluginDependencies>
+                            <mainClass>${generator.main}</mainClass>
+                            <arguments>
+                                <argument>${generator.models.path}</argument>
+                                <argument>${generator.local-models.path}</argument>
+                                <argument>${generator.templates.path}</argument>
+                                <argument>${generator.local-templates.path}</argument>
+                                <argument>${generator.sources.directory}</argument>
+                                <argument>${generator.output.directory}</argument>
+                                <argument>${subreddit.cd}</argument>
                             </arguments>
                         </configuration>
                     </execution>

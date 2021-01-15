@@ -1,0 +1,139 @@
+package vartas.reddit.types;
+
+import java.time.OffsetDateTime.OffsetDateTime;
+import java.util.List.List;
+import java.util.Optional.Optional;
+import org.json.JSONObject.JSONObject;
+import vartas.reddit.types.Types.JsonType;
+
+/**
+ * The Reddit API according to their specification
+ * See more at: https://github.com/reddit-archive/reddit/wiki/JSON
+ */
+public classdiagram Subreddit {
+    public abstract class SubredditType extends JsonType {
+        /**
+         * Number of users active in last 15 minutes.
+         */
+        + abstract Optional<Integer> getAccountsActive();
+        /**
+         * Number of minutes the subreddit initially hides comment scores.
+         */
+        + abstract int getCommentScoreHideMinutes();
+        /**
+         * Sidebar text.
+         */
+        + abstract String getDescription();
+        /**
+         * Sidebar text, escaped HTML format.
+         */
+        + abstract String getDescriptionHtml();
+        /**
+         * Human name of the subreddit
+         */
+        + abstract String getDisplayName();
+        /**
+         * Full URL to the banner image, or empty.
+         */
+        + abstract Optional<String> getBannerImage();
+        /**
+         * Full URL to the header image, or empty.
+         */
+        + abstract Optional<String> getHeaderImage();
+        /**
+         * Width and height of the header image, or empty.
+         */
+        + abstract Optional<List<Integer>> getHeaderSize();
+        /**
+         * Description of header image shown on hover, or empty.
+         */
+        + abstract Optional<String> getHeaderTitle();
+        /**
+         * Whether the subreddit is marked as NSFW.
+         */
+        + abstract boolean isNsfw();
+        /**
+         * Description shown in subreddit search results?
+         */
+        + abstract String getPublicDescription();
+        /**
+         * Whether the subreddit's traffic page is publicly-accessible.
+         */
+        + abstract boolean isPublicTraffic();
+        /**
+         * The number of redditors subscribed to this subreddit.
+         */
+        + abstract long getSubscribers();
+        /**
+         * The type of submissions the subreddit allows - one of "any", "link" or "self".
+         */
+        + abstract String getSubmissionType();
+        /**
+         * The subreddit's custom label for the submit link button, if any.
+         */
+        + abstract String getSubmitLinkLabel();
+        /**
+         * The subreddit's custom label for the submit text button, if any.
+         */
+        + abstract String getSubmitTextLabel();
+        /**
+         * The subreddit's type - one of "public", "private", "restricted", or in very special cases "gold_restricted"
+         * or "archived".
+         */
+        + abstract String getSubredditType();
+        /**
+         * Title of the main page.
+         */
+        + abstract String getTitle();
+        /**
+         * The relative URL of the subreddit. Ex: "/r/pics/".
+         */
+        + abstract String getUrl();
+        /**
+         * Whether the logged-in user is banned from the subreddit.
+         */
+        + abstract boolean isUserBanned();
+        /**
+         * Whether the logged-in user is an approved submitter in the subreddit.
+         */
+        + abstract boolean isUserContributor();
+        /**
+         * Whether the logged-in user is a moderator of the subreddit.
+         */
+        + abstract boolean isUserModerator();
+        /**
+         * Whether the logged-in user is subscribed to the subreddit.
+         */
+        + abstract boolean isUserSubscriber();
+        //------------------------------------------------------------------------------------------------------------//
+        //  Undocumented                                                                                              //
+        //------------------------------------------------------------------------------------------------------------//
+        + abstract Optional<String> getIconImage();
+    }
+
+    public abstract class Rules extends JsonType{
+        + abstract List<Rule> getRules();
+        + abstract List<String> getSiteRules();
+        + abstract List<NextStepReason> getSiteRulesFlow();
+    }
+
+    public abstract class Rule extends JsonType{
+        + abstract OffsetDateTime getCreatedUtc();
+        + abstract Optional<String> getDescription();
+        + abstract Optional<String> getDescriptionHtml();
+        + abstract String getKind();
+        + abstract int getPriority();
+        + abstract String getShortName();
+        + abstract String getViolationReason();
+    }
+
+    public abstract class NextStepReason extends JsonType{
+        + abstract String getReasonTextToShow();
+        + abstract String getReasonText();
+        + abstract List<NextStepReason> getNextStepReasons();
+        /**
+         * My guess is this entry is empty if getNextStepReasons is empty and vice versa.
+         */
+        + abstract Optional<String> getNextStepHeader();
+    }
+}
