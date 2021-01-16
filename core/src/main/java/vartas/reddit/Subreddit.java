@@ -1,6 +1,6 @@
 package vartas.reddit;
 
-import de.se_rwth.commons.Joiners;
+import com.google.common.base.Joiner;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import vartas.reddit.$factory.LinkFactory;
@@ -317,7 +317,7 @@ public class Subreddit extends SubredditTOP{
         }
 
         public Query setTypes(@Nonnull Type... types){
-            args.put(TYPE, Joiners.COMMA.join(types));
+            args.put(TYPE, Joiner.on(",").join(types));
             return this;
         }
 

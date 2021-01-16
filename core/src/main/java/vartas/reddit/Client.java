@@ -1,7 +1,7 @@
 package vartas.reddit;
 
+import com.google.common.base.Joiner;
 import com.google.common.net.HttpHeaders;
-import de.se_rwth.commons.Joiners;
 import okhttp3.*;
 import org.apache.commons.lang3.concurrent.TimedSemaphore;
 import org.json.JSONObject;
@@ -210,7 +210,7 @@ public abstract class Client extends ClientTOP{
 
     //@Override
     public List<Link> getLinksById(@Nonnull String... names) throws InterruptedException, IOException, HttpException {
-        JSONObject response = new JSONObject(get(Endpoint.GET_BY_ID, Joiners.COMMA.join(names)));
+        JSONObject response = new JSONObject(get(Endpoint.GET_BY_ID, Joiner.on(",").join(names)));
 
         Thing thing = Thing.from(response);
         Listing listing = ListingFactory.create(Listing::new, thing.getData());

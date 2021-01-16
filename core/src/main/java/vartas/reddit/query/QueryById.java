@@ -1,6 +1,6 @@
 package vartas.reddit.query;
 
-import de.se_rwth.commons.Joiners;
+import com.google.common.base.Joiner;
 import org.json.JSONObject;
 import vartas.reddit.Client;
 import vartas.reddit.Endpoint;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class QueryById extends Query<List<Link>, QueryById> {
     public QueryById(Client client, String... names){
-        super(client, Endpoint.GET_BY_ID, Joiners.COMMA.join(names));
+        super(client, Endpoint.GET_BY_ID, Joiner.on(",").join(names));
     }
 
     @Override
