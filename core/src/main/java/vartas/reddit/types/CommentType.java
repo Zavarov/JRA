@@ -5,6 +5,8 @@ import org.json.JSONArray;
 import vartas.reddit.types.$factory.CommentTypeFactory;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -55,13 +57,15 @@ public class CommentType extends CommentTypeTOP{
     }
 
     @Override
-    public String getAuthorFlairCssClass() {
-        return getSource().getString(AUTHOR_FLAIR_CSS_CLASS);
+    public Optional<String> getAuthorFlairCssClass() {
+        String value = getSource().optString(AUTHOR_FLAIR_CSS_CLASS);
+        return value.isBlank() ? Optional.empty() : Optional.of(value);
     }
 
     @Override
-    public String getAuthorFlairText() {
-        return getSource().getString(AUTHOR_FLAIR_TEXT);
+    public Optional<String> getAuthorFlairText() {
+        String value = getSource().optString(AUTHOR_FLAIR_TEXT);
+        return value.isBlank() ? Optional.empty() : Optional.of(value);
     }
 
     @Override
@@ -80,11 +84,15 @@ public class CommentType extends CommentTypeTOP{
     }
 
     @Override
-    public Optional<Instant> getEdited() {
-        if(getSource().has(EDITED))
-            return Optional.of(getSource().getLong(EDITED)).map(Instant::ofEpochSecond);
-        else
+    public Optional<OffsetDateTime> getEdited() {
+        //Returns false if not edited, occasionally true for very old comments
+        //Otherwise the edit-date in UTC
+        if(getSource().get(EDITED) instanceof Boolean)
             return Optional.empty();
+        else
+            return Optional.of(getSource().getLong(EDITED))
+                    .map(Instant::ofEpochSecond)
+                    .map(instant -> OffsetDateTime.ofInstant(instant, ZoneOffset.UTC));
     }
 
     @Override
@@ -93,8 +101,9 @@ public class CommentType extends CommentTypeTOP{
     }
 
     @Override
-    public String getLinkAuthor() {
-        return getSource().getString(LINK_AUTHOR);
+    public Optional<String> getLinkAuthor() {
+        String value = getSource().optString(LINK_AUTHOR);
+        return value.isBlank() ? Optional.empty() : Optional.of(value);
     }
 
     @Override
@@ -103,21 +112,23 @@ public class CommentType extends CommentTypeTOP{
     }
 
     @Override
-    public String getLinkTitle() {
-        return getSource().getString(LINK_TITLE);
+    public Optional<String> getLinkTitle() {
+        String value = getSource().optString(LINK_AUTHOR);
+        return value.isBlank() ? Optional.empty() : Optional.of(value);
     }
 
     @Override
-    public String getLinkUrl() {
-        return getSource().getString(LINK_URL);
+    public Optional<String> getLinkUrl() {
+        String value = getSource().optString(LINK_URL);
+        return value.isBlank() ? Optional.empty() : Optional.of(value);
     }
 
     @Override
     public Optional<Integer> getNumberOfReports() {
-        if(getSource().has(NUM_REPORTS))
-            return Optional.of(getSource().getInt(NUM_REPORTS));
-        else
+        if(getSource().isNull(NUM_REPORTS))
             return Optional.empty();
+        else
+            return Optional.of(getSource().getInt(NUM_REPORTS));
     }
 
     @Override

@@ -6,10 +6,10 @@ import vartas.reddit.types.Thing;
 
 import java.util.function.Function;
 
-public class QueryBest<T> extends QueryThing<T,QueryBest<T>> {
+public class QueryBest<T> extends QueryMany<T,QueryBest<T>> {
 
-    public QueryBest(Function<Thing, T> transformer, Client client, Endpoint endpoint, Object... args) {
-        super(transformer, client, endpoint, args);
+    public QueryBest(Function<Thing, T> mapper, Client client, Endpoint endpoint, Object... args) {
+        super(mapper, client, endpoint, args);
     }
 
     @Override

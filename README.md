@@ -29,8 +29,8 @@ credentials for the respective module in /src/test/resources/config.json.
 The template for the file is
 ```
 {
+  "platform" : "PLATFORM",
   "name"     : "NAME",
-  "version"  : "VERSION",
   "id"       : "ID",
   "secret"   : "SECRET"
 }

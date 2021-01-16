@@ -17,23 +17,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class SubredditTest {
     static Client client;
-    static Subreddit test;
+    static Subreddit redditdev;
 
     @BeforeAll
     public static void setUpAll() throws IOException, HttpException, InterruptedException {
         String content = Files.readString(Paths.get("src", "test", "resources", "config.json"));
         JSONObject config = new JSONObject(content);
 
+        String version = SubredditTest.class.getSimpleName();
+        String platform = config.getString("platform");
         String author = config.getString("name");
-        String version = config.getString("version");
         String id = config.getString("id");
         String secret = config.getString("secret");
 
-        client = new UserlessClient("linux",author,version,id,secret);
+        client = new UserlessClient(platform,author,version,id,secret);
         client.login(Client.Duration.TEMPORARY);
 
 
-        test = client.getSubreddit("test").orElseThrow();
+        redditdev = client.getSubreddit("RedditDev");
     }
 
     @AfterAll
@@ -43,7 +44,7 @@ public class SubredditTest {
 
     @Test
     public void testGetRules() throws IOException, HttpException, RateLimiterException, InterruptedException {
-        Rules rules = test.getRules();
+        Rules rules = redditdev.getRules();
 
         assertThat(rules.getSiteRules()).isNotEmpty();
 
@@ -67,17 +68,17 @@ public class SubredditTest {
 
     @Test
     public void testGetRandom() throws InterruptedException, IOException, HttpException {
-        test.getRandom();
+        redditdev.getRandomLink().query();
     }
 
     @Test
     public void testGetRising() throws InterruptedException, IOException, HttpException {
-        test.getRising();
+        redditdev.getRisingLinks().query();
     }
 
     @Test
     public void testGetSearch() throws InterruptedException, IOException, HttpException {
-        test.getSearch()
+        redditdev.getSearch()
                 .setAfter(null)
                 .setBefore(null)
                 //.setCategory("foo") //May result in an 500 error (Internal Server Error)
@@ -97,13 +98,13 @@ public class SubredditTest {
     @Test
     @SuppressWarnings("deprecation")
     public void testGetSidebar() {
-        test.getSidebar();
+        redditdev.getSidebar();
     }
 
     @Test
     public void testGetSticky() throws InterruptedException, IOException, HttpException {
         try {
-            test.getSticky(1);
+            redditdev.getSticky(1);
         }catch(NotFoundException ignored){}
     }
 }

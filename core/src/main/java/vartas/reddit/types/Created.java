@@ -1,19 +1,21 @@
 package vartas.reddit.types;
 
-import java.time.Instant;
+import java.time.*;
 
 public interface Created extends CreatedTOP{
     String CREATED = "created";
     String CREATED_UTC = "created_utc";
 
     @Override
-    default Instant getCreated() {
-        return Instant.ofEpochSecond(getSource().getLong(CREATED));
+    default LocalDateTime getCreated() {
+        Instant created = Instant.ofEpochSecond(getSource().getLong(CREATED));
+        return LocalDateTime.ofInstant(created, ZoneId.systemDefault());
     }
 
     @Override
-    default Instant getCreatedUtc() {
-        return Instant.ofEpochSecond(getSource().getLong(CREATED_UTC));
+    default OffsetDateTime getCreatedUtc() {
+        Instant created = Instant.ofEpochSecond(getSource().getLong(CREATED_UTC));
+        return OffsetDateTime.ofInstant(created, ZoneOffset.UTC);
     }
 
 

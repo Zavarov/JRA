@@ -1,6 +1,7 @@
 package vartas.reddit;
 
 import com.google.common.net.HttpHeaders;
+import de.se_rwth.commons.Joiners;
 import okhttp3.*;
 import org.apache.commons.lang3.concurrent.TimedSemaphore;
 import org.json.JSONObject;
@@ -13,13 +14,20 @@ import vartas.reddit.exceptions.$factory.NotFoundExceptionFactory;
 import vartas.reddit.exceptions.$factory.RateLimiterExceptionFactory;
 import vartas.reddit.exceptions.HttpException;
 import vartas.reddit.exceptions.RateLimiterException;
+import vartas.reddit.query.*;
+import vartas.reddit.types.$factory.ListingFactory;
 import vartas.reddit.types.$factory.ThingFactory;
+import vartas.reddit.types.$factory.TrendingSubredditsFactory;
+import vartas.reddit.types.Listing;
 import vartas.reddit.types.Thing;
+import vartas.reddit.types.TrendingSubreddits;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public abstract class Client extends ClientTOP{
     @Nonnull
@@ -29,7 +37,9 @@ public abstract class Client extends ClientTOP{
     @Nonnull
     protected static final String HTTPS = "https";
     @Nonnull
-    protected static final String HOST = "oauth.reddit.com";
+    protected static final String OAUTH2 = "oauth.reddit.com";
+    @Nonnull
+    protected static final String WWW = "www.reddit.com";
     @Nonnull
     protected final String uuid = UUID.randomUUID().toString();
     @Nonnull
@@ -48,10 +58,10 @@ public abstract class Client extends ClientTOP{
         return this;
     }
 
-    protected String buildUrl(Map<?, ?> query, Endpoint endpoint, Object... args){
+    protected String buildUrl(String host, Map<?, ?> query, Endpoint endpoint, Object... args){
         HttpUrl.Builder builder = new HttpUrl.Builder()
                 .scheme(HTTPS)
-                .host(HOST);
+                .host(host);
 
         //Append the endpoint URL
         endpoint.getPath(args).forEach(builder::addPathSegment);
@@ -68,25 +78,35 @@ public abstract class Client extends ClientTOP{
     //                                                                                                                //
     //----------------------------------------------------------------------------------------------------------------//
 
-    private Request buildGet(Map<?, ?> query, Endpoint endpoint, Object... args){
+    private Request buildGet(String host, Map<?, ?> query, Endpoint endpoint, Object... args){
         assert isPresentToken();
 
-        String url = buildUrl(query, endpoint, args);
+        String url = buildUrl(host, query, endpoint, args);
 
-        return new Request.Builder()
+        Request.Builder builder = new Request.Builder()
                 .url(url)
-                .addHeader(HttpHeaders.AUTHORIZATION, "bearer " + getToken().orElseThrow().getAccessToken())
-                .addHeader(HttpHeaders.USER_AGENT, getUserAgent().toString())
-                .get()
-                .build();
+                .addHeader(HttpHeaders.USER_AGENT, getUserAgent().toString());
+
+        if(Objects.equals(host, OAUTH2))
+            builder.addHeader(HttpHeaders.AUTHORIZATION, "bearer " + orElseThrowToken().getAccessToken());
+
+        return builder.get().build();
     }
 
     public String get(Endpoint endpoint, Object... args) throws InterruptedException, IOException, HttpException {
-        return get(Collections.emptyMap(), endpoint, args);
+        return get(OAUTH2, endpoint, args);
+    }
+
+    public String get(String host, Endpoint endpoint, Object... args) throws InterruptedException, IOException, HttpException {
+        return get(host, Collections.emptyMap(), endpoint, args);
     }
 
     public String get(Map<?, ?> query, Endpoint endpoint, Object... args) throws InterruptedException, IOException, HttpException {
-        Request request = buildGet(query, endpoint, args);
+        return get(OAUTH2, query, endpoint, args);
+    }
+
+    public String get(String host, Map<?, ?> query, Endpoint endpoint, Object... args) throws InterruptedException, IOException, HttpException {
+        Request request = buildGet(host, query, endpoint, args);
         Response response = request(request);
         ResponseBody body = response.body();
 
@@ -126,6 +146,7 @@ public abstract class Client extends ClientTOP{
         log.debug("<-- {}", response);
 
         if(!response.isSuccessful()){
+            System.out.println(response.code());
             switch(response.code()){
                 //Not Found
                 case 404:
@@ -153,15 +174,107 @@ public abstract class Client extends ClientTOP{
     }
 
     @Override
-    public Optional<Subreddit> getSubreddit(String name) throws HttpException, IOException, InterruptedException {
+    public Subreddit getSubreddit(String name) throws HttpException, IOException, InterruptedException {
         Thing thing = ThingFactory.create(Thing::new, new JSONObject(get(Endpoint.GET_SUBREDDIT_ABOUT, name)));
 
-        //In case a subreddit with the specified name doesn't exist, the return thing may be arbitrary
+        //TODO Check
+        //In case a subreddit with the specified name doesn't exist, the return Thing may be arbitrary
         if(Thing.Kind.Subreddit.matches(thing.getKind()))
-            return Optional.of(SubredditFactory.create(() -> new Subreddit(this), thing.getData()));
+            return SubredditFactory.create(() -> new Subreddit(this), thing.getData());
         else
-            return Optional.empty();
+            throw NotFoundExceptionFactory.create(HttpURLConnection.HTTP_NOT_FOUND, "A subreddit with this name doesn't exist");
 
+    }
+
+    //----------------------------------------------------------------------------------------------------------------//
+    //                                                                                                                //
+    //    Listings                                                                                                    //
+    //                                                                                                                //
+    //----------------------------------------------------------------------------------------------------------------//
+
+    @Override
+    public TrendingSubreddits getTrendingSubreddits() throws IOException, HttpException, InterruptedException {
+        //Because for some reason trending subreddits don't require OAuth2 and return an 400 if used
+        JSONObject response = new JSONObject(get(WWW, Endpoint.GET_API_TRENDING_SUBREDDITS));
+        return TrendingSubredditsFactory.create(TrendingSubreddits::new, response);
+    }
+
+    @Override
+    public QueryBest<Link> getBestLinks() {
+        return new QueryBest<>(
+                Thing::toLink,
+                this,
+                Endpoint.GET_BEST
+        );
+    }
+
+    //@Override
+    public List<Link> getLinksById(@Nonnull String... names) throws InterruptedException, IOException, HttpException {
+        JSONObject response = new JSONObject(get(Endpoint.GET_BY_ID, Joiners.COMMA.join(names)));
+
+        Thing thing = Thing.from(response);
+        Listing listing = ListingFactory.create(Listing::new, thing.getData());
+        return listing.getChildren().stream().map(Thing::toLink).collect(Collectors.toUnmodifiableList());
+    }
+
+    @Override
+    public QueryComments getComments(String article) {
+        return new QueryComments(this, Endpoint.GET_COMMENTS, article);
+    }
+
+    @Override
+    public QueryControversial<Link> getControversialLinks() {
+        return new QueryControversial<>(
+                Thing::toLink,
+                this,
+                Endpoint.GET_CONTROVERSIAL
+        );
+    }
+
+    @Override
+    public QueryDuplicates getDuplicates(String article) {
+        return new QueryDuplicates(this, article);
+    }
+
+    @Override
+    public QueryHot<Link> getHotLinks() {
+        return new QueryHot<>(
+                Thing::toLink,
+                this,
+                Endpoint.GET_HOT
+        );
+    }
+
+    @Override
+    public QueryNew<Link> getNewLinks() {
+        return new QueryNew<>(
+                Thing::toLink,
+                this,
+                Endpoint.GET_NEW
+        );
+    }
+
+    @Override
+    public QueryRandom getRandomLink() {
+        return new QueryRandom(this, Endpoint.GET_RANDOM);
+    }
+
+    @Override
+    public QueryRising<Link> getRisingLinks() {
+        return new QueryRising<>(
+                Thing::toLink,
+                this,
+                Endpoint.GET_RISING
+        );
+    }
+
+    @Override
+    public QueryTop<Link> getTopLinks() {
+        return new QueryTop<>(
+                Thing::toLink,
+                this,
+                Endpoint.GET_TOP
+        );
     }
 
     //----------------------------------------------------------------------------------------------------------------//

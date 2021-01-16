@@ -57,10 +57,12 @@ public enum Endpoint {
 
     /**
      * Return a list of trending subreddits, link to the comment in r/trendingsubreddits, and the comment count of that
-     * link.
+     * link.<p>
+     * Note: The actual endpoint deviates from the documentation as in that it ends with {@code .json}. It also seems to
+     * be one of the few endpoints that can't be accessed via OAuth2.
      * @see <a href="https://www.reddit.com/dev/api#GET_api_trending_subreddits">here</a>
      */
-    GET_API_TRENDING_SUBREDDITS("api","trending_subreddits"),
+    GET_API_TRENDING_SUBREDDITS("api","trending_subreddits.json"),
     /**
      * TODO What does it do?
      * @see <a href="https://www.reddit.com/dev/api#GET_best">here</a>
@@ -297,7 +299,7 @@ public enum Endpoint {
      * Note: The endpoint according to the <b>official API</b> is inaccurate and the endpoint has been moved.
      * @see <a href="https://www.reddit.com/dev/api#GET_sticky">here</a>
      */
-    GET_SUBREDDIT_STICKY("r", "{subreddit}","about","sticky"),
+    GET_SUBREDDIT_ABOUT_STICKY("r", "{subreddit}","about","sticky"),
     /**
      * Get all subreddits.
      * @see #GET_SUBREDDITS_WHERE
@@ -411,7 +413,7 @@ public enum Endpoint {
                 result.add(entry);
 
         //All arguments have to be consumed
-        assert i == args.length - 1;
+        assert i == args.length;
 
         return Collections.unmodifiableList(result);
     }

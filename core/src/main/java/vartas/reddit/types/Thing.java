@@ -18,14 +18,19 @@
 package vartas.reddit.types;
 
 import org.json.JSONObject;
+import vartas.reddit.$factory.CommentFactory;
 import vartas.reddit.$factory.LinkFactory;
+import vartas.reddit.$factory.SubredditFactory;
+import vartas.reddit.Client;
+import vartas.reddit.Comment;
 import vartas.reddit.Link;
+import vartas.reddit.Subreddit;
+import vartas.reddit.types.$factory.ListingFactory;
+import vartas.reddit.types.$factory.ThingFactory;
 
 import java.util.Objects;
-import java.util.function.Function;
 
 public class Thing extends ThingTOP {
-    public static final Function<Thing,Link> THING2LINK = new Thing2Link();
     private static final String ID = "id";
     private static final String NAME = "name";
     private static final String KIND = "kind";
@@ -63,9 +68,10 @@ public class Thing extends ThingTOP {
         Message("t4"),
         Subreddit("t5"),
         Award("t6"),
-        Listing("Listing");
+        Listing("Listing"),
+        More("more");
 
-        private final String name;
+        public final String name;
 
         Kind(String name){
             this.name = name;
@@ -80,11 +86,27 @@ public class Thing extends ThingTOP {
         }
     }
 
-    private static class Thing2Link implements Function<Thing, Link> {
-        @Override
-        public Link apply(Thing thing) {
-            assert Thing.Kind.Link.matches(thing);
-            return LinkFactory.create(Link::new, thing.getData());
-        }
+    public static Thing from(JSONObject node){
+        return ThingFactory.create(Thing::new, node);
+    }
+
+    public static Comment toComment(Thing thing){
+        assert Thing.Kind.Comment.matches(thing);
+        return CommentFactory.create(Comment::new, thing.getData());
+    }
+
+    public static Link toLink(Thing thing){
+        assert Thing.Kind.Link.matches(thing);
+        return LinkFactory.create(Link::new, thing.getData());
+    }
+
+    public static Subreddit toSubreddit(Thing thing, Client client){
+        assert Kind.Subreddit.matches(thing);
+        return SubredditFactory.create(() -> new Subreddit(client), thing.getData());
+    }
+
+    public static Listing toListing(Thing thing){
+        assert Kind.Listing.matches(thing);
+        return ListingFactory.create(Listing::new, thing.getData());
     }
 }

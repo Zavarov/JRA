@@ -37,14 +37,19 @@ public class Subreddit extends SubredditTOP{
     //----------------------------------------------------------------------------------------------------------------//
 
     @Override
-    public QueryComments getComments(){
-        return new QueryComments();
+    public QueryComments getComments(String article){
+        return new QueryComments(
+                client,
+                Endpoint.GET_SUBREDDIT_COMMENTS,
+                getDisplayName(),
+                article
+        );
     }
 
     @Override
     public QueryControversial<Link> getControversialLinks(){
         return new QueryControversial<>(
-                Thing.THING2LINK,
+                Thing::toLink,
                 client,
                 Endpoint.GET_SUBREDDIT_CONTROVERSIAL,
                 getDisplayName()
@@ -54,7 +59,7 @@ public class Subreddit extends SubredditTOP{
     @Override
     public QueryHot<Link> getHotLinks(){
         return new QueryHot<>(
-                Thing.THING2LINK,
+                Thing::toLink,
                 client,
                 Endpoint.GET_SUBREDDIT_HOT,
                 getDisplayName()
@@ -64,7 +69,7 @@ public class Subreddit extends SubredditTOP{
     @Override
     public QueryNew<Link> getNewLinks(){
         return new QueryNew<>(
-                Thing.THING2LINK,
+                Thing::toLink,
                 client,
                 Endpoint.GET_SUBREDDIT_NEW,
                 getDisplayName()
@@ -72,39 +77,18 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public Link getRandomLink() throws IOException, HttpException, InterruptedException {
-        JSONArray response = new JSONArray(client.get(Endpoint.GET_RANDOM, getDisplayName()));
-        Thing thing;
-
-        //For some reasons we get two JSON objects.
-        //Both are listings, however only the first one contains a random submission.
-        //The other one only contains junk data.
-        //Maybe it's some kind of meta data?
-        assert response.length() == 2;
-
-        thing = ThingFactory.create(Thing::new, response.getJSONObject(0));
-
-        //Did we really receive a listing
-        assert Thing.Kind.Listing.matches(thing);
-
-        Listing listing = ListingFactory.create(Listing::new, thing.getData());
-        List<Thing> children = listing.getChildren();
-
-        //Reddit should've only returned a single submission
-        assert children.size() == 1;
-
-        thing = children.get(0);
-
-        //Did we really receive a submission
-        assert Thing.Kind.Link.matches(thing);
-
-        return LinkFactory.create(Link::new, thing.getData());
+    public QueryRandom getRandomLink() {
+        return new QueryRandom(
+                client,
+                Endpoint.GET_SUBREDDIT_RANDOM,
+                getDisplayName()
+        );
     }
 
     @Override
     public QueryRising<Link> getRisingLinks(){
         return new QueryRising<>(
-                Thing.THING2LINK,
+                Thing::toLink,
                 client,
                 Endpoint.GET_SUBREDDIT_RISING,
                 getDisplayName()
@@ -114,7 +98,7 @@ public class Subreddit extends SubredditTOP{
     @Override
     public QueryTop<Link> getTopLinks(){
         return new QueryTop<>(
-                Thing.THING2LINK,
+                Thing::toLink,
                 client,
                 Endpoint.GET_SUBREDDIT_TOP,
                 getDisplayName()
@@ -151,7 +135,7 @@ public class Subreddit extends SubredditTOP{
         Map<String, Integer> args = new HashMap<>();
         args.put("num", index);
 
-        JSONArray response = new JSONArray(client.get(args, Endpoint.GET_SUBREDDIT_STICKY, getDisplayName()));
+        JSONArray response = new JSONArray(client.get(args, Endpoint.GET_SUBREDDIT_ABOUT_STICKY, getDisplayName()));
         Thing thing;
 
         //For some reasons we get two JSON objects.

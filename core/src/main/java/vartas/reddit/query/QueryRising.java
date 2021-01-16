@@ -6,9 +6,9 @@ import vartas.reddit.types.Thing;
 
 import java.util.function.Function;
 
-public class QueryRising <T> extends QueryThing<T,QueryRising<T>> {
-    public QueryRising(Function<Thing, T> transformer, Client client, Endpoint endpoint, Object... args) {
-        super(transformer, client, endpoint, args);
+public class QueryRising <T> extends QueryMany<T,QueryRising<T>> {
+    public QueryRising(Function<Thing, T> mapper, Client client, Endpoint endpoint, Object... args) {
+        super(mapper, client, endpoint, args);
     }
 
     @Override

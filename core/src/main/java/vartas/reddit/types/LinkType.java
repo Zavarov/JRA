@@ -18,6 +18,8 @@
 package vartas.reddit.types;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Optional;
 
 public class LinkType extends LinkTypeTOP{
@@ -67,13 +69,15 @@ public class LinkType extends LinkTypeTOP{
     }
 
     @Override
-    public String getAuthorFlairCssClass() {
-        return getSource().getString(AUTHOR_FLAIR_CSS_CLASS);
+    public Optional<String> getAuthorFlairCssClass() {
+        String value = getSource().optString(AUTHOR_FLAIR_CSS_CLASS, "");
+        return value.isBlank() ? Optional.empty() : Optional.of(value);
     }
 
     @Override
-    public String getAuthorFlairText() {
-        return getSource().getString(AUTHOR_FLAIR_TEXT);
+    public Optional<String> getAuthorFlairText() {
+        String value = getSource().optString(AUTHOR_FLAIR_TEXT, "");
+        return value.isBlank() ? Optional.empty() : Optional.of(value);
     }
 
     @Override
@@ -97,13 +101,15 @@ public class LinkType extends LinkTypeTOP{
     }
 
     @Override
-    public String getLinkFlairCssClass() {
-        return getSource().getString(LINK_FLAIR_CSS_CLASS);
+    public Optional<String> getLinkFlairCssClass() {
+        String value = getSource().optString(LINK_FLAIR_CSS_CLASS, "");
+        return value.isBlank() ? Optional.empty() : Optional.of(value);
     }
 
     @Override
     public Optional<String> getLinkFlairText() {
-        return Optional.ofNullable(getSource().optString(LINK_FLAIR_TEXT, null));
+        String value = getSource().optString(LINK_FLAIR_TEXT, "");
+        return value.isBlank() ? Optional.empty() : Optional.of(value);
     }
 
     @Override
@@ -148,12 +154,14 @@ public class LinkType extends LinkTypeTOP{
 
     @Override
     public Optional<String> getSelftext() {
-        return Optional.ofNullable(getSource().optString(SELFTEXT, null));
+        String selftext = getSource().optString(SELFTEXT, "");
+        return selftext.isBlank() ? Optional.empty() : Optional.of(selftext);
     }
 
     @Override
     public Optional<String> getSelftextHtml() {
-        return Optional.ofNullable(getSource().optString(SELFTEXT_HTML, null));
+        String selftext = getSource().optString(SELFTEXT_HTML, "");
+        return selftext.isBlank() ? Optional.empty() : Optional.of(selftext);
     }
 
     @Override
@@ -168,7 +176,8 @@ public class LinkType extends LinkTypeTOP{
 
     @Override
     public Optional<String> getThumbnail() {
-        return Optional.ofNullable(getSource().optString(THUMBNAIL, null));
+        String value = getSource().optString(THUMBNAIL, "");
+        return value.isBlank() ? Optional.empty() : Optional.of(value);
     }
 
     @Override
@@ -182,11 +191,15 @@ public class LinkType extends LinkTypeTOP{
     }
 
     @Override
-    public Optional<Instant> getEdited() {
-        if(getSource().has(EDITED))
-            return Optional.of(getSource().getLong(EDITED)).map(Instant::ofEpochSecond);
-        else
+    public Optional<OffsetDateTime> getEdited() {
+        //Returns false if not edited, occasionally true for very old comments
+        //Otherwise the edit-date in UTC
+        if(getSource().get(EDITED) instanceof Boolean)
             return Optional.empty();
+        else
+            return Optional.of(getSource().getLong(EDITED))
+                    .map(Instant::ofEpochSecond)
+                    .map(instant -> OffsetDateTime.ofInstant(instant, ZoneOffset.UTC));
     }
 
     @Override
