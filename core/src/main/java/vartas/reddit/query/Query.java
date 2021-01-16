@@ -66,7 +66,7 @@ public abstract class Query <T, Q extends Query<T,Q>> {
      */
     public abstract T query() throws IOException, HttpException, InterruptedException;
 
-    public enum Region{
+    public enum GeoLocation {
         GLOBAL,
         US, AR, AU, BG, CA, CL,
         CO, HR, CZ, FI, FR, DE,

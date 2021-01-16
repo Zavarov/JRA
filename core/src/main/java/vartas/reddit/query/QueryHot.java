@@ -18,8 +18,8 @@ public class QueryHot<T> extends QueryMany<T,QueryHot<T>> {
         return this;
     }
 
-    public QueryHot<T> setRegion(@Nonnull Region region){
-        params.put(REGION, region);
+    public QueryHot<T> setRegion(@Nonnull GeoLocation geoLocation){
+        params.put(REGION, geoLocation);
         return this;
     }
 }
