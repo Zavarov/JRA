@@ -6,7 +6,6 @@ import vartas.reddit.Subreddit;
 import vartas.reddit.types.Thing;
 
 import javax.annotation.Nonnull;
-import java.util.Locale;
 import java.util.function.Function;
 
 public abstract class QuerySort<T, Q extends QuerySort<T,Q>> extends QueryMany<T,Q> {
@@ -24,19 +23,5 @@ public abstract class QuerySort<T, Q extends QuerySort<T,Q>> extends QueryMany<T
     public Q setTimePeriod(@Nonnull TimePeriod timePeriod){
         params.put(TIME_PERIOD, timePeriod);
         return getRealThis();
-    }
-
-    public enum TimePeriod{
-        HOUR,
-        DAY,
-        WEEK,
-        MONTH,
-        YEAR,
-        ALL;
-
-        @Override
-        public String toString(){
-            return name().toLowerCase(Locale.ENGLISH);
-        }
     }
 }
