@@ -19,6 +19,8 @@ public abstract class QueryBase<T, Q extends QueryBase<T,Q>> extends Query<T, Q>
     private static final String BEFORE = "before";
     /**
      * A non-negative integer.<p>
+     * The number of items already seen in this query. on the html site, the builder uses this to determine when to give
+     * values for {@code before} and {@code after} in the response.
      * Default is {@code 0}.
      */
     private static final String COUNT = "count";
@@ -28,7 +30,9 @@ public abstract class QueryBase<T, Q extends QueryBase<T,Q>> extends Query<T, Q>
      */
     private static final String LIMIT = "limit";
     /**
-     * The String "all".
+     * Either null or the String "all".<p>
+     * If {@code all} is passed, filters such as "hide links that I have voted on" will be disabled.<p>
+     * Default is {@code all}.
      */
     private static final String SHOW = "show";
     /**
@@ -41,10 +45,11 @@ public abstract class QueryBase<T, Q extends QueryBase<T,Q>> extends Query<T, Q>
         super(client, endpoint, args);
 
         //Initialize arguments with default values
-        super.params.putIfAbsent(AFTER, null);
-        super.params.putIfAbsent(BEFORE, null);
-        super.params.put(COUNT, 0);
-        super.params.putIfAbsent(LIMIT, 25);
+        params.put(AFTER, null);
+        params.put(BEFORE, null);
+        params.put(COUNT, 0);
+        params.put(LIMIT, 25);
+        params.put(SHOW, "all");
     }
 
     public Q setAfter(@Nullable String after){
