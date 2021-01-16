@@ -13,11 +13,69 @@ public enum Endpoint {
     //                                                                                                                //
     //----------------------------------------------------------------------------------------------------------------//
 
+    /**
+     * Returns the identity of the user.
+     * @see <a href="https://www.reddit.com/dev/api#GET_api_v1_me">here</a>
+     */
+    GET_ME("api","v1","me"),
+    /**
+     * TODO What does it do?
+     * @see <a href="https://www.reddit.com/dev/api#GET_api_v1_me_blocked">here</a>
+     */
+    GET_ME_BLOCKED("api","v1","me","blocked"),
+    /**
+     * TODO What does it do?
+     * @see <a href="https://www.reddit.com/dev/api#GET_api_v1_me_friends">here</a>
+     */
+    GET_ME_FRIENDS("api","v1","me","friends"),
+    /**
+     * Return a breakdown of subreddit karma.
+     * @see <a href="https://www.reddit.com/dev/api#GET_api_v1_me_karma">here</a>
+     */
+    GET_ME_KARMA("api","v1","me","karma"),
+    /**
+     * Return the preference settings of the logged in user.
+     * @see <a href="https://www.reddit.com/dev/api#GET_api_v1_me_prefs">here</a>
+     */
+    GET_ME_PREFS("api","v1","me","prefs"),
+    /**
+     * Return a list of trophies for the current user.
+     * @see <a href="https://www.reddit.com/dev/api#GET_api_v1_me_trophies">here</a>
+     */
+    GET_ME_TROPHIES("api","v1","me","trophies"),
+    /**
+     * TODO What does it do?
+     * @see <a href="https://www.reddit.com/dev/api#GET_prefs_blocked">here</a>
+     */
+    GET_PREFS_BLOCKED("prefs","blocked"),
+    /**
+     * TODO What does it do?
+     * @see <a href="https://www.reddit.com/dev/api#GET_prefs_friends">here</a>
+     */
+    GET_PREFS_FRIENDS("prefs","friends"),
+    /**
+     * TODO What does it do?
+     * @see <a href="https://www.reddit.com/dev/api#GET_prefs_messaging">here</a>
+     */
+    GET_PREFS_MESSAGING("prefs","messaging"),
+    /**
+     * TODO What does it do?
+     * @see <a href="https://www.reddit.com/dev/api#GET_prefs_trusted">here</a>
+     */
+    GET_PREFS_TRUSTED("prefs","trusted"),
+    /**
+     * TODO What does it do?
+     * @see <a href="https://www.reddit.com/dev/api#GET_prefs_{where}">here</a>
+     */
+    GET_PREFS_WHERE("prefs","{where}"),
+
     //----------------------------------------------------------------------------------------------------------------//
     //                                                                                                                //
     //    captcha                                                                                                     //
     //                                                                                                                //
     //----------------------------------------------------------------------------------------------------------------//
+
+    GET_NEEDS_CAPTCHA("api","needs_captcha"),
 
     //----------------------------------------------------------------------------------------------------------------//
     //                                                                                                                //
