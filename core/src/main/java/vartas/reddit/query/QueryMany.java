@@ -4,8 +4,6 @@ import org.json.JSONObject;
 import vartas.reddit.Client;
 import vartas.reddit.Endpoint;
 import vartas.reddit.exceptions.HttpException;
-import vartas.reddit.types.$factory.ListingFactory;
-import vartas.reddit.types.$factory.ThingFactory;
 import vartas.reddit.types.Listing;
 import vartas.reddit.types.Thing;
 
@@ -26,12 +24,7 @@ public abstract class QueryMany<T, Q extends QueryBase<List<T>,Q>> extends Query
     public List<T> query() throws IOException, HttpException, InterruptedException{
         JSONObject response = new JSONObject(client.get(params, endpoint, args));
 
-        Thing thing = ThingFactory.create(Thing::new, response);
-
-        //We should've received a collection of things
-        assert Thing.Kind.Listing.matches(thing);
-
-        Listing listing = ListingFactory.create(Listing::new, thing.getData());
+        Listing listing = Thing.from(response).toListing();
         List<T> result = new ArrayList<>(listing.getChildren().size());
 
         for(Thing child : listing.getChildren()) {

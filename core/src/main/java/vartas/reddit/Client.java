@@ -1,33 +1,29 @@
 package vartas.reddit;
 
-import com.google.common.base.Joiner;
 import com.google.common.net.HttpHeaders;
 import okhttp3.*;
 import org.apache.commons.lang3.concurrent.TimedSemaphore;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vartas.reddit.$factory.SubredditFactory;
-import vartas.reddit.$factory.UserAgentFactory;
+import vartas.reddit.$json.JSONToken;
 import vartas.reddit.exceptions.$factory.HttpExceptionFactory;
 import vartas.reddit.exceptions.$factory.NotFoundExceptionFactory;
 import vartas.reddit.exceptions.$factory.RateLimiterExceptionFactory;
 import vartas.reddit.exceptions.HttpException;
 import vartas.reddit.exceptions.RateLimiterException;
 import vartas.reddit.query.*;
-import vartas.reddit.types.$factory.ListingFactory;
 import vartas.reddit.types.$factory.ThingFactory;
 import vartas.reddit.types.$factory.TrendingSubredditsFactory;
-import vartas.reddit.types.Listing;
-import vartas.reddit.types.Thing;
-import vartas.reddit.types.TrendingSubreddits;
+import vartas.reddit.types.*;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public abstract class Client extends ClientTOP{
     @Nonnull
@@ -40,6 +36,8 @@ public abstract class Client extends ClientTOP{
     protected static final String OAUTH2 = "oauth.reddit.com";
     @Nonnull
     protected static final String WWW = "www.reddit.com";
+    @Nonnull
+    protected final String credentials;
     @Nonnull
     protected final String uuid = UUID.randomUUID().toString();
     @Nonnull
@@ -164,7 +162,7 @@ public abstract class Client extends ClientTOP{
 
     //----------------------------------------------------------------------------------------------------------------//
     //                                                                                                                //
-    //    API Calls                                                                                                   //
+    //    Login                                                                                                       //
     //                                                                                                                //
     //----------------------------------------------------------------------------------------------------------------//
 
@@ -173,17 +171,148 @@ public abstract class Client extends ClientTOP{
         login(Duration.PERMANENT);
     }
 
+    //----------------------------------------------------------------------------------------------------------------//
+    //                                                                                                                //
+    //    Logout                                                                                                      //
+    //                                                                                                                //
+    //----------------------------------------------------------------------------------------------------------------//
+
     @Override
-    public Subreddit getSubreddit(String name) throws HttpException, IOException, InterruptedException {
-        Thing thing = ThingFactory.create(Thing::new, new JSONObject(get(Endpoint.GET_SUBREDDIT_ABOUT, name)));
+    public synchronized void logout() throws IOException, HttpException, InterruptedException, RateLimiterException {
+        assert isPresentToken();
 
-        //TODO Check
-        //In case a subreddit with the specified name doesn't exist, the return Thing may be arbitrary
-        if(Thing.Kind.Subreddit.matches(thing.getKind()))
-            return SubredditFactory.create(() -> new Subreddit(this), thing.getData());
-        else
-            throw NotFoundExceptionFactory.create(HttpURLConnection.HTTP_NOT_FOUND, "A subreddit with this name doesn't exist");
+        revokeRefreshToken();
+        revokeAccessToken();
+        setToken(Optional.empty());
+    }
 
+    private void revokeRefreshToken() throws IOException, HttpException, InterruptedException, RateLimiterException {
+        assert isPresentToken();
+
+        if(orElseThrowToken().isEmptyRefreshToken())
+            return;
+
+        RequestBody body = new FormBody.Builder()
+                .add("token", orElseThrowToken().orElseThrowRefreshToken())
+                .add("token_type_hint", TokenType.REFRESH_TOKEN.toString())
+                .build();
+
+        request(getAuthentication(REVOKE_TOKEN, body)).close();
+    }
+
+    private void revokeAccessToken() throws IOException, HttpException, InterruptedException, RateLimiterException {
+        assert isPresentToken();
+
+        RequestBody body = new FormBody.Builder()
+                .add("token", orElseThrowToken().getAccessToken())
+                .add("token_type_hint", TokenType.ACCESS_TOKEN.toString())
+                .build();
+
+        request(getAuthentication(REVOKE_TOKEN, body)).close();
+    }
+
+    //----------------------------------------------------------------------------------------------------------------//
+    //                                                                                                                //
+    //    Refresh                                                                                                     //
+    //                                                                                                                //
+    //----------------------------------------------------------------------------------------------------------------//
+
+    @Override
+    protected synchronized void refresh() throws IOException, HttpException, RateLimiterException, InterruptedException {
+        assert isPresentToken() && orElseThrowToken().isPresentRefreshToken();
+
+        RequestBody body = new FormBody.Builder()
+                .add("grant_type", GrantType.REFRESH.toString())
+                .add("refresh_token", orElseThrowToken().orElseThrowRefreshToken())
+                .build();
+
+        Response response = request(getAuthentication(ACCESS_TOKEN, body));
+        ResponseBody data = response.body();
+
+        assert data != null;
+
+        //On February 15th 2021, the refresh response will contain a new refresh token.
+        //Until then, we reuse the initial token.
+        //@see https://redd.it/kvzaot
+        String refreshToken = orElseThrowToken().orElseThrowRefreshToken();
+
+        setToken(JSONToken.fromJson(new Token(), new JSONObject(data.string())));
+        //#TODO Remove after February 15th 2021
+        if(orElseThrowToken().isEmptyRefreshToken())
+            orElseThrowToken().setRefreshToken(refreshToken);
+    }
+
+    //----------------------------------------------------------------------------------------------------------------//
+    //                                                                                                                //
+    //    Account                                                                                                     //
+    //                                                                                                                //
+    //----------------------------------------------------------------------------------------------------------------//
+
+    @Override
+    public void getMe() throws InterruptedException, IOException, HttpException {
+        JSONObject response = new JSONObject(get(Endpoint.GET_ME));
+        System.out.println(response.toString(2));
+    }
+
+    @Override
+    @Deprecated
+    public List<User> getBlocked() throws InterruptedException, IOException, HttpException {
+        return Thing.from(new JSONObject(get(Endpoint.GET_ME_BLOCKED))).toUserList().getData();
+    }
+
+    @Override
+    public List<User> getFriends() throws InterruptedException, IOException, HttpException {
+        return Thing.from(new JSONObject(get(Endpoint.GET_ME_FRIENDS))).toUserList().getData();
+    }
+
+    @Override
+    public List<Karma> getKarma() throws InterruptedException, IOException, HttpException {
+        return Thing.from(new JSONObject(get(Endpoint.GET_ME_KARMA))).toKarmaList().getData();
+    }
+
+    @Override
+    public void getPreferences() throws InterruptedException, IOException, HttpException {
+        JSONObject response = new JSONObject(get(Endpoint.GET_ME_PREFS));
+        System.out.println(response.toString(2));
+    }
+
+    @Override
+    public List<Trophy> getTrophies() throws InterruptedException, IOException, HttpException {
+        return Thing.from(new JSONObject(get(Endpoint.GET_ME_TROPHIES))).toTrophyList().getData();
+    }
+
+    @Override
+    public List<User> getPreferencesBlocked() throws InterruptedException, IOException, HttpException {
+        return Thing.from(new JSONObject(get(Endpoint.GET_PREFS_BLOCKED))).toUserList().getData();
+    }
+
+    @Override
+    public List<User> getPreferencesFriends() throws InterruptedException, IOException, HttpException {
+        System.out.println(new JSONArray(get(Endpoint.GET_PREFS_FRIENDS)));
+        return Thing.from(new JSONObject(get(Endpoint.GET_PREFS_FRIENDS))).toUserList().getData();
+    }
+
+    @Override
+    public void getPreferencesMessaging() throws InterruptedException, IOException, HttpException {
+        JSONArray response = new JSONArray(get(Endpoint.GET_PREFS_MESSAGING));
+        System.out.println(response.toString(2));
+    }
+
+    @Override
+    public List<User> getPreferencesTrusted() throws InterruptedException, IOException, HttpException {
+        return Thing.from(new JSONObject(get(Endpoint.GET_PREFS_TRUSTED))).toUserList().getData();
+    }
+
+    //----------------------------------------------------------------------------------------------------------------//
+    //                                                                                                                //
+    //    Captcha                                                                                                     //
+    //                                                                                                                //
+    //----------------------------------------------------------------------------------------------------------------//
+
+    @Override
+    @Deprecated
+    public boolean needsCaptcha() throws InterruptedException, IOException, HttpException {
+        return Boolean.parseBoolean(get(Endpoint.GET_NEEDS_CAPTCHA));
     }
 
     //----------------------------------------------------------------------------------------------------------------//
@@ -208,13 +337,9 @@ public abstract class Client extends ClientTOP{
         );
     }
 
-    //@Override
-    public List<Link> getLinksById(@Nonnull String... names) throws InterruptedException, IOException, HttpException {
-        JSONObject response = new JSONObject(get(Endpoint.GET_BY_ID, Joiner.on(",").join(names)));
-
-        Thing thing = Thing.from(response);
-        Listing listing = ListingFactory.create(Listing::new, thing.getData());
-        return listing.getChildren().stream().map(Thing::toLink).collect(Collectors.toUnmodifiableList());
+    @Override
+    public QueryById getLinksById(@Nonnull String... names) {
+        return new QueryById(this, names);
     }
 
     @Override
@@ -283,6 +408,28 @@ public abstract class Client extends ClientTOP{
     //                                                                                                                //
     //----------------------------------------------------------------------------------------------------------------//
 
+    @Override
+    public Subreddit getSubreddit(String name) throws HttpException, IOException, InterruptedException {
+        Thing thing = ThingFactory.create(Thing::new, new JSONObject(get(Endpoint.GET_SUBREDDIT_ABOUT, name)));
+
+        //TODO Check
+        //In case a subreddit with the specified name doesn't exist, the return Thing may be arbitrary
+        if(Thing.Kind.Subreddit.matches(thing.getKind()))
+            return thing.toSubreddit(this);
+        else
+            throw NotFoundExceptionFactory.create(HttpURLConnection.HTTP_NOT_FOUND, "A subreddit with this name doesn't exist");
+
+    }
+
+    protected Request getAuthentication(String url, RequestBody body){
+        return new Request.Builder()
+                .url(url)
+                .addHeader(HttpHeaders.AUTHORIZATION, "Basic "+credentials)
+                .addHeader(HttpHeaders.USER_AGENT, getUserAgent().toString())
+                .post(body)
+                .build();
+    }
+
     public enum Duration {
         PERMANENT("permanent"),
         TEMPORARY("temporary");
@@ -300,6 +447,7 @@ public abstract class Client extends ClientTOP{
 
     public enum GrantType {
         USERLESS("https://oauth.reddit.com/grants/installed_client"),
+        PASSWORD("password"),
         CLIENT("client_credentials"),
         REFRESH("refresh_token");
 

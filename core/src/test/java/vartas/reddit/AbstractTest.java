@@ -2,7 +2,11 @@ package vartas.reddit;
 
 import org.assertj.core.api.Condition;
 import org.json.JSONObject;
+import org.slf4j.LoggerFactory;
+import vartas.reddit.types.Karma;
 import vartas.reddit.types.Thing;
+import vartas.reddit.types.Trophy;
+import vartas.reddit.types.User;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,7 +28,20 @@ public class AbstractTest {
         return new JSONObject(content);
     }
 
-    protected static Client getClient(String version) throws IOException {
+    protected static Client getScript(String version) throws IOException {
+        JSONObject config = getConfig();
+
+        String platform = config.getString("platform");
+        String author = config.getString("name");
+        String id = config.getString("id");
+        String secret = config.getString("secret");
+        String account = config.getString("account");
+        String password = config.getString("password");
+
+        return new ScriptClient(account,password,platform,author,version,id,secret);
+    }
+
+    protected static Client getUserless(String version) throws IOException {
         JSONObject config = getConfig();
 
         String platform = config.getString("platform");
@@ -38,15 +55,47 @@ public class AbstractTest {
     protected static void check(Thing thing){
         switch(thing.getKind()){
             case "t1":
-                check(Thing.toComment(thing));
+                check(thing.toComment());
                 break;
             case "t3":
-                check(Thing.toLink(thing));
+                check(thing.toLink());
                 break;
         }
     }
 
+    protected static void check(Trophy trophy){
+        LoggerFactory.getLogger(trophy.getClass()).info(trophy.toString());
+
+        assertThat(trophy.getIcon70()).doesNotHave(INVALID_STRING);
+        trophy.getGrantedAt(); //TODO Test
+        assertThat(trophy.getName()).doesNotHave(INVALID_STRING);
+        assertThat(trophy.getDescription()).doesNotHave(INVALID_OPTIONAL_STRING);
+        assertThat(trophy.getId()).doesNotHave(INVALID_OPTIONAL_STRING);
+        assertThat(trophy.getUrl()).doesNotHave(INVALID_OPTIONAL_STRING);
+        assertThat(trophy.getIcon40()).doesNotHave(INVALID_STRING);
+        assertThat(trophy.getAwardId()).doesNotHave(INVALID_OPTIONAL_STRING);
+    }
+
+    protected static void check(Karma karma){
+        LoggerFactory.getLogger(karma.getClass()).info(karma.toString());
+
+        assertThat(karma.getCommentKarma()).isNotNull();
+        assertThat(karma.getLinkKarma()).isNotNull();
+        assertThat(karma.getSubreddit()).doesNotHave(INVALID_STRING);
+    }
+
+    protected static void check(User user){
+        LoggerFactory.getLogger(user.getClass()).info(user.toString());
+
+        assertThat(user.getDate()).isNotNull();
+        assertThat(user.getName()).isNotNull();
+        assertThat(user.getRelativeId()).isNotNull();
+        assertThat(user.getId()).isNotNull();
+    }
+
     protected static void check(Link link){
+        LoggerFactory.getLogger(link.getClass()).info(link.toString());
+
         assertThat(link.getAuthor()).doesNotHave(INVALID_OPTIONAL_STRING);
         assertThat(link.getAuthorFlairCssClass()).doesNotHave(INVALID_OPTIONAL_STRING);
         assertThat(link.getAuthorFlairText()).doesNotHave(INVALID_OPTIONAL_STRING);
@@ -78,6 +127,8 @@ public class AbstractTest {
     }
 
     protected static void check(Comment comment){
+        LoggerFactory.getLogger(comment.getClass()).info(comment.toString());
+
         assertThat(comment.getApprovedBy()).doesNotHave(INVALID_OPTIONAL_STRING);
         assertThat(comment.getAuthor()).doesNotHave(INVALID_STRING);
         assertThat(comment.getAuthorFlairCssClass()).doesNotHave(INVALID_OPTIONAL_STRING);

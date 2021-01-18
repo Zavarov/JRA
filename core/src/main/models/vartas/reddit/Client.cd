@@ -12,6 +12,9 @@ import vartas.reddit.types.Types.SubredditType;
 import vartas.reddit.types.Types.LinkType;
 import vartas.reddit.types.Types.CommentType;
 import vartas.reddit.types.Types.TrendingSubreddits;
+import vartas.reddit.types.Types.Trophy;
+import vartas.reddit.types.Types.User;
+import vartas.reddit.types.Types.Karma;
 import vartas.reddit.types.Subreddit.Rules;
 import vartas.reddit.exceptions.Exceptions.HttpException;
 import vartas.reddit.exceptions.Exceptions.RateLimiterException;
@@ -40,11 +43,23 @@ public classdiagram Client {
         + abstract void logout() throws IOException, HttpException, RateLimiterException, InterruptedException;
         # abstract void refresh() throws IOException, HttpException, RateLimiterException, InterruptedException;
         + abstract Subreddit getSubreddit(String name) throws IOException, HttpException, InterruptedException;
+        //Account
+        + abstract void getMe() throws InterruptedException, IOException, HttpException;
+        + abstract List<User> getBlocked() throws InterruptedException, IOException, HttpException;
+        + abstract List<User> getFriends() throws InterruptedException, IOException, HttpException;
+        + abstract List<Karma> getKarma() throws InterruptedException, IOException, HttpException;
+        + abstract void getPreferences() throws InterruptedException, IOException, HttpException;
+        + abstract List<Trophy> getTrophies() throws InterruptedException, IOException, HttpException;
+        + abstract List<User> getPreferencesBlocked() throws InterruptedException, IOException, HttpException;
+        + abstract List<User> getPreferencesFriends() throws InterruptedException, IOException, HttpException;
+        + abstract void getPreferencesMessaging() throws InterruptedException, IOException, HttpException;
+        + abstract List<User> getPreferencesTrusted() throws InterruptedException, IOException, HttpException;
+        //Captcha
+        + abstract boolean needsCaptcha() throws InterruptedException, IOException, HttpException;
         //Listings
         + abstract TrendingSubreddits getTrendingSubreddits() throws IOException, HttpException, InterruptedException;
         + abstract QueryBest<Link> getBestLinks();
-        //TODO `String...` is turned into `String`
-        //+ abstract QueryById getLinksById(String... names) throws InterruptedException, IOException, HttpException {
+        + abstract QueryById getLinksById(String[] names);
         + abstract QueryComments getComments(String article);
         + abstract QueryControversial<Link> getControversialLinks();
         + abstract QueryDuplicates getDuplicates(String article);
@@ -88,7 +103,7 @@ public classdiagram Client {
         <<key="expires_in">>
         - int expiresIn;
         <<key="device_id">>
-        - String deviceId;
+        - Optional<String> deviceId;
     }
 
     public class UserAgent{

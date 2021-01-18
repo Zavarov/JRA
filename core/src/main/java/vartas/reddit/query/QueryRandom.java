@@ -7,7 +7,6 @@ import vartas.reddit.Client;
 import vartas.reddit.Endpoint;
 import vartas.reddit.Link;
 import vartas.reddit.exceptions.HttpException;
-import vartas.reddit.types.$factory.ListingFactory;
 import vartas.reddit.types.Listing;
 import vartas.reddit.types.Thing;
 
@@ -39,21 +38,16 @@ public class QueryRandom extends Query<Pair<Link, List<Thing>>,QueryRandom>{
         assert response.length() == 2;
 
         //Extract random submissions
-        Thing thing = Thing.from(response.getJSONObject(0));
-
-        Listing listing = ListingFactory.create(Listing::new, thing.getData());
+        Listing listing = Thing.from(response.getJSONObject(0)).toListing();
         List<Thing> children = listing.getChildren();
 
         //Reddit should've only returned a single submission
         assert children.size() == 1;
 
-        link = Thing.toLink(children.get(0));
+        link = children.get(0).toLink();
 
         //Extract comments, if present
-
-        thing = Thing.from(response.getJSONObject(1));
-
-        listing = ListingFactory.create(Listing::new, thing.getData());
+        listing = Thing.from(response.getJSONObject(1)).toListing();
         comments = Collections.unmodifiableList(listing.getChildren());
 
         return new ImmutablePair<>(link, comments);

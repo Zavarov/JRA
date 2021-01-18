@@ -1,13 +1,14 @@
 package vartas.reddit;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import vartas.reddit.exceptions.HttpException;
+import vartas.reddit.query.Query;
 import vartas.reddit.query.QueryDuplicates;
-import vartas.reddit.query.QueryHot;
 import vartas.reddit.query.QuerySort;
 import vartas.reddit.types.Thing;
 import vartas.reddit.types.TrendingSubreddits;
@@ -24,10 +25,15 @@ public class ListingTest extends AbstractTest{
 
     @BeforeAll
     public static void setUpAll() throws IOException, HttpException, InterruptedException {
-        client = getClient(ListingTest.class.getSimpleName());
+        client = getUserless(ListingTest.class.getSimpleName());
         client.login(Client.Duration.TEMPORARY);
 
         subreddit = client.getSubreddit(SUBREDDIT_NAME);
+    }
+
+    @AfterAll
+    public static void tearDownAll() throws InterruptedException, IOException, HttpException {
+        client.logout();
     }
 
     @Test
@@ -54,7 +60,7 @@ public class ListingTest extends AbstractTest{
     @ParameterizedTest
     @ValueSource(strings = {"t3_kvzaot"})
     public void testGetLinksById(String name) throws InterruptedException, IOException, HttpException {
-        client.getLinksById(name).forEach(AbstractTest::check);
+        client.getLinksById(name).query().forEach(AbstractTest::check);
     }
 
     @ParameterizedTest
@@ -119,7 +125,7 @@ public class ListingTest extends AbstractTest{
     @Test
     public void testGetHotLinks() throws InterruptedException, IOException, HttpException {
         client.getHotLinks()
-                .setRegion(QueryHot.Region.GLOBAL)
+                .setRegion(Query.GeoLocation.GLOBAL)
                 .setAfter(null)
                 .setBefore(null)
                 .setCount(0)
@@ -130,7 +136,7 @@ public class ListingTest extends AbstractTest{
                 .forEach(AbstractTest::check);
 
         subreddit.getHotLinks()
-                .setRegion(QueryHot.Region.GLOBAL)
+                .setRegion(Query.GeoLocation.GLOBAL)
                 .setAfter(null)
                 .setBefore(null)
                 .setCount(0)

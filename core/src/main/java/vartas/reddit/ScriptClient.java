@@ -9,10 +9,15 @@ import vartas.reddit.exceptions.RateLimiterException;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 
-public class UserlessClient extends Client{
+public class ScriptClient extends Client{
+    @Nonnull
+    private final String account;
+    @Nonnull
+    private final String password;
 
-
-    public UserlessClient(
+    public ScriptClient(
+            @Nonnull String account,
+            @Nonnull String password,
             @Nonnull String platform,
             @Nonnull String author,
             @Nonnull String version,
@@ -20,20 +25,16 @@ public class UserlessClient extends Client{
             @Nonnull String secret
     ){
         super(platform, version, author, id, secret);
+        this.account = account;
+        this.password = password;
     }
-
-    //----------------------------------------------------------------------------------------------------------------//
-    //                                                                                                                //
-    //    Login                                                                                                       //
-    //                                                                                                                //
-    //----------------------------------------------------------------------------------------------------------------//
 
     @Override
     public synchronized void login(Duration duration) throws IOException, HttpException, RateLimiterException, InterruptedException {
         RequestBody body = new FormBody.Builder()
-                .add("grant_type", GrantType.USERLESS.toString())
-                .add("device_id", uuid)
-                .add("duration", duration.toString())
+                .add("grant_type", GrantType.PASSWORD.toString())
+                .add("username", account)
+                .add("password", password)
                 .build();
 
         Request request = getAuthentication(ACCESS_TOKEN, body);

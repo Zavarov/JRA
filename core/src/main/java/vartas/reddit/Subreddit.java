@@ -3,12 +3,9 @@ package vartas.reddit;
 import com.google.common.base.Joiner;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import vartas.reddit.$factory.LinkFactory;
 import vartas.reddit.exceptions.HttpException;
 import vartas.reddit.query.*;
-import vartas.reddit.types.$factory.ListingFactory;
 import vartas.reddit.types.$factory.RulesFactory;
-import vartas.reddit.types.$factory.ThingFactory;
 import vartas.reddit.types.Listing;
 import vartas.reddit.types.Rules;
 import vartas.reddit.types.Thing;
@@ -139,17 +136,12 @@ public class Subreddit extends SubredditTOP{
         Thing thing;
 
         //For some reasons we get two JSON objects.
-        //Both are listings, however only the first one contains a random submission.
+        //Both are listings, however only the first one contains a sticky submission.
         //The other one only contains junk data.
         //Maybe it's some kind of meta data?
+        //TODO The second entry contains the comments
         assert response.length() == 2;
-
-        thing = ThingFactory.create(Thing::new, response.getJSONObject(0));
-
-        //Did we really receive a listing?
-        assert Thing.Kind.Listing.matches(thing);
-
-        Listing listing = ListingFactory.create(Listing::new, thing.getData());
+        Listing listing = Thing.from(response.getJSONObject(0)).toListing();
 
         //We should've only received a single submission
         //In case no submission exist, the request should've failed earlier with a 404
@@ -160,7 +152,7 @@ public class Subreddit extends SubredditTOP{
         //Did we really receive a submission?
         assert Thing.Kind.Link.matches(thing);
 
-        return LinkFactory.create(Link::new, thing.getData());
+        return thing.toLink();
     }
 
     //----------------------------------------------------------------------------------------------------------------//
@@ -336,12 +328,7 @@ public class Subreddit extends SubredditTOP{
                     subreddit.client.get(args, Endpoint.GET_SUBREDDIT_SEARCH, subreddit.getDisplayName())
             );
 
-            Thing thing = ThingFactory.create(Thing::new, response);
-
-            //We expect a listing containing the result of the search.
-            assert Thing.Kind.Listing.matches(thing);
-
-            Listing listing = ListingFactory.create(Listing::new, thing.getData());
+            Listing listing = Thing.from(response).toListing();
             return Collections.unmodifiableList(listing.getChildren());
         }
 

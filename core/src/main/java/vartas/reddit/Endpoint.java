@@ -21,7 +21,10 @@ public enum Endpoint {
     /**
      * TODO What does it do?
      * @see <a href="https://www.reddit.com/dev/api#GET_api_v1_me_blocked">here</a>
+     * @deprecated This endpoint seems to be no longer supported and throws an 404. Use {@link #GET_PREFS_BLOCKED} if
+     * you want a list of all blocked users.
      */
+    @Deprecated
     GET_ME_BLOCKED("api","v1","me","blocked"),
     /**
      * TODO What does it do?
@@ -75,6 +78,11 @@ public enum Endpoint {
     //                                                                                                                //
     //----------------------------------------------------------------------------------------------------------------//
 
+    /**
+     * Check whether ReCAPTCHAs are needed for API methods
+     * @deprecated Reddit no longer requires captchas and thus this endpoint returns 403
+     */
+    @Deprecated
     GET_NEEDS_CAPTCHA("api","needs_captcha"),
 
     //----------------------------------------------------------------------------------------------------------------//

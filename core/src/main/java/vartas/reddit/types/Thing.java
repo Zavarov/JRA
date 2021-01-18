@@ -27,6 +27,10 @@ import vartas.reddit.Link;
 import vartas.reddit.Subreddit;
 import vartas.reddit.types.$factory.ListingFactory;
 import vartas.reddit.types.$factory.ThingFactory;
+import vartas.reddit.types.$json.JSONKarmaList;
+import vartas.reddit.types.$json.JSONTrophy;
+import vartas.reddit.types.$json.JSONTrophyList;
+import vartas.reddit.types.$json.JSONUserList;
 
 import java.util.Objects;
 
@@ -52,8 +56,8 @@ public class Thing extends ThingTOP {
     }
 
     @Override
-    public JSONObject getData() {
-        return getSource().getJSONObject(DATA);
+    public Object getData() {
+        return getSource().get(DATA);
     }
 
     @Override
@@ -69,7 +73,10 @@ public class Thing extends ThingTOP {
         Subreddit("t5"),
         Award("t6"),
         Listing("Listing"),
-        More("more");
+        More("more"),
+        UserList("UserList"),
+        TrophyList("TrophyList"),
+        KarmaList("KarmaList");
 
         public final String name;
 
@@ -90,23 +97,55 @@ public class Thing extends ThingTOP {
         return ThingFactory.create(Thing::new, node);
     }
 
-    public static Comment toComment(Thing thing){
-        assert Thing.Kind.Comment.matches(thing);
-        return CommentFactory.create(Comment::new, thing.getData());
+    public static JSONObject from(JSONObject source, Kind kind){
+        JSONObject node = new JSONObject();
+        node.put(DATA, source);
+        node.put(KIND, kind.name);
+        return node;
     }
 
-    public static Link toLink(Thing thing){
-        assert Thing.Kind.Link.matches(thing);
-        return LinkFactory.create(Link::new, thing.getData());
+    public KarmaList toKarmaList(){
+        assert Kind.KarmaList.matches(this);
+
+        //While TrophyList and UserList return a JSON Object, KarmaList returns a JSONArray.
+        //We have to wrap this array in an object, to make it compatible with the rest of the program.
+        JSONObject root = new JSONObject();
+        root.put(JSONKarmaList.KEY, getSource().getJSONArray(DATA));
+        return JSONKarmaList.fromJson(new KarmaList(), root);
     }
 
-    public static Subreddit toSubreddit(Thing thing, Client client){
-        assert Kind.Subreddit.matches(thing);
-        return SubredditFactory.create(() -> new Subreddit(client), thing.getData());
+    public TrophyList toTrophyList(){
+        assert Kind.TrophyList.matches(this);
+        return JSONTrophyList.fromJson(new TrophyList(), getSource().getJSONObject(DATA));
     }
 
-    public static Listing toListing(Thing thing){
-        assert Kind.Listing.matches(thing);
-        return ListingFactory.create(Listing::new, thing.getData());
+    public Trophy toTrophy(){
+        assert Kind.Award.matches(this);
+        return JSONTrophy.fromJson(new Trophy(), getSource().getJSONObject(DATA));
+    }
+
+    public UserList toUserList(){
+        assert Kind.UserList.matches(this);
+        return JSONUserList.fromJson(new UserList(), getSource().getJSONObject(DATA));
+    }
+
+    public Comment toComment(){
+        assert Thing.Kind.Comment.matches(this);
+        return CommentFactory.create(Comment::new, getSource().getJSONObject(DATA));
+    }
+
+    public Link toLink(){
+        assert Thing.Kind.Link.matches(this);
+        return LinkFactory.create(Link::new, getSource().getJSONObject(DATA));
+    }
+
+    public Subreddit toSubreddit(Client client){
+        assert Kind.Subreddit.matches(this);
+        return SubredditFactory.create(() -> new Subreddit(client), getSource().getJSONObject(DATA));
+    }
+
+    public Listing toListing(){
+        assert Kind.Listing.matches(this);
+        return ListingFactory.create(Listing::new, getSource().getJSONObject(DATA));
     }
 }
