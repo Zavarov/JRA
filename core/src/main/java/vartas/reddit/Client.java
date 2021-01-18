@@ -47,8 +47,16 @@ public abstract class Client extends ClientTOP{
     @Nonnull
     protected final OkHttpClient http = new OkHttpClient();
 
-    public Client(@Nonnull String platform, @Nonnull String version, @Nonnull String author){
-        setUserAgent(UserAgentFactory.create(platform, getClass().getPackage().getName(), version, author));
+    /**
+     * Creates a new instance.
+     * @param userAgent The user agent attached to every request.
+     * @param id The application id.
+     * @param secret The "password".
+     * @see <a href="https://github.com/reddit-archive/reddit/wiki/OAuth2">here</a>
+     */
+    public Client(@Nonnull UserAgent userAgent, @Nonnull String id, @Nonnull String secret){
+        setUserAgent(userAgent);
+        this.credentials = Base64.getEncoder().encodeToString((id+":"+secret).getBytes(StandardCharsets.UTF_8));
     }
 
     @Override

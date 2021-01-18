@@ -2,7 +2,6 @@ package vartas.reddit.query;
 
 import vartas.reddit.Client;
 import vartas.reddit.Endpoint;
-import vartas.reddit.Subreddit;
 import vartas.reddit.types.Thing;
 
 import javax.annotation.Nonnull;
@@ -11,7 +10,7 @@ import java.util.function.Function;
 public abstract class QuerySort<T, Q extends QuerySort<T,Q>> extends QueryMany<T,Q> {
     /**
      * The time period limiting the age of the things. The age is relative to the time the query is made.
-     * @see Subreddit.Query.TimePeriod
+     * @see Query.TimePeriod
      */
     protected static final String TIME_PERIOD = "t";
 
@@ -21,7 +20,7 @@ public abstract class QuerySort<T, Q extends QuerySort<T,Q>> extends QueryMany<T
     }
 
     public Q setTimePeriod(@Nonnull TimePeriod timePeriod){
-        params.put(TIME_PERIOD, timePeriod);
+        params.put(TIME_PERIOD, timePeriod.key);
         return getRealThis();
     }
 }

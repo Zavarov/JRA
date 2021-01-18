@@ -19,8 +19,6 @@ import vartas.reddit.types.Subreddit.Rules;
 import vartas.reddit.exceptions.Exceptions.HttpException;
 import vartas.reddit.exceptions.Exceptions.RateLimiterException;
 import vartas.reddit.Client.Client.Duration;
-//Bug, should be Client.Subreddit.Query
-import vartas.reddit.Subreddit.Subreddit.Query;
 import vartas.reddit.query.Query.QueryBest;
 import vartas.reddit.query.Query.QueryById;
 import vartas.reddit.query.Query.QueryComments;
@@ -32,6 +30,8 @@ import vartas.reddit.query.Query.QueryRising;
 import vartas.reddit.query.Query.QuerySort;
 import vartas.reddit.query.Query.QueryTop;
 import vartas.reddit.query.Query.QueryRandom;
+import vartas.reddit.query.Query.QuerySearchSubreddit;
+import vartas.reddit.query.Query.QuerySticky;
 
 public classdiagram Client {
     public abstract class Client {
@@ -73,9 +73,9 @@ public classdiagram Client {
 
     public abstract class Subreddit extends SubredditType{
         + abstract Rules getRules() throws IOException, HttpException, RateLimiterException, InterruptedException;
-        + abstract Query getSearch();
         + abstract String getSidebar() throws IOException, HttpException, RateLimiterException, InterruptedException;
-        + abstract Link getSticky(int index) throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract QuerySearchSubreddit getSearch();
+        + abstract QuerySticky getSticky();
         //Listings
         + abstract QueryComments getComments(String article);
         + abstract QueryControversial<Link> getControversialLinks();

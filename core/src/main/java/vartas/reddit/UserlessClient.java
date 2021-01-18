@@ -9,17 +9,27 @@ import vartas.reddit.exceptions.RateLimiterException;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 
+/**
+ * Creates a new instance of the client without user context.<p>
+ * The application can still access subreddits and fetch both links and comments. However, it is not able
+ * to retrieve user-specific information or submit anything.
+ */
+@Nonnull
 public class UserlessClient extends Client{
-
-
+    /**
+     * Creates a new user-less client.
+     * @param userAgent The user agent attached to every request.
+     * @param id The application id.
+     * @param secret The "password".
+     * @see <a href="https://github.com/reddit-archive/reddit/wiki/OAuth2">here</a>
+     */
+    @Nonnull
     public UserlessClient(
-            @Nonnull String platform,
-            @Nonnull String author,
-            @Nonnull String version,
+            @Nonnull UserAgent userAgent,
             @Nonnull String id,
             @Nonnull String secret
     ){
-        super(platform, version, author, id, secret);
+        super(userAgent, id, secret);
     }
 
     //----------------------------------------------------------------------------------------------------------------//
@@ -29,7 +39,7 @@ public class UserlessClient extends Client{
     //----------------------------------------------------------------------------------------------------------------//
 
     @Override
-    public synchronized void login(Duration duration) throws IOException, HttpException, RateLimiterException, InterruptedException {
+    public synchronized void login(@Nonnull Duration duration) throws IOException, HttpException, RateLimiterException, InterruptedException {
         RequestBody body = new FormBody.Builder()
                 .add("grant_type", GrantType.USERLESS.toString())
                 .add("device_id", uuid)

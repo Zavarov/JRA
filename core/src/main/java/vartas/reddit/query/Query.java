@@ -92,17 +92,35 @@ public abstract class Query <T, Q extends Query<T,Q>> {
         }
     }
 
+    /**
+     * Is used to limit the number of requested things by age.
+     */
     public enum TimePeriod{
+        /**
+         * Only requests things made within the last hour.
+         */
         HOUR,
+        /**
+         * Only requests things made within the last day.
+         */
         DAY,
+        /**
+         * Only requests things made within the last week.
+         */
         WEEK,
+        /**
+         * Only requests things made within the last month.
+         */
         MONTH,
+        /**
+         * Only requests things made within the last year.
+         */
         YEAR,
+        /**
+         * Accept all things, no matter their age.
+         */
         ALL;
 
-        @Override
-        public String toString(){
-            return name().toLowerCase(Locale.ENGLISH);
-        }
+        public final String key = name().toLowerCase(Locale.ENGLISH);
     }
 }
