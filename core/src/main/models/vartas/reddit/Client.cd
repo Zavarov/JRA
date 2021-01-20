@@ -95,15 +95,17 @@ public classdiagram Client {
 
     }
 
-    public class Token{
+    public abstract class Token{
         <<key="access_token">>
         - String accessToken;
         <<key="refresh_token">>
         - Optional<String> refreshToken;
         <<key="expires_in">>
-        - int expiresIn;
+        - int lifetime;
         <<key="device_id">>
         - Optional<String> deviceId;
+
+        public abstract boolean isExpired();
     }
 
     public class UserAgent{

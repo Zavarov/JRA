@@ -140,6 +140,10 @@ public abstract class Client extends ClientTOP{
     protected synchronized Response request(Request request) throws IOException, HttpException, InterruptedException, RateLimiterException {
         assert isPresentToken();
 
+        //Make sure that the token is still valid
+        if(orElseThrowToken().isExpired())
+            refresh();
+
         return execute(request);
     }
 
