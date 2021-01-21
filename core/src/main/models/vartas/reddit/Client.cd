@@ -21,7 +21,7 @@ import vartas.reddit.exceptions.Exceptions.RateLimiterException;
 import vartas.reddit.Client.Client.Duration;
 import vartas.reddit.query.Query.QueryBest;
 import vartas.reddit.query.Query.QueryById;
-import vartas.reddit.query.Query.QueryComments;
+import vartas.reddit.query.Query.QueryComment;
 import vartas.reddit.query.Query.QueryControversial;
 import vartas.reddit.query.Query.QueryDuplicates;
 import vartas.reddit.query.Query.QueryHot;
@@ -60,7 +60,7 @@ public classdiagram Client {
         + abstract TrendingSubreddits getTrendingSubreddits() throws IOException, HttpException, InterruptedException;
         + abstract QueryBest<Link> getBestLinks();
         + abstract QueryById getLinksById(String[] names);
-        + abstract QueryComments getComments(String article);
+        + abstract QueryComment getComments(String article);
         + abstract QueryControversial<Link> getControversialLinks();
         + abstract QueryDuplicates getDuplicates(String article);
         + abstract QueryHot<Link> getHotLinks();
@@ -77,7 +77,7 @@ public classdiagram Client {
         + abstract QuerySearchSubreddit getSearch();
         + abstract QuerySticky getSticky();
         //Listings
-        + abstract QueryComments getComments(String article);
+        + abstract QueryComment getComments(String article);
         + abstract QueryControversial<Link> getControversialLinks();
         + abstract QueryHot<Link> getHotLinks();
         + abstract QueryNew<Link> getNewLinks();

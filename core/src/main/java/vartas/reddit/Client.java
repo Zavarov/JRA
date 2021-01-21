@@ -25,25 +25,60 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+@Nonnull
 public abstract class Client extends ClientTOP{
+    /**
+     * The endpoint for requesting an access token.
+     */
     @Nonnull
     protected static final String ACCESS_TOKEN = "https://www.reddit.com/api/v1/access_token";
+    /**
+     * The endpoint for revoking either an access or a refresh token.
+     */
     @Nonnull
     protected static final String REVOKE_TOKEN = "https://www.reddit.com/api/v1/revoke_token";
-    @Nonnull
-    protected static final String HTTPS = "https";
-    @Nonnull
-    protected static final String OAUTH2 = "oauth.reddit.com";
+    /**
+     * The endpoint used for all requests that don't require OAuth2.<p>
+     * Apparently the only endpoint this applies to is {@link Endpoint#GET_API_TRENDING_SUBREDDITS}.
+     */
     @Nonnull
     protected static final String WWW = "www.reddit.com";
+    /**
+     * The protocol used for OAuth requests.
+     */
+    @Nonnull
+    protected static final String HTTPS = "https";
+    /**
+     * The host accepting all OAuth2 requests.
+     */
+    @Nonnull
+    protected static final String OAUTH2 = "oauth.reddit.com";
+    /**
+     * The application credentials is derived from the application id and secret.<p>
+     * More explicitly, it is the base 64 encoding of "&lt;id&gt;:&lt;secret&gt;".
+     */
     @Nonnull
     protected final String credentials;
+    /**
+     * A random UUID used to identify the hardware.
+     */
     @Nonnull
     protected final String uuid = UUID.randomUUID().toString();
+    /**
+     * A rate limiter to handle sudden bursts of request.
+     * Using OAuth2, Reddit only allows us to do up to 60 requests per minute. Violating this rule may get the
+     * application banned.
+     */
     @Nonnull
     protected final TimedSemaphore rateLimiter = new TimedSemaphore(1, TimeUnit.MINUTES, 60);
+    /**
+     * The logger for keeping track of the HTTP exchange between Reddit and application.
+     */
     @Nonnull
     protected final Logger log = LoggerFactory.getLogger(this.getClass());
+    /**
+     * The actual HTTP client performing the requests.
+     */
     @Nonnull
     protected final OkHttpClient http = new OkHttpClient();
 
@@ -51,20 +86,43 @@ public abstract class Client extends ClientTOP{
      * Creates a new instance.
      * @param userAgent The user agent attached to every request.
      * @param id The application id.
-     * @param secret The "password".
+     * @param secret The application "password".
      * @see <a href="https://github.com/reddit-archive/reddit/wiki/OAuth2">here</a>
      */
+    @Nonnull
     public Client(@Nonnull UserAgent userAgent, @Nonnull String id, @Nonnull String secret){
         setUserAgent(userAgent);
         this.credentials = Base64.getEncoder().encodeToString((id+":"+secret).getBytes(StandardCharsets.UTF_8));
     }
 
+
+    /**
+     * Returns a reference to the instance of this class.
+     * @return {@code this}.
+     */
     @Override
+    @Nonnull
     public Client getRealThis() {
         return this;
     }
 
-    protected String buildUrl(String host, Map<?, ?> query, Endpoint endpoint, Object... args){
+    /**
+     * Creates the URL for an {@link Endpoint}. It specifies the address the corresponding request has to be directed
+     * to.
+     * @param host The host address of the URL. Usually {@link #OAUTH2}.
+     * @param query Additional parameter appended to the URL. Those may contain additional information, such as the
+     *              index when requesting stickied posts.
+     * @param endpoint The endpoint targeted by the URL.
+     * @param args Additional arguments for the {@link Endpoint}. E.g. a  {@link Subreddit} name.
+     * @return The qualified address of the {@link Request}.
+     */
+    @Nonnull
+    protected String buildUrl(
+            @Nonnull String host,
+            @Nonnull Map<?, ?> query,
+            @Nonnull Endpoint endpoint,
+            @Nonnull Object... args
+    ){
         HttpUrl.Builder builder = new HttpUrl.Builder()
                 .scheme(HTTPS)
                 .host(host);
@@ -84,7 +142,23 @@ public abstract class Client extends ClientTOP{
     //                                                                                                                //
     //----------------------------------------------------------------------------------------------------------------//
 
-    private Request buildGet(String host, Map<?, ?> query, Endpoint endpoint, Object... args){
+
+    /**
+     * Creates a GET {@link Request} for the corresponding {@link Endpoint}.
+     * @param host The host address of the URL. Usually {@link #OAUTH2}.
+     * @param query Additional parameter appended to the URL. Those may contain additional information, such as the
+     *              index when requesting stickied posts.
+     * @param endpoint The endpoint targeted by the URL.
+     * @param args Additional arguments for the {@link Endpoint}. E.g. a  {@link Subreddit} name.
+     * @return A GET {@link Request} for the specified {@link Endpoint}.
+     */
+    @Nonnull
+    private Request buildGet(
+            @Nonnull String host,
+            @Nonnull Map<?, ?> query,
+            @Nonnull Endpoint endpoint,
+            @Nonnull Object... args
+    ){
         assert isPresentToken();
 
         String url = buildUrl(host, query, endpoint, args);
@@ -99,19 +173,71 @@ public abstract class Client extends ClientTOP{
         return builder.get().build();
     }
 
-    public String get(Endpoint endpoint, Object... args) throws InterruptedException, IOException, HttpException {
+    /**
+     * Executes a GET {@link Request}.
+     * @param endpoint The endpoint targeted by the URL.
+     * @param args Additional arguments for the {@link Endpoint}. E.g. a  {@link Subreddit} name.
+     * @return The content of the {@link Response} body.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     */
+    @Nonnull
+    public String get(@Nonnull Endpoint endpoint, @Nonnull Object... args) throws InterruptedException, IOException, HttpException {
         return get(OAUTH2, endpoint, args);
     }
 
-    public String get(String host, Endpoint endpoint, Object... args) throws InterruptedException, IOException, HttpException {
+    /**
+     * Executes a GET {@link Request}.
+     * @param host The host address of the URL. Usually {@link #OAUTH2}.
+     *              index when requesting stickied posts.
+     * @param endpoint The endpoint targeted by the URL.
+     * @param args Additional arguments for the {@link Endpoint}. E.g. a  {@link Subreddit} name.
+     * @return The content of the {@link Response} body.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     */
+    @Nonnull
+    public String get(@Nonnull String host, @Nonnull Endpoint endpoint, @Nonnull Object... args) throws InterruptedException, IOException, HttpException {
         return get(host, Collections.emptyMap(), endpoint, args);
     }
 
-    public String get(Map<?, ?> query, Endpoint endpoint, Object... args) throws InterruptedException, IOException, HttpException {
+    /**
+     * Executes a GET {@link Request}.
+     * @param query Additional parameter appended to the URL. Those may contain additional information, such as the
+     *              index when requesting stickied posts.
+     * @param endpoint The endpoint targeted by the URL.
+     * @param args Additional arguments for the {@link Endpoint}. E.g. a  {@link Subreddit} name.
+     * @return The content of the {@link Response} body.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     */
+    @Nonnull
+    public String get(@Nonnull Map<?, ?> query, @Nonnull Endpoint endpoint, @Nonnull Object... args) throws InterruptedException, IOException, HttpException {
         return get(OAUTH2, query, endpoint, args);
     }
 
-    public String get(String host, Map<?, ?> query, Endpoint endpoint, Object... args) throws InterruptedException, IOException, HttpException {
+    /**
+     * Executes a GET {@link Request}.
+     * @param host The host address of the URL. Usually {@link #OAUTH2}.
+     * @param query Additional parameter appended to the URL. Those may contain additional information, such as the
+     *              index when requesting stickied posts.
+     * @param endpoint The endpoint targeted by the URL.
+     * @param args Additional arguments for the {@link Endpoint}. E.g. a  {@link Subreddit} name.
+     * @return The content of the {@link Response} body.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     */
+    @Nonnull
+    public String get(
+            @Nonnull String host,
+            @Nonnull Map<?, ?> query,
+            @Nonnull Endpoint endpoint,
+            @Nonnull Object... args
+    ) throws InterruptedException, IOException, HttpException {
         Request request = buildGet(host, query, endpoint, args);
         Response response = request(request);
         ResponseBody body = response.body();
@@ -137,6 +263,16 @@ public abstract class Client extends ClientTOP{
     //                                                                                                                //
     //----------------------------------------------------------------------------------------------------------------//
 
+    /**
+     * This function has two purposes. The primary purpose is to execute the provided {@link Request}. However it also
+     * checks if the current access token is still valid. In case it expired, a new one will be fetched automatically.
+     * @param request The request transmitted to Reddit.
+     * @return The HTTP {@link Response} corresponding to the {@link Request}.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     * @throws RateLimiterException If too many requests are performed within short succession.
+     */
     protected synchronized Response request(Request request) throws IOException, HttpException, InterruptedException, RateLimiterException {
         assert isPresentToken();
 
@@ -147,7 +283,19 @@ public abstract class Client extends ClientTOP{
         return execute(request);
     }
 
-    protected Response execute(Request request) throws InterruptedException, IOException, HttpException, RateLimiterException {
+    /**
+     * This method serves three purposes. The primary purpose is to execute the provided {@link Request}. In addition,
+     * it also makes sure that all requests are made within the rate limit and, if necessary, waits until the next
+     * {@link Request} can be made.<p>
+     * It also checks if the {@link Request} was accepted and, upon error, throws the corresponding exception.
+     * @param request The request transmitted to Reddit.
+     * @return The HTTP {@link Response} corresponding to the {@link Request}.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     * @throws RateLimiterException If too many requests are performed within short succession.
+     */
+    protected synchronized Response execute(Request request) throws InterruptedException, IOException, HttpException, RateLimiterException {
         //Wait if we're making too many requests at once
         rateLimiter.acquire();
 
@@ -156,7 +304,6 @@ public abstract class Client extends ClientTOP{
         log.debug("<-- {}", response);
 
         if(!response.isSuccessful()){
-            System.out.println(response.code());
             switch(response.code()){
                 //Not Found
                 case 404:
@@ -178,6 +325,12 @@ public abstract class Client extends ClientTOP{
     //                                                                                                                //
     //----------------------------------------------------------------------------------------------------------------//
 
+    /**
+     * Requests a new access and refresh token.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     */
     @Override
     public void login() throws InterruptedException, IOException, HttpException {
         login(Duration.PERMANENT);
@@ -189,6 +342,17 @@ public abstract class Client extends ClientTOP{
     //                                                                                                                //
     //----------------------------------------------------------------------------------------------------------------//
 
+
+    /**
+     * Invalidates the access token and -if present- the refresh token. It is highly recommended to always invalidate
+     * tokens once the they are no longer needed. Not only prevents the token to be misused, in case it gets leaked on
+     * accident, but also minimizes the overhead since Reddit can safely delete the tokens from their database.
+     * @return The HTTP {@link Response} corresponding to the {@link Request}.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     * @throws RateLimiterException If too many requests are performed within short succession.
+     */
     @Override
     public synchronized void logout() throws IOException, HttpException, InterruptedException, RateLimiterException {
         assert isPresentToken();
@@ -198,6 +362,13 @@ public abstract class Client extends ClientTOP{
         setToken(Optional.empty());
     }
 
+    /**
+     * A helper method invalidating the refresh token, if present.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     * @throws RateLimiterException If too many requests are performed within short succession.
+     */
     private void revokeRefreshToken() throws IOException, HttpException, InterruptedException, RateLimiterException {
         assert isPresentToken();
 
@@ -206,12 +377,19 @@ public abstract class Client extends ClientTOP{
 
         RequestBody body = new FormBody.Builder()
                 .add("token", orElseThrowToken().orElseThrowRefreshToken())
-                .add("token_type_hint", TokenType.REFRESH_TOKEN.toString())
+                .add("token_type_hint", TokenType.REFRESH_TOKEN.name)
                 .build();
 
         request(getAuthentication(REVOKE_TOKEN, body)).close();
     }
 
+    /**
+     * A helper method invalidating the access token.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     * @throws RateLimiterException If too many requests are performed within short succession.
+     */
     private void revokeAccessToken() throws IOException, HttpException, InterruptedException, RateLimiterException {
         assert isPresentToken();
 
@@ -229,6 +407,13 @@ public abstract class Client extends ClientTOP{
     //                                                                                                                //
     //----------------------------------------------------------------------------------------------------------------//
 
+    /**
+     * Requests a new access token.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     * @throws RateLimiterException If too many requests are performed within short succession.
+     */
     @Override
     protected synchronized void refresh() throws IOException, HttpException, RateLimiterException, InterruptedException {
         assert isPresentToken() && orElseThrowToken().isPresentRefreshToken();
@@ -355,8 +540,8 @@ public abstract class Client extends ClientTOP{
     }
 
     @Override
-    public QueryComments getComments(String article) {
-        return new QueryComments(this, Endpoint.GET_COMMENTS, article);
+    public QueryComment getComments(String article) {
+        return new QueryComment(this, Endpoint.GET_COMMENTS, article);
     }
 
     @Override
@@ -474,18 +659,35 @@ public abstract class Client extends ClientTOP{
         }
     }
 
+    /**
+     * The token type is used to inform Reddit about the kind of token that is transmitted. It is required when
+     * refreshing the access token or invalidating already existing tokens.
+     */
     public enum TokenType {
+        /**
+         * The access token is required to authenticate the application when using the OAuth2 endpoints.
+         */
+        @Nonnull
         ACCESS_TOKEN("access_token"),
+        /**
+         * The refresh token is required when requesting a new access token, once the previous one expired.
+         */
+        @Nonnull
         REFRESH_TOKEN("refresh_token");
 
-        private final String value;
-        TokenType(String value){
-            this.value = value;
-        }
+        /**
+         * The type name.
+         */
+        @Nonnull
+        public final String name;
 
-        @Override
-        public String toString(){
-            return value;
+        /**
+         * Assigns each token type a name. The name matches the one used by Reddit.
+         * @param name The type name.
+         */
+        @Nonnull
+        TokenType(@Nonnull String name){
+            this.name = name;
         }
     }
 
@@ -493,132 +695,169 @@ public abstract class Client extends ClientTOP{
      * A list containing all supported Reddit scopes.
      * See https://www.reddit.com/api/v1/scopes for more.
      */
+    @Nonnull
     public enum Scope {
         /**
          * Spend my reddit gold creddits on giving gold to other users.
          */
+        @Nonnull
         CREDDITS("creddits"),
         /**
          * Add/remove users to approved user lists and ban/unban or mute/unmute users from subreddits I moderate.
          */
+        @Nonnull
         MODCONTRIBUTORS("modcontributors"),
         /**
          * Access and manage modmail via mod.reddit.com.
          */
+        @Nonnull
         MODMAIL("modmail"),
         /**
          * Manage the configuration, sidebar, and CSS of subreddits I moderate.
          */
+        @Nonnull
         MODCONFIG("modconfig"),
         /**
          * Manage my subreddit subscriptions. Manage \"friends\" - users whose content I follow.
          */
+        @Nonnull
         SUBSCRIBE("subscribe"),
         /**
          * Edit structured styles for a subreddit I moderate.
          */
+        @Nonnull
         STRUCTUREDSTYLES("structuredstyles"),
         /**
          * Submit and change my votes on comments and submissions.
          */
+        @Nonnull
         VOTE("vote"),
         /**
          * Edit wiki pages on my behalf.
          */
+        @Nonnull
         WIKIEDIT("wikiedit"),
         /**
          * Access the list of subreddits I moderate, contribute to, and subscribe to.
          */
+        @Nonnull
         MYSUBREDDITS("mysubreddits"),
         /**
          * Submit links and comments from my account.
          */
+        @Nonnull
         SUBMIT("submit"),
         /**
          * Access the moderation log in subreddits I moderate.
          */
+        @Nonnull
         MODLOG("modlog"),
         /**
          * Approve, remove, mark nsfw, and distinguish content in subreddits I moderate.
          */
+        @Nonnull
         MODPOST("modpost"),
         /**
          * Manage and assign flair in subreddits I moderate.
          */
+        @Nonnull
         MODFLAIR("modflair"),
         /**
          * Save and unsave comments and submissions.
          */
+        @Nonnull
         SAVE("save"),
         /**
          * Invite or remove other moderators from subreddits I moderate.
          */
+        @Nonnull
         MODOTHERS("modothers"),
         /**
          * Access posts and comments through my account.
          */
+        @Nonnull
         READ("read"),
         /**
          * Access my inbox and send private messages to other users.
          */
+        @Nonnull
         PRIVATEMESSAGES("privatemessages"),
         /**
          * Report content for rules violations. Hide &amp; show individual submissions.
          */
+        @Nonnull
         REPORT("report"),
         /**
          * Access my reddit username and signup date.
          */
+        @Nonnull
         IDENTITY("identity"),
         /**
          * Manage settings and contributors of live threads I contribute to.
          */
+        @Nonnull
         LIVEMANAGE("livemanage"),
         /**
          * Update preferences and related account information. Will not have access to your email or password.
          */
+        @Nonnull
         ACCOUNT("account"),
         /**
          * Access traffic stats in subreddits I moderate.
          */
+        @Nonnull
         MODTRAFFIC("modtraffic"),
         /**
          * Read wiki pages through my account.
          */
+        @Nonnull
         WIKIREAD("wikiread"),
         /**
          * Edit and delete my comments and submissions.
          */
+        @Nonnull
         EDIT("edit"),
         /**
          * Change editors and visibility of wiki pages in subreddits I moderate.
          */
+        @Nonnull
         MODWIKI("modwiki"),
         /**
          * Accept invitations to moderate a subreddit. Remove myself as a moderator or contributor of subreddits I moderate
          * or contribute to.
          */
+        @Nonnull
         MODSELF("modself"),
         /**
          * Access my voting history and comments or submissions I've saved or hidden.
          */
+        @Nonnull
         HISTORY("history"),
         /**
          * Select my subreddit flair. Change link flair on my submissions.
          */
+        @Nonnull
         FLAIR("flair"),
 
+        /**
+         * A wildcard indicating that all scopes are used.
+         */
+        @Nonnull
         ANY("*");
 
-        private final String name;
+        /**
+         * The scope name.
+         */
+        @Nonnull
+        public final String name;
 
-        Scope(String name){
+        /**
+         * Assigns each scope a name. The name matches the one used by Reddit.
+         * @param name The name of the scope.
+         */
+        @Nonnull
+        Scope(@Nonnull String name){
             this.name = name;
-        }
-
-        @Override
-        public String toString(){
-            return name;
         }
     }
 }

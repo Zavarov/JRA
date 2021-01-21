@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A collection of all Reddit Endpoints usable by this application.
+ */
 public enum Endpoint {
 
     //----------------------------------------------------------------------------------------------------------------//
@@ -461,7 +464,7 @@ public enum Endpoint {
      */
     GET_USER_ABOUT("user","{username}","about");
 
-    private List<String> path;
+    private final List<String> path;
 
     Endpoint(String... path){
         this.path = Arrays.asList(path);

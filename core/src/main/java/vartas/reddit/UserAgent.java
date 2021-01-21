@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 @Nonnull
 public class UserAgent extends UserAgentTOP{
     /**
-     * Returns a reference to the  instance of this class.
+     * Returns a reference to the instance of this class.
      * @return {@code this}.
      */
     @Override

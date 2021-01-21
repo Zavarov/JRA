@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class QueryComments extends Query<Pair<Link,List<Thing>>, QueryComments> {
+public class QueryComment extends Query<Pair<Link,List<Thing>>, QueryComment> {
     private static final String COMMENT = "comment";
     private static final String CONTEXT = "context";
     private static final String DEPTH = "depth";
@@ -29,67 +29,67 @@ public class QueryComments extends Query<Pair<Link,List<Thing>>, QueryComments> 
     private static final String THREADED = "threaded";
     private static final String TRUNCATE = "truncate";
 
-    public QueryComments(Client client, Endpoint endpoint, Object... args) {
+    public QueryComment(Client client, Endpoint endpoint, Object... args) {
         super(client, endpoint, args);
     }
 
     @Override
-    protected QueryComments getRealThis() {
+    protected QueryComment getRealThis() {
         return this;
     }
 
-    public QueryComments setComment(@Nonnull String comment){
+    public QueryComment setComment(@Nonnull String comment){
         params.put(COMMENT, comment);
         return this;
     }
 
-    public QueryComments setContext(int context){
+    public QueryComment setContext(int context){
         assert context >= 0 && context <= 8;
         params.put(CONTEXT, context);
         return this;
     }
 
-    public QueryComments setDepth(int depth){
+    public QueryComment setDepth(int depth){
         params.put(DEPTH, depth);
         return this;
     }
 
-    public QueryComments setLimit(int limit){
+    public QueryComment setLimit(int limit){
         params.put(LIMIT, limit);
         return this;
     }
 
-    public QueryComments setShowEdits(boolean state){
+    public QueryComment setShowEdits(boolean state){
         params.put(SHOW_EDITS, state);
         return this;
     }
 
-    public QueryComments setShowMedia(boolean state){
+    public QueryComment setShowMedia(boolean state){
         params.put(SHOW_MEDIA, state);
         return this;
     }
 
-    public QueryComments setShowMore(boolean state){
+    public QueryComment setShowMore(boolean state){
         params.put(SHOW_MORE, state);
         return this;
     }
 
-    public QueryComments setSort(@Nonnull Sort sort){
+    public QueryComment setSort(@Nonnull Sort sort){
         params.put(SORT, sort);
         return this;
     }
 
-    public QueryComments setExpandSubreddit(boolean state){
+    public QueryComment setExpandSubreddit(boolean state){
         params.put(EXPAND_SUBREDDITS, state);
         return this;
     }
 
-    public QueryComments setThreaded(boolean state){
+    public QueryComment setThreaded(boolean state){
         params.put(THREADED, state);
         return this;
     }
 
-    public QueryComments setTruncate(int amount){
+    public QueryComment setTruncate(int amount){
         assert amount >= 0 && amount <= 50;
         params.put(TRUNCATE, amount);
         return this;

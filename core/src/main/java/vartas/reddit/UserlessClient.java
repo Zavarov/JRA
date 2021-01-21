@@ -20,7 +20,7 @@ public class UserlessClient extends Client{
      * Creates a new user-less client.
      * @param userAgent The user agent attached to every request.
      * @param id The application id.
-     * @param secret The "password".
+     * @param secret The application "password".
      * @see <a href="https://github.com/reddit-archive/reddit/wiki/OAuth2">here</a>
      */
     @Nonnull
@@ -38,6 +38,16 @@ public class UserlessClient extends Client{
     //                                                                                                                //
     //----------------------------------------------------------------------------------------------------------------//
 
+    /**
+     * Requests a new access token.<p>
+     * Depending on the value of {@code duration}, Reddit will also return a refresh token with which the client is able
+     * to retrieve a new access token once the old one expired.
+     * @param duration The lifetime of the token.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     * @throws RateLimiterException If too many requests are made within a short amount of time.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     */
     @Override
     public synchronized void login(@Nonnull Duration duration) throws IOException, HttpException, RateLimiterException, InterruptedException {
         RequestBody body = new FormBody.Builder()
@@ -49,6 +59,7 @@ public class UserlessClient extends Client{
         Request request = getAuthentication(ACCESS_TOKEN, body);
         //Call execute directly to avoid checking the non-existent token for validity
         Response response = execute(request);
+
         ResponseBody data = response.body();
 
         //Call.execute() supposedly always returns a non-null response with non-null body
