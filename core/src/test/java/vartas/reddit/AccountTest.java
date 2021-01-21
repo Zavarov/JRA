@@ -67,7 +67,9 @@ public class AccountTest extends AbstractTest{
 
     @Test
     public void testGetPreferencesMessaging() throws InterruptedException, IOException, HttpException {
-        client.getPreferencesMessaging();
+        Messaging messaging = client.getPreferencesMessaging();
+        messaging.getBlocked().forEach(AbstractTest::check);
+        messaging.getTrusted().forEach(AbstractTest::check);
     }
 
     @Test

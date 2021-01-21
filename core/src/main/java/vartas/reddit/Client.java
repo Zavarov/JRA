@@ -7,6 +7,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vartas.reddit.$factory.MessagingFactory;
+import vartas.reddit.$json.JSONPreferences;
+import vartas.reddit.$json.JSONSelfUser;
 import vartas.reddit.$json.JSONToken;
 import vartas.reddit.exceptions.$factory.HttpExceptionFactory;
 import vartas.reddit.exceptions.$factory.NotFoundExceptionFactory;
@@ -445,9 +448,8 @@ public abstract class Client extends ClientTOP{
     //----------------------------------------------------------------------------------------------------------------//
 
     @Override
-    public void getMe() throws InterruptedException, IOException, HttpException {
-        JSONObject response = new JSONObject(get(Endpoint.GET_ME));
-        System.out.println(response.toString(2));
+    public SelfUser getMe() throws InterruptedException, IOException, HttpException {
+        return JSONSelfUser.fromJson(new SelfUser(), new JSONObject(get(Endpoint.GET_ME)));
     }
 
     @Override
@@ -467,9 +469,8 @@ public abstract class Client extends ClientTOP{
     }
 
     @Override
-    public void getPreferences() throws InterruptedException, IOException, HttpException {
-        JSONObject response = new JSONObject(get(Endpoint.GET_ME_PREFS));
-        System.out.println(response.toString(2));
+    public Preferences getPreferences() throws InterruptedException, IOException, HttpException {
+        return JSONPreferences.fromJson(new Preferences(), new JSONObject(get(Endpoint.GET_ME_PREFS)));
     }
 
     @Override
@@ -484,14 +485,31 @@ public abstract class Client extends ClientTOP{
 
     @Override
     public List<User> getPreferencesFriends() throws InterruptedException, IOException, HttpException {
-        System.out.println(new JSONArray(get(Endpoint.GET_PREFS_FRIENDS)));
-        return Thing.from(new JSONObject(get(Endpoint.GET_PREFS_FRIENDS))).toUserList().getData();
+        JSONArray response = new JSONArray(get(Endpoint.GET_PREFS_FRIENDS));
+
+        //I think that's a relic from when /prefs/friends/ used to return both friends and blocked users
+        //I.e. The first entry contains all friends
+        //And the second entry should always be empty.
+        assert response.length() == 2;
+
+        List<User> friends = Thing.from(response.getJSONObject(0)).toUserList().getData();
+        List<User> blocked = Thing.from(response.getJSONObject(1)).toUserList().getData();
+
+        assert blocked.isEmpty();
+
+        return friends;
     }
 
     @Override
-    public void getPreferencesMessaging() throws InterruptedException, IOException, HttpException {
+    public Messaging getPreferencesMessaging() throws InterruptedException, IOException, HttpException {
         JSONArray response = new JSONArray(get(Endpoint.GET_PREFS_MESSAGING));
-        System.out.println(response.toString(2));
+
+        assert response.length() == 2;
+
+        List<User> blocked = Thing.from(response.getJSONObject(0)).toUserList().getData();
+        List<User> trusted = Thing.from(response.getJSONObject(1)).toUserList().getData();
+
+        return MessagingFactory.create(blocked, trusted);
     }
 
     @Override
