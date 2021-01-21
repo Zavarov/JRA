@@ -20,7 +20,7 @@ public class QuerySticky extends Query<Optional<Pair<Link, List<Thing>>>, QueryS
     protected static final String INDEX = "num";
 
     public QuerySticky(Client client, String subreddit) {
-        super(client, Endpoint.GET_SUBREDDIT_SEARCH, subreddit);
+        super(client, Endpoint.GET_SUBREDDIT_ABOUT_STICKY, subreddit);
     }
 
     @Override

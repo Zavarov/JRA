@@ -35,6 +35,11 @@ public class QuerySearchSubreddit extends QuerySort<Thing, QuerySearchSubreddit>
      */
     protected static final String RESTRICT_SUBREDDIT = "restrict_sr";
     /**
+     * Specifies the order in which the results are listed.
+     * Default is {@link Sort#NEW}
+     */
+    protected static final String SORT = "sort";
+    /**
      * A list of result types.
      * @see Type
      */
@@ -42,6 +47,7 @@ public class QuerySearchSubreddit extends QuerySort<Thing, QuerySearchSubreddit>
 
     public QuerySearchSubreddit(Client client, String subreddit) {
         super(Function.identity(), client, Endpoint.GET_SUBREDDIT_SEARCH, subreddit);
+        params.put(SORT, Sort.NEW);
         params.put(RESTRICT_SUBREDDIT, true);
         params.put(INCLUDE_FACETS, false);
     }
@@ -75,6 +81,11 @@ public class QuerySearchSubreddit extends QuerySort<Thing, QuerySearchSubreddit>
 
     public QuerySearchSubreddit setTypes(@Nonnull Type... types){
         params.put(TYPE, Joiner.on(",").join(types));
+        return this;
+    }
+
+    public QuerySearchSubreddit setSort(@Nonnull Sort sort){
+        params.put(SORT, sort);
         return this;
     }
 

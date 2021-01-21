@@ -3,6 +3,7 @@ package vartas.reddit;
 import org.assertj.core.api.Condition;
 import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
+import vartas.reddit.$factory.UserAgentFactory;
 import vartas.reddit.types.Karma;
 import vartas.reddit.types.Thing;
 import vartas.reddit.types.Trophy;
@@ -37,8 +38,9 @@ public class AbstractTest {
         String secret = config.getString("secret");
         String account = config.getString("account");
         String password = config.getString("password");
+        UserAgent userAgent = UserAgentFactory.create(platform, AbstractTest.class.getPackageName(), version, author);
 
-        return new ScriptClient(account,password,platform,author,version,id,secret);
+        return new ScriptClient(userAgent, id, secret, account, password);
     }
 
     protected static Client getUserless(String version) throws IOException {
@@ -48,8 +50,11 @@ public class AbstractTest {
         String author = config.getString("name");
         String id = config.getString("id");
         String secret = config.getString("secret");
+        UserAgent userAgent = UserAgentFactory.create(platform, AbstractTest.class.getPackageName(), version, author);
 
-        return new UserlessClient(platform,author,version,id,secret);
+        System.out.println(userAgent);
+
+        return new UserlessClient(userAgent, id, secret);
     }
 
     protected static void check(Thing thing){

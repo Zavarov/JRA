@@ -4,9 +4,11 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import vartas.reddit.$factory.UserAgentFactory;
 import vartas.reddit.exceptions.HttpException;
 import vartas.reddit.exceptions.NotFoundException;
 import vartas.reddit.exceptions.RateLimiterException;
+import vartas.reddit.query.QuerySearchSubreddit;
 import vartas.reddit.types.Rules;
 
 import java.io.IOException;
@@ -29,8 +31,9 @@ public class SubredditTest {
         String author = config.getString("name");
         String id = config.getString("id");
         String secret = config.getString("secret");
+        UserAgent userAgent = UserAgentFactory.create(platform, AbstractTest.class.getPackageName(), version, author);
 
-        client = new UserlessClient(platform,author,version,id,secret);
+        client = new UserlessClient(userAgent, id, secret);
         client.login(Client.Duration.TEMPORARY);
 
 
@@ -87,11 +90,11 @@ public class SubredditTest {
                 .setLimit(25)
                 .setQuery("Snoo")
                 .restrictSubreddit(true)
-                .show("all")
-                .setSort(Subreddit.Query.Sort.NEW)
-                .expandSubreddits(false)
-                .setTimePeriod(Subreddit.Query.TimePeriod.ALL)
-                .setTypes(Subreddit.Query.Type.LINK)
+                .setShow("all")
+                .setSort(QuerySearchSubreddit.Sort.NEW)
+                .setExpandSubreddits(false)
+                .setTimePeriod(QuerySearchSubreddit.TimePeriod.ALL)
+                .setTypes(QuerySearchSubreddit.Type.LINK)
                 .query();
     }
 
@@ -104,7 +107,7 @@ public class SubredditTest {
     @Test
     public void testGetSticky() throws InterruptedException, IOException, HttpException {
         try {
-            redditdev.getSticky(1);
+            redditdev.getSticky().setIndex(1).query();
         }catch(NotFoundException ignored){}
     }
 }

@@ -347,7 +347,6 @@ public abstract class Client extends ClientTOP{
      * Invalidates the access token and -if present- the refresh token. It is highly recommended to always invalidate
      * tokens once the they are no longer needed. Not only prevents the token to be misused, in case it gets leaked on
      * accident, but also minimizes the overhead since Reddit can safely delete the tokens from their database.
-     * @return The HTTP {@link Response} corresponding to the {@link Request}.
      * @throws InterruptedException If the query got interrupted while waiting to be executed.
      * @throws IOException If an exception occurred during the request.
      * @throws HttpException If the request got rejected by the server.
