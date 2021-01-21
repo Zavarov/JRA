@@ -564,79 +564,9 @@ public classdiagram Types {
         + abstract boolean hasSubscribed();
     }
 
-    public abstract class Rules extends JsonType{
-        + abstract List<Rule> getRules();
-        + abstract List<String> getSiteRules();
-        + abstract List<NextStepReason> getSiteRulesFlow();
-    }
-
-    public abstract class Rule extends JsonType{
-        + abstract OffsetDateTime getCreatedUtc();
-        + abstract String getDescription();
-        + abstract String getDescriptionHtml();
-        + abstract String getKind();
-        + abstract int getPriority();
-        + abstract String getShortName();
-        + abstract String getViolationReason();
-    }
-
     public abstract class TrendingSubreddits extends JsonType{
         + abstract int getCommentCount();
         + abstract String getCommentUrl();
         + abstract List<String> getSubredditNames();
-    }
-
-    public class User{
-        <<key="date">>
-        OffsetDateTime date;
-        <<key="name">>
-        String name;
-        <<key="rel_id">>
-        String relativeId;
-        <<key="id">>
-        String id;
-    }
-
-    public class UserList{
-        <<key="data">>
-        - List<User> data;
-    }
-
-    public class Trophy{
-        <<key="icon_70">>
-        - String icon70;
-        <<key="granted_at">>
-        - Optional<OffsetDateTime> grantedAt;
-        <<key="name">>
-        - String name;
-        <<key="description">>
-        - Optional<String> description;
-        <<key="id">>
-        - Optional<String> id;
-        <<key="url">>
-        - Optional<String> url;
-        <<key="icon_40">>
-        - String icon40;
-        <<key="award_id">>
-        - Optional<String> awardId;
-    }
-
-    public class TrophyList{
-        <<key="data">>
-        - List<Trophy> data;
-    }
-
-    public class Karma{
-        <<key="comment_karma">>
-        - int commentKarma;
-        <<key="link_karma">>
-        - int linkKarma;
-        <<key="sr">>
-        - String subreddit;
-    }
-
-    public class KarmaList{
-        <<key="data">>
-        - List<Karma> data;
     }
 }

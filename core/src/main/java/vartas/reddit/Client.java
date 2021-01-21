@@ -20,10 +20,7 @@ import vartas.reddit.query.listings.*;
 import vartas.reddit.query.search.QuerySearch;
 import vartas.reddit.types.$factory.ThingFactory;
 import vartas.reddit.types.$factory.TrendingSubredditsFactory;
-import vartas.reddit.types.Thing;
-import vartas.reddit.types.TrendingSubreddits;
-import vartas.reddit.types.Trophy;
-import vartas.reddit.types.User;
+import vartas.reddit.types.*;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;

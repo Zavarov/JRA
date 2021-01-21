@@ -30,17 +30,9 @@
 
     <properties>
         <!-- .. Generator Arguments ................................................................................ -->
-        <generator.main>vartas.monticore.cd4code.Main</generator.main>
-        <generator.models.path>${project.build.directory}/models-resources</generator.models.path>
-        <generator.local-models.path>${project.basedir}/src/main/models</generator.local-models.path>
-        <generator.templates.path>${project.build.directory}/template-resources</generator.templates.path>
-        <generator.local-templates.path>${project.basedir}/src/main/resources/templates</generator.local-templates.path>
-        <generator.sources.directory>${project.basedir}/src/main/java/</generator.sources.directory>
+        <generator.main>vartas.monticore.cd4code.SimpleMain</generator.main>
+        <generator.config>${project.basedir}/src/main/resources/cd4code.json</generator.config>
         <generator.output.directory>${project.basedir}/target/generated-sources/</generator.output.directory>
-        <client.cd>vartas.reddit.Client</client.cd>
-        <types.cd>vartas.reddit.types.Types</types.cd>
-        <subreddit.cd>vartas.reddit.types.Subreddit</subreddit.cd>
-        <exceptions.cd>vartas.reddit.exceptions.Exceptions</exceptions.cd>
     </properties>
 
     <dependencies>
@@ -67,7 +59,6 @@
                         </goals>
                         <phase>initialize</phase>
                         <configuration>
-                            <outputDirectory>${generator.templates.path}</outputDirectory>
                             <classifier>${templates.classifier}</classifier>
                             <includeGroupIds>vartas.monticore-commons</includeGroupIds>
                             <includeArtifactIds>cd4code</includeArtifactIds>
@@ -81,7 +72,6 @@
                         </goals>
                         <phase>initialize</phase>
                         <configuration>
-                            <outputDirectory>${generator.models.path}</outputDirectory>
                             <classifier>${models.classifier}</classifier>
                             <includeGroupIds>vartas.monticore-commons</includeGroupIds>
                             <includeArtifactIds>cd4code</includeArtifactIds>
@@ -108,13 +98,8 @@
                             <includePluginDependencies>true</includePluginDependencies>
                             <mainClass>${generator.main}</mainClass>
                             <arguments>
-                                <argument>${generator.models.path}</argument>
-                                <argument>${generator.local-models.path}</argument>
-                                <argument>${generator.templates.path}</argument>
-                                <argument>${generator.local-templates.path}</argument>
-                                <argument>${generator.sources.directory}</argument>
-                                <argument>${generator.output.directory}</argument>
-                                <argument>${client.cd}</argument>
+                                <argument>${generator.config}</argument>
+                                <argument>vartas.reddit.Client</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -130,35 +115,12 @@
                             <includePluginDependencies>true</includePluginDependencies>
                             <mainClass>${generator.main}</mainClass>
                             <arguments>
-                                <argument>${generator.models.path}</argument>
-                                <argument>${generator.local-models.path}</argument>
-                                <argument>${generator.templates.path}</argument>
-                                <argument>${generator.local-templates.path}</argument>
-                                <argument>${generator.sources.directory}</argument>
-                                <argument>${generator.output.directory}</argument>
-                                <argument>${types.cd}</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <!-- Generate subreddit types -->
-                    <execution>
-                        <id>subreddit</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <includeProjectDependencies>false</includeProjectDependencies>
-                            <includePluginDependencies>true</includePluginDependencies>
-                            <mainClass>${generator.main}</mainClass>
-                            <arguments>
-                                <argument>${generator.models.path}</argument>
-                                <argument>${generator.local-models.path}</argument>
-                                <argument>${generator.templates.path}</argument>
-                                <argument>${generator.local-templates.path}</argument>
-                                <argument>${generator.sources.directory}</argument>
-                                <argument>${generator.output.directory}</argument>
-                                <argument>${subreddit.cd}</argument>
+                                <argument>${generator.config}</argument>
+                                <argument>vartas.reddit.types.Karma</argument>
+                                <argument>vartas.reddit.types.Subreddit</argument>
+                                <argument>vartas.reddit.types.Trophy</argument>
+                                <argument>vartas.reddit.types.Types</argument>
+                                <argument>vartas.reddit.types.User</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -174,13 +136,8 @@
                             <includePluginDependencies>true</includePluginDependencies>
                             <mainClass>${generator.main}</mainClass>
                             <arguments>
-                                <argument>${generator.models.path}</argument>
-                                <argument>${generator.local-models.path}</argument>
-                                <argument>${generator.templates.path}</argument>
-                                <argument>${generator.local-templates.path}</argument>
-                                <argument>${generator.sources.directory}</argument>
-                                <argument>${generator.output.directory}</argument>
-                                <argument>${exceptions.cd}</argument>
+                                <argument>${generator.config}</argument>
+                                <argument>vartas.reddit.exceptions.Exceptions</argument>
                             </arguments>
                         </configuration>
                     </execution>
