@@ -77,7 +77,7 @@ public classdiagram Client {
     public abstract class Subreddit extends SubredditType{
         + abstract Rules getRules() throws IOException, HttpException, RateLimiterException, InterruptedException;
         + abstract String getSidebar() throws IOException, HttpException, RateLimiterException, InterruptedException;
-        + abstract QuerySearchSubreddit getSearch();
+        + abstract QuerySearch getSearch();
         + abstract QuerySticky getSticky();
         //Listings
         + abstract QueryComment getComments(String article);

@@ -309,6 +309,11 @@ public enum Endpoint {
      * @see <a href="https://www.reddit.com/dev/api#GET_search">here</a>
      */
     GET_SUBREDDIT_SEARCH("r", "{subreddit}", "search"),
+    /**
+     * Search links page.
+     * @see <a href="https://www.reddit.com/dev/api#GET_search">here</a>
+     */
+    GET_SEARCH("search"),
 
     //----------------------------------------------------------------------------------------------------------------//
     //                                                                                                                //

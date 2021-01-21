@@ -17,6 +17,7 @@ import vartas.reddit.exceptions.$factory.RateLimiterExceptionFactory;
 import vartas.reddit.exceptions.HttpException;
 import vartas.reddit.exceptions.RateLimiterException;
 import vartas.reddit.query.listings.*;
+import vartas.reddit.query.search.QuerySearch;
 import vartas.reddit.types.$factory.ThingFactory;
 import vartas.reddit.types.$factory.TrendingSubredditsFactory;
 import vartas.reddit.types.Thing;
@@ -618,6 +619,23 @@ public abstract class Client extends ClientTOP{
                 Endpoint.GET_TOP
         );
     }
+
+    //----------------------------------------------------------------------------------------------------------------//
+    //                                                                                                                //
+    //    Search                                                                                                      //
+    //                                                                                                                //
+    //----------------------------------------------------------------------------------------------------------------//
+
+    /**
+     * Provides access to the search function for links.
+     * @return A search query over links.
+     */
+    @Override
+    @Nonnull
+    public QuerySearch getSearch() {
+        return new QuerySearch(this, Endpoint.GET_SEARCH);
+    }
+
 
     //----------------------------------------------------------------------------------------------------------------//
     //                                                                                                                //
