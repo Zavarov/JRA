@@ -21,19 +21,18 @@ import vartas.reddit.exceptions.Exceptions.HttpException;
 import vartas.reddit.exceptions.Exceptions.RateLimiterException;
 import vartas.reddit.Client.Client.Duration;
 import vartas.reddit.Client.SelfUser;
-import vartas.reddit.query.Query.QueryBest;
-import vartas.reddit.query.Query.QueryById;
-import vartas.reddit.query.Query.QueryComment;
-import vartas.reddit.query.Query.QueryControversial;
-import vartas.reddit.query.Query.QueryDuplicates;
-import vartas.reddit.query.Query.QueryHot;
-import vartas.reddit.query.Query.QueryNew;
-import vartas.reddit.query.Query.QueryRising;
-import vartas.reddit.query.Query.QuerySort;
-import vartas.reddit.query.Query.QueryTop;
-import vartas.reddit.query.Query.QueryRandom;
-import vartas.reddit.query.Query.QuerySearchSubreddit;
-import vartas.reddit.query.Query.QuerySticky;
+import vartas.reddit.query.listings.Query.QueryBest;
+import vartas.reddit.query.listings.Query.QueryById;
+import vartas.reddit.query.listings.Query.QueryComment;
+import vartas.reddit.query.listings.Query.QueryControversial;
+import vartas.reddit.query.listings.Query.QueryDuplicates;
+import vartas.reddit.query.listings.Query.QueryHot;
+import vartas.reddit.query.listings.Query.QueryNew;
+import vartas.reddit.query.listings.Query.QueryRandom;
+import vartas.reddit.query.listings.Query.QueryRising;
+import vartas.reddit.query.listings.Query.QueryTop;
+import vartas.reddit.query.search.Query.QuerySearch;
+import vartas.reddit.query.subreddits.Query.QuerySticky;
 
 public classdiagram Client {
     public abstract class Client {
@@ -71,6 +70,8 @@ public classdiagram Client {
         + abstract QueryRising<Link> getRisingLinks();
         + abstract QueryTop<Link> getTopLinks();
         //+ abstract QuerySort<Link> getSortedLinks();
+        //Search
+        + abstract QuerySearch getSearch();
     }
 
     public abstract class Subreddit extends SubredditType{

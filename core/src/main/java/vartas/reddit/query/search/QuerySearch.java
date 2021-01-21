@@ -1,10 +1,11 @@
-package vartas.reddit.query;
+package vartas.reddit.query.search;
 
 import com.google.common.base.Joiner;
 import org.json.JSONObject;
 import vartas.reddit.Client;
 import vartas.reddit.Endpoint;
 import vartas.reddit.exceptions.HttpException;
+import vartas.reddit.query.QuerySort;
 import vartas.reddit.types.Listing;
 import vartas.reddit.types.Thing;
 
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
 
-public class QuerySearchSubreddit extends QuerySort<Thing, QuerySearchSubreddit>{
+public class QuerySearch extends QuerySort<Thing, QuerySearch> {
     /**
      * A string no longer than 5 characters. Setting this parameter may result in an internal server error.
      */
@@ -45,46 +46,46 @@ public class QuerySearchSubreddit extends QuerySort<Thing, QuerySearchSubreddit>
      */
     protected static final String TYPE = "type";
 
-    public QuerySearchSubreddit(Client client, String subreddit) {
-        super(Function.identity(), client, Endpoint.GET_SUBREDDIT_SEARCH, subreddit);
+    public QuerySearch(Client client, Endpoint endpoint, Object... args) {
+        super(Function.identity(), client, endpoint, args);
         params.put(SORT, Sort.NEW);
         params.put(RESTRICT_SUBREDDIT, true);
         params.put(INCLUDE_FACETS, false);
     }
 
     @Override
-    protected QuerySearchSubreddit getRealThis() {
+    protected QuerySearch getRealThis() {
         return this;
     }
 
-    public QuerySearchSubreddit setCategory(@Nonnull String category){
+    public QuerySearch setCategory(@Nonnull String category){
         assert category.length() <= 5;
         params.put(CATEGORY, category);
         return this;
     }
 
-    public QuerySearchSubreddit includeFacets(boolean state){
+    public QuerySearch includeFacets(boolean state){
         params.put(INCLUDE_FACETS, state);
         return this;
     }
 
-    public QuerySearchSubreddit setQuery(@Nonnull String query){
+    public QuerySearch setQuery(@Nonnull String query){
         assert query.length() <= 512;
         params.put(QUERY, query);
         return this;
     }
 
-    public QuerySearchSubreddit restrictSubreddit(boolean state){
+    public QuerySearch restrictSubreddit(boolean state){
         params.put(RESTRICT_SUBREDDIT, state);
         return this;
     }
 
-    public QuerySearchSubreddit setTypes(@Nonnull Type... types){
+    public QuerySearch setTypes(@Nonnull Type... types){
         params.put(TYPE, Joiner.on(",").join(types));
         return this;
     }
 
-    public QuerySearchSubreddit setSort(@Nonnull Sort sort){
+    public QuerySearch setSort(@Nonnull Sort sort){
         params.put(SORT, sort);
         return this;
     }

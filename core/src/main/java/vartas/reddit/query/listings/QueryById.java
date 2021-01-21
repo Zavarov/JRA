@@ -1,4 +1,4 @@
-package vartas.reddit.query;
+package vartas.reddit.query.listings;
 
 import com.google.common.base.Joiner;
 import org.json.JSONObject;
@@ -6,6 +6,7 @@ import vartas.reddit.Client;
 import vartas.reddit.Endpoint;
 import vartas.reddit.Link;
 import vartas.reddit.exceptions.HttpException;
+import vartas.reddit.query.Query;
 import vartas.reddit.types.Listing;
 import vartas.reddit.types.Thing;
 

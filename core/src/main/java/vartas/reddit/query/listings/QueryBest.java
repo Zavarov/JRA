@@ -1,7 +1,8 @@
-package vartas.reddit.query;
+package vartas.reddit.query.listings;
 
 import vartas.reddit.Client;
 import vartas.reddit.Endpoint;
+import vartas.reddit.query.QueryMany;
 import vartas.reddit.types.Thing;
 
 import java.util.function.Function;

@@ -8,7 +8,7 @@ import vartas.reddit.$factory.UserAgentFactory;
 import vartas.reddit.exceptions.HttpException;
 import vartas.reddit.exceptions.NotFoundException;
 import vartas.reddit.exceptions.RateLimiterException;
-import vartas.reddit.query.QuerySearchSubreddit;
+import vartas.reddit.query.search.QuerySearch;
 import vartas.reddit.types.Rules;
 
 import java.io.IOException;
@@ -91,10 +91,10 @@ public class SubredditTest {
                 .setQuery("Snoo")
                 .restrictSubreddit(true)
                 .setShow("all")
-                .setSort(QuerySearchSubreddit.Sort.NEW)
+                .setSort(QuerySearch.Sort.NEW)
                 .setExpandSubreddits(false)
-                .setTimePeriod(QuerySearchSubreddit.TimePeriod.ALL)
-                .setTypes(QuerySearchSubreddit.Type.LINK)
+                .setTimePeriod(QuerySearch.TimePeriod.ALL)
+                .setTypes(QuerySearch.Type.LINK)
                 .query();
     }
 

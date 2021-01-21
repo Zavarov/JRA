@@ -8,8 +8,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import vartas.reddit.exceptions.HttpException;
 import vartas.reddit.query.Query;
-import vartas.reddit.query.QueryDuplicates;
 import vartas.reddit.query.QuerySort;
+import vartas.reddit.query.listings.QueryDuplicates;
 import vartas.reddit.types.Thing;
 import vartas.reddit.types.TrendingSubreddits;
 

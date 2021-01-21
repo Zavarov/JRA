@@ -2,7 +2,9 @@ package vartas.reddit;
 
 import org.json.JSONObject;
 import vartas.reddit.exceptions.HttpException;
-import vartas.reddit.query.*;
+import vartas.reddit.query.listings.*;
+import vartas.reddit.query.search.QuerySearch;
+import vartas.reddit.query.subreddits.QuerySticky;
 import vartas.reddit.types.$factory.RulesFactory;
 import vartas.reddit.types.Rules;
 import vartas.reddit.types.Thing;
@@ -163,6 +165,22 @@ public class Subreddit extends SubredditTOP{
         );
     }
 
+    //----------------------------------------------------------------------------------------------------------------//
+    //                                                                                                                //
+    //    Search                                                                                                      //
+    //                                                                                                                //
+    //----------------------------------------------------------------------------------------------------------------//
+
+    /**
+     * Provides access to the search function for links.
+     * @return A search query over links.
+     */
+    @Override
+    @Nonnull
+    public QuerySearch getSearch() {
+        return new QuerySearch(client, Endpoint.GET_SUBREDDIT_SEARCH, getDisplayName());
+    }
+
     //------------------------------------------------------------------------------------------------------------------
 
     /**
@@ -180,16 +198,6 @@ public class Subreddit extends SubredditTOP{
     public Rules getRules() throws InterruptedException, IOException, HttpException {
         JSONObject data = new JSONObject(client.get(Endpoint.GET_SUBREDDIT_ABOUT_RULES, getDisplayName()));
         return RulesFactory.create(Rules::new, data);
-    }
-
-    /**
-     * Provides access to the search function for links.
-     * @return A search query over links.
-     */
-    @Override
-    @Nonnull
-    public QuerySearchSubreddit getSearch() {
-        return new QuerySearchSubreddit(client, getDisplayName());
     }
 
     /**

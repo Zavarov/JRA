@@ -1,4 +1,4 @@
-package vartas.reddit.query;
+package vartas.reddit.query.listings;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -7,46 +7,27 @@ import vartas.reddit.Client;
 import vartas.reddit.Endpoint;
 import vartas.reddit.Link;
 import vartas.reddit.exceptions.HttpException;
-import vartas.reddit.exceptions.NotFoundException;
+import vartas.reddit.query.Query;
 import vartas.reddit.types.Listing;
 import vartas.reddit.types.Thing;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
-public class QuerySticky extends Query<Optional<Pair<Link, List<Thing>>>, QuerySticky>{
-    protected static final String INDEX = "num";
-
-    public QuerySticky(Client client, String subreddit) {
-        super(client, Endpoint.GET_SUBREDDIT_ABOUT_STICKY, subreddit);
+public class QueryRandom extends Query<Pair<Link, List<Thing>>,QueryRandom> {
+    public QueryRandom(Client client, Endpoint endpoint, Object... args) {
+        super(client, endpoint, args);
     }
 
     @Override
-    protected QuerySticky getRealThis() {
-        return this;
-    }
-
-    public QuerySticky setIndex(int index){
-        //Reddit only allows at most two submissions to be stickied
-        assert index == 1 || index == 2;
-        params.put(INDEX, index);
+    protected QueryRandom getRealThis() {
         return this;
     }
 
     @Override
-    public Optional<Pair<Link, List<Thing>>> query() throws IOException, HttpException, InterruptedException {
-        assert params.containsKey(INDEX);
-
-        JSONArray response;
-
-        try{
-            //Throws 404 if no submissions are stickied
-            response = new JSONArray(client.get(params, endpoint, args));
-        }catch(NotFoundException e){
-            return Optional.empty();
-        }
+    public Pair<Link, List<Thing>> query() throws IOException, HttpException, InterruptedException {
+        JSONArray response = new JSONArray(client.get(params, endpoint, args));
 
         Link link;
         List<Thing> comments;
@@ -70,6 +51,6 @@ public class QuerySticky extends Query<Optional<Pair<Link, List<Thing>>>, QueryS
         listing = Thing.from(response.getJSONObject(1)).toListing();
         comments = Collections.unmodifiableList(listing.getChildren());
 
-        return Optional.of(new ImmutablePair<>(link, comments));
+        return new ImmutablePair<>(link, comments);
     }
 }
