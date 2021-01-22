@@ -110,30 +110,4 @@ public classdiagram Subreddit {
         //------------------------------------------------------------------------------------------------------------//
         + abstract Optional<String> getIconImage();
     }
-
-    public abstract class Rules extends JsonType{
-        + abstract List<Rule> getRules();
-        + abstract List<String> getSiteRules();
-        + abstract List<NextStepReason> getSiteRulesFlow();
-    }
-
-    public abstract class Rule extends JsonType{
-        + abstract OffsetDateTime getCreatedUtc();
-        + abstract Optional<String> getDescription();
-        + abstract Optional<String> getDescriptionHtml();
-        + abstract String getKind();
-        + abstract int getPriority();
-        + abstract String getShortName();
-        + abstract String getViolationReason();
-    }
-
-    public abstract class NextStepReason extends JsonType{
-        + abstract String getReasonTextToShow();
-        + abstract String getReasonText();
-        + abstract List<NextStepReason> getNextStepReasons();
-        /**
-         * My guess is this entry is empty if getNextStepReasons is empty and vice versa.
-         */
-        + abstract Optional<String> getNextStepHeader();
-    }
 }

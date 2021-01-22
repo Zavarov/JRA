@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import vartas.reddit.exceptions.HttpException;
 import vartas.reddit.exceptions.NotFoundException;
+import vartas.reddit.types.Messaging;
 
 import java.io.IOException;
 

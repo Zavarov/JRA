@@ -116,7 +116,11 @@
                             <mainClass>${generator.main}</mainClass>
                             <arguments>
                                 <argument>${generator.config}</argument>
+                                <argument>vartas.reddit.types.Identity</argument>
                                 <argument>vartas.reddit.types.Karma</argument>
+                                <argument>vartas.reddit.types.Messaging</argument>
+                                <argument>vartas.reddit.types.Preferences</argument>
+                                <argument>vartas.reddit.types.Rule</argument>
                                 <argument>vartas.reddit.types.Subreddit</argument>
                                 <argument>vartas.reddit.types.Trophy</argument>
                                 <argument>vartas.reddit.types.Types</argument>

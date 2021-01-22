@@ -1,7 +1,7 @@
-package vartas.reddit.$json;
+package vartas.reddit.types.$json;
 
 import org.json.JSONObject;
-import vartas.reddit.Preferences;
+import vartas.reddit.types.Preferences;
 
 public class JSONPreferences extends JSONPreferencesTOP{
     @Override

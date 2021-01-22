@@ -5,7 +5,7 @@ import vartas.reddit.exceptions.HttpException;
 import vartas.reddit.query.listings.*;
 import vartas.reddit.query.search.QuerySearch;
 import vartas.reddit.query.subreddits.QuerySticky;
-import vartas.reddit.types.$factory.RulesFactory;
+import vartas.reddit.types.$json.JSONRules;
 import vartas.reddit.types.Rules;
 import vartas.reddit.types.Thing;
 
@@ -197,7 +197,7 @@ public class Subreddit extends SubredditTOP{
     @Nonnull
     public Rules getRules() throws InterruptedException, IOException, HttpException {
         JSONObject data = new JSONObject(client.get(Endpoint.GET_SUBREDDIT_ABOUT_RULES, getDisplayName()));
-        return RulesFactory.create(Rules::new, data);
+        return JSONRules.fromJson(new Rules(), data);
     }
 
     /**
