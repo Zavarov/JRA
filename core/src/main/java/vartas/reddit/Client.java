@@ -631,6 +631,15 @@ public abstract class Client extends ClientTOP{
     //                                                                                                                //
     //----------------------------------------------------------------------------------------------------------------//
 
+    /**
+     * Specifies whether this application needs to solve a captcha before executing API requests.
+     * @return {@code true}, if a captcha is required.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     * @throws RateLimiterException If too many requests are performed within short succession.
+     * @deprecated With OAuth2, the need for captchas is no longer exist.
+     */
     @Override
     @Deprecated
     public boolean needsCaptcha() throws IOException, HttpException, RateLimiterException, InterruptedException {
@@ -643,14 +652,29 @@ public abstract class Client extends ClientTOP{
     //                                                                                                                //
     //----------------------------------------------------------------------------------------------------------------//
 
+    /**
+     * Return a list of trending subreddits, link to the {@link Comment} in {@code r/trendingsubreddits}, and the
+     * {@link Comment} count of that {@link Link}.
+     * @return An instance of the trending subreddits.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     * @throws RateLimiterException If too many requests are performed within short succession.
+     */
     @Override
+    @Nonnull
     public TrendingSubreddits getTrendingSubreddits() throws IOException, HttpException, RateLimiterException, InterruptedException {
         //Because for some reason trending subreddits don't require OAuth2 and return an 400 if used
         JSONObject response = new JSONObject(get(WWW, Endpoint.GET_API_TRENDING_SUBREDDITS));
         return TrendingSubredditsFactory.create(TrendingSubreddits::new, response);
     }
 
+    /**
+     * Links sorted by {code best} have the highest ration between upvotes and downvotes.
+     * @return A query over the latest links.
+     */
     @Override
+    @Nonnull
     public QueryBest<Link> getBestLinks() {
         return new QueryBest<>(
                 Thing::toLink,
@@ -659,17 +683,36 @@ public abstract class Client extends ClientTOP{
         );
     }
 
+    /**
+     * Get a listing of links by fullname.
+     * @param names A sequence of {@link Link} fullnames.
+     * @return A query over the links with the specified fullnames.
+     */
     @Override
+    @Nonnull
     public QueryById getLinksById(@Nonnull String... names) {
         return new QueryById(this, names);
     }
 
+    /**
+     * Get the comment tree for a given Link article.<p>
+     * If a base 36 id is supplied, it will be the (highlighted) focal point of the returned view and context will be
+     * the number of parents shown.
+     * @param article The base 36 id of a {@link Link}.
+     * @return A query over all comments in the provided {@link Link}.
+     */
     @Override
+    @Nonnull
     public QueryComment getComments(String article) {
         return new QueryComment(this, Endpoint.GET_COMMENTS, article);
     }
 
+    /**
+     * Links sorted by {code controversial} have recently received a high amount of upvotes <b>and</b> downvotes.
+     * @return A query over the latest links.
+     */
     @Override
+    @Nonnull
     public QueryControversial<Link> getControversialLinks() {
         return new QueryControversial<>(
                 Thing::toLink,
@@ -678,12 +721,24 @@ public abstract class Client extends ClientTOP{
         );
     }
 
+    /**
+     * Return a list of other links of the same URL. This happens, for example, if a link is cross-posted to another
+     * {@link Subreddit}.
+     * @param article The base 36 id of a {@link Link}.
+     * @return A query over all links identical to the one provided.
+     */
     @Override
+    @Nonnull
     public QueryDuplicates getDuplicates(String article) {
         return new QueryDuplicates(this, article);
     }
 
+    /**
+     * Links sorted by {code hot} have recently received a high amount of upvotes and/or comments.
+     * @return A query over the latest links.
+     */
     @Override
+    @Nonnull
     public QueryHot<Link> getHotLinks() {
         return new QueryHot<>(
                 Thing::toLink,
@@ -692,7 +747,12 @@ public abstract class Client extends ClientTOP{
         );
     }
 
+    /**
+     * Links sorted by {code new} are ordered according to their submission date.
+     * @return A query over the latest links.
+     */
     @Override
+    @Nonnull
     public QueryNew<Link> getNewLinks() {
         return new QueryNew<>(
                 Thing::toLink,
@@ -701,12 +761,23 @@ public abstract class Client extends ClientTOP{
         );
     }
 
+    /**
+     * The {@link Link} is chosen randomly from the {@code top} links.
+     * @return A query over a single {@link Link}.
+     * @see #getTopLinks()
+     */
     @Override
+    @Nonnull
     public QueryRandom getRandomLink() {
         return new QueryRandom(this, Endpoint.GET_RANDOM);
     }
 
+    /**
+     * Links sorted by {code rising} have received a high amount of upvotes and/or comments right now.
+     * @return A query over the latest links.
+     */
     @Override
+    @Nonnull
     public QueryRising<Link> getRisingLinks() {
         return new QueryRising<>(
                 Thing::toLink,
@@ -715,7 +786,12 @@ public abstract class Client extends ClientTOP{
         );
     }
 
+    /**
+     * Links sorted by {code top} have received a high amount of upvotes over an unspecified period of time.
+     * @return A query over the latest links.
+     */
     @Override
+    @Nonnull
     public QueryTop<Link> getTopLinks() {
         return new QueryTop<>(
                 Thing::toLink,
