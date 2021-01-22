@@ -20,7 +20,6 @@ import vartas.reddit.types.Subreddit.Rules;
 import vartas.reddit.exceptions.Exceptions.HttpException;
 import vartas.reddit.exceptions.Exceptions.RateLimiterException;
 import vartas.reddit.Client.Client.Duration;
-import vartas.reddit.Client.SelfUser;
 import vartas.reddit.query.listings.Query.QueryBest;
 import vartas.reddit.query.listings.Query.QueryById;
 import vartas.reddit.query.listings.Query.QueryComment;
@@ -45,20 +44,20 @@ public classdiagram Client {
         # abstract void refresh() throws IOException, HttpException, RateLimiterException, InterruptedException;
         + abstract Subreddit getSubreddit(String name) throws IOException, HttpException, InterruptedException;
         //Account
-        + abstract SelfUser getMe() throws InterruptedException, IOException, HttpException;
-        + abstract List<User> getBlocked() throws InterruptedException, IOException, HttpException;
-        + abstract List<User> getFriends() throws InterruptedException, IOException, HttpException;
-        + abstract List<Karma> getKarma() throws InterruptedException, IOException, HttpException;
-        + abstract Preferences getPreferences() throws InterruptedException, IOException, HttpException;
-        + abstract List<Trophy> getTrophies() throws InterruptedException, IOException, HttpException;
-        + abstract List<User> getPreferencesBlocked() throws InterruptedException, IOException, HttpException;
-        + abstract List<User> getPreferencesFriends() throws InterruptedException, IOException, HttpException;
-        + abstract Messaging getPreferencesMessaging() throws InterruptedException, IOException, HttpException;
-        + abstract List<User> getPreferencesTrusted() throws InterruptedException, IOException, HttpException;
+        + abstract Identity getMe() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract List<User> getBlocked() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract List<User> getFriends() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract List<Karma> getKarma() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract Preferences getPreferences() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract List<Trophy> getTrophies() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract List<User> getPreferencesBlocked() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract List<User> getPreferencesFriends() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract Messaging getPreferencesMessaging() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract List<User> getPreferencesTrusted() throws IOException, HttpException, RateLimiterException, InterruptedException;
         //Captcha
-        + abstract boolean needsCaptcha() throws InterruptedException, IOException, HttpException;
+        + abstract boolean needsCaptcha() throws IOException, HttpException, RateLimiterException, InterruptedException;
         //Listings
-        + abstract TrendingSubreddits getTrendingSubreddits() throws IOException, HttpException, InterruptedException;
+        + abstract TrendingSubreddits getTrendingSubreddits() throws IOException, HttpException, RateLimiterException, InterruptedException;
         + abstract QueryBest<Link> getBestLinks();
         + abstract QueryById getLinksById(String[] names);
         + abstract QueryComment getComments(String article);
@@ -118,7 +117,7 @@ public classdiagram Client {
         - String author;
     }
 
-    public class SelfUser{
+    public class Identity{
         <<key="over_18">>
         - boolean over18;
         <<key="comment_karma">>

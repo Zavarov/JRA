@@ -36,6 +36,7 @@ public class AccountTest extends AbstractTest{
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testGetFriends() throws InterruptedException, IOException, HttpException {
         client.getFriends().forEach(AbstractTest::check);
     }

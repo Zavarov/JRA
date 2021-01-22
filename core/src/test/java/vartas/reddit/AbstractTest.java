@@ -52,8 +52,6 @@ public class AbstractTest {
         String secret = config.getString("secret");
         UserAgent userAgent = UserAgentFactory.create(platform, AbstractTest.class.getPackageName(), version, author);
 
-        System.out.println(userAgent);
-
         return new UserlessClient(userAgent, id, secret);
     }
 
@@ -90,7 +88,7 @@ public class AbstractTest {
     }
 
     protected static void check(User user){
-        LoggerFactory.getLogger(user.getClass()).info(user.toString());
+        LoggerFactory.getLogger(user.getClass()).info(user.getName());
 
         assertThat(user.getDate()).isNotNull();
         assertThat(user.getName()).isNotNull();

@@ -8,8 +8,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vartas.reddit.$factory.MessagingFactory;
+import vartas.reddit.$json.JSONIdentity;
 import vartas.reddit.$json.JSONPreferences;
-import vartas.reddit.$json.JSONSelfUser;
 import vartas.reddit.$json.JSONToken;
 import vartas.reddit.exceptions.$factory.HttpExceptionFactory;
 import vartas.reddit.exceptions.$factory.NotFoundExceptionFactory;
@@ -28,6 +28,8 @@ import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+
+import static vartas.reddit.query.listings.QueryComment.Sort;
 
 @Nonnull
 public abstract class Client extends ClientTOP{
@@ -448,44 +450,129 @@ public abstract class Client extends ClientTOP{
     //                                                                                                                //
     //----------------------------------------------------------------------------------------------------------------//
 
+    /**
+     * Returns the identity of the user.
+     * @return An instance of the currently logged-in {@link User}.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     * @throws RateLimiterException If too many requests are performed within short succession.
+     */
     @Override
-    public SelfUser getMe() throws InterruptedException, IOException, HttpException {
-        return JSONSelfUser.fromJson(new SelfUser(), new JSONObject(get(Endpoint.GET_ME)));
+    @Nonnull
+    public Identity getMe() throws InterruptedException, IOException, HttpException, RateLimiterException {
+        return JSONIdentity.fromJson(new Identity(), new JSONObject(get(Endpoint.GET_ME)));
     }
 
+    /**
+     * Returns a list of all users blocked by the currently logged-in {@link User}.
+     * @return A list of users.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     * @throws RateLimiterException If too many requests are performed within short succession.
+     * @deprecated This endpoint is no longer supported and will always return 404. In order to get all blocked users,
+     * use {@link #getPreferencesBlocked()}
+     * @see #getPreferencesBlocked()
+     */
     @Override
+    @Nonnull
     @Deprecated
-    public List<User> getBlocked() throws InterruptedException, IOException, HttpException {
+    public List<User> getBlocked() throws InterruptedException, IOException, HttpException, RateLimiterException {
         return Thing.from(new JSONObject(get(Endpoint.GET_ME_BLOCKED))).toUserList().getData();
     }
 
+    /**
+     * Returns a list of all users the currently logged-in {@link User} is friends with.
+     * @return A list of users.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     * @throws RateLimiterException If too many requests are performed within short succession.
+     * @deprecated While this endpoint is still supported, the result is equivalent to the one returned by
+     * {@link #getPreferencesFriends()}. So in order to avoid using duplicate methods, we gently encourage everyone to
+     * choose the other one instead.
+     * @see #getPreferencesFriends()
+     */
     @Override
-    public List<User> getFriends() throws InterruptedException, IOException, HttpException {
+    @Nonnull
+    @Deprecated
+    public List<User> getFriends() throws InterruptedException, IOException, HttpException, RateLimiterException {
         return Thing.from(new JSONObject(get(Endpoint.GET_ME_FRIENDS))).toUserList().getData();
     }
 
+
+    /**
+     * Returns a breakdown of the {@link Karma} received the currently logged-in {@link User}.<p>
+     * Each entry contains the number of {@link Link} and {@link Comment} in one of the subreddits the {@link User}
+     * has been active at some point.
+     * @return A list of {@link Karma} instances.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     * @throws RateLimiterException If too many requests are performed within short succession.
+     */
     @Override
-    public List<Karma> getKarma() throws InterruptedException, IOException, HttpException {
+    @Nonnull
+    public List<Karma> getKarma() throws InterruptedException, IOException, HttpException, RateLimiterException {
         return Thing.from(new JSONObject(get(Endpoint.GET_ME_KARMA))).toKarmaList().getData();
     }
 
+    /**
+     * Returns the preference settings of the currently logged-in {@link User}.<p>
+     * Those settings contain information such as the default {@link Comment} {@link Sort}, whether nightmode is enabled
+     * or whether they should be notified via email upon mentions or responses.
+     * @return An instance of the user preferences.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     * @throws RateLimiterException If too many requests are performed within short succession.
+     */
     @Override
-    public Preferences getPreferences() throws InterruptedException, IOException, HttpException {
+    @Nonnull
+    public Preferences getPreferences() throws InterruptedException, IOException, HttpException, RateLimiterException {
         return JSONPreferences.fromJson(new Preferences(), new JSONObject(get(Endpoint.GET_ME_PREFS)));
     }
 
+    /**
+     * Returns a list of all trophies that have been awarded to the currently logged-in {@link User}.
+     * @return A list of trophies.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     * @throws RateLimiterException If too many requests are performed within short succession.
+     */
     @Override
-    public List<Trophy> getTrophies() throws InterruptedException, IOException, HttpException {
+    @Nonnull
+    public List<Trophy> getTrophies() throws InterruptedException, IOException, HttpException, RateLimiterException {
         return Thing.from(new JSONObject(get(Endpoint.GET_ME_TROPHIES))).toTrophyList().getData();
     }
 
+    /**
+     * Returns a list of all users blocked by the currently logged-in {@link User}.
+     * @return A list of users.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     * @throws RateLimiterException If too many requests are performed within short succession.
+     */
     @Override
-    public List<User> getPreferencesBlocked() throws InterruptedException, IOException, HttpException {
+    @Nonnull
+    public List<User> getPreferencesBlocked() throws InterruptedException, IOException, HttpException, RateLimiterException {
         return Thing.from(new JSONObject(get(Endpoint.GET_PREFS_BLOCKED))).toUserList().getData();
     }
 
+    /**
+     * Returns a list of all users the currently logged-in {@link User} is friends with.
+     * @return A list of users.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     * @throws RateLimiterException If too many requests are performed within short succession.
+     */
     @Override
-    public List<User> getPreferencesFriends() throws InterruptedException, IOException, HttpException {
+    @Nonnull
+    public List<User> getPreferencesFriends() throws InterruptedException, IOException, HttpException, RateLimiterException {
         JSONArray response = new JSONArray(get(Endpoint.GET_PREFS_FRIENDS));
 
         //I think that's a relic from when /prefs/friends/ used to return both friends and blocked users
@@ -501,8 +588,18 @@ public abstract class Client extends ClientTOP{
         return friends;
     }
 
+    /**
+     * Returns the message settings of the currently logged-in {@link User}.<p>
+     * This configuration contains all users that have been either blacklisted or whitelisted.
+     * @return An instance of the message settings.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     * @throws RateLimiterException If too many requests are performed within short succession.
+     */
     @Override
-    public Messaging getPreferencesMessaging() throws InterruptedException, IOException, HttpException {
+    @Nonnull
+    public Messaging getPreferencesMessaging() throws InterruptedException, IOException, HttpException, RateLimiterException {
         JSONArray response = new JSONArray(get(Endpoint.GET_PREFS_MESSAGING));
 
         assert response.length() == 2;
@@ -513,8 +610,18 @@ public abstract class Client extends ClientTOP{
         return MessagingFactory.create(blocked, trusted);
     }
 
+    /**
+     * Returns the whitelist of all users that are able to send messages to the currently logged-in {@link User}. Even
+     * if private messages have been disabled.
+     * @return A list of users.
+     * @throws InterruptedException If the query got interrupted while waiting to be executed.
+     * @throws IOException If an exception occurred during the request.
+     * @throws HttpException If the request got rejected by the server.
+     * @throws RateLimiterException If too many requests are performed within short succession.
+     */
     @Override
-    public List<User> getPreferencesTrusted() throws InterruptedException, IOException, HttpException {
+    @Nonnull
+    public List<User> getPreferencesTrusted() throws InterruptedException, IOException, HttpException, RateLimiterException {
         return Thing.from(new JSONObject(get(Endpoint.GET_PREFS_TRUSTED))).toUserList().getData();
     }
 
@@ -526,7 +633,7 @@ public abstract class Client extends ClientTOP{
 
     @Override
     @Deprecated
-    public boolean needsCaptcha() throws InterruptedException, IOException, HttpException {
+    public boolean needsCaptcha() throws IOException, HttpException, RateLimiterException, InterruptedException {
         return Boolean.parseBoolean(get(Endpoint.GET_NEEDS_CAPTCHA));
     }
 
@@ -537,7 +644,7 @@ public abstract class Client extends ClientTOP{
     //----------------------------------------------------------------------------------------------------------------//
 
     @Override
-    public TrendingSubreddits getTrendingSubreddits() throws IOException, HttpException, InterruptedException {
+    public TrendingSubreddits getTrendingSubreddits() throws IOException, HttpException, RateLimiterException, InterruptedException {
         //Because for some reason trending subreddits don't require OAuth2 and return an 400 if used
         JSONObject response = new JSONObject(get(WWW, Endpoint.GET_API_TRENDING_SUBREDDITS));
         return TrendingSubredditsFactory.create(TrendingSubreddits::new, response);
