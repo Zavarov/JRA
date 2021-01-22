@@ -451,6 +451,195 @@ public enum Endpoint {
     //                                                                                                                //
     //----------------------------------------------------------------------------------------------------------------//
 
+    /**
+     * For blocking a user.
+     * @see <a href="https://www.reddit.com/dev/api#POST_api_block_user">here</a>
+     */
+    POST_BLOCK_USER("api", "block_user"),
+    /**
+     * Create a relationship between a user and another user or subreddit.<p>
+     * OAuth2 use requires appropriate scope based on the 'type' of the relationship:<p>
+     * <ul>
+     *     <li>moderator: Use "moderator_invite"</li>
+     *     <li>moderator_invite: modothers</li>
+     *     <li>contributor: modcontributors</li>
+     *     <li>banned: modcontributors</li>
+     *     <li>muted: modcontributors</li>
+     *     <li>wikibanned: modcontributors and modwiki</li>
+     *     <li>wikicontributor: modcontributors and modwiki</li>
+     *     <li>friend: Use /api/v1/me/friends/{username}</li>
+     *     <li>enemy: Use /api/block</li>
+     * </ul>
+     *
+     * Complement to #POST_SUBREDDIT_UNFRIEND
+     * @see <a href="https://www.reddit.com/dev/api#POST_api_friend">here</a>
+     * @see #POST_SUBREDDIT_UNFRIEND
+     */
+    POST_SUBREDDIT_FRIEND("r","{subreddit}","api","friend"),
+    /**
+     * Create a relationship between a user and another user or subreddit.<p>
+     * OAuth2 use requires appropriate scope based on the 'type' of the relationship:<p>
+     * <ul>
+     *     <li>moderator: Use "moderator_invite"</li>
+     *     <li>moderator_invite: modothers</li>
+     *     <li>contributor: modcontributors</li>
+     *     <li>banned: modcontributors</li>
+     *     <li>muted: modcontributors</li>
+     *     <li>wikibanned: modcontributors and modwiki</li>
+     *     <li>wikicontributor: modcontributors and modwiki</li>
+     *     <li>friend: Use /api/v1/me/friends/{username}</li>
+     *     <li>enemy: Use /api/block</li>
+     * </ul>
+     *
+     * Complement to #POST_UNFRIEND
+     * @see <a href="https://www.reddit.com/dev/api#POST_api_friend">here</a>
+     * @see #POST_UNFRIEND
+     */
+    POST_FRIEND("api", "friend"),
+    /**
+     * Report a user. Reporting a user brings it to the attention of a Reddit admin.
+     * @see <a href="https://www.reddit.com/dev/api#POST_api_report_user">here</a>
+     */
+    POST_REPORT_USER("api", "report_user"),
+    /**
+     * TODO What does it do?
+     * @see <a href="https://www.reddit.com/dev/api#POST_api_setpermissions">here</a>
+     */
+    POST_SUBREDDIT_SETPERMISSION("r","{subreddit}","api","setpermission"),
+    /**
+     * TODO What does it do?
+     * @see <a href="https://www.reddit.com/dev/api#POST_api_setpermissions">here</a>
+     */
+    POST_SETPERMISSION("api","setpermission"),
+    /**
+     * Remove a relationship between a user and another user or subreddit<p>
+     * The user can either be passed in by name (nuser) or by fullname (iuser). If type is friend or enemy, 'container'
+     * MUST be the current user's fullname; for other types, the subreddit must be set via URL
+     * (e.g., /r/funny/api/unfriend).<p>
+     * OAuth2 use requires appropriate scope based on the 'type' of the relationship:
+     * <ul>
+     *     <li>moderator: modothers</li>
+     *     <li>moderator_invite: modothers</li>
+     *     <li>contributor: modcontributors</li>
+     *     <li>banned: modcontributors</li>
+     *     <li>muted: modcontributors</li>
+     *     <li>wikibanned: modcontributors and modwiki</li>
+     *     <li>wikicontributor: modcontributors and modwiki</li>
+     *     <li>friend: Use /api/v1/me/friends/{username}</li>
+     *     <li>enemy: privatemessages<li>
+     * </ul>
+     *
+     * Complement to #POST_SUBREDDIT_FRIEND
+     * @see <a href="https://www.reddit.com/dev/api#POST_api_unfriend">here</a>
+     * @see #POST_SUBREDDIT_FRIEND
+     */
+    POST_SUBREDDIT_UNFRIEND("r","{subreddit}","api","unfriend"),
+    /**
+     * Remove a relationship between a user and another user or subreddit<p>
+     * The user can either be passed in by name (nuser) or by fullname (iuser). If type is friend or enemy, 'container'
+     * MUST be the current user's fullname; for other types, the subreddit must be set via URL
+     * (e.g., /r/funny/api/unfriend).<p>
+     * OAuth2 use requires appropriate scope based on the 'type' of the relationship:
+     * <ul>
+     *     <li>moderator: modothers</li>
+     *     <li>moderator_invite: modothers</li>
+     *     <li>contributor: modcontributors</li>
+     *     <li>banned: modcontributors</li>
+     *     <li>muted: modcontributors</li>
+     *     <li>wikibanned: modcontributors and modwiki</li>
+     *     <li>wikicontributor: modcontributors and modwiki</li>
+     *     <li>friend: Use /api/v1/me/friends/{username}</li>
+     *     <li>enemy: privatemessages<li>
+     * </ul>
+     *
+     * Complement to #POST_FRIEND
+     * @see <a href="https://www.reddit.com/dev/api#POST_api_unfriend">here</a>
+     * @see #POST_FRIEND
+     */
+    POST_UNFRIEND("api","unfriend"),
+    /**
+     * TODO What does it do?
+     * @see <a href="https://www.reddit.com/dev/api#GET_api_user_data_by_account_ids">here</a>
+     */
+    GET_USER_DATA_BY_ACCOUNT_IDS("api","user_data_by_account_ids"),
+    /**
+     * Check whether a username is available for registration.
+     * @see <a href="https://www.reddit.com/dev/api#GET_api_username_available">here</a>
+     */
+    GET_USERNAME_AVAILABLE("api","username_available"),
+    /**
+     * Stop being friends with a user.
+     * @see <a href="https://www.reddit.com/dev/api#DELETE_api_v1_me_friends_{username}">here</a>
+     */
+    DELETE_ME_FRIENDS_USERNAME("api","v1","me","friends","{username}"),
+    /**
+     * Get information about a specific 'friend', such as notes.
+     * @see <a href="https://www.reddit.com/dev/api#GET_api_v1_me_friends_{username}">here</a>
+     */
+    GET_ME_FRIENDS_USERNAME("api","v1","me","friends","{username}"),
+    /**
+     * Create or update a "friend" relationship.<p>
+     * This operation is idempotent. It can be used to add a new friend, or update an existing friend
+     * (e.g., add/change the note on that friend).
+     * @see <a href="https://www.reddit.com/dev/api#PUT_api_v1_me_friends_{username}">here</a>
+     */
+    PUT_ME_FRIENDS_USERNAME("api","v1","me","friends","{username}"),
+    /**
+     * Return a list of trophies for the a given user.
+     * @see <a href="https://www.reddit.com/dev/api#GET_api_v1_user_{username}_trophies">here</a>
+     */
+    GET_USER_USERNAME_TROHPIES("api","v1","user","{username}","trophies"),
+    /**
+     * Return information about the user, including karma and gold status.
+     * @see <a href="https://www.reddit.com/dev/api/oauth#GET_user_{username}_about">here</a>
+     */
+    GET_USER_USERNAME_ABOUT("user","{username}","about"),
+    /**
+     * TODO What does it do?
+     * @see <a href="https://www.reddit.com/dev/api#GET_user_{username}_comments">here</a>
+     */
+    GET_USER_USERNAME_COMMENTS("user","{username}","comments"),
+    /**
+     * TODO What does it do?
+     * @see <a href="https://www.reddit.com/dev/api#GET_user_{username}_downvoted">here</a>
+     */
+    GET_USER_USERNAME_DOWNVOTED("user","{username}","downvoted"),
+    /**
+     * TODO What does it do?
+     * @see <a href="https://www.reddit.com/dev/api#GET_user_{username}_gilded">here</a>
+     */
+    GET_USER_USERNAME_GILDED("user","{username}","gilded"),
+    /**
+     * TODO What does it do?
+     * @see <a href="https://www.reddit.com/dev/api#GET_user_{username}_hidden">here</a>
+     */
+    GET_USER_USERNAME_HIDDEN("user","{username}","hidden"),
+    /**
+     * TODO What does it do?
+     * @see <a href="https://www.reddit.com/dev/api#GET_user_{username}_overview">here</a>
+     */
+    GET_USER_USERNAME_OVERVIEW("user","{username}","overview"),
+    /**
+     * TODO What does it do?
+     * @see <a href="https://www.reddit.com/dev/api#GET_user_{username}_saved">here</a>
+     */
+    GET_USER_USERNAME_SAVED("user","{username}","saved"),
+    /**
+     * TODO What does it do?
+     * @see <a href="https://www.reddit.com/dev/api#GET_user_{username}_submitted">here</a>
+     */
+    GET_USER_USERNAME_SUBMITTED("user","{username}","submitted"),
+    /**
+     * TODO What does it do?
+     * @see <a href="https://www.reddit.com/dev/api#GET_user_{username}_upvoted">here</a>
+     */
+    GET_USER_USERNAME_UPVOTED("user","{username}","upvoted"),
+    /**
+     * TODO What does it do?
+     * @see <a href="https://www.reddit.com/dev/api#GET_user_{username}_{where}">here</a>
+     */
+    GET_USER_USERNAME_WHERE("user","{username}","{where}");
+
     //----------------------------------------------------------------------------------------------------------------//
     //                                                                                                                //
     //    widgets                                                                                                        //
@@ -463,11 +652,6 @@ public enum Endpoint {
     //                                                                                                                //
     //----------------------------------------------------------------------------------------------------------------//
 
-    /**
-     * Return information about the user, including karma and gold status.
-     * @see <a href="https://www.reddit.com/dev/api/oauth#GET_user_{username}_about">here</a>
-     */
-    GET_USER_ABOUT("user","{username}","about");
 
     private final List<String> path;
 
