@@ -2,6 +2,7 @@ package vartas.reddit;
 
 import org.json.JSONObject;
 import vartas.reddit.exceptions.HttpException;
+import vartas.reddit.http.APIRequest;
 import vartas.reddit.query.listings.*;
 import vartas.reddit.query.search.QuerySearch;
 import vartas.reddit.query.subreddits.QuerySticky;
@@ -196,7 +197,12 @@ public class Subreddit extends SubredditTOP{
     @Override
     @Nonnull
     public Rules getRules() throws InterruptedException, IOException, HttpException {
-        JSONObject data = new JSONObject(client.get(Endpoint.GET_SUBREDDIT_ABOUT_RULES, getDisplayName()));
+        String source = new APIRequest.Builder(client)
+                .setEndpoint(Endpoint.GET_SUBREDDIT_ABOUT_RULES)
+                .setArgs(getDisplayName())
+                .build()
+                .get();
+        JSONObject data = new JSONObject(source);
         return JSONRules.fromJson(new Rules(), data);
     }
 

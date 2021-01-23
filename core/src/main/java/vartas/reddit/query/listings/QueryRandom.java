@@ -7,6 +7,7 @@ import vartas.reddit.Client;
 import vartas.reddit.Endpoint;
 import vartas.reddit.Link;
 import vartas.reddit.exceptions.HttpException;
+import vartas.reddit.http.APIRequest;
 import vartas.reddit.query.Query;
 import vartas.reddit.types.Listing;
 import vartas.reddit.types.Thing;
@@ -27,7 +28,13 @@ public class QueryRandom extends Query<Pair<Link, List<Thing>>,QueryRandom> {
 
     @Override
     public Pair<Link, List<Thing>> query() throws IOException, HttpException, InterruptedException {
-        JSONArray response = new JSONArray(client.get(params, endpoint, args));
+        String source = new APIRequest.Builder(client)
+                .setParams(params)
+                .setEndpoint(endpoint)
+                .setArgs(args)
+                .build()
+                .get();
+        JSONArray response = new JSONArray(source);
 
         Link link;
         List<Thing> comments;

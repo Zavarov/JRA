@@ -7,6 +7,7 @@ import vartas.reddit.Client;
 import vartas.reddit.Endpoint;
 import vartas.reddit.Link;
 import vartas.reddit.exceptions.HttpException;
+import vartas.reddit.http.APIRequest;
 import vartas.reddit.query.QueryBase;
 import vartas.reddit.types.Listing;
 import vartas.reddit.types.Thing;
@@ -47,8 +48,14 @@ public class QueryDuplicates extends QueryBase<Pair<Link, List<Link>>,QueryDupli
 
     @Override
     public Pair<Link, List<Link>> query() throws IOException, HttpException, InterruptedException {
-        JSONArray response = new JSONArray(client.get(params, endpoint, args));
-        Link source;
+        String source = new APIRequest.Builder(client)
+                .setParams(params)
+                .setEndpoint(endpoint)
+                .setArgs(args)
+                .build()
+                .get();
+        JSONArray response = new JSONArray(source);
+        Link reference;
         List<Link> duplicates;
 
         //We receive an array consisting of two listings.
@@ -64,7 +71,7 @@ public class QueryDuplicates extends QueryBase<Pair<Link, List<Link>>,QueryDupli
         //Reddit should've only returned a single submission
         assert children.size() == 1;
 
-        source = children.get(0).toLink();
+        reference = children.get(0).toLink();
 
         //Duplicates, if present
         listing = Thing.from(response.getJSONObject(1)).toListing();
@@ -72,7 +79,7 @@ public class QueryDuplicates extends QueryBase<Pair<Link, List<Link>>,QueryDupli
 
         duplicates = children.stream().map(Thing::toLink).collect(Collectors.toUnmodifiableList());
 
-        return new ImmutablePair<>(source, duplicates);
+        return new ImmutablePair<>(reference, duplicates);
     }
 
     public enum Sort{

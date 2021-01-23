@@ -13,6 +13,7 @@ import vartas.reddit.exceptions.$factory.NotFoundExceptionFactory;
 import vartas.reddit.exceptions.$factory.RateLimiterExceptionFactory;
 import vartas.reddit.exceptions.HttpException;
 import vartas.reddit.exceptions.RateLimiterException;
+import vartas.reddit.http.APIRequest;
 import vartas.reddit.query.listings.*;
 import vartas.reddit.query.search.QuerySearch;
 import vartas.reddit.types.$factory.MessagingFactory;
@@ -26,7 +27,10 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static vartas.reddit.query.listings.QueryComment.Sort;
@@ -43,22 +47,6 @@ public abstract class Client extends ClientTOP{
      */
     @Nonnull
     protected static final String REVOKE_TOKEN = "https://www.reddit.com/api/v1/revoke_token";
-    /**
-     * The endpoint used for all requests that don't require OAuth2.<p>
-     * Apparently the only endpoint this applies to is {@link Endpoint#GET_API_TRENDING_SUBREDDITS}.
-     */
-    @Nonnull
-    protected static final String WWW = "www.reddit.com";
-    /**
-     * The protocol used for OAuth requests.
-     */
-    @Nonnull
-    protected static final String HTTPS = "https";
-    /**
-     * The host accepting all OAuth2 requests.
-     */
-    @Nonnull
-    protected static final String OAUTH2 = "oauth.reddit.com";
     /**
      * The application credentials is derived from the application id and secret.<p>
      * More explicitly, it is the base 64 encoding of "&lt;id&gt;:&lt;secret&gt;".
@@ -112,157 +100,6 @@ public abstract class Client extends ClientTOP{
         return this;
     }
 
-    /**
-     * Creates the URL for an {@link Endpoint}. It specifies the address the corresponding request has to be directed
-     * to.
-     * @param host The host address of the URL. Usually {@link #OAUTH2}.
-     * @param query Additional parameter appended to the URL. Those may contain additional information, such as the
-     *              index when requesting stickied posts.
-     * @param endpoint The endpoint targeted by the URL.
-     * @param args Additional arguments for the {@link Endpoint}. E.g. a  {@link Subreddit} name.
-     * @return The qualified address of the {@link Request}.
-     */
-    @Nonnull
-    protected String buildUrl(
-            @Nonnull String host,
-            @Nonnull Map<?, ?> query,
-            @Nonnull Endpoint endpoint,
-            @Nonnull Object... args
-    ){
-        HttpUrl.Builder builder = new HttpUrl.Builder()
-                .scheme(HTTPS)
-                .host(host);
-
-        //Append the endpoint URL
-        endpoint.getPath(args).forEach(builder::addPathSegment);
-
-        //Append any additional parameter
-        query.forEach((k,v) -> builder.addQueryParameter(Objects.toString(k), Objects.toString(v)));
-
-        return builder.build().toString();
-    }
-
-    //----------------------------------------------------------------------------------------------------------------//
-    //                                                                                                                //
-    //    Get                                                                                                         //
-    //                                                                                                                //
-    //----------------------------------------------------------------------------------------------------------------//
-
-
-    /**
-     * Creates a GET {@link Request} for the corresponding {@link Endpoint}.
-     * @param host The host address of the URL. Usually {@link #OAUTH2}.
-     * @param query Additional parameter appended to the URL. Those may contain additional information, such as the
-     *              index when requesting stickied posts.
-     * @param endpoint The endpoint targeted by the URL.
-     * @param args Additional arguments for the {@link Endpoint}. E.g. a  {@link Subreddit} name.
-     * @return A GET {@link Request} for the specified {@link Endpoint}.
-     */
-    @Nonnull
-    private Request buildGet(
-            @Nonnull String host,
-            @Nonnull Map<?, ?> query,
-            @Nonnull Endpoint endpoint,
-            @Nonnull Object... args
-    ){
-        assert isPresentToken();
-
-        String url = buildUrl(host, query, endpoint, args);
-
-        Request.Builder builder = new Request.Builder()
-                .url(url)
-                .addHeader(HttpHeaders.USER_AGENT, getUserAgent().toString());
-
-        if(Objects.equals(host, OAUTH2))
-            builder.addHeader(HttpHeaders.AUTHORIZATION, "bearer " + orElseThrowToken().getAccessToken());
-
-        return builder.get().build();
-    }
-
-    /**
-     * Executes a GET {@link Request}.
-     * @param endpoint The endpoint targeted by the URL.
-     * @param args Additional arguments for the {@link Endpoint}. E.g. a  {@link Subreddit} name.
-     * @return The content of the {@link Response} body.
-     * @throws InterruptedException If the query got interrupted while waiting to be executed.
-     * @throws IOException If an exception occurred during the request.
-     * @throws HttpException If the request got rejected by the server.
-     */
-    @Nonnull
-    public String get(@Nonnull Endpoint endpoint, @Nonnull Object... args) throws InterruptedException, IOException, HttpException {
-        return get(OAUTH2, endpoint, args);
-    }
-
-    /**
-     * Executes a GET {@link Request}.
-     * @param host The host address of the URL. Usually {@link #OAUTH2}.
-     *              index when requesting stickied posts.
-     * @param endpoint The endpoint targeted by the URL.
-     * @param args Additional arguments for the {@link Endpoint}. E.g. a  {@link Subreddit} name.
-     * @return The content of the {@link Response} body.
-     * @throws InterruptedException If the query got interrupted while waiting to be executed.
-     * @throws IOException If an exception occurred during the request.
-     * @throws HttpException If the request got rejected by the server.
-     */
-    @Nonnull
-    public String get(@Nonnull String host, @Nonnull Endpoint endpoint, @Nonnull Object... args) throws InterruptedException, IOException, HttpException {
-        return get(host, Collections.emptyMap(), endpoint, args);
-    }
-
-    /**
-     * Executes a GET {@link Request}.
-     * @param query Additional parameter appended to the URL. Those may contain additional information, such as the
-     *              index when requesting stickied posts.
-     * @param endpoint The endpoint targeted by the URL.
-     * @param args Additional arguments for the {@link Endpoint}. E.g. a  {@link Subreddit} name.
-     * @return The content of the {@link Response} body.
-     * @throws InterruptedException If the query got interrupted while waiting to be executed.
-     * @throws IOException If an exception occurred during the request.
-     * @throws HttpException If the request got rejected by the server.
-     */
-    @Nonnull
-    public String get(@Nonnull Map<?, ?> query, @Nonnull Endpoint endpoint, @Nonnull Object... args) throws InterruptedException, IOException, HttpException {
-        return get(OAUTH2, query, endpoint, args);
-    }
-
-    /**
-     * Executes a GET {@link Request}.
-     * @param host The host address of the URL. Usually {@link #OAUTH2}.
-     * @param query Additional parameter appended to the URL. Those may contain additional information, such as the
-     *              index when requesting stickied posts.
-     * @param endpoint The endpoint targeted by the URL.
-     * @param args Additional arguments for the {@link Endpoint}. E.g. a  {@link Subreddit} name.
-     * @return The content of the {@link Response} body.
-     * @throws InterruptedException If the query got interrupted while waiting to be executed.
-     * @throws IOException If an exception occurred during the request.
-     * @throws HttpException If the request got rejected by the server.
-     */
-    @Nonnull
-    public String get(
-            @Nonnull String host,
-            @Nonnull Map<?, ?> query,
-            @Nonnull Endpoint endpoint,
-            @Nonnull Object... args
-    ) throws InterruptedException, IOException, HttpException {
-        Request request = buildGet(host, query, endpoint, args);
-        Response response = request(request);
-        ResponseBody body = response.body();
-
-        assert body != null;
-
-        return body.string();
-    }
-
-    //----------------------------------------------------------------------------------------------------------------//
-    //                                                                                                                //
-    //    Post                                                                                                        //
-    //                                                                                                                //
-    //----------------------------------------------------------------------------------------------------------------//
-
-    //protected JSONObject post(){
-    //    throw new UnsupportedOperationException();
-    //}
-
     //----------------------------------------------------------------------------------------------------------------//
     //                                                                                                                //
     //    HTTP Requests                                                                                               //
@@ -279,7 +116,7 @@ public abstract class Client extends ClientTOP{
      * @throws HttpException If the request got rejected by the server.
      * @throws RateLimiterException If too many requests are performed within short succession.
      */
-    protected synchronized Response request(Request request) throws IOException, HttpException, InterruptedException, RateLimiterException {
+    public synchronized Response request(Request request) throws IOException, HttpException, InterruptedException, RateLimiterException {
         assert isPresentToken();
 
         //Make sure that the token is still valid
@@ -461,7 +298,8 @@ public abstract class Client extends ClientTOP{
     @Override
     @Nonnull
     public Identity getMe() throws InterruptedException, IOException, HttpException, RateLimiterException {
-        return JSONIdentity.fromJson(new Identity(), new JSONObject(get(Endpoint.GET_ME)));
+        String source = new APIRequest.Builder(this).setEndpoint(Endpoint.GET_ME).build().get();
+        return JSONIdentity.fromJson(new Identity(), new JSONObject(source));
     }
 
     /**
@@ -479,7 +317,8 @@ public abstract class Client extends ClientTOP{
     @Nonnull
     @Deprecated
     public List<User> getBlocked() throws InterruptedException, IOException, HttpException, RateLimiterException {
-        return Thing.from(new JSONObject(get(Endpoint.GET_ME_BLOCKED))).toUserList().getData();
+        String source = new APIRequest.Builder(this).setEndpoint(Endpoint.GET_ME_BLOCKED).build().get();
+        return Thing.from(new JSONObject(source)).toUserList().getData();
     }
 
     /**
@@ -498,7 +337,8 @@ public abstract class Client extends ClientTOP{
     @Nonnull
     @Deprecated
     public List<User> getFriends() throws InterruptedException, IOException, HttpException, RateLimiterException {
-        return Thing.from(new JSONObject(get(Endpoint.GET_ME_FRIENDS))).toUserList().getData();
+        String source = new APIRequest.Builder(this).setEndpoint(Endpoint.GET_ME_FRIENDS).build().get();
+        return Thing.from(new JSONObject(source)).toUserList().getData();
     }
 
 
@@ -515,7 +355,8 @@ public abstract class Client extends ClientTOP{
     @Override
     @Nonnull
     public List<Karma> getKarma() throws InterruptedException, IOException, HttpException, RateLimiterException {
-        return Thing.from(new JSONObject(get(Endpoint.GET_ME_KARMA))).toKarmaList().getData();
+        String source = new APIRequest.Builder(this).setEndpoint(Endpoint.GET_ME_KARMA).build().get();
+        return Thing.from(new JSONObject(source)).toKarmaList().getData();
     }
 
     /**
@@ -531,7 +372,8 @@ public abstract class Client extends ClientTOP{
     @Override
     @Nonnull
     public Preferences getPreferences() throws InterruptedException, IOException, HttpException, RateLimiterException {
-        return JSONPreferences.fromJson(new Preferences(), new JSONObject(get(Endpoint.GET_ME_PREFS)));
+        String source = new APIRequest.Builder(this).setEndpoint(Endpoint.GET_ME_PREFS).build().get();
+        return JSONPreferences.fromJson(new Preferences(), new JSONObject(source));
     }
 
     /**
@@ -545,7 +387,8 @@ public abstract class Client extends ClientTOP{
     @Override
     @Nonnull
     public List<Trophy> getTrophies() throws InterruptedException, IOException, HttpException, RateLimiterException {
-        return Thing.from(new JSONObject(get(Endpoint.GET_ME_TROPHIES))).toTrophyList().getData();
+        String source = new APIRequest.Builder(this).setEndpoint(Endpoint.GET_ME_TROPHIES).build().get();
+        return Thing.from(new JSONObject(source)).toTrophyList().getData();
     }
 
     /**
@@ -559,7 +402,8 @@ public abstract class Client extends ClientTOP{
     @Override
     @Nonnull
     public List<User> getPreferencesBlocked() throws InterruptedException, IOException, HttpException, RateLimiterException {
-        return Thing.from(new JSONObject(get(Endpoint.GET_PREFS_BLOCKED))).toUserList().getData();
+        String source = new APIRequest.Builder(this).setEndpoint(Endpoint.GET_PREFS_BLOCKED).build().get();
+        return Thing.from(new JSONObject(source)).toUserList().getData();
     }
 
     /**
@@ -573,7 +417,8 @@ public abstract class Client extends ClientTOP{
     @Override
     @Nonnull
     public List<User> getPreferencesFriends() throws InterruptedException, IOException, HttpException, RateLimiterException {
-        JSONArray response = new JSONArray(get(Endpoint.GET_PREFS_FRIENDS));
+        String source = new APIRequest.Builder(this).setEndpoint(Endpoint.GET_PREFS_FRIENDS).build().get();
+        JSONArray response = new JSONArray(source);
 
         //I think that's a relic from when /prefs/friends/ used to return both friends and blocked users
         //I.e. The first entry contains all friends
@@ -600,7 +445,8 @@ public abstract class Client extends ClientTOP{
     @Override
     @Nonnull
     public Messaging getPreferencesMessaging() throws InterruptedException, IOException, HttpException, RateLimiterException {
-        JSONArray response = new JSONArray(get(Endpoint.GET_PREFS_MESSAGING));
+        String source = new APIRequest.Builder(this).setEndpoint(Endpoint.GET_PREFS_MESSAGING).build().get();
+        JSONArray response = new JSONArray(source);
 
         assert response.length() == 2;
 
@@ -622,7 +468,8 @@ public abstract class Client extends ClientTOP{
     @Override
     @Nonnull
     public List<User> getPreferencesTrusted() throws InterruptedException, IOException, HttpException, RateLimiterException {
-        return Thing.from(new JSONObject(get(Endpoint.GET_PREFS_TRUSTED))).toUserList().getData();
+        String source = new APIRequest.Builder(this).setEndpoint(Endpoint.GET_PREFS_TRUSTED).build().get();
+        return Thing.from(new JSONObject(source)).toUserList().getData();
     }
 
     //----------------------------------------------------------------------------------------------------------------//
@@ -643,7 +490,8 @@ public abstract class Client extends ClientTOP{
     @Override
     @Deprecated
     public boolean needsCaptcha() throws IOException, HttpException, RateLimiterException, InterruptedException {
-        return Boolean.parseBoolean(get(Endpoint.GET_NEEDS_CAPTCHA));
+        String source = new APIRequest.Builder(this).setEndpoint(Endpoint.GET_NEEDS_CAPTCHA).build().get();
+        return Boolean.parseBoolean(source);
     }
 
     //----------------------------------------------------------------------------------------------------------------//
@@ -665,8 +513,9 @@ public abstract class Client extends ClientTOP{
     @Nonnull
     public TrendingSubreddits getTrendingSubreddits() throws IOException, HttpException, RateLimiterException, InterruptedException {
         //Because for some reason trending subreddits don't require OAuth2 and return an 400 if used
-        JSONObject response = new JSONObject(get(WWW, Endpoint.GET_API_TRENDING_SUBREDDITS));
-        return TrendingSubredditsFactory.create(TrendingSubreddits::new, response);
+        //So we have to use HTTPS as host.
+        String source = new APIRequest.Builder(this).setHost(APIRequest.WWW).setEndpoint(Endpoint.GET_API_TRENDING_SUBREDDITS).build().get();
+        return TrendingSubredditsFactory.create(TrendingSubreddits::new, new JSONObject(source));
     }
 
     /**
@@ -825,7 +674,8 @@ public abstract class Client extends ClientTOP{
 
     @Override
     public Subreddit getSubreddit(String name) throws HttpException, IOException, InterruptedException {
-        Thing thing = ThingFactory.create(Thing::new, new JSONObject(get(Endpoint.GET_SUBREDDIT_ABOUT, name)));
+        String source = new APIRequest.Builder(this).setEndpoint(Endpoint.GET_SUBREDDIT_ABOUT).setArgs(name).build().get();
+        Thing thing = ThingFactory.create(Thing::new, new JSONObject(source));
 
         //TODO Check
         //In case a subreddit with the specified name doesn't exist, the return Thing may be arbitrary

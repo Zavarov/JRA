@@ -6,6 +6,7 @@ import vartas.reddit.Client;
 import vartas.reddit.Endpoint;
 import vartas.reddit.Link;
 import vartas.reddit.exceptions.HttpException;
+import vartas.reddit.http.APIRequest;
 import vartas.reddit.query.Query;
 import vartas.reddit.types.Listing;
 import vartas.reddit.types.Thing;
@@ -26,7 +27,13 @@ public class QueryById extends Query<List<Link>, QueryById> {
 
     @Override
     public List<Link> query() throws InterruptedException, IOException, HttpException {
-        JSONObject response = new JSONObject(client.get(params, Endpoint.GET_BY_ID, args));
+        String source = new APIRequest.Builder(client)
+                .setParams(params)
+                .setEndpoint(endpoint)
+                .setArgs(args)
+                .build()
+                .get();
+        JSONObject response = new JSONObject(source);
 
         Listing listing = Thing.from(response).toListing();
 

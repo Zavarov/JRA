@@ -4,6 +4,7 @@ import org.json.JSONObject;
 import vartas.reddit.Client;
 import vartas.reddit.Endpoint;
 import vartas.reddit.exceptions.HttpException;
+import vartas.reddit.http.APIRequest;
 import vartas.reddit.types.Listing;
 import vartas.reddit.types.Thing;
 
@@ -22,7 +23,13 @@ public abstract class QueryMany<T, Q extends QueryBase<List<T>,Q>> extends Query
 
     @Override
     public List<T> query() throws IOException, HttpException, InterruptedException{
-        JSONObject response = new JSONObject(client.get(params, endpoint, args));
+        String source = new APIRequest.Builder(client)
+                .setParams(params)
+                .setEndpoint(endpoint)
+                .setArgs(args)
+                .build()
+                .get();
+        JSONObject response = new JSONObject(source);
 
         Listing listing = Thing.from(response).toListing();
         List<T> result = new ArrayList<>(listing.getChildren().size());

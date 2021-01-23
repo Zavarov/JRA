@@ -8,6 +8,7 @@ import vartas.reddit.Endpoint;
 import vartas.reddit.Link;
 import vartas.reddit.exceptions.HttpException;
 import vartas.reddit.exceptions.NotFoundException;
+import vartas.reddit.http.APIRequest;
 import vartas.reddit.query.Query;
 import vartas.reddit.types.Listing;
 import vartas.reddit.types.Thing;
@@ -44,7 +45,13 @@ public class QuerySticky extends Query<Optional<Pair<Link, List<Thing>>>, QueryS
 
         try{
             //Throws 404 if no submissions are stickied
-            response = new JSONArray(client.get(params, endpoint, args));
+            String source = new APIRequest.Builder(client)
+                    .setParams(params)
+                    .setEndpoint(endpoint)
+                    .setArgs(args)
+                    .build()
+                    .get();
+            response = new JSONArray(source);
         }catch(NotFoundException e){
             return Optional.empty();
         }
