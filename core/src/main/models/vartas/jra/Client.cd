@@ -1,0 +1,122 @@
+package vartas.jra;
+
+import java.io.IOException.IOException;
+import java.lang.String.String;
+import java.lang.Object.Object;
+import java.lang.InterruptedException.InterruptedException;
+import java.time.Instant.Instant;
+import java.time.LocalDateTime.LocalDateTime;
+import java.util.Optional.Optional;
+import java.util.List.List;
+import org.json.JSONObject.JSONObject;
+import vartas.jra.types.Types.SubredditType;
+import vartas.jra.types.Types.LinkType;
+import vartas.jra.types.Types.CommentType;
+import vartas.jra.types.Types.TrendingSubreddits;
+import vartas.jra.types.Types.Trophy;
+import vartas.jra.types.Types.User;
+import vartas.jra.types.Types.Karma;
+import vartas.jra.types.Rule.Rules;
+import vartas.jra.types.Preferences.Preferences;
+import vartas.jra.types.Identity.Identity;
+import vartas.jra.types.Messaging.Messaging;
+import vartas.jra.exceptions.Exceptions.HttpException;
+import vartas.jra.exceptions.Exceptions.RateLimiterException;
+import vartas.jra.Client.Client.Duration;
+import vartas.jra.query.listings.Query.QueryBest;
+import vartas.jra.query.listings.Query.QueryById;
+import vartas.jra.query.listings.Query.QueryComment;
+import vartas.jra.query.listings.Query.QueryControversial;
+import vartas.jra.query.listings.Query.QueryDuplicates;
+import vartas.jra.query.listings.Query.QueryHot;
+import vartas.jra.query.listings.Query.QueryNew;
+import vartas.jra.query.listings.Query.QueryRandom;
+import vartas.jra.query.listings.Query.QueryRising;
+import vartas.jra.query.listings.Query.QueryTop;
+import vartas.jra.query.search.Query.QuerySearch;
+import vartas.jra.query.subreddits.Query.QuerySticky;
+
+public classdiagram Client {
+    public abstract class Client {
+        - Optional<Token> token;
+        - UserAgent userAgent;
+
+        + abstract void login(Duration duration) throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract void login() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract void logout() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        # abstract void refresh() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract Subreddit getSubreddit(String name) throws IOException, HttpException, InterruptedException;
+        //Account
+        + abstract Identity getMe() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract List<User> getBlocked() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract List<User> getFriends() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract List<Karma> getKarma() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract Preferences getPreferences() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract List<Trophy> getTrophies() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract List<User> getPreferencesBlocked() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract List<User> getPreferencesFriends() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract Messaging getPreferencesMessaging() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract List<User> getPreferencesTrusted() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        //Captcha
+        + abstract boolean needsCaptcha() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        //Listings
+        + abstract TrendingSubreddits getTrendingSubreddits() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract QueryBest<Link> getBestLinks();
+        + abstract QueryById getLinksById(String[] names);
+        + abstract QueryComment getComments(String article);
+        + abstract QueryControversial<Link> getControversialLinks();
+        + abstract QueryDuplicates getDuplicates(String article);
+        + abstract QueryHot<Link> getHotLinks();
+        + abstract QueryNew<Link> getNewLinks();
+        + abstract QueryRandom getRandomLink();
+        + abstract QueryRising<Link> getRisingLinks();
+        + abstract QueryTop<Link> getTopLinks();
+        //+ abstract QuerySort<Link> getSortedLinks();
+        //Search
+        + abstract QuerySearch getSearch();
+    }
+
+    public abstract class Subreddit extends SubredditType{
+        + abstract Rules getRules() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract String getSidebar() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract QuerySearch getSearch();
+        + abstract QuerySticky getSticky();
+        //Listings
+        + abstract QueryComment getComments(String article);
+        + abstract QueryControversial<Link> getControversialLinks();
+        + abstract QueryHot<Link> getHotLinks();
+        + abstract QueryNew<Link> getNewLinks();
+        + abstract QueryRandom getRandomLink();
+        + abstract QueryRising<Link> getRisingLinks();
+        + abstract QueryTop<Link> getTopLinks();
+        //+ abstract QuerySort<Link> getSortedLinks();
+    }
+
+    public abstract class Link extends LinkType{
+
+    }
+
+    public abstract class Comment extends CommentType{
+
+    }
+
+    public abstract class Token{
+        <<key="access_token">>
+        - String accessToken;
+        <<key="refresh_token">>
+        - Optional<String> refreshToken;
+        <<key="expires_in">>
+        - int lifetime;
+        <<key="device_id">>
+        - Optional<String> deviceId;
+
+        public abstract boolean isExpired();
+    }
+
+    public class UserAgent{
+        - String platform;
+        - String name;
+        - String version;
+        - String author;
+    }
+}

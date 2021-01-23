@@ -1,0 +1,23 @@
+package vartas.jra.types;
+
+import java.lang.String.String;
+import java.time.OffsetDateTime.OffsetDateTime;
+import java.util.List.List;
+
+public classdiagram User {
+    public class User{
+        <<key="date">>
+        OffsetDateTime date;
+        <<key="name">>
+        String name;
+        <<key="rel_id">>
+        String relativeId;
+        <<key="id">>
+        String id;
+    }
+
+    public class UserList{
+        <<key="data">>
+        - List<User> data;
+    }
+}
