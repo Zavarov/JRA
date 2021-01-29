@@ -1,0 +1,13 @@
+{
+  "data": {
+    "children": [
+      {
+        "date": 1.123456789E9,
+        "name": "Friend",
+        "rel_id": "r9_abcdefg",
+        "id": "t2_abcdefg"
+      }
+    ]
+  },
+  "kind": "UserList"
+}

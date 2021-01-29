@@ -1,0 +1,12 @@
+package vartas.jra;
+
+import org.json.JSONObject.JSONObject;
+import java.util.List.List;
+import vartas.jra.Link.Link;
+
+public classdiagram Duplicate {
+    public class Duplicate {
+        private Link source;
+        private List<Link> duplicates;
+    }
+}

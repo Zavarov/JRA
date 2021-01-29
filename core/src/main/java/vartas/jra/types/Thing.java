@@ -21,10 +21,8 @@ import org.json.JSONObject;
 import vartas.jra.$factory.CommentFactory;
 import vartas.jra.$factory.LinkFactory;
 import vartas.jra.$factory.SubredditFactory;
-import vartas.jra.Client;
-import vartas.jra.Comment;
-import vartas.jra.Link;
-import vartas.jra.Subreddit;
+import vartas.jra.$json.JSONAccount;
+import vartas.jra.*;
 import vartas.jra.types.$factory.ListingFactory;
 import vartas.jra.types.$factory.ThingFactory;
 import vartas.jra.types.$json.JSONKarmaList;
@@ -93,6 +91,10 @@ public class Thing extends ThingTOP {
         }
     }
 
+    public static Thing from(String source){
+        return from(new JSONObject(source));
+    }
+
     public static Thing from(JSONObject node){
         return ThingFactory.create(Thing::new, node);
     }
@@ -102,6 +104,11 @@ public class Thing extends ThingTOP {
         node.put(DATA, source);
         node.put(KIND, kind.name);
         return node;
+    }
+
+    public Account toAccount(Client client){
+        assert Kind.Account.matches(this);
+        return JSONAccount.fromJson(new Account(client, getSource()), getSource().getJSONObject(DATA));
     }
 
     public KarmaList toKarmaList(){

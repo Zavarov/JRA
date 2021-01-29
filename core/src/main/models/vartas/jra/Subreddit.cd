@@ -1,0 +1,26 @@
+package vartas.jra;
+
+import org.json.JSONObject.JSONObject;
+import java.lang.String.String;
+import vartas.jra.types.Types.Thing;
+import vartas.jra.types.AbstractSubreddit.AbstractSubreddit;
+import vartas.jra.types.Rule.Rules;
+import vartas.jra.query.QueryOne.QueryOne;
+import vartas.jra.query.QueryMany.QueryMany;
+
+public classdiagram Subreddit {
+    public abstract class Subreddit extends AbstractSubreddit{
+        + abstract QueryOne<Rules> getRules();
+        + abstract QueryOne<String> getSidebar();
+        + abstract QueryMany<Thing> getSearch();
+        + abstract QueryOne<Submission> getSticky();
+        //Listings
+        + abstract QueryOne<Submission> getComments(String article);
+        + abstract QueryMany<Link> getControversialLinks();
+        + abstract QueryMany<Link> getHotLinks();
+        + abstract QueryMany<Link> getNewLinks();
+        + abstract QueryOne<Submission> getRandomSubmission();
+        + abstract QueryMany<Link> getRisingLinks();
+        + abstract QueryMany<Link> getTopLinks();
+    }
+}

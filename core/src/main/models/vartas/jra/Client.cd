@@ -9,13 +9,18 @@ import java.time.LocalDateTime.LocalDateTime;
 import java.util.Optional.Optional;
 import java.util.List.List;
 import org.json.JSONObject.JSONObject;
+import vartas.jra.query.QueryOne.QueryOne;
+import vartas.jra.query.QueryMany.QueryMany;
+import vartas.jra.Account.Account;
+import vartas.jra.Account.Account;
+import vartas.jra.types.Types.Thing;
 import vartas.jra.types.Types.SubredditType;
 import vartas.jra.types.Types.LinkType;
 import vartas.jra.types.Types.CommentType;
 import vartas.jra.types.Types.TrendingSubreddits;
-import vartas.jra.types.Types.Trophy;
-import vartas.jra.types.Types.User;
-import vartas.jra.types.Types.Karma;
+import vartas.jra.types.Trophy.TrophyList;
+import vartas.jra.types.User.UserList;
+import vartas.jra.types.Karma.KarmaList;
 import vartas.jra.types.Rule.Rules;
 import vartas.jra.types.Preferences.Preferences;
 import vartas.jra.types.Identity.Identity;
@@ -23,18 +28,6 @@ import vartas.jra.types.Messaging.Messaging;
 import vartas.jra.exceptions.Exceptions.HttpException;
 import vartas.jra.exceptions.Exceptions.RateLimiterException;
 import vartas.jra.Client.Client.Duration;
-import vartas.jra.query.listings.Query.QueryBest;
-import vartas.jra.query.listings.Query.QueryById;
-import vartas.jra.query.listings.Query.QueryComment;
-import vartas.jra.query.listings.Query.QueryControversial;
-import vartas.jra.query.listings.Query.QueryDuplicates;
-import vartas.jra.query.listings.Query.QueryHot;
-import vartas.jra.query.listings.Query.QueryNew;
-import vartas.jra.query.listings.Query.QueryRandom;
-import vartas.jra.query.listings.Query.QueryRising;
-import vartas.jra.query.listings.Query.QueryTop;
-import vartas.jra.query.search.Query.QuerySearch;
-import vartas.jra.query.subreddits.Query.QuerySticky;
 
 public classdiagram Client {
     public abstract class Client {
@@ -47,57 +40,34 @@ public classdiagram Client {
         # abstract void refresh() throws IOException, HttpException, RateLimiterException, InterruptedException;
         + abstract Subreddit getSubreddit(String name) throws IOException, HttpException, InterruptedException;
         //Account
-        + abstract Identity getMe() throws IOException, HttpException, RateLimiterException, InterruptedException;
-        + abstract List<User> getBlocked() throws IOException, HttpException, RateLimiterException, InterruptedException;
-        + abstract List<User> getFriends() throws IOException, HttpException, RateLimiterException, InterruptedException;
-        + abstract List<Karma> getKarma() throws IOException, HttpException, RateLimiterException, InterruptedException;
-        + abstract Preferences getPreferences() throws IOException, HttpException, RateLimiterException, InterruptedException;
-        + abstract List<Trophy> getTrophies() throws IOException, HttpException, RateLimiterException, InterruptedException;
-        + abstract List<User> getPreferencesBlocked() throws IOException, HttpException, RateLimiterException, InterruptedException;
-        + abstract List<User> getPreferencesFriends() throws IOException, HttpException, RateLimiterException, InterruptedException;
-        + abstract Messaging getPreferencesMessaging() throws IOException, HttpException, RateLimiterException, InterruptedException;
-        + abstract List<User> getPreferencesTrusted() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract QueryOne<Identity> getMe();
+        + abstract QueryOne<UserList> getBlocked();
+        + abstract QueryOne<UserList> getFriends();
+        + abstract QueryOne<KarmaList> getKarma();
+        + abstract QueryOne<Preferences> getPreferences();
+        + abstract QueryOne<TrophyList> getTrophies();
+        + abstract QueryOne<UserList> getPreferencesBlocked();
+        + abstract QueryOne<UserList> getPreferencesFriends();
+        + abstract QueryOne<Messaging> getPreferencesMessaging();
+        + abstract QueryOne<UserList> getPreferencesTrusted();
         //Captcha
-        + abstract boolean needsCaptcha() throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract QueryOne<Boolean> needsCaptcha();
         //Listings
-        + abstract TrendingSubreddits getTrendingSubreddits() throws IOException, HttpException, RateLimiterException, InterruptedException;
-        + abstract QueryBest<Link> getBestLinks();
-        + abstract QueryById getLinksById(String[] names);
-        + abstract QueryComment getComments(String article);
-        + abstract QueryControversial<Link> getControversialLinks();
-        + abstract QueryDuplicates getDuplicates(String article);
-        + abstract QueryHot<Link> getHotLinks();
-        + abstract QueryNew<Link> getNewLinks();
-        + abstract QueryRandom getRandomLink();
-        + abstract QueryRising<Link> getRisingLinks();
-        + abstract QueryTop<Link> getTopLinks();
-        //+ abstract QuerySort<Link> getSortedLinks();
+        + abstract TrendingSubreddits getTrendingSubreddits() throws IOException, HttpException, RateLimiterException, InterruptedException ;
+        + abstract QueryMany<Link> getBestLinks();
+        + abstract QueryMany<Link> getLinksById(String[] names);
+        + abstract QueryOne<Submission> getComments(String article);
+        + abstract QueryMany<Link> getControversialLinks();
+        + abstract QueryOne<Duplicate> getDuplicates(String article);
+        + abstract QueryMany<Link> getHotLinks();
+        + abstract QueryMany<Link> getNewLinks();
+        + abstract QueryOne<Submission> getRandomSubmission();
+        + abstract QueryMany<Link> getRisingLinks();
+        + abstract QueryMany<Link> getTopLinks();
         //Search
-        + abstract QuerySearch getSearch();
-    }
-
-    public abstract class Subreddit extends SubredditType{
-        + abstract Rules getRules() throws IOException, HttpException, RateLimiterException, InterruptedException;
-        + abstract String getSidebar() throws IOException, HttpException, RateLimiterException, InterruptedException;
-        + abstract QuerySearch getSearch();
-        + abstract QuerySticky getSticky();
-        //Listings
-        + abstract QueryComment getComments(String article);
-        + abstract QueryControversial<Link> getControversialLinks();
-        + abstract QueryHot<Link> getHotLinks();
-        + abstract QueryNew<Link> getNewLinks();
-        + abstract QueryRandom getRandomLink();
-        + abstract QueryRising<Link> getRisingLinks();
-        + abstract QueryTop<Link> getTopLinks();
-        //+ abstract QuerySort<Link> getSortedLinks();
-    }
-
-    public abstract class Link extends LinkType{
-
-    }
-
-    public abstract class Comment extends CommentType{
-
+        + abstract QueryMany<Thing> getSearch();
+        //Users
+        + abstract QueryOne<Account> getAccount(String name);
     }
 
     public abstract class Token{

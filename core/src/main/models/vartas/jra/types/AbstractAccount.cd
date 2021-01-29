@@ -1,0 +1,79 @@
+package vartas.jra.types;
+
+import java.lang.String.String;
+import java.util.Optional.Optional;
+import vartas.jra.types.Types.Created;
+
+public classdiagram AbstractAccount {
+    public abstract class AbstractAccount implements Created{
+        /**
+         * User's comment karma.
+         */
+        <<key="comment_karma">>
+        - int commentKarma;
+        /**
+         * User has unread mail? Empty if not your account.
+         */
+        <<key="has_mail">>
+        - Optional<Boolean> hasMail;
+        /**
+         * User has unread mod mail? Empty if not your account.
+         */
+        <<key="has_mod_mail">>
+        - Optional<Boolean> hasModMail;
+        /**
+         * User has provided an email address and got it verified?
+         */
+        <<key="has_verified_email">>
+        - boolean hasVerifiedEmail;
+        /**
+         * ID of the account; prepend t2_ to get fullname.
+         */
+        <<key="id">>
+        - String id;
+        /**
+         * Number of unread messages in the inbox. Empty if not your account.
+         */
+        <<key="inbox_count">>
+        - Optional<Integer> inboxCount;
+        /**
+         * Whether the logged-in user has this user set as a friend.
+         */
+        <<key="is_friend">>
+        - boolean friend;
+        /**
+         * Reddit gold status.
+         */
+        <<key="is_gold">>
+        - boolean goldMember;
+        /**
+         * Whether this account moderates any subreddits.
+         */
+        <<key="is_mod">>
+        - boolean mod;
+        /**
+         * User's link karma.
+         */
+        <<key="link_karma">>
+        - int linkKarma;
+        /**
+         * Current modhash. Empty if not your account.
+         */
+        <<key="modhash">>
+        - Optional<String> modHash;
+        /**
+         * The username of the account in question. This attribute overrides the superclass's name attribute.
+         * Do not confuse an account's name which is the account's username with a thing's name which is the thing's
+         * FULLNAME. See API: Glossary for details on what FULLNAMEs are.
+         */
+        <<key="name">>
+        - String name;
+        /**
+         * Whether this account is set to be over 18.
+         */
+        <<key="over_18">>
+        - Optional<Boolean> nsfw;
+        <<key="has_subscribed">>
+        - boolean hasSubscribed;
+    }
+}

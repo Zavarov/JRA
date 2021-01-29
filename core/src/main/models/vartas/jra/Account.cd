@@ -1,0 +1,22 @@
+package vartas.jra;
+
+import org.json.JSONObject.JSONObject;
+import java.util.Optional.Optional;
+import vartas.jra.types.AbstractAccount.AbstractAccount;
+import vartas.jra.types.Types.Thing;
+import vartas.jra.query.QueryMany.QueryMany;
+
+public classdiagram Account {
+    public abstract class Account extends AbstractAccount{
+        //Users
+        + abstract QueryMany<Thing> getComments();
+        + abstract QueryMany<Thing> getDownvoted();
+        + abstract QueryMany<Thing> getGilded();
+        + abstract QueryMany<Thing> getHidden();
+        + abstract QueryMany<Thing> getOverview();
+        + abstract QueryMany<Thing> getSaved();
+        + abstract QueryMany<Thing> getSubmitted();
+        + abstract QueryMany<Thing> getTrophies();
+        + abstract QueryMany<Thing> getUpvoted();
+    }
+}

@@ -27,4 +27,10 @@ public classdiagram Exceptions {
      */
     public class NotFoundException extends HttpException{
     }
+
+    /**
+     * This exception is thrown whenever a request failed due to an expired token.
+     */
+    public class UnauthorizedException extends HttpException{
+    }
 }

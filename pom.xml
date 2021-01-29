@@ -133,7 +133,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Zavarov Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/zavarov/reddit</url>
+            <url>https://maven.pkg.github.com/zavarov/jra</url>
         </repository>
     </distributionManagement>
 
