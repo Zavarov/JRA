@@ -5,6 +5,7 @@ import vartas.jra.$factory.SubmissionFactory;
 import vartas.jra.exceptions.NotFoundException;
 import vartas.jra.query.QueryMany;
 import vartas.jra.query.QueryOne;
+import vartas.jra.query.QueryPost;
 import vartas.jra.types.$json.JSONRules;
 import vartas.jra.types.Listing;
 import vartas.jra.types.Rules;
@@ -52,7 +53,6 @@ public class Subreddit extends SubredditTOP{
     //    Listings                                                                                                    //
     //                                                                                                                //
     //----------------------------------------------------------------------------------------------------------------//
-
 
     /**
      * Get the comment tree for a given Link article.<p>
@@ -500,6 +500,163 @@ public class Subreddit extends SubredditTOP{
                 Endpoint.GET_SUBREDDIT_SEARCH,
                 getDisplayName()
         );
+    }
+
+    //----------------------------------------------------------------------------------------------------------------//
+    //                                                                                                                //
+    //    Users                                                                                                       //
+    //                                                                                                                //
+    //----------------------------------------------------------------------------------------------------------------//
+
+
+    /**
+     * Create a relationship between a user and another user or subreddit.<p>
+     * OAuth2 use requires appropriate scope based on the 'type' of the relationship:<p>
+     * <ul>
+     *     <li>moderator: Use "moderator_invite"</li>
+     *     <li>moderator_invite: modothers</li>
+     *     <li>contributor: modcontributors</li>
+     *     <li>banned: modcontributors</li>
+     *     <li>muted: modcontributors</li>
+     *     <li>wikibanned: modcontributors and modwiki</li>
+     *     <li>wikicontributor: modcontributors and modwiki</li>
+     *     <li>friend: Use /api/v1/me/friends/{username}</li>
+     *     <li>enemy: Use /api/block</li>
+     * </ul>
+     * This endpoint accepts the following arguments:
+     * <table>
+     *     <tr>
+     *         <th>{@code api_type}</th>
+     *         <th>The string {@code json}</th>
+     *     </tr>
+     *     <tr>
+     *         <th>{@code ban_context}</th>
+     *         <th>fullname of a thing</th>
+     *     </tr>
+     *     <tr>
+     *         <th>{@code ban_message}</th>
+     *         <th>raw markdown text</th>
+     *     </tr>
+     *     <tr>
+     *         <th>{@code ban_reason}</th>
+     *         <th>a string no longer than 100 characters</th>
+     *     </tr>
+     *     <tr>
+     *         <th>{@code container}</th>
+     *         <th></th>
+     *     </tr>
+     *     <tr>
+     *         <th>{@code duration}</th>
+     *         <th>an integer between 1 and 999</th>
+     *     </tr>
+     *     <tr>
+     *         <th>{@code name}</th>
+     *         <th>the name of an existing user</th>
+     *     </tr>
+     *     <tr>
+     *         <th>{@code note}</th>
+     *         <th>a string no longer than 300 characters</th>
+     *     </tr>
+     *     <tr>
+     *         <th>{@code permissions}</th>
+     *         <th></th>
+     *     </tr>
+     *     <tr>
+     *         <th>{@code type}</th>
+     *         <th>	one of ({@code friend}, {@code moderator}, {@code moderator_invite}, {@code contributor},
+     *         {@code banned}, {@code muted}, {@code wikibanned}, {@code wikicontributor})</th>
+     *     </tr>
+     *     <tr>
+     *         <th>{@code uh / X-Modhash header}</th>
+     *         <th>a modhash</th>
+     *     </tr>
+     * </table>
+     * Complement to {@link #postUnfriend()}
+     * @see #postUnfriend()
+     */
+    @Override
+    public QueryPost<String> postFriend() {
+        return new QueryPost<>(Function.identity(), client, Endpoint.POST_FRIEND);
+    }
+
+    /**
+     * This endpoint accepts the following arguments:
+     * <table>
+     *     <tr>
+     *         <th>{@code api_type}</th>
+     *         <th>the string {@code json}</th>
+     *     </tr>
+     *     <tr>
+     *         <th>{@code name}</th>
+     *         <th>the name of an existing user</th>
+     *     </tr>
+     *     <tr>
+     *         <th>{@code permission}</th>
+     *         <th></th>
+     *     </tr>
+     *     <tr>
+     *         <th>{@code type}</th>
+     *         <th></th>
+     *     </tr>
+     *     <tr>
+     *         <th>{@code uh / X-Modhash header}</th>
+     *         <th>a modhash</th>
+     *     </tr>
+     * </table>
+     */
+    @Override
+    public QueryPost<String> postSetPermission() {
+        return new QueryPost<>(Function.identity(), client, Endpoint.POST_SETPERMISSION);
+    }
+
+    /**
+     * Remove a relationship between a user and another user or subreddit<p>
+     * The user can either be passed in by name (nuser) or by fullname (iuser). If type is friend or enemy, 'container'
+     * MUST be the current user's fullname; for other types, the subreddit must be set via URL
+     * (e.g., /r/funny/api/unfriend).<p>
+     * OAuth2 use requires appropriate scope based on the 'type' of the relationship:
+     * <ul>
+     *     <li>moderator: modothers</li>
+     *     <li>moderator_invite: modothers</li>
+     *     <li>contributor: modcontributors</li>
+     *     <li>banned: modcontributors</li>
+     *     <li>muted: modcontributors</li>
+     *     <li>wikibanned: modcontributors and modwiki</li>
+     *     <li>wikicontributor: modcontributors and modwiki</li>
+     *     <li>friend: Use /api/v1/me/friends/{username}</li>
+     *     <li>enemy: privatemessages<li>
+     * </ul>
+     * This endpoint accepts the following arguments:
+     * <table>
+     *     <tr>
+     *         <th>{@code container}</th>
+     *         <th></th>
+     *     </tr>
+     *     <tr>
+     *         <th>{@code id}</th>
+     *         <th>fullname of a thing</th>
+     *     </tr>
+     *     <tr>
+     *         <th>{@code name}</th>
+     *         <th>the name of an existing user</th>
+     *     </tr>
+     *     <tr>
+     *         <th>{@code type}</th>
+     *         <th>	one of ({@code friend}, {@code enemy}, {@code moderator}, {@code moderator_invite},
+     *         {@code contributor}, {@code banned}, {@code muted}, {@code wikibanned}, {@code wikicontributor})</th>
+     *     </tr>
+     *     <tr>
+     *         <th>{@code uh / X-Modhash header}</th>
+     *         <th>a modhash</th>
+     *     </tr>
+     * </table>
+     *
+     * Complement to {@link #postFriend()}
+     * @see #postFriend()
+     */
+    @Override
+    public QueryPost<String> postUnfriend() {
+        return new QueryPost<>(Function.identity(), client, Endpoint.POST_UNFRIEND);
     }
 
     //------------------------------------------------------------------------------------------------------------------

@@ -1,21 +1,21 @@
 package vartas.jra;
 
 import com.google.common.base.Joiner;
-import com.google.common.net.HttpHeaders;
-import okhttp3.*;
-import org.apache.commons.lang3.concurrent.TimedSemaphore;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vartas.jra.$factory.DuplicateFactory;
+import vartas.jra.$factory.RateLimiterFactory;
 import vartas.jra.$factory.SubmissionFactory;
 import vartas.jra.$json.JSONToken;
-import vartas.jra.exceptions.$factory.HttpExceptionFactory;
-import vartas.jra.exceptions.$factory.NotFoundExceptionFactory;
-import vartas.jra.exceptions.$factory.RateLimiterExceptionFactory;
+import vartas.jra.exceptions.$factory.*;
 import vartas.jra.exceptions.HttpException;
 import vartas.jra.exceptions.RateLimiterException;
+import vartas.jra.http.APIAuthentication;
 import vartas.jra.http.APIRequest;
 import vartas.jra.query.QueryMany;
 import vartas.jra.query.QueryOne;
@@ -24,6 +24,7 @@ import vartas.jra.types.$factory.ThingFactory;
 import vartas.jra.types.$json.JSONIdentity;
 import vartas.jra.types.$json.JSONPreferences;
 import vartas.jra.types.$json.JSONTrendingSubreddits;
+import vartas.jra.types.$json.JSONUserDataMap;
 import vartas.jra.types.*;
 
 import javax.annotation.Nonnull;
@@ -31,7 +32,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -64,7 +64,7 @@ public abstract class Client extends ClientTOP{
      * application banned.
      */
     @Nonnull
-    protected final TimedSemaphore rateLimiter = new TimedSemaphore(1, TimeUnit.MINUTES, 60);
+    protected final RateLimiter rateLimiter = RateLimiterFactory.create(RateLimiter::new, 0, 60, 60);
     /**
      * The logger for keeping track of the HTTP exchange between Reddit and application.
      */
@@ -75,6 +75,8 @@ public abstract class Client extends ClientTOP{
      */
     @Nonnull
     protected final OkHttpClient http = new OkHttpClient();
+    @Nonnull
+    protected final Scope[] scope;
 
     /**
      * Creates a new instance.
@@ -84,9 +86,10 @@ public abstract class Client extends ClientTOP{
      * @see <a href="https://github.com/reddit-archive/reddit/wiki/OAuth2">here</a>
      */
     @Nonnull
-    public Client(@Nonnull UserAgent userAgent, @Nonnull String id, @Nonnull String secret){
+    public Client(@Nonnull UserAgent userAgent, @Nonnull String id, @Nonnull String secret, @Nonnull Scope... scope){
         setUserAgent(userAgent);
         this.credentials = Base64.getEncoder().encodeToString((id+":"+secret).getBytes(StandardCharsets.UTF_8));
+        this.scope = scope;
     }
 
 
@@ -138,16 +141,24 @@ public abstract class Client extends ClientTOP{
      * @throws HttpException If the request got rejected by the server.
      * @throws RateLimiterException If too many requests are performed within short succession.
      */
-    protected synchronized Response execute(Request request) throws InterruptedException, IOException, HttpException, RateLimiterException {
+    public synchronized Response execute(Request request) throws InterruptedException, IOException, HttpException, RateLimiterException {
         //Wait if we're making too many requests at once
         rateLimiter.acquire();
 
         log.debug("--> {}", request);
         Response response = http.newCall(request).execute();
+        rateLimiter.update(response);
         log.debug("<-- {}", response);
+
 
         if(!response.isSuccessful()){
             switch(response.code()){
+                //Unauthorized
+                case 401:
+                    throw UnauthorizedExceptionFactory.create(response.code(), response.message());
+                //Forbidden
+                case 403:
+                    throw ForbiddenExceptionFactory.create(response.code(), response.message());
                 //Not Found
                 case 404:
                     throw NotFoundExceptionFactory.create(response.code(), response.message());
@@ -217,12 +228,11 @@ public abstract class Client extends ClientTOP{
         if(orElseThrowToken().isEmptyRefreshToken())
             return;
 
-        RequestBody body = new FormBody.Builder()
-                .add("token", orElseThrowToken().orElseThrowRefreshToken())
-                .add("token_type_hint", TokenType.REFRESH_TOKEN.name)
-                .build();
-
-        request(getAuthentication(REVOKE_TOKEN, body)).close();
+        new APIAuthentication.Builder(REVOKE_TOKEN, credentials, this)
+                .addParameter("token", orElseThrowToken().orElseThrowRefreshToken())
+                .addParameter("token_type_hint", TokenType.REFRESH_TOKEN)
+                .build()
+                .post();
     }
 
     /**
@@ -235,12 +245,11 @@ public abstract class Client extends ClientTOP{
     private void revokeAccessToken() throws IOException, HttpException, InterruptedException, RateLimiterException {
         assert isPresentToken();
 
-        RequestBody body = new FormBody.Builder()
-                .add("token", orElseThrowToken().getAccessToken())
-                .add("token_type_hint", TokenType.ACCESS_TOKEN.toString())
-                .build();
-
-        request(getAuthentication(REVOKE_TOKEN, body)).close();
+        new APIAuthentication.Builder(REVOKE_TOKEN, credentials, this)
+                .addParameter("token", orElseThrowToken().getAccessToken())
+                .addParameter("token_type_hint", TokenType.REFRESH_TOKEN)
+                .build()
+                .post();
     }
 
     //----------------------------------------------------------------------------------------------------------------//
@@ -260,22 +269,19 @@ public abstract class Client extends ClientTOP{
     protected synchronized void refresh() throws IOException, HttpException, RateLimiterException, InterruptedException {
         assert isPresentToken() && orElseThrowToken().isPresentRefreshToken();
 
-        RequestBody body = new FormBody.Builder()
-                .add("grant_type", GrantType.REFRESH.toString())
-                .add("refresh_token", orElseThrowToken().orElseThrowRefreshToken())
+        APIAuthentication request = new APIAuthentication.Builder(ACCESS_TOKEN, credentials, this)
+                .addParameter("grant_type", GrantType.REFRESH)
+                .addParameter("refresh_token", orElseThrowToken().orElseThrowRefreshToken())
                 .build();
 
-        Response response = request(getAuthentication(ACCESS_TOKEN, body));
-        ResponseBody data = response.body();
-
-        assert data != null;
+        String response = request.post();
 
         //On February 15th 2021, the refresh response will contain a new refresh token.
         //Until then, we reuse the initial token.
         //@see https://redd.it/kvzaot
         String refreshToken = orElseThrowToken().orElseThrowRefreshToken();
 
-        setToken(JSONToken.fromJson(new Token(), new JSONObject(data.string())));
+        setToken(JSONToken.fromJson(new Token(), response));
         //#TODO Remove after February 15th 2021
         if(orElseThrowToken().isEmptyRefreshToken())
             orElseThrowToken().setRefreshToken(refreshToken);
@@ -1060,37 +1066,8 @@ public abstract class Client extends ClientTOP{
     @Override
     @Nonnull
     public QueryOne<Submission> getRandomSubmission() {
-        //Move to Submission class
-        Function<String, Submission> mapper = source -> {
-            JSONArray response = new JSONArray(source);
-
-            Link link;
-            List<Thing> comments;
-
-            //We receive an array consisting of two listings.
-            //The first listing contains a randomly fetched submission
-            //The second listing contains comments belonging to the fetched submission
-            //Note that it might be the case that the comments are compressed
-            assert response.length() == 2;
-
-            //Extract random submissions
-            Listing listing = Thing.from(response.getJSONObject(0)).toListing();
-            List<Thing> children = listing.getChildren();
-
-            //Reddit should've only returned a single submission
-            assert children.size() == 1;
-
-            link = children.get(0).toLink();
-
-            //Extract comments, if present
-            listing = Thing.from(response.getJSONObject(1)).toListing();
-            comments = Collections.unmodifiableList(listing.getChildren());
-
-            return SubmissionFactory.create(link, comments);
-        };
-
         return new QueryOne<>(
-                mapper,
+                Submission::from,
                 this,
                 Endpoint.GET_RANDOM
         );
@@ -1259,18 +1236,58 @@ public abstract class Client extends ClientTOP{
 
     //----------------------------------------------------------------------------------------------------------------//
     //                                                                                                                //
-    //    Account                                                                                             //
+    //    Users                                                                                                       //
     //                                                                                                                //
     //----------------------------------------------------------------------------------------------------------------//
 
+    /**
+     * This endpoint accepts the following arguments:
+     * <table>
+     *     <tr>
+     *         <th>{@code ids}</th>
+     *         <th>A comma-separated list of account fullnames</th>
+     *     </tr>
+     * </table>
+     */
+    @Override
+    public QueryOne<UserDataMap> getUserDataByAccountIds() {
+        return new QueryOne<>(
+                source -> JSONUserDataMap.fromJson(new UserDataMap(), source),
+                this,
+                Endpoint.GET_USER_DATA_BY_ACCOUNT_IDS
+        );
+    }
+
+    /**
+     * Check whether a username is available for registration.<p>
+     * This endpoint accepts the following arguments:
+     * <table>
+     *     <tr>
+     *         <th>{@code user}</th>
+     *         <th>a valid, unused, username</th>
+     *     </tr>
+     * </table>
+     */
+    @Override
+    public QueryOne<Boolean> getUsernameAvailable() {
+        return new QueryOne<>(
+                Boolean::parseBoolean,
+                this,
+                Endpoint.GET_USERNAME_AVAILABLE
+        );
+    }
+
+    /**
+     * Return information about the user, including karma and gold status.
+     */
     @Override
     @Nonnull
-    public QueryOne<Account> getAccount(String name){
+    public QueryOne<Account> getAccount(String username){
         return new QueryOne<>(
                 source -> Thing.from(source).toAccount(this),
                 this,
                 Endpoint.GET_USER_USERNAME_ABOUT,
-                name
+                username
         );
     }
 
@@ -1294,27 +1311,13 @@ public abstract class Client extends ClientTOP{
 
     }
 
-    protected Request getAuthentication(String url, RequestBody body){
-        return new Request.Builder()
-                .url(url)
-                .addHeader(HttpHeaders.AUTHORIZATION, "Basic "+credentials)
-                .addHeader(HttpHeaders.USER_AGENT, getUserAgent().toString())
-                .post(body)
-                .build();
-    }
-
     public enum Duration {
-        PERMANENT("permanent"),
-        TEMPORARY("temporary");
-
-        private final String name;
-        Duration(String name){
-            this.name = name;
-        }
+        PERMANENT,
+        TEMPORARY;
 
         @Override
         public String toString(){
-            return name;
+            return name().toLowerCase(Locale.ENGLISH);
         }
     }
 
@@ -1344,26 +1347,16 @@ public abstract class Client extends ClientTOP{
          * The access token is required to authenticate the application when using the OAuth2 endpoints.
          */
         @Nonnull
-        ACCESS_TOKEN("access_token"),
+        ACCESS_TOKEN,
         /**
          * The refresh token is required when requesting a new access token, once the previous one expired.
          */
         @Nonnull
-        REFRESH_TOKEN("refresh_token");
+        REFRESH_TOKEN;
 
-        /**
-         * The type name.
-         */
-        @Nonnull
-        public final String name;
-
-        /**
-         * Assigns each token type a name. The name matches the one used by Reddit.
-         * @param name The type name.
-         */
-        @Nonnull
-        TokenType(@Nonnull String name){
-            this.name = name;
+        @Override
+        public String toString(){
+            return name().toLowerCase(Locale.ENGLISH);
         }
     }
 
@@ -1525,7 +1518,7 @@ public abstract class Client extends ClientTOP{
          * The scope name.
          */
         @Nonnull
-        public final String name;
+        private final String name;
 
         /**
          * Assigns each scope a name. The name matches the one used by Reddit.
@@ -1534,6 +1527,12 @@ public abstract class Client extends ClientTOP{
         @Nonnull
         Scope(@Nonnull String name){
             this.name = name;
+        }
+
+        @Nonnull
+        @Override
+        public String toString(){
+            return name;
         }
     }
 }

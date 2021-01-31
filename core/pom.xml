@@ -133,6 +133,7 @@
                                 <argument>vartas.jra.types.Trophy</argument>
                                 <argument>vartas.jra.types.Types</argument>
                                 <argument>vartas.jra.types.User</argument>
+                                <argument>vartas.jra.types.UserData</argument>
                             </arguments>
                         </configuration>
                     </execution>

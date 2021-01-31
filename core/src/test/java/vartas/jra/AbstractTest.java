@@ -20,14 +20,13 @@ import java.nio.file.Paths;
 
 public class AbstractTest {
     protected static final Logger log = LoggerFactory.getLogger(AbstractTest.class);
-    protected static final String SUBREDDIT_NAME = "RedditDev";
 
     protected static JSONObject getConfig() throws IOException {
         String content = Files.readString(Paths.get("src", "test", "resources", "config.json"));
         return new JSONObject(content);
     }
 
-    protected static Client getScript(String version) throws IOException {
+    protected static Client getScript(String version, Client.Scope... scope) throws IOException {
         JSONObject config = getConfig();
 
         String platform = config.getString("platform");
@@ -38,10 +37,10 @@ public class AbstractTest {
         String password = config.getString("password");
         UserAgent userAgent = UserAgentFactory.create(platform, AbstractTest.class.getPackageName(), version, author);
 
-        return new ScriptClient(userAgent, id, secret, account, password);
+        return new ScriptClient(userAgent, id, secret, account, password, scope);
     }
 
-    protected static Client getUserless(String version) throws IOException {
+    protected static Client getUserless(String version, Client.Scope... scope) throws IOException {
         JSONObject config = getConfig();
 
         String platform = config.getString("platform");
@@ -50,7 +49,7 @@ public class AbstractTest {
         String secret = config.getString("secret");
         UserAgent userAgent = UserAgentFactory.create(platform, AbstractTest.class.getPackageName(), version, author);
 
-        return new UserlessClient(userAgent, id, secret);
+        return new UserlessClient(userAgent, id, secret, scope);
     }
 
     protected static void check(Thing thing){

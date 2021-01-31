@@ -9,7 +9,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
-public class QueryMany<T> extends QueryBase<List<T>, QueryMany<T>> {
+public class QueryMany<T> extends QueryGet<List<T>, QueryMany<T>> {
     public QueryMany(Function<Thing, T> mapper, Client client, Endpoint endpoint, Object... args) {
         super(many(mapper), client, endpoint, args);
     }

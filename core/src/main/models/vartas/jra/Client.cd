@@ -1,27 +1,21 @@
 package vartas.jra;
 
+import okhttp3.Response.Response;
 import java.io.IOException.IOException;
 import java.lang.String.String;
-import java.lang.Object.Object;
 import java.lang.InterruptedException.InterruptedException;
-import java.time.Instant.Instant;
-import java.time.LocalDateTime.LocalDateTime;
 import java.util.Optional.Optional;
-import java.util.List.List;
-import org.json.JSONObject.JSONObject;
 import vartas.jra.query.QueryOne.QueryOne;
 import vartas.jra.query.QueryMany.QueryMany;
-import vartas.jra.Account.Account;
+import vartas.jra.query.QueryPost.QueryPost;
 import vartas.jra.Account.Account;
 import vartas.jra.types.Types.Thing;
-import vartas.jra.types.Types.SubredditType;
-import vartas.jra.types.Types.LinkType;
-import vartas.jra.types.Types.CommentType;
 import vartas.jra.types.Types.TrendingSubreddits;
 import vartas.jra.types.Trophy.TrophyList;
+import vartas.jra.types.User.User;
 import vartas.jra.types.User.UserList;
+import vartas.jra.types.UserData.UserDataMap;
 import vartas.jra.types.Karma.KarmaList;
-import vartas.jra.types.Rule.Rules;
 import vartas.jra.types.Preferences.Preferences;
 import vartas.jra.types.Identity.Identity;
 import vartas.jra.types.Messaging.Messaging;
@@ -67,7 +61,29 @@ public classdiagram Client {
         //Search
         + abstract QueryMany<Thing> getSearch();
         //Users
+        + abstract QueryOne<UserDataMap> getUserDataByAccountIds();
+        + abstract QueryOne<Boolean> getUsernameAvailable();
         + abstract QueryOne<Account> getAccount(String name);
+
+    }
+
+    public abstract class RateLimiter{
+        /**
+         * Approximate number of requests used in this period.
+         */
+        - long used;
+        /**
+         * Approximate number of requests left to use.
+         */
+        - long remaining;
+        /**
+         * Approximate number of seconds to end of period.
+         */
+        - long reset;
+
+        public abstract void update(Response response);
+
+        public abstract void acquire() throws InterruptedException;
     }
 
     public abstract class Token{

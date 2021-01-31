@@ -179,6 +179,17 @@ public class ClientTest extends AbstractTest{
     //                                                                                                                //
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
+    @ParameterizedTest
+    @ValueSource(strings = {"t2_1qwk"})
+    public void testGetUserDataByAccountIds(String ids) throws InterruptedException, IOException, HttpException {
+        client.getUserDataByAccountIds().setParameter("ids", ids).query();
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"Reddit"})
+    public void getUsernameAvailable(String name) throws InterruptedException, IOException, HttpException {
+        client.getUsernameAvailable().setParameter("user", name).query();
+    }
 
     @ParameterizedTest
     @ValueSource(strings = {"Reddit"})

@@ -33,4 +33,10 @@ public classdiagram Exceptions {
      */
     public class UnauthorizedException extends HttpException{
     }
+
+    /**
+     * This exception is thrown whenever a request failed due to a lack of permission.
+     */
+    public class ForbiddenException extends HttpException{
+    }
 }

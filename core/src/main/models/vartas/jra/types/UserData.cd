@@ -1,0 +1,28 @@
+package vartas.jra.types;
+
+import java.lang.String.String;
+import java.time.OffsetDateTime.OffsetDateTime;
+import java.util.Map.Map;
+
+public classdiagram UserData {
+    public class UserData{
+        <<key="name">>
+        String name;
+        <<key="created_utc">>
+        OffsetDateTime createdUtc;
+        <<key="link_karma">>
+        int linkKarma;
+        <<key="comment_karma">>
+        int commentKarma;
+        <<key="profile_img">>
+        String profileImage;
+        <<key="profile_color">>
+        String profileColor;
+        <<key="profile_over_18">>
+        boolean profileOver18;
+    }
+
+    public class UserDataMap{
+        - Map<String, UserData> userData;
+    }
+}

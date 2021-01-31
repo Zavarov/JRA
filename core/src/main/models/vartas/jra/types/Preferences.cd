@@ -143,7 +143,7 @@ public classdiagram Preferences {
         <<key="store_visits">>
         - boolean storeVisits;
         <<key="survey_last_seen_time">>
-        - long surveyLastSeenTime;
+        - Optional<Long> surveyLastSeenTime;
         <<key="third_party_data_personalized_ads">>
         - boolean thirdPartyDataPersonalizedAds;
         <<key="third_party_personalized_ads">>
@@ -167,6 +167,6 @@ public classdiagram Preferences {
         //- boolean in_redesign_beta;
         //- String other_theme;
         //- boolean organic
-        // boolean show_promote
+        //- boolean show_promote
     }
 }

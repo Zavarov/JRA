@@ -2,21 +2,37 @@ package vartas.jra;
 
 import org.json.JSONObject.JSONObject;
 import java.util.Optional.Optional;
+import vartas.jra.Comment.Comment;
+import vartas.jra.Link.Link;
 import vartas.jra.types.AbstractAccount.AbstractAccount;
+import vartas.jra.types.TrophyList.TrophyList;
 import vartas.jra.types.Types.Thing;
+import vartas.jra.types.User.User;
+import vartas.jra.query.QueryOne.QueryOne;
 import vartas.jra.query.QueryMany.QueryMany;
+import vartas.jra.query.QueryDelete.QueryDelete;
+import vartas.jra.query.QueryPost.QueryPost;
+import vartas.jra.query.QueryPut.QueryPut;
 
 public classdiagram Account {
     public abstract class Account extends AbstractAccount{
         //Users
-        + abstract QueryMany<Thing> getComments();
+        + abstract QueryOne<TrophyList> getTrophies();
+        + abstract QueryMany<Comment> getComments();
         + abstract QueryMany<Thing> getDownvoted();
         + abstract QueryMany<Thing> getGilded();
         + abstract QueryMany<Thing> getHidden();
         + abstract QueryMany<Thing> getOverview();
         + abstract QueryMany<Thing> getSaved();
-        + abstract QueryMany<Thing> getSubmitted();
-        + abstract QueryMany<Thing> getTrophies();
+        + abstract QueryMany<Link> getSubmitted();
         + abstract QueryMany<Thing> getUpvoted();
+        + abstract QueryPost<String> postBlock();
+        + abstract QueryPost<String> postFriend();
+        + abstract QueryPost<String> postReport();
+        + abstract QueryPost<String> postSetPermission();
+        + abstract QueryPost<String> postUnfriend();
+        + abstract QueryDelete<Void> deleteFriends();
+        + abstract QueryOne<User> getFriends();
+        + abstract QueryPut<User> putFriends();
     }
 }

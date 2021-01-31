@@ -1,10 +1,9 @@
 package vartas.jra;
 
-import okhttp3.*;
-import org.json.JSONObject;
 import vartas.jra.$json.JSONToken;
 import vartas.jra.exceptions.HttpException;
 import vartas.jra.exceptions.RateLimiterException;
+import vartas.jra.http.APIAuthentication;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -41,9 +40,10 @@ public class ScriptClient extends Client{
             @Nonnull String id,
             @Nonnull String secret,
             @Nonnull String account,
-            @Nonnull String password
+            @Nonnull String password,
+            @Nonnull Scope... scope
     ){
-        super(userAgent, id, secret);
+        super(userAgent, id, secret, scope);
         this.account = account;
         this.password = password;
     }
@@ -59,22 +59,16 @@ public class ScriptClient extends Client{
      */
     @Override
     public synchronized void login(@Nonnull Duration duration) throws IOException, HttpException, RateLimiterException, InterruptedException {
-        RequestBody body = new FormBody.Builder()
-                .add("grant_type", GrantType.PASSWORD.toString())
-                .add("username", account)
-                .add("password", password)
-                .add("duration", duration.toString())
+        APIAuthentication request = new APIAuthentication.Builder(ACCESS_TOKEN, credentials, this)
+                .addParameter("grant_type", GrantType.PASSWORD)
+                .addParameter("username", account)
+                .addParameter("password", password)
+                .addParameter("duration", duration)
+                .addScope(scope)
                 .build();
 
-        Request request = getAuthentication(ACCESS_TOKEN, body);
-        //Call execute directly to avoid checking the non-existent token for validity
-        Response response = execute(request);
-        ResponseBody data = response.body();
+        String response = request.post();
 
-        //Call.execute() supposedly always returns a non-null response with non-null body
-        assert data != null;
-
-        //data.string() automatically closes the response
-        setToken(JSONToken.fromJson(new Token(), new JSONObject(data.string())));
+        setToken(JSONToken.fromJson(new Token(), response));
     }
 }

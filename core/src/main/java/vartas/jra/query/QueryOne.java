@@ -5,7 +5,7 @@ import vartas.jra.Endpoint;
 
 import java.util.function.Function;
 
-public class QueryOne<T> extends QueryBase<T, QueryOne<T>>{
+public class QueryOne<T> extends QueryGet<T, QueryOne<T>>{
     public QueryOne(Function<String, T> mapper, Client client, Endpoint endpoint, Object... args) {
         super(mapper, client, endpoint, args);
     }
