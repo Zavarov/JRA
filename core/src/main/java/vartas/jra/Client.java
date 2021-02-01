@@ -11,21 +11,23 @@ import org.slf4j.LoggerFactory;
 import vartas.jra.$factory.DuplicateFactory;
 import vartas.jra.$factory.RateLimiterFactory;
 import vartas.jra.$factory.SubmissionFactory;
+import vartas.jra.$json.JSONSelfAccount;
 import vartas.jra.$json.JSONToken;
 import vartas.jra.exceptions.$factory.*;
 import vartas.jra.exceptions.HttpException;
 import vartas.jra.exceptions.RateLimiterException;
 import vartas.jra.http.APIAuthentication;
 import vartas.jra.http.APIRequest;
+import vartas.jra.query.QueryInternal;
 import vartas.jra.query.QueryMany;
 import vartas.jra.query.QueryOne;
-import vartas.jra.types.$factory.MessagingFactory;
 import vartas.jra.types.$factory.ThingFactory;
-import vartas.jra.types.$json.JSONIdentity;
-import vartas.jra.types.$json.JSONPreferences;
 import vartas.jra.types.$json.JSONTrendingSubreddits;
 import vartas.jra.types.$json.JSONUserDataMap;
-import vartas.jra.types.*;
+import vartas.jra.types.Listing;
+import vartas.jra.types.Thing;
+import vartas.jra.types.TrendingSubreddits;
+import vartas.jra.types.UserDataMap;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -149,6 +151,7 @@ public abstract class Client extends ClientTOP{
         Response response = http.newCall(request).execute();
         rateLimiter.update(response);
         log.debug("<-- {}", response);
+        log.debug("{} used, {} remain, {} seconds until next period", rateLimiter.getUsed(), rateLimiter.getRemaining(), rateLimiter.getReset());
 
 
         if(!response.isSuccessful()){
@@ -294,349 +297,17 @@ public abstract class Client extends ClientTOP{
     //----------------------------------------------------------------------------------------------------------------//
 
     /**
-     * Returns the {@link Identity} of the user.
-     * @return An instance of the {@link Identity} of the currently logged-in user.
+     * Returns the {@link SelfAccount} of the client.
+     * @return An instance of the {@link SelfAccount} of the currently logged-in user.
+     * @see Endpoint#GET_ME
      */
     @Override
     @Nonnull
-    public QueryOne<Identity> getMe() {
+    public QueryOne<SelfAccount> getMe() {
         return new QueryOne<>(
-                source -> JSONIdentity.fromJson(new Identity(), source),
+                source -> JSONSelfAccount.fromJson(new SelfAccount(this), source),
                 this,
                 Endpoint.GET_ME
-        );
-    }
-
-    /**
-     * Returns a list of all users blocked by the currently logged-in user.<p>
-     * This endpoint is a listing and accepts the following arguments:
-     * <table>
-     *     <tr>
-     *         <th>{@code after}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code before}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code count}</th>
-     *         <th>a positive integer (default: 0)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code limit}</th>
-     *         <th>the maximum number of items desired (default: 25, maximum: 100)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code show}</th>
-     *         <th>(optional) the string {@code all}</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code sr_detail}</th>
-     *         <th>(optional) expand subreddits (boolean)</th>
-     *     </tr>
-     * </table>
-     * @return A list of users.
-     * @deprecated This endpoint is no longer supported and will always return 404. In order to get all blocked users,
-     * use {@link #getPreferencesBlocked()}
-     * @see #getPreferencesBlocked()
-     */
-    @Override
-    @Nonnull
-    @Deprecated
-    public QueryOne<UserList> getBlocked() {
-        return new QueryOne<>(
-                source -> Thing.from(source).toUserList(),
-                this,
-                Endpoint.GET_ME_BLOCKED
-        );
-    }
-
-    /**
-     * Returns a list of all users the currently logged-in {@link User} is friends with.<p>
-     * This endpoint is a listing and accepts the following arguments:
-     * <table>
-     *     <tr>
-     *         <th>{@code after}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code before}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code count}</th>
-     *         <th>a positive integer (default: 0)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code limit}</th>
-     *         <th>the maximum number of items desired (default: 25, maximum: 100)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code show}</th>
-     *         <th>(optional) the string {@code all}</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code sr_detail}</th>
-     *         <th>(optional) expand subreddits (boolean)</th>
-     *     </tr>
-     * </table>
-     * @return A list of users.
-     * @deprecated While this endpoint is still supported, the result is equivalent to the one returned by
-     * {@link #getPreferencesFriends()}. So in order to avoid using duplicate methods, we gently encourage everyone to
-     * choose the other one instead.
-     * @see #getPreferencesFriends()
-     */
-    @Override
-    @Nonnull
-    @Deprecated
-    public QueryOne<UserList> getFriends() {
-        return new QueryOne<>(
-            source -> Thing.from(source).toUserList(),
-            this,
-            Endpoint.GET_ME_FRIENDS
-        );
-    }
-
-
-    /**
-     * Returns a breakdown of the {@link Karma} received the currently logged-in {@link User}.<p>
-     * Each entry contains the number of {@link Link} and {@link Comment} in one of the subreddits the {@link User}
-     * has been active at some point.
-     * @return A list of {@link Karma} instances.
-     */
-    @Override
-    @Nonnull
-    public QueryOne<KarmaList> getKarma() {
-        return new QueryOne<>(
-                source -> Thing.from(source).toKarmaList(),
-                this,
-                Endpoint.GET_ME_KARMA
-        );
-    }
-
-    /**
-     * Returns the preference settings of the currently logged-in {@link User}.<p>
-     * Those settings contain information such as the default {@link Comment} sort, whether nightmode is enabled or
-     * whether they should be notified via email upon mentions or responses.
-     * @return An instance of the user preferences.
-     */
-    @Override
-    @Nonnull
-    public QueryOne<Preferences> getPreferences() {
-        return new QueryOne<>(
-                source -> JSONPreferences.fromJson(new Preferences(), source),
-                this,
-                Endpoint.GET_ME_PREFS
-        );
-    }
-
-    /**
-     * Returns a list of all trophies that have been awarded to the currently logged-in {@link User}.
-     * @return A list of trophies.
-     */
-    @Override
-    @Nonnull
-    public QueryOne<TrophyList> getTrophies() {
-        return new QueryOne<>(
-                source -> Thing.from(source).toTrophyList(),
-                this,
-                Endpoint.GET_ME_TROPHIES
-        );
-    }
-
-    /**
-     * Returns a list of all users blocked by the currently logged-in {@link User}.<p>
-     * This endpoint is a listing and accepts the following arguments:
-     * <table>
-     *     <tr>
-     *         <th>{@code after}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code before}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code count}</th>
-     *         <th>a positive integer (default: 0)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code limit}</th>
-     *         <th>the maximum number of items desired (default: 25, maximum: 100)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code show}</th>
-     *         <th>(optional) the string {@code all}</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code sr_detail}</th>
-     *         <th>(optional) expand subreddits (boolean)</th>
-     *     </tr>
-     * </table>
-     * @return A list of users.
-     */
-    @Override
-    @Nonnull
-    public QueryOne<UserList> getPreferencesBlocked() {
-        return new QueryOne<>(
-                source -> Thing.from(source).toUserList(),
-                this,
-                Endpoint.GET_PREFS_BLOCKED
-        );
-    }
-
-    /**
-     * Returns a list of all users the currently logged-in {@link User} is friends with.<p>
-     * This endpoint is a listing and accepts the following arguments:
-     * <table>
-     *     <tr>
-     *         <th>{@code after}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code before}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code count}</th>
-     *         <th>a positive integer (default: 0)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code limit}</th>
-     *         <th>the maximum number of items desired (default: 25, maximum: 100)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code show}</th>
-     *         <th>(optional) the string {@code all}</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code sr_detail}</th>
-     *         <th>(optional) expand subreddits (boolean)</th>
-     *     </tr>
-     * </table>
-     * @return A list of users.
-     */
-    @Override
-    @Nonnull
-    public QueryOne<UserList> getPreferencesFriends() {
-        //TODO Find a better way to extract friends
-        Function<String, UserList> mapper = source -> {
-            JSONArray response = new JSONArray(source);
-
-            //I think that's a relic from when /prefs/friends/ used to return both friends and blocked users
-            //I.e. The first entry contains all friends
-            //And the second entry should always be empty.
-            assert response.length() == 2;
-
-            UserList friends = Thing.from(response.getJSONObject(0)).toUserList();
-            UserList blocked = Thing.from(response.getJSONObject(1)).toUserList();
-
-            assert blocked.isEmptyData();
-
-            return friends;
-        };
-
-        return new QueryOne<>(
-                mapper,
-                this,
-                Endpoint.GET_PREFS_FRIENDS
-        );
-    }
-
-    /**
-     * Returns the message settings of the currently logged-in {@link User}.<p>
-     * This configuration contains all users that have been either blacklisted or whitelisted.<p>
-     * This endpoint is a listing and accepts the following arguments:
-     * <table>
-     *     <tr>
-     *         <th>{@code after}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code before}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code count}</th>
-     *         <th>a positive integer (default: 0)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code limit}</th>
-     *         <th>the maximum number of items desired (default: 25, maximum: 100)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code show}</th>
-     *         <th>(optional) the string {@code all}</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code sr_detail}</th>
-     *         <th>(optional) expand subreddits (boolean)</th>
-     *     </tr>
-     * </table>
-     * @return An instance of the message settings.
-     */
-    @Override
-    @Nonnull
-    public QueryOne<Messaging> getPreferencesMessaging() {
-        //TODO Use JSONMessaging instead
-        Function<String, Messaging> mapper = source -> {
-            JSONArray response = new JSONArray(source);
-
-            assert response.length() == 2;
-
-            List<User> blocked = Thing.from(response.getJSONObject(0)).toUserList().getData();
-            List<User> trusted = Thing.from(response.getJSONObject(1)).toUserList().getData();
-
-            return MessagingFactory.create(blocked, trusted);
-        };
-
-        return new QueryOne<>(
-                mapper,
-                this,
-                Endpoint.GET_PREFS_MESSAGING
-        );
-    }
-
-    /**
-     * Returns the whitelist of all users that are able to send messages to the currently logged-in {@link User}. Even
-     * if private messages have been disabled.<p>
-     * This endpoint is a listing and accepts the following arguments:
-     * <table>
-     *     <tr>
-     *         <th>{@code after}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code before}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code count}</th>
-     *         <th>a positive integer (default: 0)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code limit}</th>
-     *         <th>the maximum number of items desired (default: 25, maximum: 100)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code show}</th>
-     *         <th>(optional) the string {@code all}</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code sr_detail}</th>
-     *         <th>(optional) expand subreddits (boolean)</th>
-     *     </tr>
-     * </table>
-     * @return A list of users.
-     */
-    @Override
-    @Nonnull
-    public QueryOne<UserList> getPreferencesTrusted() {
-        return new QueryOne<>(
-                source -> Thing.from(source).toUserList(),
-                this,
-                Endpoint.GET_PREFS_TRUSTED
         );
     }
 
@@ -667,6 +338,11 @@ public abstract class Client extends ClientTOP{
     //                                                                                                                //
     //----------------------------------------------------------------------------------------------------------------//
 
+    @Override
+    public QueryInternal<FrontPage> getFrontPage(){
+        return new QueryInternal<>(new FrontPage(this));
+    }
+
     /**
      * Return a list of trending subreddits, link to the {@link Comment} in {@code r/trendingsubreddits}, and the
      * {@link Comment} count of that {@link Link}.
@@ -677,47 +353,6 @@ public abstract class Client extends ClientTOP{
     public TrendingSubreddits getTrendingSubreddits() throws IOException, HttpException, RateLimiterException, InterruptedException {
         String source = new APIRequest.Builder(this).setHost(APIRequest.WWW).setEndpoint(Endpoint.GET_API_TRENDING_SUBREDDITS).build().get();
         return JSONTrendingSubreddits.fromJson(new TrendingSubreddits(), source);
-    }
-
-    /**
-     * Links sorted by {code best} have the highest ration between upvotes and downvotes.<p>
-     * This endpoint is a listing and accepts the following arguments:
-     * <table>
-     *     <tr>
-     *         <th>{@code after}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code before}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code count}</th>
-     *         <th>a positive integer (default: 0)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code limit}</th>
-     *         <th>the maximum number of items desired (default: 25, maximum: 100)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code show}</th>
-     *         <th>(optional) the string {@code all}</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code sr_detail}</th>
-     *         <th>(optional) expand subreddits (boolean)</th>
-     *     </tr>
-     * </table>
-     * @return A list of links.
-     */
-    @Override
-    @Nonnull
-    public QueryMany<Link> getBestLinks() {
-        return new QueryMany<>(
-                Thing::toLink,
-                this,
-                Endpoint.GET_BEST
-        );
     }
 
     /**
@@ -838,51 +473,6 @@ public abstract class Client extends ClientTOP{
     }
 
     /**
-     * Links sorted by {code controversial} have recently received a high amount of upvotes <b>and</b> downvotes.
-     * This endpoint is a listing and accepts the following arguments:
-     * <table>
-     *     <tr>
-     *         <th>{@code t}</th>
-     *         <th>one of ({@code hour}, {@code day}, {@code week}, {@code month}, {@code year}, {@code all})</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code after}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code before}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code count}</th>
-     *         <th>a positive integer (default: 0)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code limit}</th>
-     *         <th>the maximum number of items desired (default: 25, maximum: 100)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code show}</th>
-     *         <th>(optional) the string {@code all}</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code sr_detail}</th>
-     *         <th>(optional) expand subreddits (boolean)</th>
-     *     </tr>
-     * </table>
-     * @return A list of links.
-     */
-    @Override
-    @Nonnull
-    public QueryMany<Link> getControversialLinks() {
-        return new QueryMany<>(
-                Thing::toLink,
-                this,
-                Endpoint.GET_CONTROVERSIAL
-        );
-    }
-
-    /**
      * Return a list of other links of the same URL. This happens, for example, if a link is cross-posted to another
      * {@link Subreddit}.<p>
      * This endpoint is a listing and accepts the following arguments:
@@ -965,272 +555,6 @@ public abstract class Client extends ClientTOP{
                 this,
                 Endpoint.GET_DUPLICATES,
                 article
-        );
-    }
-
-    /**
-     * Links sorted by {code hot} have recently received a high amount of upvotes and/or comments.<p>
-     * This endpoint is a listing and accepts the following arguments:
-     * <table>
-     *     <tr>
-     *         <th>{@code q}</th>
-     *         <th>	one of (GLOBAL, US, AR, AU, BG, CA, CL, CO, HR, CZ, FI, FR, DE, GR, HU, IS, IN, IE, IT, JP, MY, MX,
-     *         NZ, PH, PL, PT, PR, RO, RS, SG, ES, SE, TW, TH, TR, GB, US_WA, US_DE, US_DC, US_WI, US_WV, US_HI, US_FL,
-     *         US_WY, US_NH, US_NJ, US_NM, US_TX, US_LA, US_NC, US_ND, US_NE, US_TN, US_NY, US_PA, US_CA, US_NV, US_VA,
-     *         US_CO, US_AK, US_AL, US_AR, US_VT, US_IL, US_GA, US_IN, US_IA, US_OK, US_AZ, US_ID, US_CT, US_ME, US_MD,
-     *         US_MA, US_OH, US_UT, US_MO, US_MN, US_MI, US_RI, US_KS, US_MT, US_MS, US_SC, US_KY, US_OR, US_SD)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code after}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code before}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code count}</th>
-     *         <th>a positive integer (default: 0)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code limit}</th>
-     *         <th>the maximum number of items desired (default: 25, maximum: 100)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code show}</th>
-     *         <th>(optional) the string {@code all}</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code sr_detail}</th>
-     *         <th>(optional) expand subreddits (boolean)</th>
-     *     </tr>
-     * </table>
-     * @return A list of links.
-     */
-    @Override
-    @Nonnull
-    public QueryMany<Link> getHotLinks() {
-        return new QueryMany<>(
-                Thing::toLink,
-                this,
-                Endpoint.GET_HOT
-        );
-    }
-
-    /**
-     * Links sorted by {code new} are ordered according to their submission date.<p>
-     * This endpoint is a listing and accepts the following arguments:
-     * <table>
-     *     <tr>
-     *         <th>{@code after}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code before}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code count}</th>
-     *         <th>a positive integer (default: 0)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code limit}</th>
-     *         <th>the maximum number of items desired (default: 25, maximum: 100)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code show}</th>
-     *         <th>(optional) the string {@code all}</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code sr_detail}</th>
-     *         <th>(optional) expand subreddits (boolean)</th>
-     *     </tr>
-     * </table>
-     * @return A list of links.
-     */
-    @Override
-    @Nonnull
-    public QueryMany<Link> getNewLinks() {
-        return new QueryMany<>(
-                Thing::toLink,
-                this,
-                Endpoint.GET_NEW
-        );
-    }
-
-    /**
-     * The {@link Link} is chosen randomly from the {@code top} links.
-     * @return A link.
-     * @see #getTopLinks()
-     */
-    @Override
-    @Nonnull
-    public QueryOne<Submission> getRandomSubmission() {
-        return new QueryOne<>(
-                Submission::from,
-                this,
-                Endpoint.GET_RANDOM
-        );
-    }
-
-    /**
-     * Links sorted by {code rising} have received a high amount of upvotes and/or comments right now.<p>
-     * This endpoint is a listing and accepts the following arguments:
-     * <table>
-     *     <tr>
-     *         <th>{@code after}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code before}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code count}</th>
-     *         <th>a positive integer (default: 0)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code limit}</th>
-     *         <th>the maximum number of items desired (default: 25, maximum: 100)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code show}</th>
-     *         <th>(optional) the string {@code all}</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code sr_detail}</th>
-     *         <th>(optional) expand subreddits (boolean)</th>
-     *     </tr>
-     * </table>
-     * @return A list of links.
-     */
-    @Override
-    @Nonnull
-    public QueryMany<Link> getRisingLinks() {
-        return new QueryMany<>(
-                Thing::toLink,
-                this,
-                Endpoint.GET_RISING
-        );
-    }
-
-    /**
-     * Links sorted by {code top} have received a high amount of upvotes over an unspecified period of time.<p>
-     * This endpoint is a listing and accepts the following arguments:
-     * <table>
-     *     <tr>
-     *         <th>{@code t}</th>
-     *         <th>one of ({@code hour}, {@code day}, {@code week}, {@code month}, {@code year}, {@code all})</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code after}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code before}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code count}</th>
-     *         <th>a positive integer (default: 0)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code limit}</th>
-     *         <th>the maximum number of items desired (default: 25, maximum: 100)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code show}</th>
-     *         <th>(optional) the string {@code all}</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code sr_detail}</th>
-     *         <th>(optional) expand subreddits (boolean)</th>
-     *     </tr>
-     * </table>
-     * @return A list of links.
-     */
-    @Override
-    @Nonnull
-    public QueryMany<Link> getTopLinks() {
-        return new QueryMany<>(
-                Thing::toLink,
-                this,
-                Endpoint.GET_TOP
-        );
-    }
-
-    //----------------------------------------------------------------------------------------------------------------//
-    //                                                                                                                //
-    //    Search                                                                                                      //
-    //                                                                                                                //
-    //----------------------------------------------------------------------------------------------------------------//
-
-    /**
-     * Provides access to the search function for links.<p>
-     * This endpoint is a listing and accepts the following arguments:
-     * <table>
-     *     <tr>
-     *         <th>{@code after}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code before}</th>
-     *         <th>{@code fullname} of a thing</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code category}</th>
-     *         <th>a string no longer than 5 characters</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code count}</th>
-     *         <th>a positive integer (default: 0)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code include_facets}</th>
-     *         <th>boolean value</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code limit}</th>
-     *         <th>the maximum number of items desired (default: 25, maximum: 100)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code q}</th>
-     *         <th>a string no longer than 512 characters</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code restrict_sr}</th>
-     *         <th>boolean value</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code show}</th>
-     *         <th>(optional) the string {@code all}</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code sort}</th>
-     *         <th>one of ({@code relevance}, {@code hot}, {@code top}, {@code new}, {@code comments})</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code sr_detail}</th>
-     *         <th>(optional) expand subreddits (boolean)</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code t}</th>
-     *         <th>one of ({@code hour}, {@code day}, {@code week}, {@code month}, {@code year}, {@code all})</th>
-     *     </tr>
-     *     <tr>
-     *         <th>{@code type}</th>
-     *         <th>(optional) comma-delimited list of result types ({@code sr}, {@code link}, {@code user})</th>
-     *     </tr>
-     * </table>
-     * @return A list of things.
-     */
-    @Override
-    @Nonnull
-    public QueryMany<Thing> getSearch() {
-        return new QueryMany<>(
-                Function.identity(),
-                this,
-                Endpoint.GET_SEARCH
         );
     }
 

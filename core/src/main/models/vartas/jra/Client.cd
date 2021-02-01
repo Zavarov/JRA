@@ -5,10 +5,14 @@ import java.io.IOException.IOException;
 import java.lang.String.String;
 import java.lang.InterruptedException.InterruptedException;
 import java.util.Optional.Optional;
+import vartas.jra.Account.Account;
+import vartas.jra.FrontPage.FrontPage;
+import vartas.jra.SelfAccount.SelfAccount;
+import vartas.jra.Client.Client.Duration;
+import vartas.jra.query.QueryInternal.QueryInternal;
 import vartas.jra.query.QueryOne.QueryOne;
 import vartas.jra.query.QueryMany.QueryMany;
 import vartas.jra.query.QueryPost.QueryPost;
-import vartas.jra.Account.Account;
 import vartas.jra.types.Types.Thing;
 import vartas.jra.types.Types.TrendingSubreddits;
 import vartas.jra.types.Trophy.TrophyList;
@@ -17,11 +21,9 @@ import vartas.jra.types.User.UserList;
 import vartas.jra.types.UserData.UserDataMap;
 import vartas.jra.types.Karma.KarmaList;
 import vartas.jra.types.Preferences.Preferences;
-import vartas.jra.types.Identity.Identity;
 import vartas.jra.types.Messaging.Messaging;
 import vartas.jra.exceptions.Exceptions.HttpException;
 import vartas.jra.exceptions.Exceptions.RateLimiterException;
-import vartas.jra.Client.Client.Duration;
 
 public classdiagram Client {
     public abstract class Client {
@@ -33,33 +35,17 @@ public classdiagram Client {
         + abstract void logout() throws IOException, HttpException, RateLimiterException, InterruptedException;
         # abstract void refresh() throws IOException, HttpException, RateLimiterException, InterruptedException;
         + abstract Subreddit getSubreddit(String name) throws IOException, HttpException, InterruptedException;
+
+        + abstract QueryInternal<FrontPage> getFrontPage();
         //Account
-        + abstract QueryOne<Identity> getMe();
-        + abstract QueryOne<UserList> getBlocked();
-        + abstract QueryOne<UserList> getFriends();
-        + abstract QueryOne<KarmaList> getKarma();
-        + abstract QueryOne<Preferences> getPreferences();
-        + abstract QueryOne<TrophyList> getTrophies();
-        + abstract QueryOne<UserList> getPreferencesBlocked();
-        + abstract QueryOne<UserList> getPreferencesFriends();
-        + abstract QueryOne<Messaging> getPreferencesMessaging();
-        + abstract QueryOne<UserList> getPreferencesTrusted();
+        + abstract QueryOne<SelfAccount> getMe();
         //Captcha
         + abstract QueryOne<Boolean> needsCaptcha();
         //Listings
         + abstract TrendingSubreddits getTrendingSubreddits() throws IOException, HttpException, RateLimiterException, InterruptedException ;
-        + abstract QueryMany<Link> getBestLinks();
         + abstract QueryMany<Link> getLinksById(String[] names);
         + abstract QueryOne<Submission> getComments(String article);
-        + abstract QueryMany<Link> getControversialLinks();
         + abstract QueryOne<Duplicate> getDuplicates(String article);
-        + abstract QueryMany<Link> getHotLinks();
-        + abstract QueryMany<Link> getNewLinks();
-        + abstract QueryOne<Submission> getRandomSubmission();
-        + abstract QueryMany<Link> getRisingLinks();
-        + abstract QueryMany<Link> getTopLinks();
-        //Search
-        + abstract QueryMany<Thing> getSearch();
         //Users
         + abstract QueryOne<UserDataMap> getUserDataByAccountIds();
         + abstract QueryOne<Boolean> getUsernameAvailable();

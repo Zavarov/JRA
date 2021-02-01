@@ -1,0 +1,26 @@
+package vartas.jra;
+
+import java.util.Optional.Optional;
+import vartas.jra.types.AbstractSelfAccount.AbstractSelfAccount;
+import vartas.jra.types.Preferences.Preferences;
+import vartas.jra.types.Messaging.Messaging;
+import vartas.jra.types.TrophyList.TrophyList;
+import vartas.jra.types.Karma.KarmaList;
+import vartas.jra.types.User.UserList;
+import vartas.jra.query.QueryOne.QueryOne;
+import vartas.jra.query.QueryPatch.QueryPatch;
+
+public classdiagram SelfAccount {
+    public abstract class SelfAccount extends AbstractSelfAccount{
+            + abstract QueryOne<UserList> getBlocked();
+            + abstract QueryOne<UserList> getFriends();
+            + abstract QueryOne<KarmaList> getKarma();
+            + abstract QueryOne<Preferences> getPreferences();
+            + abstract QueryPatch<Preferences> patchPreferences();
+            + abstract QueryOne<TrophyList> getTrophies();
+            + abstract QueryOne<UserList> getPreferencesBlocked();
+            + abstract QueryOne<UserList> getPreferencesFriends();
+            + abstract QueryOne<Messaging> getPreferencesMessaging();
+            + abstract QueryOne<UserList> getPreferencesTrusted();
+    }
+}

@@ -2,8 +2,8 @@ package vartas.jra.types;
 
 import java.lang.String.String;
 
-public classdiagram Identity {
-    public class Identity{
+public classdiagram AbstractSelfAccount {
+    public abstract class AbstractSelfAccount{
         <<key="over_18">>
         - boolean over18;
         <<key="comment_karma">>

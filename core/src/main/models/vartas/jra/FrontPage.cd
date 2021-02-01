@@ -1,0 +1,22 @@
+package vartas.jra;
+
+import vartas.jra.Link.Link;
+import vartas.jra.Submission.Submission;
+import vartas.jra.types.Thing.Thing;
+import vartas.jra.query.QueryOne.QueryOne;
+import vartas.jra.query.QueryMany.QueryMany;
+
+public classdiagram FrontPage {
+    public abstract class FrontPage{
+        //Listings
+        + abstract QueryMany<Link> getBestLinks();
+        + abstract QueryMany<Link> getControversialLinks();
+        + abstract QueryMany<Link> getHotLinks();
+        + abstract QueryMany<Link> getNewLinks();
+        + abstract QueryOne<Submission> getRandomSubmission();
+        + abstract QueryMany<Link> getRisingLinks();
+        + abstract QueryMany<Link> getTopLinks();
+        //Search
+        + abstract QueryMany<Thing> getSearch();
+    }
+}

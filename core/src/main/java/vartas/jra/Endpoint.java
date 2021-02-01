@@ -22,17 +22,18 @@ public enum Endpoint {
      */
     GET_ME("api","v1","me"),
     /**
-     * TODO What does it do?
+     * Returns all blocked users.
      * @see <a href="https://www.reddit.com/dev/api#GET_api_v1_me_blocked">here</a>
-     * @deprecated This endpoint seems to be no longer supported and throws an 404. Use {@link #GET_PREFS_BLOCKED} if
-     * you want a list of all blocked users.
+     * @deprecated Deprecated in favor of {@link #GET_PREFS_BLOCKED}.
      */
     @Deprecated
     GET_ME_BLOCKED("api","v1","me","blocked"),
     /**
-     * TODO What does it do?
+     * Returns all friends.
      * @see <a href="https://www.reddit.com/dev/api#GET_api_v1_me_friends">here</a>
+     * @deprecated Deprecated in favor of {@link #GET_PREFS_FRIENDS}.
      */
+    @Deprecated
     GET_ME_FRIENDS("api","v1","me","friends"),
     /**
      * Return a breakdown of subreddit karma.

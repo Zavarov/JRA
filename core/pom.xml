@@ -103,7 +103,9 @@
                                 <argument>vartas.jra.Client</argument>
                                 <argument>vartas.jra.Comment</argument>
                                 <argument>vartas.jra.Duplicate</argument>
+                                <argument>vartas.jra.FrontPage</argument>
                                 <argument>vartas.jra.Link</argument>
+                                <argument>vartas.jra.SelfAccount</argument>
                                 <argument>vartas.jra.Submission</argument>
                                 <argument>vartas.jra.Subreddit</argument>
                             </arguments>
@@ -124,7 +126,7 @@
                                 <argument>${generator.config}</argument>
                                 <argument>vartas.jra.types.AbstractAccount</argument>
                                 <argument>vartas.jra.types.AbstractSubreddit</argument>
-                                <argument>vartas.jra.types.Identity</argument>
+                                <argument>vartas.jra.types.AbstractSelfAccount</argument>
                                 <argument>vartas.jra.types.Karma</argument>
                                 <argument>vartas.jra.types.Messaging</argument>
                                 <argument>vartas.jra.types.Preferences</argument>
