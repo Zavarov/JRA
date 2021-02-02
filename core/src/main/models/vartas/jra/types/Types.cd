@@ -15,119 +15,11 @@ import vartas.jra.types.Created.Created;
  * See more at: https://github.com/reddit-archive/reddit/wiki/JSON
  */
 public classdiagram Types {
-    public abstract class JsonType{
-        # JSONObject source;
-    }
-
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //
     // Data Structures
     //
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    public abstract class CommentType extends VotableCreated{
-        /**
-         * Who approved this comment. Empty if nobody or you are not a mod.
-         */
-        + abstract Optional<String> getApprovedBy();
-        /**
-         * The account name of the poster.
-         */
-        + abstract String getAuthor();
-        /**
-         * The CSS class of the author's flair. Subreddit specific.
-         * Empty if unflaired.
-         */
-        + abstract Optional<String> getAuthorFlairCssClass();
-        /**
-         * The text of the author's flair. Subreddit specific.
-         * Empty if unflaired.
-         */
-        + abstract Optional<String> getAuthorFlairText();
-        /**
-         * Who removed this comment. Empty if nobody or you are not a mod.
-         */
-        + abstract Optional<String> getBannedBy();
-        /**
-         * The raw text. This is the unformatted text which includes the raw markup characters such as ** for bold.
-         * <, >, and & are escaped.
-         */
-        + abstract String getBody();
-        /**
-         * The formatted HTML text as displayed on Reddit. For example, text that is emphasised by * will now have <em>
-         * tags wrapping it. Additionally, bullets and numbered lists will now be in HTML list format.
-         * NOTE: The HTML string will be escaped. You must unescape to get the raw HTML.
-         */
-        + abstract String getBodyHtml();
-        /**
-         * Empty if not edited, edit date in UTC epoch-seconds otherwise.
-         */
-        + abstract Optional<OffsetDateTime> getEdited();
-        /**
-         * The number of times this comment received Reddit gold.
-         */
-        + abstract int getGilded();
-        /**
-         * Present if the comment is being displayed outside its thread (user pages, /r/subreddit/comments/.json, etc.).
-         * Contains the author of the parent link.
-         */
-        + abstract Optional<String> getLinkAuthor();
-        /**
-         * ID of the link this comment is in.
-         */
-        + abstract String getLinkId();
-        /**
-         * Present if the comment is being displayed outside its thread (user pages, /r/subreddit/comments/.json, etc.).
-         * Contains the title of the parent link.
-         */
-        + abstract Optional<String> getLinkTitle();
-        /**
-         * Present if the comment is being displayed outside its thread (user pages, /r/subreddit/comments/.json, etc.).
-         * Contains the URL of the parent link.
-         */
-        + abstract Optional<String> getLinkUrl();
-        /**
-         * How many times this comment has been reported, empty if not a mod.
-         */
-        + abstract Optional<Integer> getNumberOfReports();
-        /**
-         * ID of the thing this comment is a reply to, either the link or a comment in it.
-         */
-        + abstract String getParentId();
-        /**
-         * A list of replies to this comment.
-         */
-        + abstract List<CommentType> getReplies();
-        /**
-         * true if this post is saved by the logged in user.
-         */
-        + abstract boolean isSaved();
-        /**
-         * The net-score of the comment.
-         */
-        + abstract int getScore();
-        /**
-         * Whether the comment's score is currently hidden.
-         */
-        + abstract boolean isScoreHidden();
-        /**
-         * Subreddit of thing excluding the /r/ prefix. e.g. "pics".
-         */
-        + abstract String getSubreddit();
-        /**
-         * The id of the subreddit in which the thing is located.
-         */
-        + abstract String getSubredditId();
-        /**
-         * To allow determining whether they have been distinguished by moderators/admins.
-         * Empty = not distinguished.
-         * Moderator = the green [M].
-         * Admin = the red [A].
-         * Special = various other special distinguishes
-         * http://redd.it/19ak1b
-         */
-        + abstract Optional<String> getDistinguished();
-    }
 
     public abstract class MessageType extends Created{
         /**
