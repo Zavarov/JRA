@@ -2,7 +2,7 @@ package vartas.jra;
 
 import org.json.JSONObject.JSONObject;
 import java.lang.String.String;
-import vartas.jra.types.Types.Thing;
+import vartas.jra.types.Thing.Thing;
 import vartas.jra.types.AbstractSubreddit.AbstractSubreddit;
 import vartas.jra.types.Rule.Rules;
 import vartas.jra.query.QueryOne.QueryOne;

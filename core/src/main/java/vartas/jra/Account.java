@@ -1,6 +1,5 @@
 package vartas.jra;
 
-import org.json.JSONObject;
 import vartas.jra.query.*;
 import vartas.jra.types.$json.JSONUser;
 import vartas.jra.types.Thing;
@@ -16,17 +15,14 @@ public class Account extends AccountTOP {
      */
     @Nonnull
     private final Client client;
-    @Nonnull
-    private final JSONObject source;
 
     /**
      * Creates a new instance of an account.
      * @param client The client communicating with the endpoints.
      */
     @Nonnull
-    public Account(@Nonnull Client client, @Nonnull JSONObject source){
+    public Account(@Nonnull Client client){
         this.client = client;
-        this.source = source;
     }
 
     @Override
@@ -356,12 +352,6 @@ public class Account extends AccountTOP {
                 Endpoint.PUT_ME_FRIENDS_USERNAME,
                 getName()
         );
-    }
-
-    @Override
-    @Nonnull
-    public JSONObject getSource() {
-        return source;
     }
 
     @Override

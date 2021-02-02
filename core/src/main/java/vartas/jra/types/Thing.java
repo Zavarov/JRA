@@ -18,46 +18,16 @@
 package vartas.jra.types;
 
 import org.json.JSONObject;
-import vartas.jra.$factory.CommentFactory;
-import vartas.jra.$factory.LinkFactory;
-import vartas.jra.$factory.SubredditFactory;
 import vartas.jra.$json.JSONAccount;
+import vartas.jra.$json.JSONComment;
+import vartas.jra.$json.JSONLink;
+import vartas.jra.$json.JSONSubreddit;
 import vartas.jra.*;
-import vartas.jra.types.$factory.ListingFactory;
-import vartas.jra.types.$factory.ThingFactory;
-import vartas.jra.types.$json.JSONKarmaList;
-import vartas.jra.types.$json.JSONTrophy;
-import vartas.jra.types.$json.JSONTrophyList;
-import vartas.jra.types.$json.JSONUserList;
+import vartas.jra.types.$json.*;
 
 import java.util.Objects;
 
 public class Thing extends ThingTOP {
-    private static final String ID = "id";
-    private static final String NAME = "name";
-    private static final String KIND = "kind";
-    private static final String DATA = "data";
-
-    @Override
-    public String getId() {
-        return getSource().getString(ID);
-    }
-
-    @Override
-    public String getName() {
-        return getSource().getString(NAME);
-    }
-
-    @Override
-    public String getKind() {
-        return getSource().getString(KIND);
-    }
-
-    @Override
-    public Object getData() {
-        return getSource().get(DATA);
-    }
-
     @Override
     public Thing getRealThis() {
         return this;
@@ -76,7 +46,7 @@ public class Thing extends ThingTOP {
         TrophyList("TrophyList"),
         KarmaList("KarmaList");
 
-        public final String name;
+        private final String name;
 
         Kind(String name){
             this.name = name;
@@ -96,19 +66,12 @@ public class Thing extends ThingTOP {
     }
 
     public static Thing from(JSONObject node){
-        return ThingFactory.create(Thing::new, node);
-    }
-
-    public static JSONObject from(JSONObject source, Kind kind){
-        JSONObject node = new JSONObject();
-        node.put(DATA, source);
-        node.put(KIND, kind.name);
-        return node;
+        return JSONThing.fromJson(new Thing(), node);
     }
 
     public Account toAccount(Client client){
         assert Kind.Account.matches(this);
-        return JSONAccount.fromJson(new Account(client, getSource()), getSource().getJSONObject(DATA));
+        return JSONAccount.fromJson(new Account(client), getData().toString());
     }
 
     public KarmaList toKarmaList(){
@@ -117,42 +80,42 @@ public class Thing extends ThingTOP {
         //While TrophyList and UserList return a JSON Object, KarmaList returns a JSONArray.
         //We have to wrap this array in an object, to make it compatible with the rest of the program.
         JSONObject root = new JSONObject();
-        root.put(JSONKarmaList.KEY, getSource().getJSONArray(DATA));
+        root.put(JSONKarmaList.KEY, getData());
         return JSONKarmaList.fromJson(new KarmaList(), root);
     }
 
     public TrophyList toTrophyList(){
         assert Kind.TrophyList.matches(this);
-        return JSONTrophyList.fromJson(new TrophyList(), getSource().getJSONObject(DATA));
+        return JSONTrophyList.fromJson(new TrophyList(), getData().toString());
     }
 
     public Trophy toTrophy(){
         assert Kind.Award.matches(this);
-        return JSONTrophy.fromJson(new Trophy(), getSource().getJSONObject(DATA));
+        return JSONTrophy.fromJson(new Trophy(), getData().toString());
     }
 
     public UserList toUserList(){
         assert Kind.UserList.matches(this);
-        return JSONUserList.fromJson(new UserList(), getSource().getJSONObject(DATA));
+        return JSONUserList.fromJson(new UserList(), getData().toString());
     }
 
     public Comment toComment(){
         assert Thing.Kind.Comment.matches(this);
-        return CommentFactory.create(Comment::new, getSource().getJSONObject(DATA));
+        return JSONComment.fromJson(new Comment(), getData().toString());
     }
 
     public Link toLink(){
         assert Thing.Kind.Link.matches(this);
-        return LinkFactory.create(Link::new, getSource().getJSONObject(DATA));
+        return JSONLink.fromJson(new Link(), getData().toString());
     }
 
     public Subreddit toSubreddit(Client client){
         assert Kind.Subreddit.matches(this);
-        return SubredditFactory.create(() -> new Subreddit(client), getSource().getJSONObject(DATA));
+        return JSONSubreddit.fromJson(new Subreddit(client), getData().toString());
     }
 
     public Listing toListing(){
         assert Kind.Listing.matches(this);
-        return ListingFactory.create(Listing::new, getSource().getJSONObject(DATA));
+        return JSONListing.fromJson(new Listing(), getData().toString());
     }
 }

@@ -1,10 +1,9 @@
 package vartas.jra;
 
-import org.json.JSONObject.JSONObject;
-import vartas.jra.types.Types.LinkType;
+import vartas.jra.types.AbstractLink.AbstractLink;
 
 public classdiagram Link {
-    public class Link extends LinkType{
+    public class Link extends AbstractLink{
 
     }
 }

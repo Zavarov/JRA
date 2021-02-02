@@ -1,0 +1,25 @@
+package vartas.jra.types;
+
+import java.lang.Boolean.Boolean;
+import java.time.OffsetDateTime.OffsetDateTime;
+import java.util.List.List;
+import java.util.Optional.Optional;
+import vartas.jra.types.Votable.Votable;
+
+public classdiagram VotableCreated {
+    /**
+     * Fuck Java and multiple inheritance
+     */
+    public abstract class VotableCreated extends Votable{
+        /**
+         * The time of creation in local epoch-second format. ex: 1331042771.0
+         */
+        <<key="created">>
+        - double created;
+        /**
+         * The time of creation in UTC epoch-second format. Note that neither of these ever have a non-zero fraction.
+         */
+        <<key="created_utc">>
+        - OffsetDateTime createdUtc;
+    }
+}

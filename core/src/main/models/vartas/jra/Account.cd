@@ -1,7 +1,5 @@
 package vartas.jra;
 
-import org.json.JSONObject.JSONObject;
-import java.util.Optional.Optional;
 import vartas.jra.Comment.Comment;
 import vartas.jra.Link.Link;
 import vartas.jra.types.AbstractAccount.AbstractAccount;

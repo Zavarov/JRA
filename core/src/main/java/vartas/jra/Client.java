@@ -5,10 +5,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vartas.jra.$factory.DuplicateFactory;
 import vartas.jra.$factory.RateLimiterFactory;
 import vartas.jra.$factory.SubmissionFactory;
 import vartas.jra.$json.JSONSelfAccount;
@@ -21,13 +19,11 @@ import vartas.jra.http.APIRequest;
 import vartas.jra.query.QueryInternal;
 import vartas.jra.query.QueryMany;
 import vartas.jra.query.QueryOne;
-import vartas.jra.types.$factory.ThingFactory;
+import vartas.jra.types.$factory.DuplicateFactory;
+import vartas.jra.types.$json.JSONThing;
 import vartas.jra.types.$json.JSONTrendingSubreddits;
 import vartas.jra.types.$json.JSONUserDataMap;
-import vartas.jra.types.Listing;
-import vartas.jra.types.Thing;
-import vartas.jra.types.TrendingSubreddits;
-import vartas.jra.types.UserDataMap;
+import vartas.jra.types.*;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -624,7 +620,8 @@ public abstract class Client extends ClientTOP{
     @Override
     public Subreddit getSubreddit(String name) throws HttpException, IOException, InterruptedException {
         String source = new APIRequest.Builder(this).setEndpoint(Endpoint.GET_SUBREDDIT_ABOUT).setArgs(name).build().get();
-        Thing thing = ThingFactory.create(Thing::new, new JSONObject(source));
+
+        Thing thing = JSONThing.fromJson(new Thing(), source);
 
         //TODO Check
         //In case a subreddit with the specified name doesn't exist, the return Thing may be arbitrary

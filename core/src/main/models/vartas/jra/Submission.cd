@@ -3,7 +3,7 @@ package vartas.jra;
 import org.json.JSONObject.JSONObject;
 import java.util.List.List;
 import vartas.jra.Link.Link;
-import vartas.jra.types.Types.Thing;
+import vartas.jra.types.Thing.Thing;
 
 public classdiagram Submission {
     public class Submission {

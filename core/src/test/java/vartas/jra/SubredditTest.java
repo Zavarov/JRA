@@ -41,7 +41,7 @@ public class SubredditTest extends AbstractTest{
 
     @Test
     public void testGetSearch() throws InterruptedException, IOException, HttpException {
-        client.getSearch().setParameter("q", "penguins").query();
+        subreddit.getSearch().setParameter("q", "penguins").query();
     }
 
     @Test

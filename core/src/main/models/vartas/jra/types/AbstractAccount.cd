@@ -2,10 +2,10 @@ package vartas.jra.types;
 
 import java.lang.String.String;
 import java.util.Optional.Optional;
-import vartas.jra.types.Types.Created;
+import vartas.jra.types.Created.Created;
 
 public classdiagram AbstractAccount {
-    public abstract class AbstractAccount implements Created{
+    public abstract class AbstractAccount extends Created{
         /**
          * User's comment karma.
          */

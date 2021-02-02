@@ -1,10 +1,9 @@
 package vartas.jra;
 
-import org.json.JSONObject.JSONObject;
-import vartas.jra.types.Types.CommentType;
+import vartas.jra.types.AbstractComment.AbstractComment;
 
 public classdiagram Comment {
-    public class Comment extends CommentType{
+    public class Comment extends AbstractComment{
 
     }
 }
