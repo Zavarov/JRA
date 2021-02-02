@@ -1,5 +1,6 @@
 package vartas.jra.$json;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONObject;
 import vartas.jra.Account;
 
@@ -20,5 +21,10 @@ public class JSONAccount extends JSONAccountTOP{
     protected void $toCreatedUtc(Account source, JSONObject target){
         double seconds = source.toEpochSecondCreatedUtc();
         target.put(CREATEDUTC, seconds);
+    }
+
+    @Override
+    protected void $fromIconImage(JSONObject source, Account target){
+        target.setIconImage(StringEscapeUtils.unescapeHtml4(source.getString(ICONIMAGE)));
     }
 }
