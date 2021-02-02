@@ -3,6 +3,7 @@ package vartas.jra.types;
 import java.lang.String.String;
 import java.util.Optional.Optional;
 import vartas.jra.types.Created.Created;
+import vartas.jra.Subreddit.Subreddit;
 
 public classdiagram AbstractAccount {
     public abstract class AbstractAccount extends Created{

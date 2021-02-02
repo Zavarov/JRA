@@ -1,5 +1,6 @@
 package vartas.jra;
 
+import vartas.jra.Client.Client;
 import vartas.jra.Comment.Comment;
 import vartas.jra.Link.Link;
 import vartas.jra.types.AbstractAccount.AbstractAccount;
@@ -14,6 +15,8 @@ import vartas.jra.query.QueryPut.QueryPut;
 
 public classdiagram Account {
     public abstract class Account extends AbstractAccount{
+        <<ignore>>
+        - Client client;
         //Users
         + abstract QueryOne<TrophyList> getTrophies();
         + abstract QueryMany<Comment> getComments();

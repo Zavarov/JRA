@@ -10,19 +10,8 @@ import javax.annotation.Nonnull;
 import java.util.function.Function;
 
 public class Account extends AccountTOP {
-    /**
-     * A reference to the client required for communicating with the account-specific endpoints.
-     */
-    @Nonnull
-    private final Client client;
-
-    /**
-     * Creates a new instance of an account.
-     * @param client The client communicating with the endpoints.
-     */
-    @Nonnull
-    public Account(@Nonnull Client client){
-        this.client = client;
+    public Account(Client client){
+        setClient(client);
     }
 
     @Override
@@ -30,7 +19,7 @@ public class Account extends AccountTOP {
     public QueryOne<TrophyList> getTrophies() {
         return new QueryOne<>(
                 source -> Thing.from(source).toTrophyList(),
-                client,
+                getClient(),
                 Endpoint.GET_USER_USERNAME_TROHPIES,
                 getName()
         );
@@ -39,49 +28,49 @@ public class Account extends AccountTOP {
     @Override
     @Nonnull
     public QueryMany<Comment> getComments() {
-        return new QueryMany<>(Thing::toComment, client, Endpoint.GET_USER_USERNAME_COMMENTS, getName());
+        return new QueryMany<>(Thing::toComment, getClient(), Endpoint.GET_USER_USERNAME_COMMENTS, getName());
     }
 
     @Override
     @Nonnull
     public QueryMany<Thing> getDownvoted() {
-        return new QueryMany<>(Function.identity(), client, Endpoint.GET_USER_USERNAME_DOWNVOTED, getName());
+        return new QueryMany<>(Function.identity(), getClient(), Endpoint.GET_USER_USERNAME_DOWNVOTED, getName());
     }
 
     @Override
     @Nonnull
     public QueryMany<Thing> getGilded() {
-        return new QueryMany<>(Function.identity(), client, Endpoint.GET_USER_USERNAME_GILDED, getName());
+        return new QueryMany<>(Function.identity(), getClient(), Endpoint.GET_USER_USERNAME_GILDED, getName());
     }
 
     @Override
     @Nonnull
     public QueryMany<Thing> getHidden() {
-        return new QueryMany<>(Function.identity(), client, Endpoint.GET_USER_USERNAME_HIDDEN, getName());
+        return new QueryMany<>(Function.identity(), getClient(), Endpoint.GET_USER_USERNAME_HIDDEN, getName());
     }
 
     @Override
     @Nonnull
     public QueryMany<Thing> getOverview() {
-        return new QueryMany<>(Function.identity(), client, Endpoint.GET_USER_USERNAME_OVERVIEW, getName());
+        return new QueryMany<>(Function.identity(), getClient(), Endpoint.GET_USER_USERNAME_OVERVIEW, getName());
     }
 
     @Override
     @Nonnull
     public QueryMany<Thing> getSaved() {
-        return new QueryMany<>(Function.identity(), client, Endpoint.GET_USER_USERNAME_SAVED, getName());
+        return new QueryMany<>(Function.identity(), getClient(), Endpoint.GET_USER_USERNAME_SAVED, getName());
     }
 
     @Override
     @Nonnull
     public QueryMany<Link> getSubmitted() {
-        return new QueryMany<>(Thing::toLink, client, Endpoint.GET_USER_USERNAME_SUBMITTED, getName());
+        return new QueryMany<>(Thing::toLink, getClient(), Endpoint.GET_USER_USERNAME_SUBMITTED, getName());
     }
 
     @Override
     @Nonnull
     public QueryMany<Thing> getUpvoted() {
-        return new QueryMany<>(Function.identity(), client, Endpoint.GET_USER_USERNAME_UPVOTED, getName());
+        return new QueryMany<>(Function.identity(), getClient(), Endpoint.GET_USER_USERNAME_UPVOTED, getName());
     }
 
     /**
@@ -108,7 +97,7 @@ public class Account extends AccountTOP {
      */
     @Override
     public QueryPost<String> postBlock() {
-        QueryPost<String> query = new QueryPost<>(Function.identity(), client, Endpoint.POST_BLOCK_USER);
+        QueryPost<String> query = new QueryPost<>(Function.identity(), getClient(), Endpoint.POST_BLOCK_USER);
         query.setParameter("account_id", getId());
         return query;
     }
@@ -179,7 +168,7 @@ public class Account extends AccountTOP {
      */
     @Override
     public QueryPost<String> postFriend() {
-        QueryPost<String> q = new QueryPost<>(Function.identity(), client, Endpoint.POST_FRIEND);
+        QueryPost<String> q = new QueryPost<>(Function.identity(), getClient(), Endpoint.POST_FRIEND);
         q.setParameter("name", getName());
         return q;
     }
@@ -204,7 +193,7 @@ public class Account extends AccountTOP {
      */
     @Override
     public QueryPost<String> postReport() {
-        QueryPost<String> q = new QueryPost<>(Function.identity(), client, Endpoint.POST_REPORT_USER);
+        QueryPost<String> q = new QueryPost<>(Function.identity(), getClient(), Endpoint.POST_REPORT_USER);
         q.setParameter("user", getName());
         return q;
     }
@@ -236,7 +225,7 @@ public class Account extends AccountTOP {
      */
     @Override
     public QueryPost<String> postSetPermission() {
-        QueryPost<String> q = new QueryPost<>(Function.identity(), client, Endpoint.POST_SETPERMISSION);
+        QueryPost<String> q = new QueryPost<>(Function.identity(), getClient(), Endpoint.POST_SETPERMISSION);
         q.setParameter("name", getName());
         return q;
     }
@@ -288,7 +277,7 @@ public class Account extends AccountTOP {
      */
     @Override
     public QueryPost<String> postUnfriend() {
-        QueryPost<String> q = new QueryPost<>(Function.identity(), client, Endpoint.POST_UNFRIEND);
+        QueryPost<String> q = new QueryPost<>(Function.identity(), getClient(), Endpoint.POST_UNFRIEND);
         q.setParameter("name", getName());
         return q;
     }
@@ -305,7 +294,7 @@ public class Account extends AccountTOP {
      */
     @Override
     public QueryDelete<Void> deleteFriends() {
-        return new QueryDelete<>(x -> null, client, Endpoint.DELETE_ME_FRIENDS_USERNAME, getName());
+        return new QueryDelete<>(x -> null, getClient(), Endpoint.DELETE_ME_FRIENDS_USERNAME, getName());
     }
 
     /**
@@ -322,7 +311,7 @@ public class Account extends AccountTOP {
     public QueryOne<User> getFriends() {
         return new QueryOne<>(
                 source -> JSONUser.fromJson(new User(), source),
-                client,
+                getClient(),
                 Endpoint.GET_ME_FRIENDS_USERNAME,
                 getName()
         );
@@ -348,7 +337,7 @@ public class Account extends AccountTOP {
     public QueryPut<User> putFriends() {
         return new QueryPut<>(
                 source -> JSONUser.fromJson(new User(), source),
-                client,
+                getClient(),
                 Endpoint.PUT_ME_FRIENDS_USERNAME,
                 getName()
         );
