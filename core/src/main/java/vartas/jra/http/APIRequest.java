@@ -2,7 +2,6 @@ package vartas.jra.http;
 
 import com.google.common.net.HttpHeaders;
 import okhttp3.*;
-import org.json.JSONObject;
 import vartas.jra.Client;
 import vartas.jra.Endpoint;
 import vartas.jra.Subreddit;
@@ -34,8 +33,6 @@ public class APIRequest {
      */
     @Nonnull
     public static final String WWW = "www.reddit.com";
-    @Nonnull
-    public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
     @Nonnull
     private final Client client;
@@ -174,12 +171,11 @@ public class APIRequest {
 
         @Nonnull
         public Builder setBody(@Nonnull Map<?, ?> body){
-            return setBody(new JSONObject(body));
-        }
+            FormBody.Builder builder = new FormBody.Builder();
 
-        @Nonnull
-        public Builder setBody(@Nonnull JSONObject body){
-            return setBody(RequestBody.create(body.toString(0), JSON));
+            body.forEach((k,v) -> builder.add(k.toString(), v.toString()));
+
+            return setBody(builder.build());
         }
 
         @Nonnull
