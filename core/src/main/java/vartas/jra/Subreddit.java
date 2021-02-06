@@ -4,12 +4,12 @@ import vartas.jra.exceptions.NotFoundException;
 import vartas.jra.query.QueryMany;
 import vartas.jra.query.QueryOne;
 import vartas.jra.query.QueryPost;
+import vartas.jra.types.FakeAccount;
 import vartas.jra.types.Rules;
 import vartas.jra.types.Thing;
-import vartas.jra.types.User;
 import vartas.jra.types.UserList;
+import vartas.jra.types._json.JSONFakeAccount;
 import vartas.jra.types._json.JSONRules;
-import vartas.jra.types._json.JSONUser;
 
 import javax.annotation.Nonnull;
 import java.util.function.Function;
@@ -669,9 +669,9 @@ public class Subreddit extends SubredditTOP{
     //----------------------------------------------------------------------------------------------------------------//
 
     @Override
-    public QueryMany<User> getBanned() {
+    public QueryMany<FakeAccount> getBanned() {
         return new QueryMany<>(
-                source -> JSONUser.fromJson(new User(), source),
+                source -> JSONFakeAccount.fromJson(client, source),
                 client,
                 Endpoint.GET_SUBREDDIT_ABOUT_BANNED,
                 getDisplayName()
@@ -680,9 +680,9 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public QueryMany<User> getContributors() {
+    public QueryMany<FakeAccount> getContributors() {
         return new QueryMany<>(
-                source -> JSONUser.fromJson(new User(), source),
+                source -> JSONFakeAccount.fromJson(client, source),
                 client,
                 Endpoint.GET_SUBREDDIT_ABOUT_CONTRIBUTORS,
                 getDisplayName()
@@ -692,7 +692,7 @@ public class Subreddit extends SubredditTOP{
     @Override
     public QueryOne<UserList> getModerators() {
         return new QueryOne<>(
-                source -> Thing.from(source).toUserList(),
+                source -> Thing.from(source).toUserList(client),
                 client,
                 Endpoint.GET_SUBREDDIT_ABOUT_MODERATORS,
                 getDisplayName()
@@ -700,9 +700,9 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public QueryMany<User> getMuted() {
+    public QueryMany<FakeAccount> getMuted() {
         return new QueryMany<>(
-                source -> JSONUser.fromJson(new User(), source),
+                source -> JSONFakeAccount.fromJson(client, source),
                 client,
                 Endpoint.GET_SUBREDDIT_ABOUT_MUTED,
                 getDisplayName()
@@ -710,9 +710,9 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public QueryMany<User> getWikibanned() {
+    public QueryMany<FakeAccount> getWikibanned() {
         return new QueryMany<>(
-                source -> JSONUser.fromJson(new User(), source),
+                source -> JSONFakeAccount.fromJson(client, source),
                 client,
                 Endpoint.GET_SUBREDDIT_ABOUT_WIKIBANNED,
                 getDisplayName()
@@ -720,9 +720,9 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public QueryMany<User> getWikicontributors() {
+    public QueryMany<FakeAccount> getWikicontributors() {
         return new QueryMany<>(
-                source -> JSONUser.fromJson(new User(), source),
+                source -> JSONFakeAccount.fromJson(client, source),
                 client,
                 Endpoint.GET_SUBREDDIT_ABOUT_WIKICONTRIBUTORS,
                 getDisplayName()

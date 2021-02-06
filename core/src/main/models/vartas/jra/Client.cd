@@ -21,13 +21,7 @@ import vartas.jra.types.Duplicate.Duplicate;
 import vartas.jra.types.Subreddit.FakeSubreddit;
 import vartas.jra.types.Thing.Thing;
 import vartas.jra.types.Types.TrendingSubreddits;
-import vartas.jra.types.Trophy.TrophyList;
-import vartas.jra.types.User.User;
-import vartas.jra.types.User.UserList;
-import vartas.jra.types.UserData.UserData;
-import vartas.jra.types.Karma.KarmaList;
-import vartas.jra.types.Preferences.Preferences;
-import vartas.jra.types.Messaging.Messaging;
+import vartas.jra.types.Account.FakeAccount;
 import vartas.jra.exceptions.Exceptions.HttpException;
 import vartas.jra.exceptions.Exceptions.RateLimiterException;
 
@@ -53,7 +47,7 @@ public classdiagram Client {
         + abstract QueryOne<Submission> getComments(String article);
         + abstract QueryOne<Duplicate> getDuplicates(String article);
         //Users
-        + abstract QueryOne<Map<String, UserData>> getUserDataByAccountIds();
+        + abstract QueryOne<Map<String, FakeAccount>> getUserDataByAccountIds();
         + abstract QueryOne<Boolean> getUsernameAvailable();
         + abstract QueryOne<Account> getAccount(String name);
         //Subreddits

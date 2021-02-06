@@ -98,9 +98,9 @@ public class Thing extends ThingTOP {
         return JSONTrophy.fromJson(new Trophy(), getData().toString());
     }
 
-    public UserList toUserList(){
+    public UserList toUserList(Client client){
         assert Kind.UserList.matches(this);
-        return JSONUserList.fromJson(new UserList(), getData().toString());
+        return JSONUserList.fromJson(client, getData().toString());
     }
 
     public Comment toComment(){

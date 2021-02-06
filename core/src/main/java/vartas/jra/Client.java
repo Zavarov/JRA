@@ -568,8 +568,8 @@ public abstract class Client extends ClientTOP{
      * </table>
      */
     @Override
-    public QueryOne<Map<String, UserData>> getUserDataByAccountIds() {
-        Function<String, Map<String, UserData>> mapper = source -> null;
+    public QueryOne<Map<String, FakeAccount>> getUserDataByAccountIds() {
+        Function<String, Map<String, FakeAccount>> mapper = source -> null;
 
         return new QueryOne<>(
                 mapper,

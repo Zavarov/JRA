@@ -2,10 +2,13 @@ package vartas.jra.types;
 
 import java.lang.String.String;
 import java.util.Optional.Optional;
-import vartas.jra.types.Created.Created;
+import java.util.Map.Map;
+import java.util.List.List;
+import vartas.jra.Client.Client;
 import vartas.jra.Subreddit.Subreddit;
+import vartas.jra.types.Created.Created;
 
-public classdiagram AbstractAccount {
+public classdiagram Account {
     public abstract class AbstractAccount extends Created{
         /**
          * User's comment karma.
@@ -119,5 +122,44 @@ public classdiagram AbstractAccount {
          */
         <<key="accept_pms">>
         - Optional<Boolean> acceptPrivateMessages;
+    }
+
+    public abstract class AbstractSelfAccount{
+        <<key="over_18">>
+        - boolean over18;
+        <<key="comment_karma">>
+        - int commentKarma;
+        <<key="id">>
+        - String id;
+        <<key="created_utc">>
+        - double createdUtc;
+        <<key="num_friends">>
+        - int numberOfFriends;
+        <<key="created">>
+        - double created;
+        <<key="total_karma">>
+        - int totalKarma;
+        <<key="link_karma">>
+        - int linkKarma;
+        <<key="icon_img">>
+        - String iconImage;
+    }
+
+    public class FakeAccount{
+        <<ignore>>
+        - Client client;
+        <<ignore>>
+        - String name;
+
+        - Map<String, Object> data;
+
+        + abstract QueryOne<Account> expand();
+    }
+
+    public class UserList{
+        <<ignore>>
+        - Client client;
+
+        - List<FakeAccount> data;
     }
 }

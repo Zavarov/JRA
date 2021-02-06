@@ -3,11 +3,11 @@ package vartas.jra;
 import org.json.JSONObject;
 import vartas.jra._json.JSONAccount;
 import vartas.jra.query.*;
+import vartas.jra.types.FakeAccount;
 import vartas.jra.types.Thing;
 import vartas.jra.types.TrophyList;
-import vartas.jra.types.User;
 import vartas.jra.types._factory.ThingFactory;
-import vartas.jra.types._json.JSONUser;
+import vartas.jra.types._json.JSONFakeAccount;
 
 import javax.annotation.Nonnull;
 import java.util.function.Function;
@@ -356,9 +356,9 @@ public class Account extends AccountTOP {
      * </table>
      */
     @Override
-    public QueryOne<User> getFriends() {
+    public QueryOne<FakeAccount> getFriends() {
         return new QueryOne<>(
-                source -> JSONUser.fromJson(new User(), source),
+                source -> JSONFakeAccount.fromJson(getClient(), source),
                 getClient(),
                 Endpoint.GET_ME_FRIENDS_USERNAME,
                 getName()
@@ -382,9 +382,9 @@ public class Account extends AccountTOP {
      * </table>
      */
     @Override
-    public QueryPut<User> putFriends() {
+    public QueryPut<FakeAccount> putFriends() {
         return new QueryPut<>(
-                source -> JSONUser.fromJson(new User(), source),
+                source -> JSONFakeAccount.fromJson(getClient(), source),
                 getClient(),
                 Endpoint.PUT_ME_FRIENDS_USERNAME,
                 getName()

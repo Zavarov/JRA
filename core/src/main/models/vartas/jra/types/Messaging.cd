@@ -1,11 +1,11 @@
 package vartas.jra.types;
 
 import java.util.List.List;
-import vartas.jra.types.User.User;
+import vartas.jra.types.Account.FakeAccount;
 
 public classdiagram Messaging {
     public class Messaging{
-        List<User> blocked;
-        List<User> trusted;
+        List<FakeAccount> blocked;
+        List<FakeAccount> trusted;
     }
 }

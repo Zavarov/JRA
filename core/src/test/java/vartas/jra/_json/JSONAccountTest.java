@@ -111,7 +111,7 @@ public class JSONAccountTest extends AbstractJSONTest{
 
     @Test
     public void testGetTotalKarma(){
-        assertThat(account.getTotalKarma()).isEqualTo(1729);
+        assertThat(account.getTotalKarma()).contains(1729);
     }
 
     @Test

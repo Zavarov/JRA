@@ -42,7 +42,7 @@ public class SelfAccount extends SelfAccountTOP{
     @Deprecated
     public QueryOne<UserList> getBlocked() {
         return new QueryOne<>(
-                source -> Thing.from(source).toUserList(),
+                source -> Thing.from(source).toUserList(client),
                 client,
                 Endpoint.GET_ME_BLOCKED
         );
@@ -60,7 +60,7 @@ public class SelfAccount extends SelfAccountTOP{
     @Deprecated
     public QueryOne<UserList> getFriends() {
         return new QueryOne<>(
-                source -> Thing.from(source).toUserList(),
+                source -> Thing.from(source).toUserList(client),
                 client,
                 Endpoint.GET_ME_FRIENDS
         );
@@ -69,8 +69,8 @@ public class SelfAccount extends SelfAccountTOP{
 
     /**
      * Returns a breakdown of the {@link Karma} received so far.<p>
-     * Each entry contains the number of {@link Link} and {@link Comment} in one of the subreddits the {@link User}
-     * has been active at some point.
+     * Each entry contains the number of {@link Link} and {@link Comment} in one of the subreddits the user has been
+     * active at some point.
      * @return A list of {@link Karma} instances.
      * @see Endpoint#GET_ME_KARMA
      */
@@ -141,7 +141,7 @@ public class SelfAccount extends SelfAccountTOP{
     @Nonnull
     public QueryOne<UserList> getPreferencesBlocked() {
         return new QueryOne<>(
-                source -> Thing.from(source).toUserList(),
+                source -> Thing.from(source).toUserList(client),
                 client,
                 Endpoint.GET_PREFS_BLOCKED
         );
@@ -164,8 +164,8 @@ public class SelfAccount extends SelfAccountTOP{
             //And the second entry should always be empty.
             assert response.length() == 2;
 
-            UserList friends = Thing.from(response.getJSONObject(0)).toUserList();
-            UserList blocked = Thing.from(response.getJSONObject(1)).toUserList();
+            UserList friends = Thing.from(response.getJSONObject(0)).toUserList(client);
+            UserList blocked = Thing.from(response.getJSONObject(1)).toUserList(client);
 
             assert blocked.isEmptyData();
 
@@ -194,8 +194,8 @@ public class SelfAccount extends SelfAccountTOP{
 
             assert response.length() == 2;
 
-            List<User> blocked = Thing.from(response.getJSONObject(0)).toUserList().getData();
-            List<User> trusted = Thing.from(response.getJSONObject(1)).toUserList().getData();
+            List<FakeAccount> blocked = Thing.from(response.getJSONObject(0)).toUserList(client).getData();
+            List<FakeAccount> trusted = Thing.from(response.getJSONObject(1)).toUserList(client).getData();
 
             return MessagingFactory.create(blocked, trusted);
         };
@@ -208,8 +208,8 @@ public class SelfAccount extends SelfAccountTOP{
     }
 
     /**
-     * Returns the whitelist of all users that are able to send messages to the currently logged-in {@link User}. Even
-     * if private messages have been disabled.
+     * Returns the whitelist of all users that are able to send messages to the currently logged-in user. Even if
+     * private messages have been disabled.
      * @return A list of users.
      * @see Endpoint#GET_PREFS_TRUSTED
      */
@@ -217,7 +217,7 @@ public class SelfAccount extends SelfAccountTOP{
     @Nonnull
     public QueryOne<UserList> getPreferencesTrusted() {
         return new QueryOne<>(
-                source -> Thing.from(source).toUserList(),
+                source -> Thing.from(source).toUserList(client),
                 client,
                 Endpoint.GET_PREFS_TRUSTED
         );
