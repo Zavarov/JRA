@@ -19,6 +19,7 @@ import vartas.jra.http.APIAuthentication;
 import vartas.jra.http.APIRequest;
 import vartas.jra.models.*;
 import vartas.jra.models._factory.DuplicateFactory;
+import vartas.jra.models._json.JSONFakeAccount;
 import vartas.jra.models._json.JSONFakeSubreddit;
 import vartas.jra.models._json.JSONTrendingSubreddits;
 import vartas.jra.query.QueryListing;
@@ -569,7 +570,15 @@ public abstract class Client extends ClientTOP{
      */
     @Override
     public QueryOne<Map<String, FakeAccount>> getUserDataByAccountIds() {
-        Function<String, Map<String, FakeAccount>> mapper = source -> null;
+        Function<String, Map<String, FakeAccount>> mapper = source -> {
+            JSONObject root = new JSONObject(source);
+            Map<String, FakeAccount> result = new HashMap<>();
+
+            for(String key : root.keySet())
+                result.put(key, JSONFakeAccount.fromJson(this, root.getJSONObject(key)));
+
+            return result;
+        };
 
         return new QueryOne<>(
                 mapper,
