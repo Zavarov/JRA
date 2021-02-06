@@ -9,8 +9,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
-public class QueryMany<T> extends QueryGet<List<T>, QueryMany<T>> {
-    public QueryMany(Function<String, T> mapper, Client client, Endpoint endpoint, Object... args) {
+public class QueryListing<T> extends QueryGet<List<T>, QueryListing<T>> {
+    public QueryListing(Function<String, T> mapper, Client client, Endpoint endpoint, Object... args) {
         super(many(mapper), client, endpoint, args);
     }
 
@@ -24,7 +24,7 @@ public class QueryMany<T> extends QueryGet<List<T>, QueryMany<T>> {
     }
 
     @Override
-    protected QueryMany<T> getRealThis() {
+    protected QueryListing<T> getRealThis() {
         return this;
     }
 }

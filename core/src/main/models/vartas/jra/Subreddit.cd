@@ -9,32 +9,32 @@ import vartas.jra.types.Account.UserList;
 import vartas.jra.types.Subreddit.AbstractSubreddit;
 import vartas.jra.types.Rule.Rules;
 import vartas.jra.query.QueryOne.QueryOne;
-import vartas.jra.query.QueryMany.QueryMany;
+import vartas.jra.query.QueryListing.QueryListing;
 import vartas.jra.query.QueryPost.QueryPost;
 
 public classdiagram Subreddit {
     public abstract class Subreddit extends AbstractSubreddit{
         //Listings
         + abstract QueryOne<Submission> getComments(String article);
-        + abstract QueryMany<Link> getControversialLinks();
-        + abstract QueryMany<Link> getHotLinks();
-        + abstract QueryMany<Link> getNewLinks();
+        + abstract QueryListing<Link> getControversialLinks();
+        + abstract QueryListing<Link> getHotLinks();
+        + abstract QueryListing<Link> getNewLinks();
         + abstract QueryOne<Submission> getRandomSubmission();
-        + abstract QueryMany<Link> getRisingLinks();
-        + abstract QueryMany<Link> getTopLinks();
+        + abstract QueryListing<Link> getRisingLinks();
+        + abstract QueryListing<Link> getTopLinks();
         //Search
-        + abstract QueryMany<Thing> getSearch();
+        + abstract QueryListing<Thing> getSearch();
         //Users
         + abstract QueryPost<String> postFriend();
         + abstract QueryPost<String> postSetPermission();
         + abstract QueryPost<String> postUnfriend();
         //Subreddits
-        + abstract QueryMany<FakeAccount> getBanned();
-        + abstract QueryMany<FakeAccount> getContributors();
+        + abstract QueryListing<FakeAccount> getBanned();
+        + abstract QueryListing<FakeAccount> getContributors();
         + abstract QueryOne<UserList> getModerators();
-        + abstract QueryMany<FakeAccount> getMuted();
-        + abstract QueryMany<FakeAccount> getWikibanned();
-        + abstract QueryMany<FakeAccount> getWikicontributors();
+        + abstract QueryListing<FakeAccount> getMuted();
+        + abstract QueryListing<FakeAccount> getWikibanned();
+        + abstract QueryListing<FakeAccount> getWikicontributors();
         + abstract QueryPost<String> postDeleteBanner();
         + abstract QueryPost<String> postDeleteHeader();
         + abstract QueryPost<String> postDeleteIcon();

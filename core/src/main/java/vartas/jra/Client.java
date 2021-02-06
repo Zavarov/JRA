@@ -17,8 +17,8 @@ import vartas.jra.exceptions.RateLimiterException;
 import vartas.jra.exceptions._factory.*;
 import vartas.jra.http.APIAuthentication;
 import vartas.jra.http.APIRequest;
+import vartas.jra.query.QueryListing;
 import vartas.jra.query.QueryLocal;
-import vartas.jra.query.QueryMany;
 import vartas.jra.query.QueryOne;
 import vartas.jra.query.QueryPost;
 import vartas.jra.types.*;
@@ -358,8 +358,8 @@ public abstract class Client extends ClientTOP{
      */
     @Override
     @Nonnull
-    public QueryMany<Link> getLinksById(@Nonnull String... names) {
-        return new QueryMany<>(
+    public QueryListing<Link> getLinksById(@Nonnull String... names) {
+        return new QueryListing<>(
                 source -> Thing.from(source).toLink(),
                 this,
                 Endpoint.GET_BY_ID,
@@ -732,8 +732,8 @@ public abstract class Client extends ClientTOP{
     }
 
     @Override
-    public QueryMany<Thing> getSubredditAutocompleteV2() {
-        return new QueryMany<>(
+    public QueryListing<Thing> getSubredditAutocompleteV2() {
+        return new QueryListing<>(
                 Thing::from,
                 this,
                 Endpoint.GET_SUBREDDIT_AUTOCOMPLETE_V2
@@ -750,8 +750,8 @@ public abstract class Client extends ClientTOP{
     }
 
     @Override
-    public QueryMany<Subreddit> getSubredditsPopular() {
-        return new QueryMany<>(
+    public QueryListing<Subreddit> getSubredditsPopular() {
+        return new QueryListing<>(
                 source -> Thing.from(source).toSubreddit(this),
                 this,
                 Endpoint.GET_SUBREDDITS_POPULAR
@@ -759,8 +759,8 @@ public abstract class Client extends ClientTOP{
     }
 
     @Override
-    public QueryMany<Subreddit> getSubredditsNew() {
-        return new QueryMany<>(
+    public QueryListing<Subreddit> getSubredditsNew() {
+        return new QueryListing<>(
                 source -> Thing.from(source).toSubreddit(this),
                 this,
                 Endpoint.GET_SUBREDDITS_NEW
@@ -768,8 +768,8 @@ public abstract class Client extends ClientTOP{
     }
 
     @Override
-    public QueryMany<Subreddit> getSubredditsGold() {
-        return new QueryMany<>(
+    public QueryListing<Subreddit> getSubredditsGold() {
+        return new QueryListing<>(
                 source -> Thing.from(source).toSubreddit(this),
                 this,
                 Endpoint.GET_SUBREDDITS_GOLD
@@ -777,8 +777,8 @@ public abstract class Client extends ClientTOP{
     }
 
     @Override
-    public QueryMany<Subreddit> getSubredditsDefault() {
-        return new QueryMany<>(
+    public QueryListing<Subreddit> getSubredditsDefault() {
+        return new QueryListing<>(
                 source -> Thing.from(source).toSubreddit(this),
                 this,
                 Endpoint.GET_SUBREDDITS_DEFAULT
@@ -786,8 +786,8 @@ public abstract class Client extends ClientTOP{
     }
 
     @Override
-    public QueryMany<Subreddit> getSubredditsSearch() {
-        return new QueryMany<>(
+    public QueryListing<Subreddit> getSubredditsSearch() {
+        return new QueryListing<>(
                 source -> Thing.from(source).toSubreddit(this),
                 this,
                 Endpoint.GET_SUBREDDITS_SEARCH
@@ -795,8 +795,8 @@ public abstract class Client extends ClientTOP{
     }
 
     @Override
-    public QueryMany<Subreddit> getUsersNew() {
-        return new QueryMany<>(
+    public QueryListing<Subreddit> getUsersNew() {
+        return new QueryListing<>(
                 source -> Thing.from(source).toSubreddit(this),
                 this,
                 Endpoint.GET_USERS_NEW
@@ -804,8 +804,8 @@ public abstract class Client extends ClientTOP{
     }
 
     @Override
-    public QueryMany<Subreddit> getUsersPopular() {
-        return new QueryMany<>(
+    public QueryListing<Subreddit> getUsersPopular() {
+        return new QueryListing<>(
                 source -> Thing.from(source).toSubreddit(this),
                 this,
                 Endpoint.GET_USERS_POPULAR
@@ -813,8 +813,8 @@ public abstract class Client extends ClientTOP{
     }
 
     @Override
-    public QueryMany<Account> getUsersSearch() {
-        return new QueryMany<>(
+    public QueryListing<Account> getUsersSearch() {
+        return new QueryListing<>(
                 source -> Thing.from(source).toAccount(this),
                 this,
                 Endpoint.GET_USERS_SEARCH

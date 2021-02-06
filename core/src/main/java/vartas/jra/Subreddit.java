@@ -1,7 +1,7 @@
 package vartas.jra;
 
 import vartas.jra.exceptions.NotFoundException;
-import vartas.jra.query.QueryMany;
+import vartas.jra.query.QueryListing;
 import vartas.jra.query.QueryOne;
 import vartas.jra.query.QueryPost;
 import vartas.jra.types.FakeAccount;
@@ -164,8 +164,8 @@ public class Subreddit extends SubredditTOP{
      */
     @Override
     @Nonnull
-    public QueryMany<Link> getControversialLinks() {
-        return new QueryMany<>(
+    public QueryListing<Link> getControversialLinks() {
+        return new QueryListing<>(
                 source -> Thing.from(source).toLink(),
                 client,
                 Endpoint.GET_SUBREDDIT_CONTROVERSIAL,
@@ -214,8 +214,8 @@ public class Subreddit extends SubredditTOP{
      */
     @Override
     @Nonnull
-    public QueryMany<Link> getHotLinks(){
-        return new QueryMany<>(
+    public QueryListing<Link> getHotLinks(){
+        return new QueryListing<>(
                 source -> Thing.from(source).toLink(),
                 client,
                 Endpoint.GET_SUBREDDIT_HOT,
@@ -256,8 +256,8 @@ public class Subreddit extends SubredditTOP{
      */
     @Nonnull
     @Override
-    public QueryMany<Link> getNewLinks(){
-        return new QueryMany<>(
+    public QueryListing<Link> getNewLinks(){
+        return new QueryListing<>(
                 source -> Thing.from(source).toLink(),
                 client,
                 Endpoint.GET_SUBREDDIT_NEW,
@@ -313,8 +313,8 @@ public class Subreddit extends SubredditTOP{
      */
     @Override
     @Nonnull
-    public QueryMany<Link> getRisingLinks(){
-        return new QueryMany<>(
+    public QueryListing<Link> getRisingLinks(){
+        return new QueryListing<>(
                 source -> Thing.from(source).toLink(),
                 client,
                 Endpoint.GET_SUBREDDIT_RISING,
@@ -359,8 +359,8 @@ public class Subreddit extends SubredditTOP{
      */
     @Override
     @Nonnull
-    public QueryMany<Link> getTopLinks(){
-        return new QueryMany<>(
+    public QueryListing<Link> getTopLinks(){
+        return new QueryListing<>(
                 source -> Thing.from(source).toLink(),
                 client,
                 Endpoint.GET_SUBREDDIT_TOP,
@@ -435,8 +435,8 @@ public class Subreddit extends SubredditTOP{
      */
     @Override
     @Nonnull
-    public QueryMany<Thing> getSearch() {
-        return new QueryMany<>(
+    public QueryListing<Thing> getSearch() {
+        return new QueryListing<>(
                 Thing::from,
                 client,
                 Endpoint.GET_SUBREDDIT_SEARCH,
@@ -669,8 +669,8 @@ public class Subreddit extends SubredditTOP{
     //----------------------------------------------------------------------------------------------------------------//
 
     @Override
-    public QueryMany<FakeAccount> getBanned() {
-        return new QueryMany<>(
+    public QueryListing<FakeAccount> getBanned() {
+        return new QueryListing<>(
                 source -> JSONFakeAccount.fromJson(client, source),
                 client,
                 Endpoint.GET_SUBREDDIT_ABOUT_BANNED,
@@ -680,8 +680,8 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public QueryMany<FakeAccount> getContributors() {
-        return new QueryMany<>(
+    public QueryListing<FakeAccount> getContributors() {
+        return new QueryListing<>(
                 source -> JSONFakeAccount.fromJson(client, source),
                 client,
                 Endpoint.GET_SUBREDDIT_ABOUT_CONTRIBUTORS,
@@ -700,8 +700,8 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public QueryMany<FakeAccount> getMuted() {
-        return new QueryMany<>(
+    public QueryListing<FakeAccount> getMuted() {
+        return new QueryListing<>(
                 source -> JSONFakeAccount.fromJson(client, source),
                 client,
                 Endpoint.GET_SUBREDDIT_ABOUT_MUTED,
@@ -710,8 +710,8 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public QueryMany<FakeAccount> getWikibanned() {
-        return new QueryMany<>(
+    public QueryListing<FakeAccount> getWikibanned() {
+        return new QueryListing<>(
                 source -> JSONFakeAccount.fromJson(client, source),
                 client,
                 Endpoint.GET_SUBREDDIT_ABOUT_WIKIBANNED,
@@ -720,8 +720,8 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public QueryMany<FakeAccount> getWikicontributors() {
-        return new QueryMany<>(
+    public QueryListing<FakeAccount> getWikicontributors() {
+        return new QueryListing<>(
                 source -> JSONFakeAccount.fromJson(client, source),
                 client,
                 Endpoint.GET_SUBREDDIT_ABOUT_WIKICONTRIBUTORS,

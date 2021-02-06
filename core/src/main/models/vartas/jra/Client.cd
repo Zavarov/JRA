@@ -15,7 +15,7 @@ import vartas.jra.SelfAccount.SelfAccount;
 import vartas.jra.Client.Client.Duration;
 import vartas.jra.query.QueryLocal.QueryLocal;
 import vartas.jra.query.QueryOne.QueryOne;
-import vartas.jra.query.QueryMany.QueryMany;
+import vartas.jra.query.QueryListing.QueryListing;
 import vartas.jra.query.QueryPost.QueryPost;
 import vartas.jra.types.Duplicate.Duplicate;
 import vartas.jra.types.Subreddit.FakeSubreddit;
@@ -43,7 +43,7 @@ public classdiagram Client {
         + abstract QueryOne<Boolean> needsCaptcha();
         //Listings
         + abstract TrendingSubreddits getTrendingSubreddits() throws IOException, HttpException, RateLimiterException, InterruptedException ;
-        + abstract QueryMany<Link> getLinksById(String[] names);
+        + abstract QueryListing<Link> getLinksById(String[] names);
         + abstract QueryOne<Submission> getComments(String article);
         + abstract QueryOne<Duplicate> getDuplicates(String article);
         //Users
@@ -57,17 +57,17 @@ public classdiagram Client {
         + abstract QueryPost<List<FakeSubreddit>> postSearchSubreddits();
         + abstract QueryPost<String> postSiteAdmin();
         + abstract QueryOne<List<FakeSubreddit>> getSubredditAutocomplete();
-        + abstract QueryMany<Thing> getSubredditAutocompleteV2();
+        + abstract QueryListing<Thing> getSubredditAutocompleteV2();
         + abstract QueryOne<Subreddit> getSubreddit(String name);
         + abstract QueryPost<String> postSubscribe();
-        + abstract QueryMany<Subreddit> getSubredditsPopular();
-        + abstract QueryMany<Subreddit> getSubredditsNew();
-        + abstract QueryMany<Subreddit> getSubredditsGold();
-        + abstract QueryMany<Subreddit> getSubredditsDefault();
-        + abstract QueryMany<Subreddit> getSubredditsSearch();
-        + abstract QueryMany<Subreddit> getUsersNew();
-        + abstract QueryMany<Subreddit> getUsersPopular();
-        + abstract QueryMany<Account> getUsersSearch();
+        + abstract QueryListing<Subreddit> getSubredditsPopular();
+        + abstract QueryListing<Subreddit> getSubredditsNew();
+        + abstract QueryListing<Subreddit> getSubredditsGold();
+        + abstract QueryListing<Subreddit> getSubredditsDefault();
+        + abstract QueryListing<Subreddit> getSubredditsSearch();
+        + abstract QueryListing<Subreddit> getUsersNew();
+        + abstract QueryListing<Subreddit> getUsersPopular();
+        + abstract QueryListing<Account> getUsersSearch();
 
     }
 

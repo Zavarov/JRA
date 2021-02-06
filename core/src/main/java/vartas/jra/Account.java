@@ -35,8 +35,8 @@ public class Account extends AccountTOP {
 
     @Override
     @Nonnull
-    public QueryMany<Comment> getComments() {
-        return new QueryMany<>(
+    public QueryListing<Comment> getComments() {
+        return new QueryListing<>(
                 source -> Thing.from(source).toComment(),
                 getClient(),
                 Endpoint.GET_USER_USERNAME_COMMENTS,
@@ -46,8 +46,8 @@ public class Account extends AccountTOP {
 
     @Override
     @Nonnull
-    public QueryMany<Thing> getDownvoted() {
-        return new QueryMany<>(
+    public QueryListing<Thing> getDownvoted() {
+        return new QueryListing<>(
                 Thing::from,
                 getClient(),
                 Endpoint.GET_USER_USERNAME_DOWNVOTED,
@@ -57,8 +57,8 @@ public class Account extends AccountTOP {
 
     @Override
     @Nonnull
-    public QueryMany<Thing> getGilded() {
-        return new QueryMany<>(
+    public QueryListing<Thing> getGilded() {
+        return new QueryListing<>(
                 Thing::from,
                 getClient(),
                 Endpoint.GET_USER_USERNAME_GILDED,
@@ -68,8 +68,8 @@ public class Account extends AccountTOP {
 
     @Override
     @Nonnull
-    public QueryMany<Thing> getHidden() {
-        return new QueryMany<>(
+    public QueryListing<Thing> getHidden() {
+        return new QueryListing<>(
                 Thing::from,
                 getClient(),
                 Endpoint.GET_USER_USERNAME_HIDDEN,
@@ -79,8 +79,8 @@ public class Account extends AccountTOP {
 
     @Override
     @Nonnull
-    public QueryMany<Thing> getOverview() {
-        return new QueryMany<>(
+    public QueryListing<Thing> getOverview() {
+        return new QueryListing<>(
                 Thing::from,
                 getClient(),
                 Endpoint.GET_USER_USERNAME_OVERVIEW,
@@ -90,8 +90,8 @@ public class Account extends AccountTOP {
 
     @Override
     @Nonnull
-    public QueryMany<Thing> getSaved() {
-        return new QueryMany<>(
+    public QueryListing<Thing> getSaved() {
+        return new QueryListing<>(
                 Thing::from,
                 getClient(),
                 Endpoint.GET_USER_USERNAME_SAVED,
@@ -101,8 +101,8 @@ public class Account extends AccountTOP {
 
     @Override
     @Nonnull
-    public QueryMany<Link> getSubmitted() {
-        return new QueryMany<>(
+    public QueryListing<Link> getSubmitted() {
+        return new QueryListing<>(
                 source -> Thing.from(source).toLink(),
                 getClient(),
                 Endpoint.GET_USER_USERNAME_SUBMITTED,
@@ -112,8 +112,8 @@ public class Account extends AccountTOP {
 
     @Override
     @Nonnull
-    public QueryMany<Thing> getUpvoted() {
-        return new QueryMany<>(
+    public QueryListing<Thing> getUpvoted() {
+        return new QueryListing<>(
                 Thing::from,
                 getClient(),
                 Endpoint.GET_USER_USERNAME_UPVOTED,

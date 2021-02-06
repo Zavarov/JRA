@@ -1,6 +1,6 @@
 package vartas.jra;
 
-import vartas.jra.query.QueryMany;
+import vartas.jra.query.QueryListing;
 import vartas.jra.query.QueryOne;
 import vartas.jra.types.Thing;
 
@@ -31,8 +31,8 @@ public class FrontPage extends FrontPageTOP{
      */
     @Override
     @Nonnull
-    public QueryMany<Link> getBestLinks() {
-        return new QueryMany<>(
+    public QueryListing<Link> getBestLinks() {
+        return new QueryListing<>(
                 source -> Thing.from(source).toLink(),
                 client,
                 Endpoint.GET_BEST
@@ -46,8 +46,8 @@ public class FrontPage extends FrontPageTOP{
      */
     @Override
     @Nonnull
-    public QueryMany<Link> getControversialLinks() {
-        return new QueryMany<>(
+    public QueryListing<Link> getControversialLinks() {
+        return new QueryListing<>(
                 source -> Thing.from(source).toLink(),
                 client,
                 Endpoint.GET_CONTROVERSIAL
@@ -61,8 +61,8 @@ public class FrontPage extends FrontPageTOP{
      */
     @Override
     @Nonnull
-    public QueryMany<Link> getHotLinks() {
-        return new QueryMany<>(
+    public QueryListing<Link> getHotLinks() {
+        return new QueryListing<>(
                 source -> Thing.from(source).toLink(),
                 client,
                 Endpoint.GET_HOT
@@ -76,8 +76,8 @@ public class FrontPage extends FrontPageTOP{
      */
     @Override
     @Nonnull
-    public QueryMany<Link> getNewLinks() {
-        return new QueryMany<>(
+    public QueryListing<Link> getNewLinks() {
+        return new QueryListing<>(
                 source -> Thing.from(source).toLink(),
                 client,
                 Endpoint.GET_NEW
@@ -107,8 +107,8 @@ public class FrontPage extends FrontPageTOP{
      */
     @Override
     @Nonnull
-    public QueryMany<Link> getRisingLinks() {
-        return new QueryMany<>(
+    public QueryListing<Link> getRisingLinks() {
+        return new QueryListing<>(
                 source -> Thing.from(source).toLink(),
                 client,
                 Endpoint.GET_RISING
@@ -122,8 +122,8 @@ public class FrontPage extends FrontPageTOP{
      */
     @Override
     @Nonnull
-    public QueryMany<Link> getTopLinks() {
-        return new QueryMany<>(
+    public QueryListing<Link> getTopLinks() {
+        return new QueryListing<>(
                 source -> Thing.from(source).toLink(),
                 client,
                 Endpoint.GET_TOP
@@ -143,8 +143,8 @@ public class FrontPage extends FrontPageTOP{
      */
     @Override
     @Nonnull
-    public QueryMany<Thing> getSearch() {
-        return new QueryMany<>(
+    public QueryListing<Thing> getSearch() {
+        return new QueryListing<>(
                 Thing::from,
                 client,
                 Endpoint.GET_SEARCH
