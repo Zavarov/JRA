@@ -9,9 +9,15 @@ import java.io.IOException;
 import java.util.function.Function;
 
 public class QueryDelete<Q> extends QueryBase<Q, QueryDelete<Q>>{
+    private final APIRequest.BodyType body;
+
+    public QueryDelete(Function<String, Q> mapper, Client client, Endpoint endpoint, APIRequest.BodyType body, Object... args) {
+        super(mapper, client, endpoint, args);
+        this.body = body;
+    }
 
     public QueryDelete(Function<String, Q> mapper, Client client, Endpoint endpoint, Object... args) {
-        super(mapper, client, endpoint, args);
+        this(mapper, client, endpoint, APIRequest.BodyType.FORM, args);
     }
 
     @Override
@@ -22,7 +28,7 @@ public class QueryDelete<Q> extends QueryBase<Q, QueryDelete<Q>>{
     @Override
     public Q query() throws IOException, HttpException, InterruptedException {
         String source = new APIRequest.Builder(client)
-                .setBody(params)
+                .setBody(params, body)
                 .setEndpoint(endpoint)
                 .setArgs(args)
                 .build()

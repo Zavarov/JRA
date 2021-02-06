@@ -1,4 +1,4 @@
-package vartas.jra.types.$json;
+package vartas.jra.types._json;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

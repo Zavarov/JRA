@@ -113,11 +113,11 @@ public classdiagram AbstractAccount {
          * Does the user accept chat requests?
          */
         <<key="accept_chats">>
-        - boolean acceptChats;
+        - Optional<Boolean> acceptChats;
         /**
          * Does the user accept private messages?
          */
         <<key="accept_pms">>
-        - boolean acceptPrivateMessages;
+        - Optional<Boolean> acceptPrivateMessages;
     }
 }

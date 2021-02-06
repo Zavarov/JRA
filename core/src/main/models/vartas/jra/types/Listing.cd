@@ -1,9 +1,9 @@
 package vartas.jra.types;
 
 import java.lang.String.String;
+import java.lang.Object.Object;
 import java.util.Optional.Optional;
 import java.util.List.List;
-import vartas.jra.types.Thing.Thing;
 
 public classdiagram Listing {
     /**
@@ -31,9 +31,10 @@ public classdiagram Listing {
         <<key="modhash">>
         - Optional<String> modhash;
         /**
-         * A list of 'things' that this Listing wraps.
+         * A list of 'things' that this Listing wraps. Despite the description, it may not actually be "Things",
+         * but rather arbitrary junk.
          */
         <<key="children">>
-        - List<Thing> children;
+        - List<String> children;
     }
 }

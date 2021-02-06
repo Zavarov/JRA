@@ -13,12 +13,12 @@ public classdiagram AbstractComment {
          * Who approved this comment. Empty if nobody or you are not a mod.
          */
         <<key="approved_by">>
-        - Optional<String> getApprovedBy;
+        - Optional<String> approvedBy;
         /**
          * The account name of the poster.
          */
         <<key="author">>
-        - String getAuthor;
+        - String author;
         /**
          * The CSS class of the author's flair. Subreddit specific.
          * Empty if unflaired.

@@ -34,7 +34,7 @@ public classdiagram AbstractSubreddit {
          * Sidebar text, escaped HTML format.
          */
         <<key="description_html">>
-        - String descriptionHtml;
+        - Optional<String> descriptionHtml;
         /**
          * Human name of the subreddit
          */
@@ -89,12 +89,12 @@ public classdiagram AbstractSubreddit {
          * The subreddit's custom label for the submit link button, if any.
          */
         <<key="submit_link_label">>
-        - String submitLinkLabel;
+        - Optional<String> submitLinkLabel;
         /**
          * The subreddit's custom label for the submit text button, if any.
          */
         <<key="submit_text_label">>
-        - String submitTextLabel;
+        - Optional<String> submitTextLabel;
         /**
          * The subreddit's type - one of "public", "private", "restricted", or in very special cases "gold_restricted"
          * or "archived".

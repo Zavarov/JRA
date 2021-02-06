@@ -1,4 +1,4 @@
-package vartas.jra.json;
+package vartas.jra._json;
 
 import org.json.JSONObject;
 

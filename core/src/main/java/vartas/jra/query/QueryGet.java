@@ -23,6 +23,8 @@ public abstract class QueryGet<T, Q extends QueryBase<T,Q>> extends QueryBase<T,
                 .build()
                 .get();
 
+        System.out.println(source);
+
         return mapper.apply(source);
     }
 }

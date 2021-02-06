@@ -5,7 +5,6 @@ import vartas.jra.query.QueryOne;
 import vartas.jra.types.Thing;
 
 import javax.annotation.Nonnull;
-import java.util.function.Function;
 
 public class FrontPage extends FrontPageTOP{
     private final Client client;
@@ -34,7 +33,7 @@ public class FrontPage extends FrontPageTOP{
     @Nonnull
     public QueryMany<Link> getBestLinks() {
         return new QueryMany<>(
-                Thing::toLink,
+                source -> Thing.from(source).toLink(),
                 client,
                 Endpoint.GET_BEST
         );
@@ -49,7 +48,7 @@ public class FrontPage extends FrontPageTOP{
     @Nonnull
     public QueryMany<Link> getControversialLinks() {
         return new QueryMany<>(
-                Thing::toLink,
+                source -> Thing.from(source).toLink(),
                 client,
                 Endpoint.GET_CONTROVERSIAL
         );
@@ -64,7 +63,7 @@ public class FrontPage extends FrontPageTOP{
     @Nonnull
     public QueryMany<Link> getHotLinks() {
         return new QueryMany<>(
-                Thing::toLink,
+                source -> Thing.from(source).toLink(),
                 client,
                 Endpoint.GET_HOT
         );
@@ -79,7 +78,7 @@ public class FrontPage extends FrontPageTOP{
     @Nonnull
     public QueryMany<Link> getNewLinks() {
         return new QueryMany<>(
-                Thing::toLink,
+                source -> Thing.from(source).toLink(),
                 client,
                 Endpoint.GET_NEW
         );
@@ -110,7 +109,7 @@ public class FrontPage extends FrontPageTOP{
     @Nonnull
     public QueryMany<Link> getRisingLinks() {
         return new QueryMany<>(
-                Thing::toLink,
+                source -> Thing.from(source).toLink(),
                 client,
                 Endpoint.GET_RISING
         );
@@ -125,7 +124,7 @@ public class FrontPage extends FrontPageTOP{
     @Nonnull
     public QueryMany<Link> getTopLinks() {
         return new QueryMany<>(
-                Thing::toLink,
+                source -> Thing.from(source).toLink(),
                 client,
                 Endpoint.GET_TOP
         );
@@ -146,7 +145,7 @@ public class FrontPage extends FrontPageTOP{
     @Nonnull
     public QueryMany<Thing> getSearch() {
         return new QueryMany<>(
-                Function.identity(),
+                Thing::from,
                 client,
                 Endpoint.GET_SEARCH
         );

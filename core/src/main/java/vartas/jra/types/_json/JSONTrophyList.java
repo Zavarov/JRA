@@ -1,11 +1,11 @@
-package vartas.jra.types.$json;
+package vartas.jra.types._json;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import vartas.jra.types.$factory.ThingFactory;
 import vartas.jra.types.Thing;
 import vartas.jra.types.Trophy;
 import vartas.jra.types.TrophyList;
+import vartas.jra.types._factory.ThingFactory;
 
 public class JSONTrophyList extends JSONTrophyListTOP{
     public static final String KEY = "trophies";

@@ -1,11 +1,12 @@
 package vartas.jra;
 
 import org.json.JSONArray;
+import vartas.jra.http.APIRequest;
 import vartas.jra.query.QueryOne;
 import vartas.jra.query.QueryPatch;
-import vartas.jra.types.$factory.MessagingFactory;
-import vartas.jra.types.$json.JSONPreferences;
 import vartas.jra.types.*;
+import vartas.jra.types._factory.MessagingFactory;
+import vartas.jra.types._json.JSONPreferences;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -111,7 +112,8 @@ public class SelfAccount extends SelfAccountTOP{
         return new QueryPatch<>(
                 source -> JSONPreferences.fromJson(new Preferences(), source),
                 client,
-                Endpoint.GET_ME_PREFS
+                Endpoint.GET_ME_PREFS,
+                APIRequest.BodyType.JSON
         );
     }
 
@@ -218,6 +220,48 @@ public class SelfAccount extends SelfAccountTOP{
                 source -> Thing.from(source).toUserList(),
                 client,
                 Endpoint.GET_PREFS_TRUSTED
+        );
+    }
+
+    //----------------------------------------------------------------------------------------------------------------//
+    //                                                                                                                //
+    //    Subreddits                                                                                                  //
+    //                                                                                                                //
+    //----------------------------------------------------------------------------------------------------------------//
+
+    @Override
+    public QueryOne<String> getMineContributor() {
+        return new QueryOne<>(
+                Function.identity(),
+                client,
+                Endpoint.GET_SUBREDDITS_MINE_CONTRIBUTOR
+        );
+    }
+
+    @Override
+    public QueryOne<String> getMineModerator() {
+        return new QueryOne<>(
+                Function.identity(),
+                client,
+                Endpoint.GET_SUBREDDITS_MINE_MODERATOR
+        );
+    }
+
+    @Override
+    public QueryOne<String> getMineStreams() {
+        return new QueryOne<>(
+                Function.identity(),
+                client,
+                Endpoint.GET_SUBREDDITS_MINE_STREAMS
+        );
+    }
+
+    @Override
+    public QueryOne<String> getMineSubscriber() {
+        return new QueryOne<>(
+                Function.identity(),
+                client,
+                Endpoint.GET_SUBREDDITS_MINE_SUBSCRIBER
         );
     }
 }

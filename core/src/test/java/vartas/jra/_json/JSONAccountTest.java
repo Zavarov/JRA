@@ -1,9 +1,8 @@
-package vartas.jra.json;
+package vartas.jra._json;
 
-import org.json.JSONObject;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import vartas.jra.$json.JSONAccount;
 import vartas.jra.Account;
 
 import java.io.IOException;
@@ -17,8 +16,12 @@ public class JSONAccountTest extends AbstractJSONTest{
     public static void setUpAll() throws IOException {
         account = JSONAccount.fromJson(new Account(null), from("Account.json"));
         //Test the serialization methods as well
-        JSONObject object = JSONAccount.toJson(account, new JSONObject());
-        account = JSONAccount.fromJson(new Account(null), object);
+        account = account.toThing().toAccount(null);
+    }
+
+    @AfterAll
+    public static void tearDownAll(){
+        account = null;
     }
 
     @Test
@@ -133,11 +136,11 @@ public class JSONAccountTest extends AbstractJSONTest{
 
     @Test
     public void testGetAcceptChats(){
-        assertThat(account.getAcceptChats()).isFalse();
+        assertThat(account.getAcceptChats()).contains(false);
     }
 
     @Test
     public void testGetAcceptPrivateMessages(){
-        assertThat(account.getAcceptPrivateMessages()).isTrue();
+        assertThat(account.getAcceptPrivateMessages()).contains(true);
     }
 }

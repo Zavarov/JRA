@@ -2,6 +2,7 @@ package vartas.jra.http;
 
 import com.google.common.net.HttpHeaders;
 import okhttp3.*;
+import org.json.JSONObject;
 import vartas.jra.Client;
 import vartas.jra.Endpoint;
 import vartas.jra.Subreddit;
@@ -170,12 +171,23 @@ public class APIRequest {
         }
 
         @Nonnull
-        public Builder setBody(@Nonnull Map<?, ?> body){
-            FormBody.Builder builder = new FormBody.Builder();
+        public Builder setBody(@Nonnull Map<?, ?> body, BodyType type){
+            switch(type){
+                case JSON:
+                    JSONObject node = new JSONObject(body);
 
-            body.forEach((k,v) -> builder.add(k.toString(), v.toString()));
+                    MediaType json = MediaType.parse("application/json; charset=utf-8");
 
-            return setBody(builder.build());
+                    return setBody(RequestBody.create(node.toString(), json));
+                case FORM:
+                    FormBody.Builder builder = new FormBody.Builder();
+
+                    body.forEach((k,v) -> builder.add(k.toString(), v.toString()));
+
+                    return setBody(builder.build());
+                default:
+                    throw new UnsupportedOperationException("Unknown body type: "+ type);
+            }
         }
 
         @Nonnull
@@ -221,5 +233,10 @@ public class APIRequest {
                     args
             );
         }
+    }
+
+    public enum BodyType{
+        JSON,
+        FORM
     }
 }

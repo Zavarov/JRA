@@ -1,4 +1,4 @@
-package vartas.jra.types.$json;
+package vartas.jra.types._json;
 
 import org.json.JSONObject;
 import vartas.jra.types.Rule;

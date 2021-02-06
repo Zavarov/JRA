@@ -1,19 +1,17 @@
 package vartas.jra;
 
-import org.json.JSONArray;
-import vartas.jra.$factory.SubmissionFactory;
 import vartas.jra.exceptions.NotFoundException;
 import vartas.jra.query.QueryMany;
 import vartas.jra.query.QueryOne;
 import vartas.jra.query.QueryPost;
-import vartas.jra.types.$json.JSONRules;
-import vartas.jra.types.Listing;
 import vartas.jra.types.Rules;
 import vartas.jra.types.Thing;
+import vartas.jra.types.User;
+import vartas.jra.types.UserList;
+import vartas.jra.types._json.JSONRules;
+import vartas.jra.types._json.JSONUser;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -120,35 +118,8 @@ public class Subreddit extends SubredditTOP{
     @Override
     @Nonnull
     public QueryOne<Submission> getComments(String article) {
-        //TODO Move into Submission class
-        Function<String, Submission> mapper = source -> {
-            JSONArray response = new JSONArray(source);
-            Link link;
-            List<Thing> comments;
-
-            //We receive an array consisting of two listings.
-            //The first listing contains a randomly fetched submission
-            //The second listing contains comments belonging to the fetched submission
-            assert response.length() == 2;
-
-            //Extract random submissions
-            Listing listing = Thing.from(response.getJSONObject(0)).toListing();
-            List<Thing> children = listing.getChildren();
-
-            //Reddit should've only returned a single submission
-            assert children.size() == 1;
-
-            link = children.get(0).toLink();
-
-            //Extract comments, if present
-            listing = Thing.from(response.getJSONObject(1)).toListing();
-            comments = Collections.unmodifiableList(listing.getChildren());
-
-            return SubmissionFactory.create(link, comments);
-        };
-
         return new QueryOne<>(
-                mapper,
+                Submission::from,
                 client,
                 Endpoint.GET_SUBREDDIT_COMMENTS,
                 getDisplayName(),
@@ -195,7 +166,7 @@ public class Subreddit extends SubredditTOP{
     @Nonnull
     public QueryMany<Link> getControversialLinks() {
         return new QueryMany<>(
-                Thing::toLink,
+                source -> Thing.from(source).toLink(),
                 client,
                 Endpoint.GET_SUBREDDIT_CONTROVERSIAL,
                 getDisplayName()
@@ -245,7 +216,7 @@ public class Subreddit extends SubredditTOP{
     @Nonnull
     public QueryMany<Link> getHotLinks(){
         return new QueryMany<>(
-                Thing::toLink,
+                source -> Thing.from(source).toLink(),
                 client,
                 Endpoint.GET_SUBREDDIT_HOT,
                 getDisplayName()
@@ -287,7 +258,7 @@ public class Subreddit extends SubredditTOP{
     @Override
     public QueryMany<Link> getNewLinks(){
         return new QueryMany<>(
-                Thing::toLink,
+                source -> Thing.from(source).toLink(),
                 client,
                 Endpoint.GET_SUBREDDIT_NEW,
                 getDisplayName()
@@ -301,37 +272,8 @@ public class Subreddit extends SubredditTOP{
      */
     @Override
     public QueryOne<Submission> getRandomSubmission() {
-        //TODO Move to Submission class
-        Function<String, Submission> mapper = source -> {
-            JSONArray response = new JSONArray(source);
-
-            Link link;
-            List<Thing> comments;
-
-            //We receive an array consisting of two listings.
-            //The first listing contains a randomly fetched submission
-            //The second listing contains comments belonging to the fetched submission
-            //Note that it might be the case that the comments are compressed
-            assert response.length() == 2;
-
-            //Extract random submissions
-            Listing listing = Thing.from(response.getJSONObject(0)).toListing();
-            List<Thing> children = listing.getChildren();
-
-            //Reddit should've only returned a single submission
-            assert children.size() == 1;
-
-            link = children.get(0).toLink();
-
-            //Extract comments, if present
-            listing = Thing.from(response.getJSONObject(1)).toListing();
-            comments = Collections.unmodifiableList(listing.getChildren());
-
-            return SubmissionFactory.create(link, comments);
-        };
-
         return new QueryOne<>(
-                mapper,
+                Submission::from,
                 client,
                 Endpoint.GET_SUBREDDIT_RANDOM,
                 getDisplayName()
@@ -373,7 +315,7 @@ public class Subreddit extends SubredditTOP{
     @Nonnull
     public QueryMany<Link> getRisingLinks(){
         return new QueryMany<>(
-                Thing::toLink,
+                source -> Thing.from(source).toLink(),
                 client,
                 Endpoint.GET_SUBREDDIT_RISING,
                 getDisplayName()
@@ -419,7 +361,7 @@ public class Subreddit extends SubredditTOP{
     @Nonnull
     public QueryMany<Link> getTopLinks(){
         return new QueryMany<>(
-                Thing::toLink,
+                source -> Thing.from(source).toLink(),
                 client,
                 Endpoint.GET_SUBREDDIT_TOP,
                 getDisplayName()
@@ -495,7 +437,7 @@ public class Subreddit extends SubredditTOP{
     @Nonnull
     public QueryMany<Thing> getSearch() {
         return new QueryMany<>(
-                Function.identity(),
+                Thing::from,
                 client,
                 Endpoint.GET_SUBREDDIT_SEARCH,
                 getDisplayName()
@@ -712,39 +654,177 @@ public class Subreddit extends SubredditTOP{
     @Override
     @Nonnull
     public QueryOne<Submission> getSticky(){
-        //TODO Move to Submission class
-        Function<String, Submission> mapper = source -> {
-            JSONArray response = new JSONArray(source);
-
-            Link link;
-            List<Thing> comments;
-
-            //We receive an array consisting of two listings.
-            //The first listing contains a randomly fetched submission
-            //The second listing contains comments belonging to the fetched submission
-            //Note that it might be the case that the comments are compressed
-            assert response.length() == 2;
-
-            //Extract random submissions
-            Listing listing = Thing.from(response.getJSONObject(0)).toListing();
-            List<Thing> children = listing.getChildren();
-
-            //Reddit should've only returned a single submission
-            assert children.size() == 1;
-
-            link = children.get(0).toLink();
-
-            //Extract comments, if present
-            listing = Thing.from(response.getJSONObject(1)).toListing();
-            comments = Collections.unmodifiableList(listing.getChildren());
-
-            return SubmissionFactory.create(link, comments);
-        };
-
         return new QueryOne<>(
-                mapper,
+                Submission::from,
                 client,
                 Endpoint.GET_SUBREDDIT_ABOUT_STICKY,
+                getDisplayName()
+        );
+    }
+
+    //----------------------------------------------------------------------------------------------------------------//
+    //                                                                                                                //
+    //    Users                                                                                                       //
+    //                                                                                                                //
+    //----------------------------------------------------------------------------------------------------------------//
+
+    @Override
+    public QueryMany<User> getBanned() {
+        return new QueryMany<>(
+                source -> JSONUser.fromJson(new User(), source),
+                client,
+                Endpoint.GET_SUBREDDIT_ABOUT_BANNED,
+                getDisplayName()
+        );
+
+    }
+
+    @Override
+    public QueryMany<User> getContributors() {
+        return new QueryMany<>(
+                source -> JSONUser.fromJson(new User(), source),
+                client,
+                Endpoint.GET_SUBREDDIT_ABOUT_CONTRIBUTORS,
+                getDisplayName()
+        );
+    }
+
+    @Override
+    public QueryOne<UserList> getModerators() {
+        return new QueryOne<>(
+                source -> Thing.from(source).toUserList(),
+                client,
+                Endpoint.GET_SUBREDDIT_ABOUT_MODERATORS,
+                getDisplayName()
+        );
+    }
+
+    @Override
+    public QueryMany<User> getMuted() {
+        return new QueryMany<>(
+                source -> JSONUser.fromJson(new User(), source),
+                client,
+                Endpoint.GET_SUBREDDIT_ABOUT_MUTED,
+                getDisplayName()
+        );
+    }
+
+    @Override
+    public QueryMany<User> getWikibanned() {
+        return new QueryMany<>(
+                source -> JSONUser.fromJson(new User(), source),
+                client,
+                Endpoint.GET_SUBREDDIT_ABOUT_WIKIBANNED,
+                getDisplayName()
+        );
+    }
+
+    @Override
+    public QueryMany<User> getWikicontributors() {
+        return new QueryMany<>(
+                source -> JSONUser.fromJson(new User(), source),
+                client,
+                Endpoint.GET_SUBREDDIT_ABOUT_WIKICONTRIBUTORS,
+                getDisplayName()
+        );
+    }
+
+    @Override
+    public QueryPost<String> postDeleteBanner() {
+        return new QueryPost<>(
+                Function.identity(),
+                client,
+                Endpoint.POST_SUBREDDIT_DELETE_BANNER,
+                getDisplayName()
+        );
+    }
+
+    @Override
+    public QueryPost<String> postDeleteHeader() {
+        return new QueryPost<>(
+                Function.identity(),
+                client,
+                Endpoint.POST_SUBREDDIT_DELETE_HEADER,
+                getDisplayName()
+        );
+    }
+
+    @Override
+    public QueryPost<String> postDeleteIcon() {
+        return new QueryPost<>(
+                Function.identity(),
+                client,
+                Endpoint.POST_SUBREDDIT_DELETE_ICON,
+                getDisplayName()
+        );
+    }
+
+    @Override
+    public QueryPost<String> postDeleteImage() {
+        return new QueryPost<>(
+                Function.identity(),
+                client,
+                Endpoint.POST_SUBREDDIT_DELETE_IMAGE,
+                getDisplayName()
+        );
+    }
+
+    @Override
+    public QueryPost<String> postStylesheet() {
+        return new QueryPost<>(
+                Function.identity(),
+                client,
+                Endpoint.POST_SUBREDDIT_STYLESHEET,
+                getDisplayName()
+        );
+    }
+
+    @Override
+    public QueryPost<String> postUploadImage() {
+        return new QueryPost<>(
+                Function.identity(),
+                client,
+                Endpoint.POST_SUBREDDIT_UPLOAD_IMAGE,
+                getDisplayName()
+        );
+    }
+
+    @Override
+    public QueryOne<String> getPostRequirements() {
+        return new QueryOne<>(
+                Function.identity(),
+                client,
+                Endpoint.GET_SUBREDDIT_POST_REQUIREMENTS,
+                getDisplayName()
+        );
+    }
+
+    @Override
+    public QueryOne<String> getSubmitText() {
+        return new QueryOne<>(
+                Function.identity(),
+                client,
+                Endpoint.GET_SUBREDDIT_SUBMIT_TEXT,
+                getDisplayName()
+        );
+    }
+
+    @Override
+    public QueryOne<String> getEdit() {
+        return new QueryOne<>(
+                Function.identity(),
+                client,
+                Endpoint.GET_SUBREDDIT_ABOUT_EDIT,
+                getDisplayName()
+        );
+    }
+
+    @Override
+    public QueryOne<String> getTraffic() {
+        return new QueryOne<>(
+                Function.identity(),
+                client,
+                Endpoint.GET_SUBREDDIT_ABOUT_TRAFFIC,
                 getDisplayName()
         );
     }

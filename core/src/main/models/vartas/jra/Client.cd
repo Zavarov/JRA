@@ -9,7 +9,7 @@ import vartas.jra.Account.Account;
 import vartas.jra.FrontPage.FrontPage;
 import vartas.jra.SelfAccount.SelfAccount;
 import vartas.jra.Client.Client.Duration;
-import vartas.jra.query.QueryInternal.QueryInternal;
+import vartas.jra.query.QueryLocal.QueryLocal;
 import vartas.jra.query.QueryOne.QueryOne;
 import vartas.jra.query.QueryMany.QueryMany;
 import vartas.jra.query.QueryPost.QueryPost;
@@ -35,9 +35,9 @@ public classdiagram Client {
         + abstract void login() throws IOException, HttpException, RateLimiterException, InterruptedException;
         + abstract void logout() throws IOException, HttpException, RateLimiterException, InterruptedException;
         # abstract void refresh() throws IOException, HttpException, RateLimiterException, InterruptedException;
-        + abstract Subreddit getSubreddit(String name) throws IOException, HttpException, InterruptedException;
 
-        + abstract QueryInternal<FrontPage> getFrontPage();
+        + abstract QueryLocal<FrontPage> getFrontPage();
+
         //Account
         + abstract QueryOne<SelfAccount> getMe();
         //Captcha
@@ -51,6 +51,24 @@ public classdiagram Client {
         + abstract QueryOne<UserDataMap> getUserDataByAccountIds();
         + abstract QueryOne<Boolean> getUsernameAvailable();
         + abstract QueryOne<Account> getAccount(String name);
+        //Subreddits
+        + abstract QueryOne<String> getRecommendSubreddits(String[] subreddits);
+        + abstract QueryOne<String> getSearchRedditNames();
+        + abstract QueryPost<String> postSearchRedditNames();
+        + abstract QueryPost<String> postSearchSubreddits();
+        + abstract QueryPost<String> postSiteAdmin();
+        + abstract QueryOne<String> getSubredditAutocomplete();
+        + abstract QueryOne<String> getSubredditAutocompleteV2();
+        + abstract QueryOne<Subreddit> getSubreddit(String name);
+        + abstract QueryPost<String> postSubscribe();
+        + abstract QueryOne<String> getSubredditsPopular();
+        + abstract QueryOne<String> getSubredditsNew();
+        + abstract QueryOne<String> getSubredditsGold();
+        + abstract QueryOne<String> getSubredditsDefault();
+        + abstract QueryOne<String> getSubredditsSearch();
+        + abstract QueryOne<String> getUsersNew();
+        + abstract QueryOne<String> getUsersPopular();
+        + abstract QueryOne<String> getUsersSearch();
 
     }
 

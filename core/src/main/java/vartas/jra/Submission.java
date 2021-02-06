@@ -3,12 +3,12 @@ package vartas.jra;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import vartas.jra.$factory.SubmissionFactory;
+import vartas.jra._factory.SubmissionFactory;
 import vartas.jra.types.Listing;
 import vartas.jra.types.Thing;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Submission extends SubmissionTOP{
 
@@ -26,7 +26,7 @@ public class Submission extends SubmissionTOP{
 
         //Choose a random link
         int index = (int)(Math.random() * links.getChildren().size());
-        Link link = links.getChildren().get(index).toLink();
+        Link link = Thing.from(links.getChildren().get(index)).toLink();
 
         return SubmissionFactory.create(link);
     }
@@ -43,16 +43,16 @@ public class Submission extends SubmissionTOP{
 
         //Extract random submissions
         Listing listing = Thing.from(source.getJSONObject(0)).toListing();
-        List<Thing> children = listing.getChildren();
+        List<String> children = listing.getChildren();
 
         //Reddit should've only returned a single submission
         assert children.size() == 1;
 
-        link = children.get(0).toLink();
+        link = Thing.from(children.get(0)).toLink();
 
         //Extract comments, if present
         listing = Thing.from(source.getJSONObject(1)).toListing();
-        comments = Collections.unmodifiableList(listing.getChildren());
+        comments = listing.streamChildren().map(Thing::from).collect(Collectors.toUnmodifiableList());
 
         return SubmissionFactory.create(link, comments);
     }

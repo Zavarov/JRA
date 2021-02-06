@@ -4,16 +4,16 @@ import vartas.jra.exceptions.HttpException;
 
 import java.io.IOException;
 
-public class QueryInternal<Q> extends Query<Q, QueryInternal<Q>>{
+public class QueryLocal<Q> extends Query<Q, QueryLocal<Q>>{
     private final Q value;
 
-    public QueryInternal(Q value){
+    public QueryLocal(Q value){
         super(null, null);
         this.value = value;
     }
 
     @Override
-    protected QueryInternal<Q> getRealThis() {
+    protected QueryLocal<Q> getRealThis() {
         return this;
     }
 

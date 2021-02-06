@@ -1,16 +1,16 @@
-package vartas.jra.types.$json;
+package vartas.jra._json;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONObject;
-import vartas.jra.types.UserData;
+import vartas.jra.Account;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
-public class JSONUserData extends JSONUserDataTOP{
+public class JSONAccount extends JSONAccountTOP{
     @Override
-    protected void $fromCreatedUtc(JSONObject source, UserData target){
+    protected void $fromCreatedUtc(JSONObject source, Account target){
         double seconds = source.getDouble(CREATEDUTC);
         Instant instant = Instant.ofEpochSecond((long)seconds);
         OffsetDateTime date = OffsetDateTime.ofInstant(instant, ZoneOffset.UTC);
@@ -18,13 +18,13 @@ public class JSONUserData extends JSONUserDataTOP{
     }
 
     @Override
-    protected void $toCreatedUtc(UserData source, JSONObject target){
+    protected void $toCreatedUtc(Account source, JSONObject target){
         double seconds = source.toEpochSecondCreatedUtc();
         target.put(CREATEDUTC, seconds);
     }
 
     @Override
-    protected void $fromProfileImage(JSONObject source, UserData target){
-        target.setProfileImage(StringEscapeUtils.unescapeHtml4(source.getString(PROFILEIMAGE)));
+    protected void $fromIconImage(JSONObject source, Account target){
+        target.setIconImage(StringEscapeUtils.unescapeHtml4(source.getString(ICONIMAGE)));
     }
 }

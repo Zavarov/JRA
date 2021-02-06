@@ -7,27 +7,26 @@ import okhttp3.Response;
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vartas.jra.$factory.RateLimiterFactory;
-import vartas.jra.$factory.SubmissionFactory;
-import vartas.jra.$json.JSONSelfAccount;
-import vartas.jra.$json.JSONToken;
-import vartas.jra.exceptions.$factory.*;
+import vartas.jra._factory.RateLimiterFactory;
+import vartas.jra._factory.SubmissionFactory;
+import vartas.jra._json.JSONSelfAccount;
+import vartas.jra._json.JSONToken;
 import vartas.jra.exceptions.HttpException;
 import vartas.jra.exceptions.RateLimiterException;
+import vartas.jra.exceptions._factory.*;
 import vartas.jra.http.APIAuthentication;
 import vartas.jra.http.APIRequest;
-import vartas.jra.query.QueryInternal;
+import vartas.jra.query.QueryLocal;
 import vartas.jra.query.QueryMany;
 import vartas.jra.query.QueryOne;
-import vartas.jra.types.$factory.DuplicateFactory;
-import vartas.jra.types.$json.JSONThing;
-import vartas.jra.types.$json.JSONTrendingSubreddits;
-import vartas.jra.types.$json.JSONUserDataMap;
+import vartas.jra.query.QueryPost;
 import vartas.jra.types.*;
+import vartas.jra.types._factory.DuplicateFactory;
+import vartas.jra.types._json.JSONTrendingSubreddits;
+import vartas.jra.types._json.JSONUserDataMap;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
@@ -335,8 +334,8 @@ public abstract class Client extends ClientTOP{
     //----------------------------------------------------------------------------------------------------------------//
 
     @Override
-    public QueryInternal<FrontPage> getFrontPage(){
-        return new QueryInternal<>(new FrontPage(this));
+    public QueryLocal<FrontPage> getFrontPage(){
+        return new QueryLocal<>(new FrontPage(this));
     }
 
     /**
@@ -360,7 +359,7 @@ public abstract class Client extends ClientTOP{
     @Nonnull
     public QueryMany<Link> getLinksById(@Nonnull String... names) {
         return new QueryMany<>(
-                Thing::toLink,
+                source -> Thing.from(source).toLink(),
                 this,
                 Endpoint.GET_BY_ID,
                 Joiner.on(',').join(names)
@@ -446,16 +445,16 @@ public abstract class Client extends ClientTOP{
 
             //Extract random submissions
             Listing listing = Thing.from(response.getJSONObject(0)).toListing();
-            List<Thing> children = listing.getChildren();
+            List<String> children = listing.getChildren();
 
             //Reddit should've only returned a single submission
             assert children.size() == 1;
 
-            link = children.get(0).toLink();
+            link = Thing.from(children.get(0)).toLink();
 
             //Extract comments, if present
             listing = Thing.from(response.getJSONObject(1)).toListing();
-            comments = Collections.unmodifiableList(listing.getChildren());
+            comments = listing.streamChildren().map(Thing::from).collect(Collectors.toUnmodifiableList());
 
             return SubmissionFactory.create(link, comments);
         };
@@ -530,18 +529,16 @@ public abstract class Client extends ClientTOP{
 
             //Extract source
             Listing listing = Thing.from(response.getJSONObject(0)).toListing();
-            List<Thing> children = listing.getChildren();
+            List<String> children = listing.getChildren();
 
             //Reddit should've only returned a single submission
             assert children.size() == 1;
 
-            reference = children.get(0).toLink();
+            reference = Thing.from(children.get(0)).toLink();
 
             //Duplicates, if present
             listing = Thing.from(response.getJSONObject(1)).toListing();
-            children = listing.getChildren();
-
-            duplicates = children.stream().map(Thing::toLink).collect(Collectors.toUnmodifiableList());
+            duplicates = listing.streamChildren().map(Thing::from).map(Thing::toLink).collect(Collectors.toUnmodifiableList());
 
             return DuplicateFactory.create(reference, duplicates);
         };
@@ -613,24 +610,171 @@ public abstract class Client extends ClientTOP{
 
     //----------------------------------------------------------------------------------------------------------------//
     //                                                                                                                //
-    //    Utility classes                                                                                             //
+    //    Subreddits                                                                                                  //
     //                                                                                                                //
     //----------------------------------------------------------------------------------------------------------------//
 
     @Override
-    public Subreddit getSubreddit(String name) throws HttpException, IOException, InterruptedException {
-        String source = new APIRequest.Builder(this).setEndpoint(Endpoint.GET_SUBREDDIT_ABOUT).setArgs(name).build().get();
-
-        Thing thing = JSONThing.fromJson(new Thing(), source);
-
-        //TODO Check
-        //In case a subreddit with the specified name doesn't exist, the return Thing may be arbitrary
-        if(Thing.Kind.Subreddit.matches(thing.getKind()))
-            return thing.toSubreddit(this);
-        else
-            throw NotFoundExceptionFactory.create(HttpURLConnection.HTTP_NOT_FOUND, "A subreddit with this name doesn't exist");
-
+    @Deprecated
+    public QueryOne<String> getRecommendSubreddits(String... subreddits) {
+        return new QueryOne<>(
+                Function.identity(),
+                this,
+                Endpoint.GET_RECOMMEND_SUBREDDITS,
+                Joiner.on(',').join(subreddits)
+        );
     }
+
+    @Override
+    public QueryOne<String> getSearchRedditNames() {
+        return new QueryOne<>(
+                Function.identity(),
+                this,
+                Endpoint.GET_SEARCH_REDDIT_NAMES
+        );
+    }
+
+    @Override
+    public QueryPost<String> postSearchRedditNames() {
+        return new QueryPost<>(
+                Function.identity(),
+                this,
+                Endpoint.POST_SEARCH_REDDIT_NAMES
+        );
+    }
+
+    @Override
+    public QueryPost<String> postSearchSubreddits() {
+        return new QueryPost<>(
+                Function.identity(),
+                this,
+                Endpoint.POST_SEARCH_SUBREDDITS
+        );
+    }
+
+    @Override
+    public QueryPost<String> postSiteAdmin() {
+        return new QueryPost<>(
+                Function.identity(),
+                this,
+                Endpoint.POST_SITE_ADMIN
+        );
+    }
+
+    @Override
+    public QueryOne<Subreddit> getSubreddit(String name){
+        return new QueryOne<>(
+                source -> Thing.from(source).toSubreddit(this),
+                this,
+                Endpoint.GET_SUBREDDIT_ABOUT,
+                name
+        );
+    }
+
+    @Override
+    public QueryOne<String> getSubredditAutocomplete() {
+        return new QueryOne<>(
+                source -> source,
+                this,
+                Endpoint.GET_SUBREDDIT_AUTOCOMPLETE
+        );
+    }
+
+    @Override
+    public QueryOne<String> getSubredditAutocompleteV2() {
+        return new QueryOne<>(
+                source -> source,
+                this,
+                Endpoint.GET_SUBREDDIT_AUTOCOMPLETE_V2
+        );
+    }
+
+    @Override
+    public QueryPost<String> postSubscribe() {
+        return new QueryPost<>(
+                Function.identity(),
+                this,
+                Endpoint.POST_SUBSCRIBE
+        );
+    }
+
+    @Override
+    public QueryOne<String> getSubredditsPopular() {
+        return new QueryOne<>(
+                source -> source,
+                this,
+                Endpoint.GET_SUBREDDITS_POPULAR
+        );
+    }
+
+    @Override
+    public QueryOne<String> getSubredditsNew() {
+        return new QueryOne<>(
+                source -> source,
+                this,
+                Endpoint.GET_SUBREDDITS_NEW
+        );
+    }
+
+    @Override
+    public QueryOne<String> getSubredditsGold() {
+        return new QueryOne<>(
+                source -> source,
+                this,
+                Endpoint.GET_SUBREDDITS_GOLD
+        );
+    }
+
+    @Override
+    public QueryOne<String> getSubredditsDefault() {
+        return new QueryOne<>(
+                source -> source,
+                this,
+                Endpoint.GET_SUBREDDITS_DEFAULT
+        );
+    }
+
+    @Override
+    public QueryOne<String> getSubredditsSearch() {
+        return new QueryOne<>(
+                source -> source,
+                this,
+                Endpoint.GET_SUBREDDITS_SEARCH
+        );
+    }
+
+    @Override
+    public QueryOne<String> getUsersNew() {
+        return new QueryOne<>(
+                source -> source,
+                this,
+                Endpoint.GET_USERS_NEW
+        );
+    }
+
+    @Override
+    public QueryOne<String> getUsersPopular() {
+        return new QueryOne<>(
+                source -> source,
+                this,
+                Endpoint.GET_USERS_POPULAR
+        );
+    }
+
+    @Override
+    public QueryOne<String> getUsersSearch() {
+        return new QueryOne<>(
+                source -> source,
+                this,
+                Endpoint.GET_USERS_SEARCH
+        );
+    }
+
+    //----------------------------------------------------------------------------------------------------------------//
+    //                                                                                                                //
+    //    Utility classes                                                                                             //
+    //                                                                                                                //
+    //----------------------------------------------------------------------------------------------------------------//
 
     public enum Duration {
         PERMANENT,

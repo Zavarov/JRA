@@ -22,5 +22,9 @@ public classdiagram SelfAccount {
             + abstract QueryOne<UserList> getPreferencesFriends();
             + abstract QueryOne<Messaging> getPreferencesMessaging();
             + abstract QueryOne<UserList> getPreferencesTrusted();
+            + abstract QueryOne<String> getMineContributor();
+            + abstract QueryOne<String> getMineModerator();
+            + abstract QueryOne<String> getMineStreams();
+            + abstract QueryOne<String> getMineSubscriber();
     }
 }

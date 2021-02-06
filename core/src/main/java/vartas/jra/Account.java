@@ -1,10 +1,13 @@
 package vartas.jra;
 
+import org.json.JSONObject;
+import vartas.jra._json.JSONAccount;
 import vartas.jra.query.*;
-import vartas.jra.types.$json.JSONUser;
 import vartas.jra.types.Thing;
 import vartas.jra.types.TrophyList;
 import vartas.jra.types.User;
+import vartas.jra.types._factory.ThingFactory;
+import vartas.jra.types._json.JSONUser;
 
 import javax.annotation.Nonnull;
 import java.util.function.Function;
@@ -12,6 +15,11 @@ import java.util.function.Function;
 public class Account extends AccountTOP {
     public Account(Client client){
         setClient(client);
+    }
+
+    @Nonnull
+    public Thing toThing(){
+        return ThingFactory.create(Thing.Kind.Account.toString(), JSONAccount.toJson(this, new JSONObject()));
     }
 
     @Override
@@ -28,49 +36,89 @@ public class Account extends AccountTOP {
     @Override
     @Nonnull
     public QueryMany<Comment> getComments() {
-        return new QueryMany<>(Thing::toComment, getClient(), Endpoint.GET_USER_USERNAME_COMMENTS, getName());
+        return new QueryMany<>(
+                source -> Thing.from(source).toComment(),
+                getClient(),
+                Endpoint.GET_USER_USERNAME_COMMENTS,
+                getName()
+        );
     }
 
     @Override
     @Nonnull
     public QueryMany<Thing> getDownvoted() {
-        return new QueryMany<>(Function.identity(), getClient(), Endpoint.GET_USER_USERNAME_DOWNVOTED, getName());
+        return new QueryMany<>(
+                Thing::from,
+                getClient(),
+                Endpoint.GET_USER_USERNAME_DOWNVOTED,
+                getName()
+        );
     }
 
     @Override
     @Nonnull
     public QueryMany<Thing> getGilded() {
-        return new QueryMany<>(Function.identity(), getClient(), Endpoint.GET_USER_USERNAME_GILDED, getName());
+        return new QueryMany<>(
+                Thing::from,
+                getClient(),
+                Endpoint.GET_USER_USERNAME_GILDED,
+                getName()
+        );
     }
 
     @Override
     @Nonnull
     public QueryMany<Thing> getHidden() {
-        return new QueryMany<>(Function.identity(), getClient(), Endpoint.GET_USER_USERNAME_HIDDEN, getName());
+        return new QueryMany<>(
+                Thing::from,
+                getClient(),
+                Endpoint.GET_USER_USERNAME_HIDDEN,
+                getName()
+        );
     }
 
     @Override
     @Nonnull
     public QueryMany<Thing> getOverview() {
-        return new QueryMany<>(Function.identity(), getClient(), Endpoint.GET_USER_USERNAME_OVERVIEW, getName());
+        return new QueryMany<>(
+                Thing::from,
+                getClient(),
+                Endpoint.GET_USER_USERNAME_OVERVIEW,
+                getName()
+        );
     }
 
     @Override
     @Nonnull
     public QueryMany<Thing> getSaved() {
-        return new QueryMany<>(Function.identity(), getClient(), Endpoint.GET_USER_USERNAME_SAVED, getName());
+        return new QueryMany<>(
+                Thing::from,
+                getClient(),
+                Endpoint.GET_USER_USERNAME_SAVED,
+                getName()
+        );
     }
 
     @Override
     @Nonnull
     public QueryMany<Link> getSubmitted() {
-        return new QueryMany<>(Thing::toLink, getClient(), Endpoint.GET_USER_USERNAME_SUBMITTED, getName());
+        return new QueryMany<>(
+                source -> Thing.from(source).toLink(),
+                getClient(),
+                Endpoint.GET_USER_USERNAME_SUBMITTED,
+                getName()
+        );
     }
 
     @Override
     @Nonnull
     public QueryMany<Thing> getUpvoted() {
-        return new QueryMany<>(Function.identity(), getClient(), Endpoint.GET_USER_USERNAME_UPVOTED, getName());
+        return new QueryMany<>(
+                Thing::from,
+                getClient(),
+                Endpoint.GET_USER_USERNAME_UPVOTED,
+                getName()
+        );
     }
 
     /**

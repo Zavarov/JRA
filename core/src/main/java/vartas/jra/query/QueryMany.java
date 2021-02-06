@@ -10,11 +10,11 @@ import java.util.stream.Collectors;
 
 
 public class QueryMany<T> extends QueryGet<List<T>, QueryMany<T>> {
-    public QueryMany(Function<Thing, T> mapper, Client client, Endpoint endpoint, Object... args) {
+    public QueryMany(Function<String, T> mapper, Client client, Endpoint endpoint, Object... args) {
         super(many(mapper), client, endpoint, args);
     }
 
-    private static <Q> Function<String, List<Q>> many(Function<Thing, Q> source){
+    private static <Q> Function<String, List<Q>> many(Function<String, Q> source){
         return value -> Thing.from(value)
                 .toListing()
                 .getChildren()

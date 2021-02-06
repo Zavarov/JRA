@@ -75,15 +75,13 @@ public class AccountTest extends AbstractTest{
     //                                                                                                                //
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
-    //@Test
+    //Test
     public void testPostBlock() throws InterruptedException, IOException, HttpException {
-        //Not tested / Error Code 400
         account.postBlock().query();
     }
 
     //@Test
     public void testPostFriend() throws InterruptedException, IOException, HttpException {
-        //Not tested / Error Code 500
         account.postFriend().query();
     }
 
@@ -103,7 +101,7 @@ public class AccountTest extends AbstractTest{
     //@Test
     public void testPostUnfriend() throws InterruptedException, IOException, HttpException {
         //Not tested / Error Code 500
-        account.postFriend().query();
+        account.postUnfriend().query();
     }
 
     //@Test

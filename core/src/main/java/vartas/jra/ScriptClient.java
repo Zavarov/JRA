@@ -1,6 +1,6 @@
 package vartas.jra;
 
-import vartas.jra.$json.JSONToken;
+import vartas.jra._json.JSONToken;
 import vartas.jra.exceptions.HttpException;
 import vartas.jra.exceptions.RateLimiterException;
 import vartas.jra.http.APIAuthentication;

@@ -1,17 +1,16 @@
-package vartas.jra.$json;
+package vartas.jra._json;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
-import vartas.jra.Comment;
+import vartas.jra.Link;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Optional;
 
-public class JSONComment extends JSONCommentTOP{
+public class JSONLink extends JSONLinkTOP{
     @Override
-    protected void $fromCreatedUtc(JSONObject source, Comment target){
+    protected void $fromCreatedUtc(JSONObject source, Link target){
         double seconds = source.getDouble(CREATEDUTC);
         Instant instant = Instant.ofEpochSecond((long)seconds);
         OffsetDateTime date = OffsetDateTime.ofInstant(instant, ZoneOffset.UTC);
@@ -19,15 +18,16 @@ public class JSONComment extends JSONCommentTOP{
     }
 
     @Override
-    protected void $toCreatedUtc(Comment source, JSONObject target){
+    protected void $toCreatedUtc(Link source, JSONObject target){
         double seconds = source.toEpochSecondCreatedUtc();
         target.put(CREATEDUTC, seconds);
     }
 
     @Override
-    protected void $fromEdited(JSONObject source, Comment target){
+    protected void $fromEdited(JSONObject source, Link target){
         //Returns false if not edited, occasionally true for very old comments
-        if(source.get(EDITED) instanceof Boolean) {
+        //May not existing after serialization
+        if(source.isNull(EDITED) || source.get(EDITED) instanceof Boolean) {
             target.setEdited(Optional.empty());
         }else{
             double seconds = source.getDouble(EDITED);
@@ -38,26 +38,27 @@ public class JSONComment extends JSONCommentTOP{
     }
 
     @Override
-    protected void $toEdited(Comment source, JSONObject target){
+    protected void $toEdited(Link source, JSONObject target){
         source.ifPresentEdited(edited -> target.put(EDITED, edited.toEpochSecond()));
     }
 
     @Override
-    protected void $fromReplies(JSONObject source, Comment target){
-        JSONArray values = source.optJSONArray(REPLIES);
-        if(values != null){
-            for(int i = 0 ; i < values.length() ; ++i){
-                target.addReplies(JSONComment.fromJson(new Comment(), values.getJSONObject(i)));
-            }
-        }
+    protected void $fromMedia(JSONObject source, Link target){
+        target.setMedia(source.get(MEDIA));
     }
 
     @Override
-    protected void $toReplies(Comment source, JSONObject target){
-        if(!source.isEmptyReplies()){
-            JSONArray values = new JSONArray();
-            source.forEachReplies(comment -> values.put(JSONComment.toJson(comment, new JSONObject())));
-            target.put(REPLIES, values);
-        }
+    protected void $toMedia(Link source, JSONObject target){
+        target.put(MEDIA, source.getMedia());
+    }
+
+    @Override
+    protected void $fromMediaEmbed(JSONObject source, Link target){
+        target.setMedia(source.get(MEDIAEMBED));
+    }
+
+    @Override
+    protected void $toMediaEmbed(Link source, JSONObject target){
+        target.put(MEDIAEMBED, source.getMedia());
     }
 }

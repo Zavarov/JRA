@@ -12,12 +12,12 @@ public classdiagram Votable {
          * The number of upvotes. (includes own)
          */
         <<key="ups">>
-        - int upvotes();
+        - int upvotes;
         /**
          * The number of downvotes. (includes own)
          */
         <<key="downs">>
-        - int downvotes();
+        - int downvotes;
         /**
          * true if thing is liked by the user, false if thing is disliked, empty if the user has not voted or you are
          * not logged in.

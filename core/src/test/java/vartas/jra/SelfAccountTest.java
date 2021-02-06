@@ -86,4 +86,31 @@ public class SelfAccountTest extends AbstractTest{
     public void testGetPreferencesTrusted() throws InterruptedException, IOException, HttpException {
         assertThat(me.getPreferencesTrusted().query()).isInstanceOf(UserList.class);
     }
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //                                                                                                                //
+    //    Subreddits                                                                                                  //
+    //                                                                                                                //
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+
+    @Test
+    public void testGetMineContributor() throws InterruptedException, IOException, HttpException {
+        me.getMineContributor().query();
+    }
+
+    @Test
+    public void testGetMineModerator() throws InterruptedException, IOException, HttpException {
+        me.getMineModerator().query();
+    }
+
+    //@Test
+    public void testGetMineStreams() throws InterruptedException, IOException, HttpException {
+        //Fails with 403
+        me.getMineStreams().query();
+    }
+
+    @Test
+    public void testGetMineSubscriber() throws InterruptedException, IOException, HttpException {
+        me.getMineSubscriber().query();
+    }
 }

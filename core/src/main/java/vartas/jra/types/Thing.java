@@ -18,12 +18,12 @@
 package vartas.jra.types;
 
 import org.json.JSONObject;
-import vartas.jra.$json.JSONAccount;
-import vartas.jra.$json.JSONComment;
-import vartas.jra.$json.JSONLink;
-import vartas.jra.$json.JSONSubreddit;
 import vartas.jra.*;
-import vartas.jra.types.$json.*;
+import vartas.jra._json.JSONAccount;
+import vartas.jra._json.JSONComment;
+import vartas.jra._json.JSONLink;
+import vartas.jra._json.JSONSubreddit;
+import vartas.jra.types._json.*;
 
 import java.util.Objects;
 
@@ -58,6 +58,10 @@ public class Thing extends ThingTOP {
 
         public boolean matches(String kind){
             return Objects.equals(name, kind);
+        }
+
+        public String toString(){
+            return name;
         }
     }
 
@@ -106,6 +110,7 @@ public class Thing extends ThingTOP {
 
     public Link toLink(){
         assert Thing.Kind.Link.matches(this);
+        System.out.println(new JSONObject(getData().toString()).toString(2));
         return JSONLink.fromJson(new Link(), getData().toString());
     }
 

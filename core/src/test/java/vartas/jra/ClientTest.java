@@ -27,6 +27,11 @@ public class ClientTest extends AbstractTest{
         client.logout();
     }
 
+    @Test
+    public void testGetFrontPage() throws InterruptedException, IOException, HttpException {
+        assertThat(client.getFrontPage().query()).isInstanceOf(FrontPage.class);
+    }
+
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //                                                                                                                //
     //    Account                                                                                                     //
@@ -101,5 +106,100 @@ public class ClientTest extends AbstractTest{
     @ValueSource(strings = {"Reddit"})
     public void testGetAccount(String name) throws InterruptedException, IOException, HttpException {
         client.getAccount(name).query();
+    }
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //                                                                                                                //
+    //    Subreddits                                                                                                  //
+    //                                                                                                                //
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+
+    @Test
+    @SuppressWarnings("deprecation")
+    public void testGetRecommendSubreddits() throws InterruptedException, IOException, HttpException {
+        client.getRecommendSubreddits("RedditDev").query();
+    }
+
+    @Test
+    public void testGetSearchRedditNames() throws InterruptedException, IOException, HttpException {
+        client.getSearchRedditNames().setParameter("query", "Reddit").query();
+    }
+
+    @Test
+    public void testPostSearchRedditNames() throws InterruptedException, IOException, HttpException {
+        client.postSearchRedditNames().setParameter("query", "Reddit").query();
+    }
+
+    @Test
+    public void testPostSearchSubreddits() throws InterruptedException, IOException, HttpException {
+        client.postSearchSubreddits()
+                .setParameter("query", "reddit")
+                .query();
+    }
+
+    //@Test
+    public void testPostSiteAdmin() throws InterruptedException, IOException, HttpException {
+        //TODO Test once we can get the current settings
+        client.postSiteAdmin().query();
+    }
+
+    @Test
+    public void testGetSubredditAutocomplete() throws InterruptedException, IOException, HttpException {
+        client.getSubredditAutocomplete().setParameter("query", "Reddit").query();
+    }
+
+    @Test
+    public void testGetSubredditAutocompleteV2() throws InterruptedException, IOException, HttpException {
+        client.getSubredditAutocompleteV2().setParameter("query", "Reddit").query();
+    }
+
+    @Test
+    public void testGetSubreddit() throws InterruptedException, IOException, HttpException {
+        client.getSubreddit("RedditDev").query();
+    }
+
+    //@Test
+    public void testPostSubscribe() throws InterruptedException, IOException, HttpException {
+        client.postSubscribe().query();
+    }
+
+    @Test
+    public void testGetSubredditsDefault() throws InterruptedException, IOException, HttpException{
+        client.getSubredditsDefault().query();
+    }
+
+    @Test
+    public void testGetSubredditsGold() throws InterruptedException, IOException, HttpException{
+        client.getSubredditsGold().query();
+    }
+
+    @Test
+    public void testGetSubredditsNew() throws InterruptedException, IOException, HttpException{
+        client.getSubredditsNew().query();
+    }
+
+    @Test
+    public void testGetSubredditsPopular() throws InterruptedException, IOException, HttpException{
+        client.getSubredditsPopular().query();
+    }
+
+    @Test
+    public void testGetSubredditsSearch() throws InterruptedException, IOException, HttpException{
+        client.getSubredditsSearch().setParameter("q","penguins").query();
+    }
+
+    @Test
+    public void testGetUsersNew() throws InterruptedException, IOException, HttpException{
+        client.getUsersNew().query();
+    }
+
+    @Test
+    public void testGetUsersPopular() throws InterruptedException, IOException, HttpException{
+        client.getUsersPopular().query();
+    }
+
+    @Test
+    public void testGetUsersSearch() throws InterruptedException, IOException, HttpException{
+        client.getUsersSearch().setParameter("q","penguins").query();
     }
 }

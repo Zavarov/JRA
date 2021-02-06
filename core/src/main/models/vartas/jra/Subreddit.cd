@@ -5,6 +5,8 @@ import java.lang.String.String;
 import vartas.jra.Link.Link;
 import vartas.jra.Submission.Submission;
 import vartas.jra.types.Thing.Thing;
+import vartas.jra.types.User.User;
+import vartas.jra.types.User.UserList;
 import vartas.jra.types.AbstractSubreddit.AbstractSubreddit;
 import vartas.jra.types.Rule.Rules;
 import vartas.jra.query.QueryOne.QueryOne;
@@ -13,9 +15,6 @@ import vartas.jra.query.QueryPost.QueryPost;
 
 public classdiagram Subreddit {
     public abstract class Subreddit extends AbstractSubreddit{
-        + abstract QueryOne<Rules> getRules();
-        + abstract QueryOne<String> getSidebar();
-        + abstract QueryOne<Submission> getSticky();
         //Listings
         + abstract QueryOne<Submission> getComments(String article);
         + abstract QueryMany<Link> getControversialLinks();
@@ -27,9 +26,28 @@ public classdiagram Subreddit {
         //Search
         + abstract QueryMany<Thing> getSearch();
         //Users
-        //Users
         + abstract QueryPost<String> postFriend();
         + abstract QueryPost<String> postSetPermission();
         + abstract QueryPost<String> postUnfriend();
+        //Subreddits
+        + abstract QueryMany<User> getBanned();
+        + abstract QueryMany<User> getContributors();
+        + abstract QueryOne<UserList> getModerators();
+        + abstract QueryMany<User> getMuted();
+        + abstract QueryMany<User> getWikibanned();
+        + abstract QueryMany<User> getWikicontributors();
+        + abstract QueryPost<String> postDeleteBanner();
+        + abstract QueryPost<String> postDeleteHeader();
+        + abstract QueryPost<String> postDeleteIcon();
+        + abstract QueryPost<String> postDeleteImage();
+        + abstract QueryPost<String> postStylesheet();
+        + abstract QueryPost<String> postUploadImage();
+        + abstract QueryOne<String> getPostRequirements();
+        + abstract QueryOne<String> getSubmitText();
+        + abstract QueryOne<String> getEdit();
+        + abstract QueryOne<Rules> getRules();
+        + abstract QueryOne<String> getTraffic();
+        + abstract QueryOne<String> getSidebar();
+        + abstract QueryOne<Submission> getSticky();
     }
 }
