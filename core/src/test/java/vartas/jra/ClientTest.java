@@ -134,6 +134,7 @@ public class ClientTest extends AbstractTest{
     public void testPostSearchSubreddits() throws InterruptedException, IOException, HttpException {
         client.postSearchSubreddits()
                 .setParameter("query", "reddit")
+                .setParameter("sr_detail", false)
                 .query();
     }
 

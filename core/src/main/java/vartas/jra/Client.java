@@ -23,7 +23,7 @@ import vartas.jra.query.QueryOne;
 import vartas.jra.query.QueryPost;
 import vartas.jra.types.*;
 import vartas.jra.types._factory.DuplicateFactory;
-import vartas.jra.types._json.JSONSearchSubreddit;
+import vartas.jra.types._json.JSONFakeSubreddit;
 import vartas.jra.types._json.JSONTrendingSubreddits;
 
 import javax.annotation.Nonnull;
@@ -669,17 +669,17 @@ public abstract class Client extends ClientTOP{
     }
 
     @Override
-    public QueryPost<List<SearchSubreddit>> postSearchSubreddits() {
-        Function<String, List<SearchSubreddit>> mapper = source -> {
+    public QueryPost<List<FakeSubreddit>> postSearchSubreddits() {
+        Function<String, List<FakeSubreddit>> mapper = source -> {
             JSONObject node = new JSONObject(source);
 
             System.out.println(node.toString(2));
 
             JSONArray data = node.getJSONArray("subreddits");
-            List<SearchSubreddit> subreddits = new ArrayList<>(data.length());
+            List<FakeSubreddit> subreddits = new ArrayList<>(data.length());
 
             for(int i = 0 ; i < data.length() ; ++i)
-                subreddits.add(JSONSearchSubreddit.fromJson(new SearchSubreddit(), data.getJSONObject(i)));
+                subreddits.add(JSONFakeSubreddit.fromJson(this, data.getJSONObject(i)));
 
             return subreddits;
         };
@@ -711,14 +711,15 @@ public abstract class Client extends ClientTOP{
     }
 
     @Override
-    public QueryOne<List<AutocompleteSubreddit>> getSubredditAutocomplete() {
-        Function<String, List<AutocompleteSubreddit>> mapper = source -> {
+    public QueryOne<List<FakeSubreddit>> getSubredditAutocomplete() {
+        Function<String, List<FakeSubreddit>> mapper = source -> {
             JSONObject node = new JSONObject(source);
             JSONArray data = node.getJSONArray("subreddits");
-            List<AutocompleteSubreddit> subreddits = new ArrayList<>(data.length());
+            List<FakeSubreddit> subreddits = new ArrayList<>(data.length());
 
-            for(int i = 0 ; i < data.length() ; ++i)
-                subreddits.add(vartas.jra.types._json.JSONAutocompleteSubreddit.fromJson(new AutocompleteSubreddit(), data.getJSONObject(i)));
+            for(int i = 0 ; i < data.length() ; ++i) {
+                subreddits.add(JSONFakeSubreddit.fromJson(this, data.getJSONObject(i)));
+            }
 
             return subreddits;
         };

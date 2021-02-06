@@ -208,7 +208,7 @@ public enum Endpoint {
      */
     GET_BEST("best"),
     /**
-     * Get a listing of links by fullname.<p>>
+     * Get a listing of links by fullname.<p>
      *
      * {@code names} is a list of fullnames for links separated by commas or spaces.
      * @see <a href="https://www.reddit.com/dev/api#GET_by_id_{names}">here</a>
@@ -632,6 +632,7 @@ public enum Endpoint {
      *          }
      *      ]
      * }
+     * }
      * </pre>
      * <table>
      *     <tr><th>{@code exact}</th><th>boolean value</th></tr>
@@ -747,6 +748,7 @@ public enum Endpoint {
      *              "icon": "https://styles.redditmedia.com/t5_hv5dz/styles/profileIcon_snoo8658e16c-55fa-486f-b7c7-00726de2e742-headshot.png"
      *          }
      *      ]
+     * }
      * }
      * </pre>
      * <table>
