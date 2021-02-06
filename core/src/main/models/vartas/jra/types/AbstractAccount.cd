@@ -98,7 +98,7 @@ public classdiagram AbstractAccount {
          * The link and comment karma combined.
          */
         <<key="total_karma">>
-        - int totalKarma;
+        - Optional<Integer> totalKarma;
         /**
          * Is this user verified? e.g. via email.
          */

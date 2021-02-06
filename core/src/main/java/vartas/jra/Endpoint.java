@@ -561,6 +561,14 @@ public enum Endpoint {
      * {@code anti_ads_subreddits} list will be filtered.<p>
      * If {@code exact} is true, only an exact match will be returned. Exact matches are inclusive of {@code over_18}
      * subreddits, but not {@code hide_ad} subreddits when {@code include_unadvertisable} is False.<p>
+     * Example response for this endpoint:<p>
+     * <pre>
+     * {@code
+     *      {
+     *          "names": ["reddit.com", "redditmobile"]
+     *      }
+     * }
+     * </pre>
      * <table>
      *     <tr><th>{@code exact}</th><th>boolean value</th></tr>
      *     <tr><th>{@code include_over_18}</th><th>boolean value</th></tr>
@@ -580,6 +588,14 @@ public enum Endpoint {
      * {@code anti_ads_subreddits} list will be filtered.<p>
      * If {@code exact} is true, only an exact match will be returned. Exact matches are inclusive of {@code over_18}
      * subreddits, but not {@code hide_ad} subreddits when {@code include_unadvertisable} is False.<p>
+     * Example response for this endpoint:<p>
+     * <pre>
+     * {@code
+     *      {
+     *          "names": ["reddit.com", "redditmobile"]
+     *      }
+     * }
+     * </pre>
      * <table>
      *     <tr><th>{@code exact}</th><th>boolean value</th></tr>
      *     <tr><th>{@code include_over_18}</th><th>boolean value</th></tr>
@@ -599,6 +615,24 @@ public enum Endpoint {
      * {@code anti_ads_subreddits} list will be filtered.     *
      * If {@code exact} is true, only an exact match will be returned. Exact matches are inclusive of over_18
      * subreddits, but not hide_ad subreddits when {@code include_unadvertisable} is False.<p>
+     * Example response for this endpoint:<p>
+     * <pre>
+     * {@code
+     * {
+     *      "subreddits": [
+     *          {
+     *              "icon_img": null,
+     *              "key_color": "",
+     *              "active_user_count": 942,
+     *              "subscriber_count": 877502,
+     *              "is_chat_post_feature_enabled": false,
+     *              "allow_images": true,
+     *              "name": "reddit.com",
+     *              "allow_chat_post_creation": false
+     *          }
+     *      ]
+     * }
+     * </pre>
      * <table>
      *     <tr><th>{@code exact}</th><th>boolean value</th></tr>
      *     <tr><th>{@code include_over_18}</th><th>boolean value</th></tr>
@@ -698,6 +732,23 @@ public enum Endpoint {
      * Return a list of subreddits and data for subreddits whose names start with 'query'.<p>
      * Uses typeahead endpoint to recieve the list of subreddits names. Typeahead provides exact matches, typo
      * correction, fuzzy matching and boosts subreddits to the top that the user is subscribed to.<p>
+     * Example response for this endpoint:<p>
+     * <pre>
+     * {@code
+     * {
+     *      "subreddits": [
+     *          {
+     *              "numSubscribers": 0,
+     *              "name": "u_reddit",
+     *              "allowedPostTypes": {"images": true, "text": true, "videos": true, "links": true, "spoilers": true},
+     *              "id": "t5_hv5dz",
+     *              "primaryColor": "",
+     *              "communityIcon": "",
+     *              "icon": "https://styles.redditmedia.com/t5_hv5dz/styles/profileIcon_snoo8658e16c-55fa-486f-b7c7-00726de2e742-headshot.png"
+     *          }
+     *      ]
+     * }
+     * </pre>
      * <table>
      *     <tr><th>{@code include_over_18}</th><th>boolean value</th></tr>
      *     <tr><th>{@code include_profiles}</th><th>boolean value</th></tr>
@@ -710,6 +761,8 @@ public enum Endpoint {
      * Return a list of subreddits and data for subreddits whose names start with 'query'.<p>
      * Uses typeahead endpoint to recieve the list of subreddits names. Typeahead provides exact matches, typo
      * correction, fuzzy matching and boosts subreddits to the top that the user is subscribed to.<p>
+     * This endpoint is a listing of things. Those things can either be subreddits or accounts, i.e. personal
+     * subreddits.<p>
      * <table>
      *     <tr><th>{@code include_over_18}</th><th>boolean value</th></tr>
      *     <tr><th>{@code include_profiles}</th><th>boolean value</th></tr>
@@ -808,7 +861,8 @@ public enum Endpoint {
     GET_SUBREDDIT_POST_REQUIREMENTS("api","v1","{subreddit}","post_requirements"),
     /**
      * Return information about the subreddit.<p>
-     * Data includes the subscriber count, description, and header image.
+     * Data includes the subscriber count, description, and header image.<p>
+     * This endpoint is a {@link Subreddit}.<p>
      * @see <a href="https://www.reddit.com/dev/api#GET_r_{subreddit}_about">here</a>
      */
     GET_SUBREDDIT_ABOUT("r", "{subreddit}", "about"),
@@ -867,6 +921,7 @@ public enum Endpoint {
     GET_SUBREDDITS_WHERE("subreddits","{where}"),
     /**
      * Get all subreddits.<p>
+     * This endpoint is a {@link Listing} of subreddits.<p>
      * <table>
      *     <tr><th>{@code after}</th><th><i>fullname</i> of a thing</th></tr>
      *     <tr><th>{@code before}</th><th><i>fullname</i> of a thing</th></tr>
@@ -881,6 +936,7 @@ public enum Endpoint {
     GET_SUBREDDITS_DEFAULT(GET_SUBREDDITS_WHERE.getPath("default")),
     /**
      * Get all subreddits.<p>
+     * This endpoint is a {@link Listing} of subreddits.<p>
      * <table>
      *     <tr><th>{@code after}</th><th><i>fullname</i> of a thing</th></tr>
      *     <tr><th>{@code before}</th><th><i>fullname</i> of a thing</th></tr>
@@ -896,6 +952,7 @@ public enum Endpoint {
     /**
      * Get all subreddits.<p>
      * {@code popular} sorts on the activity of the subreddit and the position of the subreddits can shift around.<p>
+     * This endpoint is a {@link Listing} of subreddits.<p>
      * <table>
      *     <tr><th>{@code after}</th><th><i>fullname</i> of a thing</th></tr>
      *     <tr><th>{@code before}</th><th><i>fullname</i> of a thing</th></tr>
@@ -911,6 +968,7 @@ public enum Endpoint {
     /**
      * Get all subreddits.<p>
      * {@code new} sorts the subreddits based on their creation date, newest first.<p>
+     * This endpoint is a {@link Listing} of subreddits.<p>
      * <table>
      *     <tr><th>{@code after}</th><th><i>fullname</i> of a thing</th></tr>
      *     <tr><th>{@code before}</th><th><i>fullname</i> of a thing</th></tr>
@@ -925,6 +983,7 @@ public enum Endpoint {
     GET_SUBREDDITS_NEW(GET_SUBREDDITS_WHERE.getPath("new")),
     /**
      * Search subreddits by title and description.<p>
+     * This endpoint is a {@link Listing} of subreddits.<p>
      * <table>
      *     <tr><th>{@code after}</th><th><i>fullname</i> of a thing</th></tr>
      *     <tr><th>{@code before}</th><th><i>fullname</i> of a thing</th></tr>
@@ -1024,6 +1083,7 @@ public enum Endpoint {
     /**
      * Get all user subreddits.<p>
      * {@code new} sorts the user subreddits based on their creation date, newest first.<p>
+     * This endpoint is a {@link Listing} of subreddits.<p>
      * <table>
      *     <tr><th>{@code after}</th><th><i>fullname</i> of a thing</th></tr>
      *     <tr><th>{@code before}</th><th><i>fullname</i> of a thing</th></tr>
@@ -1039,6 +1099,7 @@ public enum Endpoint {
     /**
      * Get all user subreddits.<p>
      * {@code popular} sorts on the activity of the subreddit and the position of the subreddits can shift around.<p>
+     * This endpoint is a {@link Listing} of subreddits.<p>
      * <table>
      *     <tr><th>{@code after}</th><th><i>fullname</i> of a thing</th></tr>
      *     <tr><th>{@code before}</th><th><i>fullname</i> of a thing</th></tr>
@@ -1053,6 +1114,7 @@ public enum Endpoint {
     GET_USERS_POPULAR(GET_USERS_WHERE.getPath("popular")),
     /**
      * Search user profiles by title and description.<p>
+     * This endpoint is a {@link Listing} of accounts.<p>
      * <table>
      *     <tr><th>{@code after}</th><th><i>fullname</i> of a thing</th></tr>
      *     <tr><th>{@code before}</th><th><i>fullname</i> of a thing</th></tr>

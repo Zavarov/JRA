@@ -5,6 +5,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vartas.jra._factory.RateLimiterFactory;
@@ -22,8 +23,8 @@ import vartas.jra.query.QueryOne;
 import vartas.jra.query.QueryPost;
 import vartas.jra.types.*;
 import vartas.jra.types._factory.DuplicateFactory;
+import vartas.jra.types._json.JSONSearchSubreddit;
 import vartas.jra.types._json.JSONTrendingSubreddits;
-import vartas.jra.types._json.JSONUserDataMap;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -567,9 +568,11 @@ public abstract class Client extends ClientTOP{
      * </table>
      */
     @Override
-    public QueryOne<UserDataMap> getUserDataByAccountIds() {
+    public QueryOne<Map<String, UserData>> getUserDataByAccountIds() {
+        Function<String, Map<String, UserData>> mapper = source -> null;
+
         return new QueryOne<>(
-                source -> JSONUserDataMap.fromJson(new UserDataMap(), source),
+                mapper,
                 this,
                 Endpoint.GET_USER_DATA_BY_ACCOUNT_IDS
         );
@@ -626,27 +629,63 @@ public abstract class Client extends ClientTOP{
     }
 
     @Override
-    public QueryOne<String> getSearchRedditNames() {
+    public QueryOne<List<String>> getSearchRedditNames() {
+        Function<String, List<String>> mapper = source -> {
+            JSONObject node = new JSONObject(source);
+            JSONArray data = node.getJSONArray("names");
+            List<String> names = new ArrayList<>(data.length());
+
+            for(int i = 0 ; i < data.length() ; ++i)
+                names.add(data.getString(i));
+
+            return names;
+        };
+
         return new QueryOne<>(
-                Function.identity(),
+                mapper,
                 this,
                 Endpoint.GET_SEARCH_REDDIT_NAMES
         );
     }
 
     @Override
-    public QueryPost<String> postSearchRedditNames() {
+    public QueryPost<List<String>> postSearchRedditNames() {
+        Function<String, List<String>> mapper = source -> {
+            JSONObject node = new JSONObject(source);
+            JSONArray data = node.getJSONArray("names");
+            List<String> names = new ArrayList<>(data.length());
+
+            for(int i = 0 ; i < data.length() ; ++i)
+                names.add(data.getString(i));
+
+            return names;
+        };
+
         return new QueryPost<>(
-                Function.identity(),
+                mapper,
                 this,
                 Endpoint.POST_SEARCH_REDDIT_NAMES
         );
     }
 
     @Override
-    public QueryPost<String> postSearchSubreddits() {
+    public QueryPost<List<SearchSubreddit>> postSearchSubreddits() {
+        Function<String, List<SearchSubreddit>> mapper = source -> {
+            JSONObject node = new JSONObject(source);
+
+            System.out.println(node.toString(2));
+
+            JSONArray data = node.getJSONArray("subreddits");
+            List<SearchSubreddit> subreddits = new ArrayList<>(data.length());
+
+            for(int i = 0 ; i < data.length() ; ++i)
+                subreddits.add(JSONSearchSubreddit.fromJson(new SearchSubreddit(), data.getJSONObject(i)));
+
+            return subreddits;
+        };
+
         return new QueryPost<>(
-                Function.identity(),
+                mapper,
                 this,
                 Endpoint.POST_SEARCH_SUBREDDITS
         );
@@ -672,18 +711,29 @@ public abstract class Client extends ClientTOP{
     }
 
     @Override
-    public QueryOne<String> getSubredditAutocomplete() {
+    public QueryOne<List<AutocompleteSubreddit>> getSubredditAutocomplete() {
+        Function<String, List<AutocompleteSubreddit>> mapper = source -> {
+            JSONObject node = new JSONObject(source);
+            JSONArray data = node.getJSONArray("subreddits");
+            List<AutocompleteSubreddit> subreddits = new ArrayList<>(data.length());
+
+            for(int i = 0 ; i < data.length() ; ++i)
+                subreddits.add(vartas.jra.types._json.JSONAutocompleteSubreddit.fromJson(new AutocompleteSubreddit(), data.getJSONObject(i)));
+
+            return subreddits;
+        };
+
         return new QueryOne<>(
-                source -> source,
+                mapper,
                 this,
                 Endpoint.GET_SUBREDDIT_AUTOCOMPLETE
         );
     }
 
     @Override
-    public QueryOne<String> getSubredditAutocompleteV2() {
-        return new QueryOne<>(
-                source -> source,
+    public QueryMany<Thing> getSubredditAutocompleteV2() {
+        return new QueryMany<>(
+                Thing::from,
                 this,
                 Endpoint.GET_SUBREDDIT_AUTOCOMPLETE_V2
         );
@@ -699,72 +749,72 @@ public abstract class Client extends ClientTOP{
     }
 
     @Override
-    public QueryOne<String> getSubredditsPopular() {
-        return new QueryOne<>(
-                source -> source,
+    public QueryMany<Subreddit> getSubredditsPopular() {
+        return new QueryMany<>(
+                source -> Thing.from(source).toSubreddit(this),
                 this,
                 Endpoint.GET_SUBREDDITS_POPULAR
         );
     }
 
     @Override
-    public QueryOne<String> getSubredditsNew() {
-        return new QueryOne<>(
-                source -> source,
+    public QueryMany<Subreddit> getSubredditsNew() {
+        return new QueryMany<>(
+                source -> Thing.from(source).toSubreddit(this),
                 this,
                 Endpoint.GET_SUBREDDITS_NEW
         );
     }
 
     @Override
-    public QueryOne<String> getSubredditsGold() {
-        return new QueryOne<>(
-                source -> source,
+    public QueryMany<Subreddit> getSubredditsGold() {
+        return new QueryMany<>(
+                source -> Thing.from(source).toSubreddit(this),
                 this,
                 Endpoint.GET_SUBREDDITS_GOLD
         );
     }
 
     @Override
-    public QueryOne<String> getSubredditsDefault() {
-        return new QueryOne<>(
-                source -> source,
+    public QueryMany<Subreddit> getSubredditsDefault() {
+        return new QueryMany<>(
+                source -> Thing.from(source).toSubreddit(this),
                 this,
                 Endpoint.GET_SUBREDDITS_DEFAULT
         );
     }
 
     @Override
-    public QueryOne<String> getSubredditsSearch() {
-        return new QueryOne<>(
-                source -> source,
+    public QueryMany<Subreddit> getSubredditsSearch() {
+        return new QueryMany<>(
+                source -> Thing.from(source).toSubreddit(this),
                 this,
                 Endpoint.GET_SUBREDDITS_SEARCH
         );
     }
 
     @Override
-    public QueryOne<String> getUsersNew() {
-        return new QueryOne<>(
-                source -> source,
+    public QueryMany<Subreddit> getUsersNew() {
+        return new QueryMany<>(
+                source -> Thing.from(source).toSubreddit(this),
                 this,
                 Endpoint.GET_USERS_NEW
         );
     }
 
     @Override
-    public QueryOne<String> getUsersPopular() {
-        return new QueryOne<>(
-                source -> source,
+    public QueryMany<Subreddit> getUsersPopular() {
+        return new QueryMany<>(
+                source -> Thing.from(source).toSubreddit(this),
                 this,
                 Endpoint.GET_USERS_POPULAR
         );
     }
 
     @Override
-    public QueryOne<String> getUsersSearch() {
-        return new QueryOne<>(
-                source -> source,
+    public QueryMany<Account> getUsersSearch() {
+        return new QueryMany<>(
+                source -> Thing.from(source).toAccount(this),
                 this,
                 Endpoint.GET_USERS_SEARCH
         );

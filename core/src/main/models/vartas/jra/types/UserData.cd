@@ -21,8 +21,4 @@ public classdiagram UserData {
         <<key="profile_over_18">>
         boolean profileOver18;
     }
-
-    public class UserDataMap{
-        - Map<String, UserData> userData;
-    }
 }

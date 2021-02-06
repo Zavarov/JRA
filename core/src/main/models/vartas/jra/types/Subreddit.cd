@@ -1,14 +1,16 @@
 package vartas.jra.types;
 
+import java.awt.Color.Color;
 import java.lang.String.String;
 import java.util.List.List;
+import java.util.Map.Map;
 import java.util.Optional.Optional;
 
 /**
  * The Reddit API according to their specification
  * See more at: https://github.com/reddit-archive/reddit/wiki/JSON
  */
-public classdiagram AbstractSubreddit {
+public classdiagram Subreddit {
     public abstract class AbstractSubreddit{
         /**
          * Number of users active in last 15 minutes.
@@ -131,5 +133,41 @@ public classdiagram AbstractSubreddit {
          */
         <<key="user_is_subscriber">>
         - boolean userIsSubscriber;
+    }
+
+    public class AutocompleteSubreddit{
+        <<key="numSubscribers">>
+        - int numberOfSubscribers;
+        <<key="name">>
+        - String name;
+        <<key="allowedPostTypes">>
+        - Map<String, Boolean> allowedPostTypes;
+        <<key="id">>
+        - String id;
+        <<key="primaryColor">>
+        - Optional<String> primaryColor;
+        <<key="communityIcon">>
+        - Optional<String> communityIcon;
+        <<key="icon">>
+        - String icon;
+    }
+
+    public class SearchSubreddit{
+        <<key="icon_img">>
+        - Optional<String> iconImage;
+        <<key="key_color">>
+        - Optional<Color> keyColor;
+        <<key="active_user_count">>
+        - int activeUserCount;
+        <<key="subscriber_count">>
+        - int subscriberCount;
+        <<key="is_chat_post_feature_enabled">>
+        - boolean isChatPostFeatureEnabled;
+        <<key="allow_images">>
+        - boolean allowImages;
+        <<key="name">>
+        - String name;
+        <<key="allow_chat_post_creation">>
+        - boolean allowChatPostCreation;
     }
 }

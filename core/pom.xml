@@ -126,7 +126,6 @@
                                 <argument>vartas.jra.types.AbstractAccount</argument>
                                 <argument>vartas.jra.types.AbstractComment</argument>
                                 <argument>vartas.jra.types.AbstractLink</argument>
-                                <argument>vartas.jra.types.AbstractSubreddit</argument>
                                 <argument>vartas.jra.types.AbstractSelfAccount</argument>
                                 <argument>vartas.jra.types.Created</argument>
                                 <argument>vartas.jra.types.Duplicate</argument>
@@ -135,6 +134,7 @@
                                 <argument>vartas.jra.types.Messaging</argument>
                                 <argument>vartas.jra.types.Preferences</argument>
                                 <argument>vartas.jra.types.Rule</argument>
+                                <argument>vartas.jra.types.Subreddit</argument>
                                 <argument>vartas.jra.types.Thing</argument>
                                 <argument>vartas.jra.types.TrendingSubreddits</argument>
                                 <argument>vartas.jra.types.Trophy</argument>
