@@ -1,0 +1,48 @@
+package vartas.jra.models;
+
+import java.time.OffsetDateTime.OffsetDateTime;
+import java.util.List.List;
+import java.util.Optional.Optional;
+import java.lang.String.String;
+
+public classdiagram Rule {
+    public class Rules{
+        <<key = "rules">>
+        - List<Rule> rules;
+        <<key = "site_rules">>
+        - List<String> siteRules;
+        <<key = "site_rules_flow">>
+        - List<NextStepReason> siteRulesFlow;
+    }
+
+    public class Rule{
+        <<key = "created_utc">>
+        - OffsetDateTime createdUtc;
+        <<key = "description">>
+        - Optional<String> description;
+        <<key = "description_html">>
+        - Optional<String> descriptionHtml;
+        <<key = "kind">>
+        - String kind;
+        <<key = "priority">>
+        - int priority;
+        <<key = "short_name">>
+        - String shortName;
+        <<key = "violation_reason">>
+        - String violationReason;
+    }
+
+    public class NextStepReason{
+        <<key = "reasonTextToShow">>
+        - String reasonTextToShow;
+        <<key = "reasonText">>
+        - String reasonText;
+        <<key = "nextStepReasons">>
+        - List<NextStepReason> nextStepReasons;
+        /**
+         * My guess is this entry is empty if getNextStepReasons is empty and vice versa.
+         */
+        <<key = "nextStepHeader">>
+         - Optional<String> nextStepHeader;
+    }
+}

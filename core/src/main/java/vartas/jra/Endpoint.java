@@ -1,6 +1,6 @@
 package vartas.jra;
 
-import vartas.jra.types.*;
+import vartas.jra.models.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;

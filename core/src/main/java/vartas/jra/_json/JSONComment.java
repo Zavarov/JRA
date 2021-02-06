@@ -2,10 +2,10 @@ package vartas.jra._json;
 
 import org.json.JSONObject;
 import vartas.jra.Comment;
-import vartas.jra.types.Listing;
-import vartas.jra.types.Thing;
-import vartas.jra.types._factory.ListingFactory;
-import vartas.jra.types._json.JSONThing;
+import vartas.jra.models.Listing;
+import vartas.jra.models.Thing;
+import vartas.jra.models._factory.ListingFactory;
+import vartas.jra.models._json.JSONThing;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;

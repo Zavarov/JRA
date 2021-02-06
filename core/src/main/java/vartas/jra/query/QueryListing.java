@@ -2,7 +2,7 @@ package vartas.jra.query;
 
 import vartas.jra.Client;
 import vartas.jra.Endpoint;
-import vartas.jra.types.Thing;
+import vartas.jra.models.Thing;
 
 import java.util.List;
 import java.util.function.Function;

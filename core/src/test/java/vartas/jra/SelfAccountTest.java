@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import vartas.jra.exceptions.HttpException;
 import vartas.jra.exceptions.NotFoundException;
-import vartas.jra.types.*;
+import vartas.jra.models.*;
 
 import java.io.IOException;
 

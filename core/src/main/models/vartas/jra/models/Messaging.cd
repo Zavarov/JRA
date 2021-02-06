@@ -1,0 +1,11 @@
+package vartas.jra.models;
+
+import java.util.List.List;
+import vartas.jra.models.Account.FakeAccount;
+
+public classdiagram Messaging {
+    public class Messaging{
+        List<FakeAccount> blocked;
+        List<FakeAccount> trusted;
+    }
+}

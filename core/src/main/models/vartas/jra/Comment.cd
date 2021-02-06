@@ -1,6 +1,6 @@
 package vartas.jra;
 
-import vartas.jra.types.AbstractComment.AbstractComment;
+import vartas.jra.models.AbstractComment.AbstractComment;
 
 public classdiagram Comment {
     public class Comment extends AbstractComment{

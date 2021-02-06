@@ -2,8 +2,8 @@ package vartas.jra;
 
 import org.json.JSONObject;
 import vartas.jra._json.JSONComment;
-import vartas.jra.types.Thing;
-import vartas.jra.types._factory.ThingFactory;
+import vartas.jra.models.Thing;
+import vartas.jra.models._factory.ThingFactory;
 
 public class Comment extends CommentTOP{
 

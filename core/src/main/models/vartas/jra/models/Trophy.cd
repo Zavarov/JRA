@@ -1,0 +1,32 @@
+package vartas.jra.models;
+
+import java.lang.String.String;
+import java.time.OffsetDateTime.OffsetDateTime;
+import java.util.List.List;
+import java.util.Optional.Optional;
+
+public classdiagram Trophy {
+    public class Trophy{
+        <<key="icon_70">>
+        - String icon70;
+        <<key="granted_at">>
+        - Optional<OffsetDateTime> grantedAt;
+        <<key="name">>
+        - String name;
+        <<key="description">>
+        - Optional<String> description;
+        <<key="id">>
+        - Optional<String> id;
+        <<key="url">>
+        - Optional<String> url;
+        <<key="icon_40">>
+        - String icon40;
+        <<key="award_id">>
+        - Optional<String> awardId;
+    }
+
+    public class TrophyList{
+        <<key="data">>
+        - List<Trophy> data;
+    }
+}

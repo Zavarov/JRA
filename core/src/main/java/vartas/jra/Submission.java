@@ -4,8 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import vartas.jra._factory.SubmissionFactory;
-import vartas.jra.types.Listing;
-import vartas.jra.types.Thing;
+import vartas.jra.models.Listing;
+import vartas.jra.models.Thing;
 
 import java.util.List;
 import java.util.stream.Collectors;

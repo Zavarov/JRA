@@ -1,15 +1,15 @@
 package vartas.jra;
 
 import vartas.jra.exceptions.NotFoundException;
+import vartas.jra.models.FakeAccount;
+import vartas.jra.models.Rules;
+import vartas.jra.models.Thing;
+import vartas.jra.models.UserList;
+import vartas.jra.models._json.JSONFakeAccount;
+import vartas.jra.models._json.JSONRules;
 import vartas.jra.query.QueryListing;
 import vartas.jra.query.QueryOne;
 import vartas.jra.query.QueryPost;
-import vartas.jra.types.FakeAccount;
-import vartas.jra.types.Rules;
-import vartas.jra.types.Thing;
-import vartas.jra.types.UserList;
-import vartas.jra.types._json.JSONFakeAccount;
-import vartas.jra.types._json.JSONRules;
 
 import javax.annotation.Nonnull;
 import java.util.function.Function;

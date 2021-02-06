@@ -1,8 +1,8 @@
 package vartas.jra;
 
+import vartas.jra.models.Thing;
 import vartas.jra.query.QueryListing;
 import vartas.jra.query.QueryOne;
-import vartas.jra.types.Thing;
 
 import javax.annotation.Nonnull;
 

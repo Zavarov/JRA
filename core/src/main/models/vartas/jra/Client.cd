@@ -17,11 +17,11 @@ import vartas.jra.query.QueryLocal.QueryLocal;
 import vartas.jra.query.QueryOne.QueryOne;
 import vartas.jra.query.QueryListing.QueryListing;
 import vartas.jra.query.QueryPost.QueryPost;
-import vartas.jra.types.Duplicate.Duplicate;
-import vartas.jra.types.Subreddit.FakeSubreddit;
-import vartas.jra.types.Thing.Thing;
-import vartas.jra.types.Types.TrendingSubreddits;
-import vartas.jra.types.Account.FakeAccount;
+import vartas.jra.models.Duplicate.Duplicate;
+import vartas.jra.models.Subreddit.FakeSubreddit;
+import vartas.jra.models.Thing.Thing;
+import vartas.jra.models.models.TrendingSubreddits;
+import vartas.jra.models.Account.FakeAccount;
 import vartas.jra.exceptions.Exceptions.HttpException;
 import vartas.jra.exceptions.Exceptions.RateLimiterException;
 

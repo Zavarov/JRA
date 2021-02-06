@@ -2,12 +2,12 @@ package vartas.jra;
 
 import org.json.JSONObject;
 import vartas.jra._json.JSONAccount;
+import vartas.jra.models.FakeAccount;
+import vartas.jra.models.Thing;
+import vartas.jra.models.TrophyList;
+import vartas.jra.models._factory.ThingFactory;
+import vartas.jra.models._json.JSONFakeAccount;
 import vartas.jra.query.*;
-import vartas.jra.types.FakeAccount;
-import vartas.jra.types.Thing;
-import vartas.jra.types.TrophyList;
-import vartas.jra.types._factory.ThingFactory;
-import vartas.jra.types._json.JSONFakeAccount;
 
 import javax.annotation.Nonnull;
 import java.util.function.Function;

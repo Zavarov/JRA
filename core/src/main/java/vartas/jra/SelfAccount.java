@@ -2,11 +2,11 @@ package vartas.jra;
 
 import org.json.JSONArray;
 import vartas.jra.http.APIRequest;
+import vartas.jra.models.*;
+import vartas.jra.models._factory.MessagingFactory;
+import vartas.jra.models._json.JSONPreferences;
 import vartas.jra.query.QueryOne;
 import vartas.jra.query.QueryPatch;
-import vartas.jra.types.*;
-import vartas.jra.types._factory.MessagingFactory;
-import vartas.jra.types._json.JSONPreferences;
 
 import javax.annotation.Nonnull;
 import java.util.List;

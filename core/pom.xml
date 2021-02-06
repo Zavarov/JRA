@@ -122,23 +122,23 @@
                             <mainClass>${generator.main}</mainClass>
                             <arguments>
                                 <argument>${generator.config}</argument>
-                                <argument>vartas.jra.types.AbstractComment</argument>
-                                <argument>vartas.jra.types.AbstractLink</argument>
-                                <argument>vartas.jra.types.Account</argument>
-                                <argument>vartas.jra.types.Created</argument>
-                                <argument>vartas.jra.types.Duplicate</argument>
-                                <argument>vartas.jra.types.Karma</argument>
-                                <argument>vartas.jra.types.Listing</argument>
-                                <argument>vartas.jra.types.Messaging</argument>
-                                <argument>vartas.jra.types.Preferences</argument>
-                                <argument>vartas.jra.types.Rule</argument>
-                                <argument>vartas.jra.types.Subreddit</argument>
-                                <argument>vartas.jra.types.Thing</argument>
-                                <argument>vartas.jra.types.TrendingSubreddits</argument>
-                                <argument>vartas.jra.types.Trophy</argument>
-                                <argument>vartas.jra.types.Types</argument>
-                                <argument>vartas.jra.types.Votable</argument>
-                                <argument>vartas.jra.types.VotableCreated</argument>
+                                <argument>vartas.jra.models.AbstractComment</argument>
+                                <argument>vartas.jra.models.AbstractLink</argument>
+                                <argument>vartas.jra.models.Account</argument>
+                                <argument>vartas.jra.models.Created</argument>
+                                <argument>vartas.jra.models.Duplicate</argument>
+                                <argument>vartas.jra.models.Karma</argument>
+                                <argument>vartas.jra.models.Listing</argument>
+                                <argument>vartas.jra.models.Messaging</argument>
+                                <argument>vartas.jra.models.Preferences</argument>
+                                <argument>vartas.jra.models.Rule</argument>
+                                <argument>vartas.jra.models.Subreddit</argument>
+                                <argument>vartas.jra.models.Thing</argument>
+                                <argument>vartas.jra.models.TrendingSubreddits</argument>
+                                <argument>vartas.jra.models.Trophy</argument>
+                                <argument>vartas.jra.models.Types</argument>
+                                <argument>vartas.jra.models.Votable</argument>
+                                <argument>vartas.jra.models.VotableCreated</argument>
                             </arguments>
                         </configuration>
                     </execution>

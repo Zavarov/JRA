@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import vartas.jra.exceptions.HttpException;
-import vartas.jra.types.TrendingSubreddits;
+import vartas.jra.models.TrendingSubreddits;
 
 import java.io.IOException;
 

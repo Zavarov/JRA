@@ -2,7 +2,7 @@ package vartas.jra;
 
 import vartas.jra.Link.Link;
 import vartas.jra.Submission.Submission;
-import vartas.jra.types.Thing.Thing;
+import vartas.jra.models.Thing.Thing;
 import vartas.jra.query.QueryOne.QueryOne;
 import vartas.jra.query.QueryListing.QueryListing;
 

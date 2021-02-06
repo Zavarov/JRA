@@ -17,14 +17,14 @@ import vartas.jra.exceptions.RateLimiterException;
 import vartas.jra.exceptions._factory.*;
 import vartas.jra.http.APIAuthentication;
 import vartas.jra.http.APIRequest;
+import vartas.jra.models.*;
+import vartas.jra.models._factory.DuplicateFactory;
+import vartas.jra.models._json.JSONFakeSubreddit;
+import vartas.jra.models._json.JSONTrendingSubreddits;
 import vartas.jra.query.QueryListing;
 import vartas.jra.query.QueryLocal;
 import vartas.jra.query.QueryOne;
 import vartas.jra.query.QueryPost;
-import vartas.jra.types.*;
-import vartas.jra.types._factory.DuplicateFactory;
-import vartas.jra.types._json.JSONFakeSubreddit;
-import vartas.jra.types._json.JSONTrendingSubreddits;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
