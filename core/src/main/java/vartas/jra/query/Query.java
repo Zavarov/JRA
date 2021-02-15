@@ -1,8 +1,9 @@
 package vartas.jra.query;
 
-import vartas.jra.Client;
-import vartas.jra.Endpoint;
+import vartas.jra.AbstractClient;
+import vartas.jra.endpoints.Endpoint;
 import vartas.jra.exceptions.HttpException;
+import vartas.jra.http.APIRequest;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -17,7 +18,7 @@ public abstract class Query <T, Q extends Query<T,Q>> {
     /**
      * The client is required for building and executing the query.
      */
-    protected final Client client;
+    protected final AbstractClient client;
     /**
      * The endpoint the query is directed to.
      */
@@ -37,6 +38,12 @@ public abstract class Query <T, Q extends Query<T,Q>> {
     protected final Map<Object,Object> params = new HashMap<>();
 
     /**
+     * The host the requests are directed at. Unless some very rare edge cases, this is almost exclusively
+     * {@link APIRequest#OAUTH2}, which is also the default value.
+     */
+    protected String host = APIRequest.OAUTH2;
+
+    /**
      * Provides a reference to the explicit query type. In fashion of the builder pattern, potential setter methods
      * for the parameters return a reference to the query. This method is required to ensure that all of those instances
      * are of the same type.
@@ -50,10 +57,14 @@ public abstract class Query <T, Q extends Query<T,Q>> {
      * @param endpoint The endpoint the query is directed to.
      * @param args Potential arguments quantifying wildcards in the endpoint.
      */
-    public Query(Client client, Endpoint endpoint, Object... args){
+    public Query(AbstractClient client, Endpoint endpoint, Object... args){
         this.client = client;
         this.endpoint = endpoint;
         this.args = args;
+    }
+
+    public void setHost(String host){
+        this.host = host;
     }
 
     public Q setParameter(Object key, Object value){

@@ -3,7 +3,7 @@ package vartas.jra.http;
 import com.google.common.base.Joiner;
 import com.google.common.net.HttpHeaders;
 import okhttp3.*;
-import vartas.jra.Client;
+import vartas.jra.AbstractClient;
 import vartas.jra.exceptions.HttpException;
 
 import java.io.IOException;
@@ -12,11 +12,11 @@ import java.util.*;
 public class APIAuthentication {
     private final String url;
     private final String credentials;
-    private final Client client;
+    private final AbstractClient client;
     private final Map<String, String> params = new HashMap<>();
-    private final List<Client.Scope> scopes = new ArrayList<>();
+    private final List<AbstractClient.Scope> scopes = new ArrayList<>();
 
-    private APIAuthentication(String url, String credentials, Client client){
+    private APIAuthentication(String url, String credentials, AbstractClient client){
         this.url = url;
         this.credentials = credentials;
         this.client = client;
@@ -56,7 +56,7 @@ public class APIAuthentication {
     public static class Builder{
         private final APIAuthentication source;
 
-        public Builder(String url, String credentials, Client client){
+        public Builder(String url, String credentials, AbstractClient client){
             source = new APIAuthentication(url, credentials, client);
         }
 
@@ -65,7 +65,7 @@ public class APIAuthentication {
             return this;
         }
 
-        public Builder addScope(Client.Scope... scope){
+        public Builder addScope(AbstractClient.Scope... scope){
             source.scopes.addAll(Arrays.asList(scope));
             return this;
         }

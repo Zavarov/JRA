@@ -1,9 +1,10 @@
 package vartas.jra.models;
 
 import java.lang.Boolean.Boolean;
-import java.time.OffsetDateTime.OffsetDateTime;
 import java.util.List.List;
 import java.util.Optional.Optional;
+import java.time.OffsetDateTime.OffsetDateTime;
+
 import vartas.jra.models.Votable.Votable;
 
 public classdiagram VotableCreated {

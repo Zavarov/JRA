@@ -3,9 +3,8 @@ package vartas.jra.http;
 import com.google.common.net.HttpHeaders;
 import okhttp3.*;
 import org.json.JSONObject;
-import vartas.jra.Client;
-import vartas.jra.Endpoint;
-import vartas.jra.Subreddit;
+import vartas.jra.AbstractClient;
+import vartas.jra.endpoints.Endpoint;
 import vartas.jra.exceptions.HttpException;
 import vartas.jra.exceptions.RateLimiterException;
 
@@ -29,14 +28,13 @@ public class APIRequest {
     @Nonnull
     public static final String OAUTH2 = "oauth.reddit.com";
     /**
-     * The endpoint used for all requests that don't require OAuth2.<p>
-     * Apparently the only endpoint this applies to is {@link Endpoint#GET_API_TRENDING_SUBREDDITS}.
+     * The endpoint used for all requests that don't require OAuth2.
      */
     @Nonnull
     public static final String WWW = "www.reddit.com";
 
     @Nonnull
-    private final Client client;
+    private final AbstractClient client;
 
     @Nullable
     private final RequestBody body;
@@ -57,13 +55,13 @@ public class APIRequest {
     @Nonnull
     private final Endpoint endpoint;
     /**
-     * Additional arguments for the {@link Endpoint}. E.g. a  {@link Subreddit} name.
+     * Additional arguments for the {@link Endpoint}. E.g. a  subreddit name.
      */
     @Nonnull
     private final Object[] args;
 
     private APIRequest(
-            @Nonnull Client client,
+            @Nonnull AbstractClient client,
             @Nullable RequestBody body,
             @Nonnull String host,
             @Nonnull Map<?, ?> query,
@@ -153,7 +151,7 @@ public class APIRequest {
     @Nonnull
     public static class Builder{
         @Nonnull
-        private final Client client;
+        private final AbstractClient client;
         @Nullable
         private RequestBody body = null;
         @Nonnull
@@ -166,7 +164,7 @@ public class APIRequest {
         private Object[] args = new Object[0];
 
         @Nonnull
-        public Builder(@Nonnull Client client){
+        public Builder(@Nonnull AbstractClient client){
             this.client = client;
         }
 

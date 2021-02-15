@@ -1,9 +1,9 @@
 package vartas.jra.models;
 
 import java.lang.String.String;
-import java.time.OffsetDateTime.OffsetDateTime;
 import java.util.List.List;
 import java.util.Optional.Optional;
+import java.time.OffsetDateTime.OffsetDateTime;
 
 public classdiagram Trophy {
     public class Trophy{

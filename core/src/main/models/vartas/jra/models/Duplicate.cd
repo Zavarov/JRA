@@ -1,11 +1,12 @@
 package vartas.jra.models;
 
 import java.util.List.List;
-import vartas.jra.Link.Link;
+
+import vartas.jra.models.AbstractLink.AbstractLink;
 
 public classdiagram Duplicate {
     public class Duplicate {
-        private Link source;
-        private List<Link> duplicates;
+        private AbstractLink source;
+        private List<AbstractLink> duplicates;
     }
 }

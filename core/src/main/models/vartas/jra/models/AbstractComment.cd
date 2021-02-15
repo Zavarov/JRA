@@ -4,8 +4,9 @@ import java.lang.String.String;
 import java.util.Optional.Optional;
 import java.util.List.List;
 import java.time.OffsetDateTime.OffsetDateTime;
+
+import vartas.jra.models.Thing.Thing;
 import vartas.jra.models.VotableCreated.VotableCreated;
-import vartas.jra.Comment.Comment;
 
 public classdiagram AbstractComment {
     public abstract class AbstractComment extends VotableCreated{
@@ -96,7 +97,7 @@ public classdiagram AbstractComment {
          * A list of replies to this comment.
          */
         <<key="replies">>
-        - List<Comment> replies;
+        - List<Thing> replies;
         /**
          * true if this post is saved by the logged in user.
          */

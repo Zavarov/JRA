@@ -1,7 +1,10 @@
 package vartas.jra.models;
 
-import java.lang.String.String;
+import java.lang.Integer.Integer;
+import java.lang.Long.Long;
 import java.lang.Object.Object;
+import java.lang.String.String;
+
 import java.util.Optional.Optional;
 
 public classdiagram Preferences {
@@ -25,7 +28,7 @@ public classdiagram Preferences {
         <<key="default_comment_sort">>
         - String defaultCommentSort;
         <<key="default_theme_sr">>
-        - Object defaultThemeSubreddit;
+        - Optional<Object> defaultThemeSubreddit;
         <<key="design_beta">>
         - boolean designBeta;
         <<key="domain_details">>

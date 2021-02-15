@@ -1,27 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright (c) 2020 Zavarov
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>JRA</artifactId>
-        <groupId>vartas.reddit</groupId>
+        <groupId>vartas.jra</groupId>
         <version>3.4-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -29,6 +12,8 @@
     <artifactId>core</artifactId>
 
     <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <!-- .. Generator Arguments ................................................................................ -->
         <generator.main>vartas.monticore.cd4code.SimpleMain</generator.main>
         <generator.config>${project.basedir}/src/main/resources/cd4code.json</generator.config>
@@ -86,7 +71,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>${maven-exec-plugin.version}</version>
                 <executions>
-                    <!-- Generate client classes -->
+                    <!-- Generate core classes -->
                     <execution>
                         <id>client</id>
                         <phase>generate-sources</phase>
@@ -99,17 +84,11 @@
                             <mainClass>${generator.main}</mainClass>
                             <arguments>
                                 <argument>${generator.config}</argument>
-                                <argument>vartas.jra.Account</argument>
-                                <argument>vartas.jra.Client</argument>
-                                <argument>vartas.jra.Comment</argument>
-                                <argument>vartas.jra.FrontPage</argument>
-                                <argument>vartas.jra.Link</argument>
-                                <argument>vartas.jra.Submission</argument>
-                                <argument>vartas.jra.Subreddit</argument>
+                                <argument>vartas.jra.AbstractClient</argument>
                             </arguments>
                         </configuration>
                     </execution>
-                    <!-- Generate datatypes -->
+                    <!-- Generate models -->
                     <execution>
                         <id>types</id>
                         <phase>generate-sources</phase>
@@ -122,9 +101,10 @@
                             <mainClass>${generator.main}</mainClass>
                             <arguments>
                                 <argument>${generator.config}</argument>
+                                <argument>vartas.jra.models.AbstractAccount</argument>
                                 <argument>vartas.jra.models.AbstractComment</argument>
                                 <argument>vartas.jra.models.AbstractLink</argument>
-                                <argument>vartas.jra.models.Account</argument>
+                                <argument>vartas.jra.models.AbstractSubreddit</argument>
                                 <argument>vartas.jra.models.Created</argument>
                                 <argument>vartas.jra.models.Duplicate</argument>
                                 <argument>vartas.jra.models.Karma</argument>
@@ -132,7 +112,8 @@
                                 <argument>vartas.jra.models.Messaging</argument>
                                 <argument>vartas.jra.models.Preferences</argument>
                                 <argument>vartas.jra.models.Rule</argument>
-                                <argument>vartas.jra.models.Subreddit</argument>
+                                <argument>vartas.jra.models.Submission</argument>
+                                <argument>vartas.jra.models.SubredditSettings</argument>
                                 <argument>vartas.jra.models.Thing</argument>
                                 <argument>vartas.jra.models.TrendingSubreddits</argument>
                                 <argument>vartas.jra.models.Trophy</argument>

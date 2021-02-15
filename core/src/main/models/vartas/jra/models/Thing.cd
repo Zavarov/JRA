@@ -24,7 +24,7 @@ public classdiagram Thing {
          * Some examples: Listing, more, t1, t2
          */
         <<key="kind">>
-        - String kind;
+        - Kind kind;
         /**
          * A custom data structure used to hold valuable information. This object's format will follow the data
          * structure respective of its kind.
@@ -32,4 +32,20 @@ public classdiagram Thing {
         <<key="data">>
         - Object data;
     }
+
+    public enum Kind {
+         Comment,
+         Account,
+         Link,
+         Message,
+         Subreddit,
+         Award,
+         Listing,
+         More,
+         UserList,
+         TrophyList,
+         KarmaList,
+         SubredditSettings,
+         Unknown;
+     }
 }

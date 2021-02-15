@@ -4,13 +4,19 @@ import org.json.JSONObject;
 import vartas.jra.models.Preferences;
 
 public class JSONPreferences extends JSONPreferencesTOP{
+    public static Preferences fromJson(String source){
+        return fromJson(new Preferences(), source);
+    }
+
     @Override
     protected void $fromDefaultThemeSubreddit(JSONObject source, Preferences target){
-        target.setDefaultThemeSubreddit(source.get(DEFAULTTHEMESUBREDDIT));
+        if(!source.isNull(DEFAULTTHEMESUBREDDIT))
+            target.setDefaultThemeSubreddit(source.get(DEFAULTTHEMESUBREDDIT));
     }
 
     @Override
     protected void $toDefaultThemeSubreddit(Preferences source, JSONObject target){
-        target.put(DEFAULTTHEMESUBREDDIT, source.getDefaultThemeSubreddit());
+        if(source.isPresentDefaultThemeSubreddit())
+            target.put(DEFAULTTHEMESUBREDDIT, source.orElseThrowDefaultThemeSubreddit());
     }
 }

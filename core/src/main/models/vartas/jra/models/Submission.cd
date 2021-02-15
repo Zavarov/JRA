@@ -1,0 +1,13 @@
+package vartas.jra.models;
+
+import java.util.List.List;
+
+import vartas.jra.models.AbstractLink.AbstractLink;
+import vartas.jra.models.Thing.Thing;
+
+public classdiagram Submission {
+    public class Submission {
+        private AbstractLink link;
+        private List<Thing> comments;
+    }
+}

@@ -21,7 +21,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>vartas.reddit</groupId>
+    <groupId>vartas.jra</groupId>
     <artifactId>JRA</artifactId>
     <packaging>pom</packaging>
     <version>3.4-SNAPSHOT</version>
@@ -43,7 +43,7 @@
 
         <!-- .. Generator .......................................................................................... -->
 
-        <cd4code.version>2.4-SNAPSHOT</cd4code.version>
+        <cd4code.version>2.4</cd4code.version>
 
         <!-- Test -->
         <junit.version>5.6.0</junit.version>

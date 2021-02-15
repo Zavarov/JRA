@@ -13,7 +13,7 @@ public classdiagram Listing {
      * directly from Object. Although it does have data and kind as parameters, it does not have id and name.
      * A listing's kind will always be Listing and its data will be a List of things.
      */
-    public class Listing{
+    public abstract class Listing{
         /**
          * The fullname of the listing that follows before this page. Empty if there is no previous page.
          */
@@ -35,6 +35,6 @@ public classdiagram Listing {
          * but rather arbitrary junk.
          */
         <<key="children">>
-        - List<String> children;
+        - List<Object> children;
     }
 }
