@@ -29,8 +29,6 @@ public class QueryGet<Q> extends QueryBase<Q, QueryGet<Q>>{
                 .build()
                 .get();
 
-        System.out.println(source);
-
         return mapper.apply(source);
     }
 }
