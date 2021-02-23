@@ -1,5 +1,6 @@
 package vartas.jra.models._json;
 
+import com.google.common.collect.Lists;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,7 +24,7 @@ public class JSONSubmission extends JSONSubmissionTOP{
     }
 
     private static Submission from(JSONObject source, Function<Thing, ? extends AbstractLink> mapper){
-        List<? extends AbstractLink> links = JSONListing.fromThing(source, mapper).asList();
+        List<? extends AbstractLink> links = Lists.newLinkedList(JSONListing.fromThing(source, mapper));
 
         //Choose a random link
         int index = (int)(Math.random() * links.size());
@@ -39,14 +40,14 @@ public class JSONSubmission extends JSONSubmissionTOP{
         assert source.length() == 2;
 
         //Extract random link
-        List<? extends AbstractLink> links = JSONListing.fromThing(source.getJSONObject(0), mapper).asList();
+        List<? extends AbstractLink> links = Lists.newLinkedList(JSONListing.fromThing(source.getJSONObject(0), mapper));
 
         //Reddit should've returned only a single link
         assert links.size() == 1;
         AbstractLink link = links.get(0);
 
         //Extract comments, if present
-        List<Thing> comments = JSONListing.fromThing(source.getJSONObject(0)).asList();
+        List<Thing> comments = Lists.newLinkedList(JSONListing.fromThing(source.getJSONObject(0)));
 
         return SubmissionFactory.create(link, comments);
     }
