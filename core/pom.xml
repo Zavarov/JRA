@@ -31,6 +31,26 @@
     <!-- == DEFAULT BUILD SETTINGS =========================================== -->
     <build>
         <plugins>
+            <!-- create model jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.version}</version>
+                <executions>
+                    <!-- models -->
+                    <execution>
+                        <id>generate-models</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>${models.classifier}</classifier>
+                            <classesDirectory>src/main/models</classesDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- Load the templates for the generator-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
