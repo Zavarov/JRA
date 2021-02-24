@@ -25,14 +25,14 @@ public class JSONDuplicate extends JSONDuplicateTOP {
         assert response.length() == 2;
 
         //Extract source
-        List<? extends AbstractLink> references = Lists.newLinkedList(JSONListing.fromThing(response.getJSONObject(0), mapper));
+        List<? extends AbstractLink> references = Lists.newArrayList(JSONListing.fromThing(response.getJSONObject(0), mapper));
 
         //Reddit should've only returned a single submission
         assert references.size() == 1;
         reference = references.get(0);
 
         //Duplicates, if present / Wrapping it in an ArrayList is necessary due to the generic type
-        duplicates = Lists.newLinkedList(JSONListing.fromThing(response.getJSONObject(1), mapper));
+        duplicates = Lists.newArrayList(JSONListing.fromThing(response.getJSONObject(1), mapper));
 
         return DuplicateFactory.create(reference, duplicates);
     }

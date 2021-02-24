@@ -1,5 +1,6 @@
 package vartas.jra.models._json;
 
+import com.google.common.collect.Lists;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
@@ -24,7 +25,7 @@ public class JSONListingTest extends AbstractJSONTest{
     @Test
     public void testFromJson(){
         Listing<Thing> listing = JSONListing.fromJson(content, JSONThing::fromJson);
-        List<Thing> children = listing.asList();
+        List<Thing> children = Lists.newArrayList(listing);
         assertThat(children).hasSize(1);
         Thing child = children.get(0);
 
@@ -48,7 +49,7 @@ public class JSONListingTest extends AbstractJSONTest{
     @Test
     public void testFromThing(){
         Listing<Thing> listing = JSONListing.fromThing(content);
-        List<Thing> children = listing.asList();
+        List<Thing> children = Lists.newArrayList(listing);
         assertThat(children).hasSize(1);
         Thing child = children.get(0);
 
