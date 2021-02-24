@@ -9,6 +9,7 @@ import java.util.Map.Map;
 import java.util.Optional.Optional;
 
 import vartas.jra.AbstractClient.AbstractClient;
+import vartas.jra.models.Snowflake.Snowflake;
 import vartas.jra.query.QueryGet.QueryGet;
 
 /**
@@ -16,7 +17,7 @@ import vartas.jra.query.QueryGet.QueryGet;
  * See more at: https://github.com/reddit-archive/reddit/wiki/JSON
  */
 public classdiagram AbstractSubreddit {
-    public abstract class AbstractSubreddit{
+    public abstract class AbstractSubreddit extends Snowflake{
         /**
          * Number of users active in last 15 minutes.
          */

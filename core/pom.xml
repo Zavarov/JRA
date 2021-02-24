@@ -132,6 +132,7 @@
                                 <argument>vartas.jra.models.Messaging</argument>
                                 <argument>vartas.jra.models.Preferences</argument>
                                 <argument>vartas.jra.models.Rule</argument>
+                                <argument>vartas.jra.models.Snowflake</argument>
                                 <argument>vartas.jra.models.Submission</argument>
                                 <argument>vartas.jra.models.SubredditSettings</argument>
                                 <argument>vartas.jra.models.Thing</argument>

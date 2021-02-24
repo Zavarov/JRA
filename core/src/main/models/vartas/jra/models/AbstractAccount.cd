@@ -34,11 +34,6 @@ public classdiagram AbstractAccount {
         <<key="has_verified_email">>
         - boolean hasVerifiedEmail;
         /**
-         * ID of the account; prepend t2_ to get fullname.
-         */
-        <<key="id">>
-        - String id;
-        /**
          * Number of unread messages in the inbox. Empty if not your account.
          */
         <<key="inbox_count">>
@@ -68,13 +63,6 @@ public classdiagram AbstractAccount {
          */
         <<key="modhash">>
         - Optional<String> modHash;
-        /**
-         * The username of the account in question. This attribute overrides the superclass's name attribute.
-         * Do not confuse an account's name which is the account's username with a thing's name which is the thing's
-         * FULLNAME. See API: Glossary for details on what FULLNAMEs are.
-         */
-        <<key="name">>
-        - String name;
         /**
          * Whether this account is set to be over 18.
          */

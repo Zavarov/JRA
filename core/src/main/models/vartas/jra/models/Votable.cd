@@ -2,12 +2,13 @@ package vartas.jra.models;
 
 import java.lang.Boolean.Boolean;
 import java.util.Optional.Optional;
+import vartas.jra.models.Snowflake.Snowflake;
 
 public classdiagram Votable {
     /**
      * All things that implement votable have these attributes:
      */
-    public abstract class Votable {
+    public abstract class Votable extends Snowflake{
         /**
          * The number of upvotes. (includes own)
          */

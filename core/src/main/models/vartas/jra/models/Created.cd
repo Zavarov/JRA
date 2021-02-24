@@ -1,12 +1,13 @@
 package vartas.jra.models;
 
 import java.time.OffsetDateTime.OffsetDateTime;
+import vartas.jra.models.Snowflake.Snowflake;
 
 public classdiagram Created {
     /**
      * All things that implement created have these attributes:
      */
-    public abstract class Created {
+    public abstract class Created extends Snowflake{
         /**
          * The time of creation in local epoch-second format. ex: 1331042771.0
          */
