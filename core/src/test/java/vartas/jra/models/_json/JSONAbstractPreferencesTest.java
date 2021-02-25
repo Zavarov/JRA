@@ -3,20 +3,20 @@ package vartas.jra.models._json;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import vartas.jra.models.Preferences;
+import vartas.jra.mock.PreferencesMock;
 
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class JSONPreferencesTest extends AbstractJSONTest{
+public class JSONAbstractPreferencesTest extends AbstractJSONTest{
     static String content;
-    static Preferences preferences;
+    static PreferencesMock preferences;
 
     @BeforeAll
     public static void setUpAll() throws IOException {
         content = getContent("Preferences.json");
-        preferences = JSONPreferences.fromJson(content);
+        preferences = JSONAbstractPreferences.fromJson(content, PreferencesMock::new);
     }
 
     @Test
@@ -26,7 +26,7 @@ public class JSONPreferencesTest extends AbstractJSONTest{
 
     @Test
     public void testToJson(){
-        JSONObject data = JSONPreferences.toJson(preferences, new JSONObject());
+        JSONObject data = JSONAbstractPreferences.toJson(preferences, new JSONObject());
 
         assertThat(data.opt("default_theme_sr")).isNotNull();
     }

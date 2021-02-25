@@ -7,8 +7,8 @@ import vartas.jra.AbstractClient;
 import vartas.jra.AbstractTest;
 import vartas.jra.exceptions.HttpException;
 import vartas.jra.exceptions.NotFoundException;
+import vartas.jra.mock.PreferencesMock;
 import vartas.jra.mock.SelfAccountMock;
-import vartas.jra.models.Preferences;
 
 import java.io.IOException;
 
@@ -54,14 +54,14 @@ public class AccountTest extends AbstractTest {
 
     @Test
     public void testGetPreferences() throws InterruptedException, IOException, HttpException {
-        assertThat(Account.getPreferences(client).query()).isNotNull();
+        assertThat(Account.getPreferences(client, PreferencesMock::new).query()).isNotNull();
     }
 
     @Test
     public void testPatchPreferences() throws InterruptedException, IOException, HttpException {
-        Preferences before = Account.getPreferences(client).query();
+        PreferencesMock before = Account.getPreferences(client, PreferencesMock::new).query();
         assertThat(before).isNotNull();
-        Preferences after = Account.patchPreferences(client).setParameter("beta", before.getBeta()).query();
+        PreferencesMock after = Account.patchPreferences(client, PreferencesMock::new).setParameter("beta", before.getBeta()).query();
         assertThat(after).isNotNull();
     }
 

@@ -99,9 +99,9 @@ public abstract class Account {
      * @see Endpoint#GET_ME_PREFS
      */
     @Nonnull
-    public static QueryGet<Preferences> getPreferences(@Nonnull AbstractClient client) {
+    public static <T extends AbstractPreferences> QueryGet<T> getPreferences(@Nonnull AbstractClient client, Supplier<T> supplier) {
         return new QueryGet<>(
-                JSONPreferences::fromJson,
+                source -> JSONAbstractPreferences.fromJson(source, supplier),
                 client,
                 Endpoint.GET_ME_PREFS
         );
@@ -114,9 +114,9 @@ public abstract class Account {
      * @see Endpoint#GET_ME_PREFS
      */
     @Nonnull
-    public static QueryPatch<Preferences> patchPreferences(@Nonnull AbstractClient client) {
+    public static <T extends AbstractPreferences> QueryPatch<T> patchPreferences(@Nonnull AbstractClient client, Supplier<T> supplier) {
         return new QueryPatch<>(
-                JSONPreferences::fromJson,
+                source -> JSONAbstractPreferences.fromJson(source, supplier),
                 client,
                 Endpoint.GET_ME_PREFS,
                 APIRequest.BodyType.JSON

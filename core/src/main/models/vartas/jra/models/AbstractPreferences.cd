@@ -7,8 +7,8 @@ import java.lang.String.String;
 
 import java.util.Optional.Optional;
 
-public classdiagram Preferences {
-    public class Preferences{
+public classdiagram AbstractPreferences {
+    public abstract class AbstractPreferences{
         <<key="accept_pms">>
         - String acceptPrivateMessages;
         <<key="activity_relevant_ads">>

@@ -124,13 +124,13 @@
                                 <argument>vartas.jra.models.AbstractAccount</argument>
                                 <argument>vartas.jra.models.AbstractComment</argument>
                                 <argument>vartas.jra.models.AbstractLink</argument>
+                                <argument>vartas.jra.models.AbstractPreferences</argument>
                                 <argument>vartas.jra.models.AbstractSubreddit</argument>
                                 <argument>vartas.jra.models.Created</argument>
                                 <argument>vartas.jra.models.Duplicate</argument>
                                 <argument>vartas.jra.models.Karma</argument>
                                 <argument>vartas.jra.models.Listing</argument>
                                 <argument>vartas.jra.models.Messaging</argument>
-                                <argument>vartas.jra.models.Preferences</argument>
                                 <argument>vartas.jra.models.Rule</argument>
                                 <argument>vartas.jra.models.Snowflake</argument>
                                 <argument>vartas.jra.models.Submission</argument>
