@@ -14,8 +14,6 @@ import vartas.jra.http.APIAuthentication;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,12 +29,6 @@ public abstract class AbstractClient extends AbstractClientTOP{
      */
     @Nonnull
     protected static final String REVOKE_TOKEN = "https://www.reddit.com/api/v1/revoke_token";
-    /**
-     * The application credentials is derived from the application id and secret.<p>
-     * More explicitly, it is the base 64 encoding of "&lt;id&gt;:&lt;secret&gt;".
-     */
-    @Nonnull
-    protected final String credentials;
     /**
      * A random UUID used to identify the hardware.
      */
@@ -59,22 +51,6 @@ public abstract class AbstractClient extends AbstractClientTOP{
      */
     @Nonnull
     protected final OkHttpClient http = new OkHttpClient();
-    @Nonnull
-    protected final Scope[] scope;
-
-    /**
-     * Creates a new instance.
-     * @param userAgent The user agent attached to every request.
-     * @param id The application id.
-     * @param secret The application "password".
-     * @see <a href="https://github.com/reddit-archive/reddit/wiki/OAuth2">here</a>
-     */
-    @Nonnull
-    public AbstractClient(@Nonnull UserAgent userAgent, @Nonnull String id, @Nonnull String secret, @Nonnull Scope... scope){
-        setUserAgent(userAgent);
-        this.credentials = Base64.getEncoder().encodeToString((id+":"+secret).getBytes(StandardCharsets.UTF_8));
-        this.scope = scope;
-    }
 
 
     /**
@@ -213,7 +189,7 @@ public abstract class AbstractClient extends AbstractClientTOP{
         if(orElseThrowToken().isEmptyRefreshToken())
             return;
 
-        new APIAuthentication.Builder(REVOKE_TOKEN, credentials, this)
+        new APIAuthentication.Builder(REVOKE_TOKEN, getCredentials(), this)
                 .addParameter("token", orElseThrowToken().orElseThrowRefreshToken())
                 .addParameter("token_type_hint", TokenType.REFRESH_TOKEN)
                 .build()
@@ -230,7 +206,7 @@ public abstract class AbstractClient extends AbstractClientTOP{
     private void revokeAccessToken() throws IOException, HttpException, InterruptedException, RateLimiterException {
         assert isPresentToken();
 
-        new APIAuthentication.Builder(REVOKE_TOKEN, credentials, this)
+        new APIAuthentication.Builder(REVOKE_TOKEN, getCredentials(), this)
                 .addParameter("token", orElseThrowToken().getAccessToken())
                 .addParameter("token_type_hint", TokenType.REFRESH_TOKEN)
                 .build()
@@ -254,7 +230,7 @@ public abstract class AbstractClient extends AbstractClientTOP{
     protected synchronized void refresh() throws IOException, HttpException, RateLimiterException, InterruptedException {
         assert isPresentToken() && orElseThrowToken().isPresentRefreshToken();
 
-        APIAuthentication request = new APIAuthentication.Builder(ACCESS_TOKEN, credentials, this)
+        APIAuthentication request = new APIAuthentication.Builder(ACCESS_TOKEN, getCredentials(), this)
                 .addParameter("grant_type", GrantType.REFRESH)
                 .addParameter("refresh_token", orElseThrowToken().orElseThrowRefreshToken())
                 .build();

@@ -14,7 +14,7 @@ public abstract class AbstractTest {
         return new JSONObject(content);
     }
 
-    protected static AbstractClient getScript(String version, AbstractClient.Scope... scope) throws IOException {
+    protected static AbstractClient getScript(String version) throws IOException {
         JSONObject config = getConfig();
 
         String platform = config.getString("platform");
@@ -25,6 +25,6 @@ public abstract class AbstractTest {
         String password = config.getString("password");
         UserAgent userAgent = UserAgentFactory.create(platform, AbstractTest.class.getPackageName(), version, author);
 
-        return new ClientMock(userAgent, id, secret, account, password, scope);
+        return new ClientMock(userAgent, id, secret, account, password);
     }
 }

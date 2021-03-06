@@ -8,6 +8,7 @@ import java.lang.String.String;
 import java.lang.InterruptedException.InterruptedException;
 import java.util.Optional.Optional;
 
+import vartas.jra.AbstractClient.AbstractClient.Scope;
 import vartas.jra.AbstractClient.AbstractClient.Duration;
 import vartas.jra.exceptions.Exceptions.HttpException;
 import vartas.jra.exceptions.Exceptions.RateLimiterException;
@@ -16,6 +17,12 @@ public classdiagram AbstractClient {
     public abstract class AbstractClient {
         - Optional<Token> token;
         - UserAgent userAgent;
+        /**
+         * The application credentials is derived from the application id and secret.<p>
+         * More explicitly, it is the base 64 encoding of "&lt;id&gt;:&lt;secret&gt;".
+         */
+        - String credentials;
+        //- Scope[] scope;
 
         + abstract void login(Duration duration) throws IOException, HttpException, RateLimiterException, InterruptedException;
         + abstract void login() throws IOException, HttpException, RateLimiterException, InterruptedException;
