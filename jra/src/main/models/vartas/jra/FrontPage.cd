@@ -1,0 +1,36 @@
+package vartas.jra;
+
+import java.io.IOException.IOException;
+import java.lang.InterruptedException.InterruptedException;
+import java.util.stream.Stream.Stream;
+
+import vartas.jra.Client.Client;
+import vartas.jra.Link.Link;
+import vartas.jra.Parameter.Parameter;
+
+import vartas.jra.exceptions.HttpException.HttpException;
+
+import vartas.jra.models.Listing.Listing;
+import vartas.jra.models.Submission.Submission;
+import vartas.jra.models.Thing.Thing;
+
+public classdiagram FrontPage {
+    /**
+     * The frontpage consists of a collection of all subreddits, the currently logged in account is
+     * subscribed to. In case the user-less mode is used, it represents r/all.
+     */
+    public abstract class FrontPage{
+        <<ignore>>
+        - Client client;
+        //Listings
+        + abstract Stream<Link> getBestLinks(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Stream<Link> getControversialLinks(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Stream<Link> getHotLinks(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Stream<Link> getNewLinks(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Submission getRandomSubmission(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Stream<Link> getRisingLinks(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Stream<Link> getTopLinks(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        //Search
+        + abstract Listing<Thing> getSearch(Parameter[] params) throws InterruptedException, IOException, HttpException;
+    }
+}

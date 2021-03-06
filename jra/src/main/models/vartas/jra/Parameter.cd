@@ -1,0 +1,10 @@
+package vartas.jra;
+
+import java.lang.String.String;
+
+public classdiagram Parameter {
+    public class Parameter{
+        String key;
+        String value;
+    }
+}

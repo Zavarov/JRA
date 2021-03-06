@@ -1,0 +1,26 @@
+package vartas.jra;
+
+import java.io.IOException.IOException;
+import java.lang.InterruptedException.InterruptedException;
+import java.util.stream.Stream.Stream;
+
+import vartas.jra.Client.Client;
+import vartas.jra.Parameter.Parameter;
+
+import vartas.jra.exceptions.HttpException.HttpException;
+
+import vartas.jra.models.AbstractPreferences.AbstractPreferences;
+import vartas.jra.models.AbstractAccount.FakeAccount;
+import vartas.jra.models.Messaging.Messaging;
+
+public classdiagram Preferences {
+    public abstract class Preferences extends AbstractPreferences{
+        <<ignore>>
+        - Client client;
+        //Account
+        + abstract Stream<FakeAccount> getBlocked(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Stream<FakeAccount> getFriends(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Messaging getMessaging(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Stream<FakeAccount> getTrusted(Parameter[] params) throws InterruptedException, IOException, HttpException;
+    }
+}

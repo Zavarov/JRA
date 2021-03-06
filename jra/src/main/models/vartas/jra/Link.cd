@@ -1,0 +1,9 @@
+package vartas.jra;
+
+import vartas.jra.models.AbstractLink.AbstractLink;
+
+public classdiagram Link {
+    public class Link extends AbstractLink{
+
+    }
+}

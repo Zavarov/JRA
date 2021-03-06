@@ -1,0 +1,60 @@
+package vartas.jra;
+
+import java.io.IOException.IOException;
+import java.lang.InterruptedException.InterruptedException;
+import java.lang.Object.Object;
+import java.lang.String.String;
+import java.util.Map.Map;
+import java.util.stream.Stream.Stream;
+
+import vartas.jra.Client.Client;
+import vartas.jra.Link.Link;
+
+import vartas.jra.exceptions.HttpException.HttpException;
+
+import vartas.jra.models.AbstractSubreddit.AbstractSubreddit;
+import vartas.jra.models.Account.FakeAccount;
+import vartas.jra.models.Listing.Listing;
+import vartas.jra.models.Rule.Rules;
+import vartas.jra.models.Submission.Submission;
+import vartas.jra.models.SubredditSettings.SubredditSettings;
+import vartas.jra.models.Thing.Thing;
+
+public classdiagram Subreddit {
+    public abstract class Subreddit extends AbstractSubreddit{
+        <<ignore>>
+        - Client client;
+        //Listings
+        + abstract Stream<Link> getControversialLinks(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Stream<Link> getHotLinks(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Stream<Link> getNewLinks(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Submission getRandomSubmission(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Stream<Link> getRisingLinks(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Stream<Link> getTopLinks(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        //Search
+        + abstract Listing<Thing> getSearch(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        //Subreddits
+        + abstract Listing<FakeAccount> getBanned(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Listing<FakeAccount> getContributors(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Stream<FakeAccount> getModerators(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Listing<FakeAccount> getMuted(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Listing<FakeAccount> getWikiBanned(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Listing<FakeAccount> getWikiContributors(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract String postDeleteBanner(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract String postDeleteHeader(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract String postDeleteIcon(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract String postDeleteImage(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract String postStylesheet(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract String postUploadImage(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Map<String, Object> getPostRequirements(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Map<String, Object> getSubmitText(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract SubredditSettings getEdit(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Rules getRules(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Map<String, Object> getTraffic(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Submission getSticky(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        //Users
+        + abstract String postFriend(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract String postSetPermission(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract String postUnfriend(Parameter[] params) throws InterruptedException, IOException, HttpException;
+    }
+}

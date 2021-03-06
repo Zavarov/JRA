@@ -1,0 +1,8 @@
+{
+  "models_path": "jra/target/dependency",
+  "local_models_path" : "jra/src/main/models",
+  "templates_path" : "jra/target/dependency",
+  "local_templates_path" : "jra/src/main/resources/templates" ,
+  "sources_directory" : "jra/src/main/java",
+  "target_directory" : "jra/target/generated-sources/"
+}

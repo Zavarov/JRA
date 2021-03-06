@@ -27,6 +27,7 @@
     <version>3.4-SNAPSHOT</version>
     <modules>
         <module>core</module>
+        <module>jra</module>
     </modules>
 
     <properties>
