@@ -2,6 +2,7 @@ package vartas.jra.models;
 
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Streams;
 import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 import vartas.jra.exceptions.HttpException;
@@ -11,7 +12,11 @@ import vartas.jra.query.QueryGet;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.function.Function;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class Listing<V> extends ListingTOP implements Iterable<V>{
     private final Function<String, V> mapper;
@@ -64,6 +69,13 @@ public class Listing<V> extends ListingTOP implements Iterable<V>{
                 LoggerFactory.getLogger(getClass()).error(e.getMessage(), e);
                 return endOfData();
             }
+        }
+
+        public Stream<V> toStream(){
+            int characteristics = Spliterator.ORDERED | Spliterator.NONNULL | Spliterator.SORTED | Spliterator.DISTINCT;
+            Spliterator<Listing<V>> spliterator = Spliterators.spliteratorUnknownSize(this, characteristics);
+
+            return StreamSupport.stream(spliterator, false).flatMap(Streams::stream);
         }
     }
 }
