@@ -95,11 +95,13 @@ public classdiagram AbstractSubreddit {
         - String submissionType;
         /**
          * The subreddit's custom label for the submit link button, if any.
+         * Empty is no custom label is set.
          */
         <<key="submit_link_label">>
         - Optional<String> submitLinkLabel;
         /**
          * The subreddit's custom label for the submit text button, if any.
+         * Empty is no custom label is set.
          */
         <<key="submit_text_label">>
         - Optional<String> submitTextLabel;
@@ -121,24 +123,28 @@ public classdiagram AbstractSubreddit {
         - String url;
         /**
          * Whether the logged-in user is banned from the subreddit.
+         * Empty in case of an user-less login.
          */
         <<key="user_is_banned">>
-        - boolean userIsBanned;
+        - Optional<Boolean> userIsBanned;
         /**
          * Whether the logged-in user is an approved submitter in the subreddit.
+         * Empty in case of an user-less login.
          */
         <<key="user_is_contributor">>
-        - boolean userIsContributor;
+        - Optional<Boolean> userIsContributor;
         /**
          * Whether the logged-in user is a moderator of the subreddit.
+         * Empty in case of an user-less login.
          */
         <<key="user_is_moderator">>
-        - boolean userIsModerator;
+        - Optional<Boolean> userIsModerator;
         /**
          * Whether the logged-in user is subscribed to the subreddit.
+         * Empty in case of an user-less login.
          */
         <<key="user_is_subscriber">>
-        - boolean userIsSubscriber;
+        - Optional<Boolean> userIsSubscriber;
     }
 
     public class FakeSubreddit{
