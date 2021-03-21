@@ -1,9 +1,9 @@
 package vartas.jra.models;
 
 import com.google.common.collect.AbstractIterator;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Streams;
 import org.json.JSONObject;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vartas.jra.exceptions.HttpException;
 import vartas.jra.models._factory.ThingFactory;
@@ -41,6 +41,7 @@ public class Listing<V> extends ListingTOP implements Iterable<V>{
     }
 
     public static class Iterator<V extends Snowflake> extends AbstractIterator<Listing<V>>{
+        private static final Logger LOGGER = LoggerFactory.getLogger(Iterator.class);
         private final QueryGet<Listing<V>> query;
 
         public Iterator(QueryGet<Listing<V>> query){
@@ -55,16 +56,19 @@ public class Listing<V> extends ListingTOP implements Iterable<V>{
         protected Listing<V> computeNext() {
             try {
                 Listing<V> listing = query.query();
+                LOGGER.debug("Receive {} element(s).", listing.sizeChildren());
 
-                if (listing.isEmptyChildren()) {
-                    return endOfData();
-                } else {
-                    //The last element of the current query serves
-                    //as an anchor point for the next query
-                    String after = Iterables.getLast(listing).getName();
+                listing.ifPresentAfter(after -> {
+                    LOGGER.info("Update 'after' to {} for the next request.", after);
                     query.setParameter("after", after);
-                    return listing;
-                }
+                });
+
+                listing.ifPresentBefore(before -> {
+                    LOGGER.info("Update 'before' to {} for the next request.", before);
+                    query.setParameter("before", before);
+                });
+
+                return listing.isEmptyChildren() ? endOfData() : listing;
             }catch(IOException | HttpException | InterruptedException e){
                 LoggerFactory.getLogger(getClass()).error(e.getMessage(), e);
                 return endOfData();
