@@ -11,6 +11,7 @@ import vartas.jra.models._json.JSONListing;
 import vartas.jra.query.QueryGet;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -41,10 +42,14 @@ public class Listing<V> extends ListingTOP implements Iterable<V>{
     }
 
     public static class Iterator<V extends Snowflake> extends AbstractIterator<Listing<V>>{
+        @Nonnull
         private static final Logger LOGGER = LoggerFactory.getLogger(Iterator.class);
+        @Nonnull
         private final QueryGet<Listing<V>> query;
+        @Nullable
+        private Listing<V> current;
 
-        public Iterator(QueryGet<Listing<V>> query){
+        public Iterator(@Nonnull QueryGet<Listing<V>> query){
             this.query = query;
         }
 
@@ -54,23 +59,30 @@ public class Listing<V> extends ListingTOP implements Iterable<V>{
 
         @Override
         protected Listing<V> computeNext() {
-            try {
-                Listing<V> listing = query.query();
-                LOGGER.debug("Receive {} element(s).", listing.sizeChildren());
+            //No more pages remain
+            if(current != null && current.isEmptyAfter() && current.isEmptyBefore()) {
+                LOGGER.info("No more pages remain.");
+                return endOfData();
+            }
 
-                listing.ifPresentAfter(after -> {
-                    LOGGER.info("Update 'after' to {} for the next request.", after);
+            //Request next page
+            try {
+                current = query.query();
+                LOGGER.info("Received page with {} element(s).", current.sizeChildren());
+
+                current.ifPresentAfter(after -> {
+                    LOGGER.debug("Update 'after' to {} for the next page.", after);
                     query.setParameter("after", after);
                 });
 
-                listing.ifPresentBefore(before -> {
-                    LOGGER.info("Update 'before' to {} for the next request.", before);
+                current.ifPresentBefore(before -> {
+                    LOGGER.debug("Update 'before' to {} for the next page.", before);
                     query.setParameter("before", before);
                 });
 
-                return listing.isEmptyChildren() ? endOfData() : listing;
+                return current;
             }catch(IOException | HttpException | InterruptedException e){
-                LoggerFactory.getLogger(getClass()).error(e.getMessage(), e);
+                LOGGER.warn(e.getMessage(), e);
                 return endOfData();
             }
         }
