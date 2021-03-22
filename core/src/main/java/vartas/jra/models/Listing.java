@@ -5,7 +5,6 @@ import com.google.common.collect.Streams;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vartas.jra.exceptions.HttpException;
 import vartas.jra.models._factory.ThingFactory;
 import vartas.jra.models._json.JSONListing;
 import vartas.jra.query.QueryGet;
@@ -81,7 +80,7 @@ public class Listing<V> extends ListingTOP implements Iterable<V>{
                 });
 
                 return current;
-            }catch(IOException | HttpException | InterruptedException e){
+            }catch(IOException | InterruptedException e){
                 LOGGER.warn(e.getMessage(), e);
                 return endOfData();
             }

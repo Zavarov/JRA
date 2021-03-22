@@ -5,7 +5,6 @@ import vartas.jra.endpoints.Listings;
 import vartas.jra.endpoints.Search;
 import vartas.jra.endpoints.Subreddits;
 import vartas.jra.endpoints.Users;
-import vartas.jra.exceptions.HttpException;
 import vartas.jra.models.*;
 import vartas.jra.query.QueryGet;
 import vartas.jra.query.QueryPost;
@@ -39,7 +38,7 @@ public class Subreddit extends SubredditTOP{
     //    Listings                                                                                                    //
     //----------------------------------------------------------------------------------------------------------------//
     @Override
-    public Stream<Link> getControversialLinks(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<Link> getControversialLinks(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Link>> query = Listings.getControversialLinks(getClient(), Link::from, getDisplayName());
 
         for(Parameter param : params)
@@ -49,7 +48,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public Stream<Link> getHotLinks(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<Link> getHotLinks(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Link>> query = Listings.getHotLinks(getClient(), Link::from, getDisplayName());
 
         for(Parameter param : params)
@@ -59,7 +58,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public Stream<Link> getNewLinks(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<Link> getNewLinks(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Link>> query = Listings.getNewLinks(getClient(), Link::from, getDisplayName());
 
         for(Parameter param : params)
@@ -69,7 +68,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public Submission getRandomSubmission(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Submission getRandomSubmission(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Submission> query = Listings.getRandomSubmission(getClient(), Link::from, getDisplayName());
 
         for(Parameter param : params)
@@ -79,7 +78,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public Stream<Link> getRisingLinks(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<Link> getRisingLinks(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Link>> query = Listings.getRisingLinks(getClient(), Link::from, getDisplayName());
 
         for(Parameter param : params)
@@ -89,7 +88,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public Stream<Link> getTopLinks(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<Link> getTopLinks(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Link>> query = Listings.getTopLinks(getClient(), Link::from, getDisplayName());
 
         for(Parameter param : params)
@@ -101,7 +100,7 @@ public class Subreddit extends SubredditTOP{
     //    Search                                                                                                      //
     //----------------------------------------------------------------------------------------------------------------//
     @Override
-    public Listing<Thing> getSearch(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Listing<Thing> getSearch(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Thing>> query = Search.getSearch(getClient(), getDisplayName());
 
         for(Parameter param : params)
@@ -113,7 +112,7 @@ public class Subreddit extends SubredditTOP{
     //    Subreddits                                                                                                    //
     //----------------------------------------------------------------------------------------------------------------//
     @Override
-    public Listing<FakeAccount> getBanned(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Listing<FakeAccount> getBanned(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<FakeAccount>> query = Subreddits.getBanned(getClient(), getDisplayName());
 
         for(Parameter param : params)
@@ -123,7 +122,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public Listing<FakeAccount> getContributors(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Listing<FakeAccount> getContributors(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<FakeAccount>> query = Subreddits.getContributors(getClient(), getDisplayName());
 
         for(Parameter param : params)
@@ -133,7 +132,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public Stream<FakeAccount> getModerators(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<FakeAccount> getModerators(Parameter... params) throws InterruptedException, IOException {
         QueryGet<List<FakeAccount>> query = Subreddits.getModerators(getClient(), getDisplayName());
 
         for(Parameter param : params)
@@ -143,7 +142,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public Listing<FakeAccount> getMuted(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Listing<FakeAccount> getMuted(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<FakeAccount>> query = Subreddits.getMuted(getClient(), getDisplayName());
 
         for(Parameter param : params)
@@ -153,7 +152,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public Listing<FakeAccount> getWikiBanned(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Listing<FakeAccount> getWikiBanned(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<FakeAccount>> query = Subreddits.getWikibanned(getClient(), getDisplayName());
 
         for(Parameter param : params)
@@ -163,7 +162,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public Listing<FakeAccount> getWikiContributors(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Listing<FakeAccount> getWikiContributors(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<FakeAccount>> query = Subreddits.getWikicontributors(getClient(), getDisplayName());
 
         for(Parameter param : params)
@@ -173,7 +172,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public String postDeleteBanner(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public String postDeleteBanner(Parameter... params) throws InterruptedException, IOException {
         QueryPost<String> query = Subreddits.postDeleteSubredditBanner(getClient(), getDisplayName());
 
         for(Parameter param : params)
@@ -183,7 +182,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public String postDeleteHeader(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public String postDeleteHeader(Parameter... params) throws InterruptedException, IOException {
         QueryPost<String> query = Subreddits.postDeleteSubredditHeader(getClient(), getDisplayName());
 
         for(Parameter param : params)
@@ -193,7 +192,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public String postDeleteIcon(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public String postDeleteIcon(Parameter... params) throws InterruptedException, IOException {
         QueryPost<String> query = Subreddits.postDeleteSubredditIcon(getClient(), getDisplayName());
 
         for(Parameter param : params)
@@ -203,7 +202,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public String postDeleteImage(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public String postDeleteImage(Parameter... params) throws InterruptedException, IOException {
         QueryPost<String> query = Subreddits.postDeleteSubredditImage(getClient(), getDisplayName());
 
         for(Parameter param : params)
@@ -213,7 +212,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public String postStylesheet(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public String postStylesheet(Parameter... params) throws InterruptedException, IOException {
         QueryPost<String> query = Subreddits.postStylesheet(getClient(), getDisplayName());
 
         for(Parameter param : params)
@@ -223,7 +222,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public String postUploadImage(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public String postUploadImage(Parameter... params) throws InterruptedException, IOException {
         QueryPost<String> query = Subreddits.postUploadImage(getClient(), getDisplayName());
 
         for(Parameter param : params)
@@ -233,7 +232,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public Map<String, Object> getPostRequirements(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Map<String, Object> getPostRequirements(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Map<String, Object>> query = Subreddits.getPostRequirements(getClient(), getDisplayName());
 
         for(Parameter param : params)
@@ -243,7 +242,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public Map<String, Object> getSubmitText(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Map<String, Object> getSubmitText(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Map<String, Object>> query = Subreddits.getSubmitText(getClient(), getDisplayName());
 
         for(Parameter param : params)
@@ -253,7 +252,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public SubredditSettings getEdit(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public SubredditSettings getEdit(Parameter... params) throws InterruptedException, IOException {
         QueryGet<SubredditSettings> query = Subreddits.getSubredditEdit(getClient(), getDisplayName());
 
         for(Parameter param : params)
@@ -263,7 +262,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public Rules getRules(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Rules getRules(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Rules> query = Subreddits.getSubredditRules(getClient(), getDisplayName());
 
         for(Parameter param : params)
@@ -273,7 +272,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public Map<String, Object> getTraffic(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Map<String, Object> getTraffic(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Map<String, Object>> query = Subreddits.getTraffic(getClient(), getDisplayName());
 
         for(Parameter param : params)
@@ -283,7 +282,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public Submission getSticky(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Submission getSticky(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Submission> query = Subreddits.getSticky(getClient(), Link::from);
 
         for(Parameter param : params)
@@ -295,7 +294,7 @@ public class Subreddit extends SubredditTOP{
     //    Subreddits                                                                                                    //
     //----------------------------------------------------------------------------------------------------------------//
     @Override
-    public String postFriend(Parameter... params) throws InterruptedException, IOException, HttpException{
+    public String postFriend(Parameter... params) throws InterruptedException, IOException{
         QueryPost<String> query = Users.postFriend(getClient(), getDisplayName());
 
         for(Parameter param : params)
@@ -305,7 +304,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public String postSetPermission(Parameter... params) throws InterruptedException, IOException, HttpException{
+    public String postSetPermission(Parameter... params) throws InterruptedException, IOException{
         QueryPost<String> query = Users.postSetPermission(getClient(), getDisplayName());
 
         for(Parameter param : params)
@@ -315,7 +314,7 @@ public class Subreddit extends SubredditTOP{
     }
 
     @Override
-    public String postUnfriend(Parameter... params) throws InterruptedException, IOException, HttpException{
+    public String postUnfriend(Parameter... params) throws InterruptedException, IOException{
         QueryPost<String> query = Users.postUnfriend(getClient(), getDisplayName());
 
         for(Parameter param : params)

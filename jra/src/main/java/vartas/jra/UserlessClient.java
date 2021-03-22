@@ -2,8 +2,6 @@ package vartas.jra;
 
 import vartas.jra._factory.ClientFactory;
 import vartas.jra._json.JSONToken;
-import vartas.jra.exceptions.HttpException;
-import vartas.jra.exceptions.RateLimiterException;
 import vartas.jra.http.APIAuthentication;
 
 import javax.annotation.Nonnull;
@@ -45,13 +43,11 @@ public class UserlessClient extends Client{
      * Depending on the value of {@code duration}, Reddit will also return a refresh token with which the client is able
      * to retrieve a new access token once the old one expired.
      * @param duration The lifetime of the token.
-     * @throws IOException If an exception occurred during the request.
-     * @throws HttpException If the request got rejected by the server.
-     * @throws RateLimiterException If too many requests are made within a short amount of time.
+     * @throws IOException If the request couldn't be completed.
      * @throws InterruptedException If the query got interrupted while waiting to be executed.
      */
     @Override
-    public synchronized void login(@Nonnull Duration duration) throws IOException, HttpException, RateLimiterException, InterruptedException {
+    public synchronized void login(@Nonnull Duration duration) throws IOException, InterruptedException {
         APIAuthentication request = new APIAuthentication.Builder(ACCESS_TOKEN, getCredentials(), this)
                 .addParameter("grant_type", GrantType.USERLESS)
                 .addParameter("device_id", uuid)

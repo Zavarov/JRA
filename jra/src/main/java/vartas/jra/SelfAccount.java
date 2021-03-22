@@ -2,7 +2,6 @@ package vartas.jra;
 
 import vartas.jra.endpoints.Account;
 import vartas.jra.endpoints.Subreddits;
-import vartas.jra.exceptions.HttpException;
 import vartas.jra.models.Karma;
 import vartas.jra.models.Listing;
 import vartas.jra.models.Trophy;
@@ -29,7 +28,7 @@ public class SelfAccount extends SelfAccountTOP{
     //    Account                                                                                                     //
     //----------------------------------------------------------------------------------------------------------------//
     @Override
-    public Stream<Karma> getKarma(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<Karma> getKarma(Parameter... params) throws InterruptedException, IOException {
         QueryGet<List<Karma>> query = Account.getKarma(getClient());
 
         for(Parameter param : params)
@@ -39,7 +38,7 @@ public class SelfAccount extends SelfAccountTOP{
     }
 
     @Override
-    public Preferences getPreferences(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Preferences getPreferences(Parameter... params) throws InterruptedException, IOException {
         Supplier<Preferences> supplier = () -> Preferences.from(getClient());
         QueryGet<Preferences> query = Account.getPreferences(getClient(), supplier);
 
@@ -50,7 +49,7 @@ public class SelfAccount extends SelfAccountTOP{
     }
 
     @Override
-    public Preferences patchPreferences(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Preferences patchPreferences(Parameter... params) throws InterruptedException, IOException {
         Supplier<Preferences> supplier = () -> Preferences.from(getClient());
         QueryPatch<Preferences> query = Account.patchPreferences(getClient(), supplier);
 
@@ -61,7 +60,7 @@ public class SelfAccount extends SelfAccountTOP{
     }
 
     @Override
-    public Stream<Trophy> getTrophies(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<Trophy> getTrophies(Parameter... params) throws InterruptedException, IOException {
         QueryGet<List<Trophy>> query = Account.getTrophies(getClient());
 
         for(Parameter param : params)
@@ -73,7 +72,7 @@ public class SelfAccount extends SelfAccountTOP{
     //    Subreddits                                                                                                    //
     //----------------------------------------------------------------------------------------------------------------//
     @Override
-    public Stream<Subreddit> getMineContributor(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<Subreddit> getMineContributor(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Subreddit>> query = Subreddits.getMineContributor(getClient(), (thing) -> Subreddit.from(thing, getClient()));
 
         for(Parameter param : params)
@@ -83,7 +82,7 @@ public class SelfAccount extends SelfAccountTOP{
     }
 
     @Override
-    public Stream<Subreddit> getMineModerator(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<Subreddit> getMineModerator(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Subreddit>> query = Subreddits.getMineModerator(getClient(), (thing) -> Subreddit.from(thing, getClient()));
 
         for(Parameter param : params)
@@ -93,7 +92,7 @@ public class SelfAccount extends SelfAccountTOP{
     }
 
     @Override
-    public Stream<Subreddit> getMineStreams(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<Subreddit> getMineStreams(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Subreddit>> query = Subreddits.getMineStreams(getClient(), (thing) -> Subreddit.from(thing, getClient()));
 
         for(Parameter param : params)
@@ -103,7 +102,7 @@ public class SelfAccount extends SelfAccountTOP{
     }
 
     @Override
-    public Stream<Subreddit> getMineSubscriber(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<Subreddit> getMineSubscriber(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Subreddit>> query = Subreddits.getMineSubscriber(getClient(), (thing) -> Subreddit.from(thing, getClient()));
 
         for(Parameter param : params)

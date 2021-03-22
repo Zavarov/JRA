@@ -1,7 +1,6 @@
 package vartas.jra.exceptions;
 
-import java.lang.RuntimeException.RuntimeException;
-import java.lang.Exception.Exception;
+import java.io.IOException.IOException;
 import java.lang.String.String;
 
 public classdiagram Exceptions {
@@ -10,12 +9,12 @@ public classdiagram Exceptions {
      * It is separated from the other exceptions since ignoring a rate limit is an easy way to get the entire
      * application blocked.
      */
-    public class RateLimiterException extends RuntimeException{
+    public class RateLimiterException extends IOException{
     }
     /**
      * This exception is thrown whenever the Reddit server rejected a request.
      */
-    public class HttpException extends Exception{
+    public class HttpException extends IOException{
         - int errorCode;
         - String explanation;
     }

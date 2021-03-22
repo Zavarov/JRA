@@ -4,7 +4,6 @@ import com.google.common.base.Joiner;
 import com.google.common.net.HttpHeaders;
 import okhttp3.*;
 import vartas.jra.AbstractClient;
-import vartas.jra.exceptions.HttpException;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -89,11 +88,10 @@ public class APIAuthentication {
      * In case a fresh token was requested, it is most likely a JSON object containing the new access token.
      * @return The API response.
      * @throws InterruptedException If the query got interrupted while waiting to be executed.
-     * @throws IOException If an exception occurred during the request.
-     * @throws HttpException If the request got rejected by the server.
+     * @throws IOException If the request couldn't be completed.
      */
     @Nonnull
-    public String post() throws InterruptedException, IOException, HttpException {
+    public String post() throws InterruptedException, IOException {
          Request request = new Request.Builder()
                 .url(url)
                 .addHeader(HttpHeaders.AUTHORIZATION, "Basic "+credentials)

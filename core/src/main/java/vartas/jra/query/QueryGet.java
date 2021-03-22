@@ -2,7 +2,6 @@ package vartas.jra.query;
 
 import vartas.jra.AbstractClient;
 import vartas.jra.endpoints.Endpoint;
-import vartas.jra.exceptions.HttpException;
 import vartas.jra.http.APIRequest;
 
 import java.io.IOException;
@@ -20,7 +19,7 @@ public class QueryGet<Q> extends QueryBase<Q, QueryGet<Q>>{
     }
 
     @Override
-    public Q query() throws IOException, HttpException, InterruptedException{
+    public Q query() throws IOException, InterruptedException{
         String source = new APIRequest.Builder(client)
                 .setHost(host)
                 .setParams(params)

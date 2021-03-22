@@ -7,8 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vartas.jra._factory.RateLimiterFactory;
 import vartas.jra._json.JSONToken;
-import vartas.jra.exceptions.HttpException;
-import vartas.jra.exceptions.RateLimiterException;
 import vartas.jra.exceptions._factory.*;
 import vartas.jra.http.APIAuthentication;
 
@@ -75,11 +73,9 @@ public abstract class AbstractClient extends AbstractClientTOP{
      * @param request The request transmitted to Reddit.
      * @return The HTTP {@link Response} corresponding to the {@link Request}.
      * @throws InterruptedException If the query got interrupted while waiting to be executed.
-     * @throws IOException If an exception occurred during the request.
-     * @throws HttpException If the request got rejected by the server.
-     * @throws RateLimiterException If too many requests are performed within short succession.
+     * @throws IOException If the request couldn't be completed.
      */
-    public synchronized Response request(Request request) throws IOException, HttpException, InterruptedException, RateLimiterException {
+    public synchronized Response request(Request request) throws IOException, InterruptedException {
         assert isPresentToken();
 
         //Make sure that the token is still valid
@@ -97,11 +93,9 @@ public abstract class AbstractClient extends AbstractClientTOP{
      * @param request The request transmitted to Reddit.
      * @return The HTTP {@link Response} corresponding to the {@link Request}.
      * @throws InterruptedException If the query got interrupted while waiting to be executed.
-     * @throws IOException If an exception occurred during the request.
-     * @throws HttpException If the request got rejected by the server.
-     * @throws RateLimiterException If too many requests are performed within short succession.
+     * @throws IOException If the request couldn't be completed.
      */
-    public synchronized Response execute(Request request) throws InterruptedException, IOException, HttpException, RateLimiterException {
+    public synchronized Response execute(Request request) throws InterruptedException, IOException {
         //Wait if we're making too many requests at once
         rateLimiter.acquire();
 
@@ -143,11 +137,10 @@ public abstract class AbstractClient extends AbstractClientTOP{
     /**
      * Requests a new access and refresh token.
      * @throws InterruptedException If the query got interrupted while waiting to be executed.
-     * @throws IOException If an exception occurred during the request.
-     * @throws HttpException If the request got rejected by the server.
+     * @throws IOException If the request couldn't be completed.
      */
     @Override
-    public void login() throws InterruptedException, IOException, HttpException {
+    public void login() throws InterruptedException, IOException {
         login(Duration.PERMANENT);
     }
 
@@ -163,12 +156,10 @@ public abstract class AbstractClient extends AbstractClientTOP{
      * tokens once the they are no longer needed. Not only prevents the token to be misused, in case it gets leaked on
      * accident, but also minimizes the overhead since Reddit can safely delete the tokens from their database.
      * @throws InterruptedException If the query got interrupted while waiting to be executed.
-     * @throws IOException If an exception occurred during the request.
-     * @throws HttpException If the request got rejected by the server.
-     * @throws RateLimiterException If too many requests are performed within short succession.
+     * @throws IOException If the request couldn't be completed.
      */
     @Override
-    public synchronized void logout() throws IOException, HttpException, InterruptedException, RateLimiterException {
+    public synchronized void logout() throws IOException, InterruptedException {
         assert isPresentToken();
 
         revokeRefreshToken();
@@ -179,11 +170,9 @@ public abstract class AbstractClient extends AbstractClientTOP{
     /**
      * A helper method invalidating the refresh token, if present.
      * @throws InterruptedException If the query got interrupted while waiting to be executed.
-     * @throws IOException If an exception occurred during the request.
-     * @throws HttpException If the request got rejected by the server.
-     * @throws RateLimiterException If too many requests are performed within short succession.
+     * @throws IOException If the request couldn't be completed.
      */
-    private void revokeRefreshToken() throws IOException, HttpException, InterruptedException, RateLimiterException {
+    private void revokeRefreshToken() throws IOException, InterruptedException {
         assert isPresentToken();
 
         if(orElseThrowToken().isEmptyRefreshToken())
@@ -199,11 +188,9 @@ public abstract class AbstractClient extends AbstractClientTOP{
     /**
      * A helper method invalidating the access token.
      * @throws InterruptedException If the query got interrupted while waiting to be executed.
-     * @throws IOException If an exception occurred during the request.
-     * @throws HttpException If the request got rejected by the server.
-     * @throws RateLimiterException If too many requests are performed within short succession.
+     * @throws IOException If the request couldn't be completed.
      */
-    private void revokeAccessToken() throws IOException, HttpException, InterruptedException, RateLimiterException {
+    private void revokeAccessToken() throws IOException, InterruptedException {
         assert isPresentToken();
 
         new APIAuthentication.Builder(REVOKE_TOKEN, getCredentials(), this)
@@ -222,12 +209,10 @@ public abstract class AbstractClient extends AbstractClientTOP{
     /**
      * Requests a new access token.
      * @throws InterruptedException If the query got interrupted while waiting to be executed.
-     * @throws IOException If an exception occurred during the request.
-     * @throws HttpException If the request got rejected by the server.
-     * @throws RateLimiterException If too many requests are performed within short succession.
+     * @throws IOException If the request couldn't be completed.
      */
     @Override
-    protected synchronized void refresh() throws IOException, HttpException, RateLimiterException, InterruptedException {
+    protected synchronized void refresh() throws IOException, InterruptedException {
         assert isPresentToken() && orElseThrowToken().isPresentRefreshToken();
 
         APIAuthentication request = new APIAuthentication.Builder(ACCESS_TOKEN, getCredentials(), this)

@@ -1,7 +1,6 @@
 package vartas.jra;
 
 import vartas.jra.endpoints.Users;
-import vartas.jra.exceptions.HttpException;
 import vartas.jra.models.FakeAccount;
 import vartas.jra.models.Listing;
 import vartas.jra.models.Thing;
@@ -31,7 +30,7 @@ public class Account extends AccountTOP{
     //----------------------------------------------------------------------------------------------------------------//
 
     @Override
-    public String postBlock(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public String postBlock(Parameter... params) throws InterruptedException, IOException {
         QueryPost<String> query = Users.postBlockUser(getClient());
 
         for(Parameter param : params)
@@ -41,7 +40,7 @@ public class Account extends AccountTOP{
     }
 
     @Override
-    public String postFriend(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public String postFriend(Parameter... params) throws InterruptedException, IOException {
         QueryPost<String> query = Users.postFriend(getClient());
 
         for(Parameter param : params)
@@ -51,7 +50,7 @@ public class Account extends AccountTOP{
     }
 
     @Override
-    public String postReport(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public String postReport(Parameter... params) throws InterruptedException, IOException {
         QueryPost<String> query = Users.postReportUser(getClient());
 
         for(Parameter param : params)
@@ -61,7 +60,7 @@ public class Account extends AccountTOP{
     }
 
     @Override
-    public String postSetPermission(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public String postSetPermission(Parameter... params) throws InterruptedException, IOException {
         QueryPost<String> query = Users.postSetPermission(getClient());
 
         for(Parameter param : params)
@@ -71,7 +70,7 @@ public class Account extends AccountTOP{
     }
 
     @Override
-    public String postUnfriend(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public String postUnfriend(Parameter... params) throws InterruptedException, IOException {
         QueryPost<String> query = Users.postUnfriend(getClient());
 
         for(Parameter param : params)
@@ -81,7 +80,7 @@ public class Account extends AccountTOP{
     }
 
     @Override
-    public void deleteFriends(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public void deleteFriends(Parameter... params) throws InterruptedException, IOException {
         QueryDelete<Void> query = Users.deleteMeFriends(getClient(), getName());
 
         for(Parameter param : params)
@@ -91,7 +90,7 @@ public class Account extends AccountTOP{
     }
 
     @Override
-    public FakeAccount getFriends(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public FakeAccount getFriends(Parameter... params) throws InterruptedException, IOException {
         QueryGet<FakeAccount> query = Users.getMeFriends(getClient(), getName());
 
         for(Parameter param : params)
@@ -101,7 +100,7 @@ public class Account extends AccountTOP{
     }
 
     @Override
-    public FakeAccount putFriends(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public FakeAccount putFriends(Parameter... params) throws InterruptedException, IOException {
         QueryPut<FakeAccount> query = Users.putMeFriends(getClient(), getName());
 
         for(Parameter param : params)
@@ -111,7 +110,7 @@ public class Account extends AccountTOP{
     }
 
     @Override
-    public Stream<Trophy> getTrophies(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<Trophy> getTrophies(Parameter... params) throws InterruptedException, IOException {
         QueryGet<List<Trophy>> query = Users.getTrophies(getClient(), getName());
 
         for(Parameter param : params)
@@ -121,7 +120,7 @@ public class Account extends AccountTOP{
     }
 
     @Override
-    public Stream<Comment> getComments(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<Comment> getComments(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Comment>> query = Users.getComments(getClient(), Comment::from, getName());
 
         for(Parameter param : params)
@@ -131,7 +130,7 @@ public class Account extends AccountTOP{
     }
 
     @Override
-    public Listing<Thing> getDownvoted(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Listing<Thing> getDownvoted(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Thing>> query = Users.getDownvoted(getClient(), getName());
 
         for(Parameter param : params)
@@ -142,7 +141,7 @@ public class Account extends AccountTOP{
     }
 
     @Override
-    public Listing<Thing> getGilded(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Listing<Thing> getGilded(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Thing>> query = Users.getGilded(getClient(), getName());
 
         for(Parameter param : params)
@@ -153,7 +152,7 @@ public class Account extends AccountTOP{
     }
 
     @Override
-    public Listing<Thing> getHidden(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Listing<Thing> getHidden(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Thing>> query = Users.getHidden(getClient(), getName());
 
         for(Parameter param : params)
@@ -163,7 +162,7 @@ public class Account extends AccountTOP{
     }
 
     @Override
-    public Listing<Thing> getOverview(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Listing<Thing> getOverview(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Thing>> query = Users.getOverview(getClient(), getName());
 
         for(Parameter param : params)
@@ -174,7 +173,7 @@ public class Account extends AccountTOP{
     }
 
     @Override
-    public Listing<Thing> getSaved(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Listing<Thing> getSaved(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Thing>> query = Users.getSaved(getClient(), getName());
 
         for(Parameter param : params)
@@ -184,7 +183,7 @@ public class Account extends AccountTOP{
     }
 
     @Override
-    public Stream<Link> getSubmitted(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<Link> getSubmitted(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Link>> query = Users.getSubmitted(getClient(), Link::from, getName());
 
         for(Parameter param : params)
@@ -194,7 +193,7 @@ public class Account extends AccountTOP{
     }
 
     @Override
-    public Listing<Thing> getUpvoted(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Listing<Thing> getUpvoted(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Thing>> query = Users.getUpvoted(getClient(), getName());
 
         for(Parameter param : params)

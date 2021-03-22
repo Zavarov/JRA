@@ -5,8 +5,6 @@ import okhttp3.*;
 import org.json.JSONObject;
 import vartas.jra.AbstractClient;
 import vartas.jra.endpoints.Endpoint;
-import vartas.jra.exceptions.HttpException;
-import vartas.jra.exceptions.RateLimiterException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -106,7 +104,7 @@ public class APIRequest {
     }
 
     @Nonnull
-    private String execute(Request request) throws InterruptedException, IOException, HttpException, RateLimiterException {
+    private String execute(Request request) throws InterruptedException, IOException {
         Response response = client.request(request);
         ResponseBody body = response.body();
 
@@ -116,33 +114,33 @@ public class APIRequest {
     }
 
     @Nonnull
-    public String get() throws InterruptedException, IOException, HttpException, RateLimiterException {
+    public String get() throws InterruptedException, IOException {
         Request request = builder().get().build();
         return execute(request);
     }
 
     @Nonnull
-    public String delete() throws InterruptedException, IOException, HttpException, RateLimiterException {
+    public String delete() throws InterruptedException, IOException {
         Request request = body == null ? builder().delete().build() : builder().delete(body).build();
         return execute(request);
     }
 
     @Nonnull
-    public String put() throws InterruptedException, IOException, HttpException, RateLimiterException {
+    public String put() throws InterruptedException, IOException {
         assert body != null;
         Request request = builder().put(body).build();
         return execute(request);
     }
 
     @Nonnull
-    public String post() throws InterruptedException, IOException, HttpException, RateLimiterException {
+    public String post() throws InterruptedException, IOException {
         assert body != null;
         Request request = builder().post(body).build();
         return execute(request);
     }
 
     @Nonnull
-    public String patch() throws InterruptedException, IOException, HttpException, RateLimiterException {
+    public String patch() throws InterruptedException, IOException {
         assert body != null;
         Request request = builder().patch(body).build();
         return execute(request);

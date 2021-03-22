@@ -3,7 +3,6 @@ package vartas.jra;
 import vartas.jra._factory.FrontPageFactory;
 import vartas.jra.endpoints.Listings;
 import vartas.jra.endpoints.Search;
-import vartas.jra.exceptions.HttpException;
 import vartas.jra.models.Listing;
 import vartas.jra.models.Submission;
 import vartas.jra.models.Thing;
@@ -26,7 +25,7 @@ public class FrontPage extends FrontPageTOP{
     //    Listings                                                                                                    //
     //----------------------------------------------------------------------------------------------------------------//
     @Override
-    public Stream<Link> getBestLinks(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<Link> getBestLinks(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Link>> query = Listings.getBestLinks(getClient(), Link::from);
 
         for(Parameter param : params)
@@ -36,7 +35,7 @@ public class FrontPage extends FrontPageTOP{
     }
 
     @Override
-    public Stream<Link> getControversialLinks(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<Link> getControversialLinks(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Link>> query = Listings.getControversialLinks(getClient(), Link::from);
 
         for(Parameter param : params)
@@ -47,7 +46,7 @@ public class FrontPage extends FrontPageTOP{
 
     @Override
     @SuppressWarnings("")
-    public Stream<Link> getHotLinks(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<Link> getHotLinks(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Link>> query = Listings.getHotLinks(getClient(), Link::from);
 
         for(Parameter param : params)
@@ -58,7 +57,7 @@ public class FrontPage extends FrontPageTOP{
 
     @Override
     @SuppressWarnings("unused")
-    public Stream<Link> getNewLinks(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<Link> getNewLinks(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Link>> query = Listings.getNewLinks(getClient(), Link::from);
 
         for(Parameter param : params)
@@ -68,7 +67,7 @@ public class FrontPage extends FrontPageTOP{
     }
 
     @Override
-    public Submission getRandomSubmission(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Submission getRandomSubmission(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Submission> query = Listings.getRandomSubmission(getClient(), Link::from);
 
         for(Parameter param : params)
@@ -78,7 +77,7 @@ public class FrontPage extends FrontPageTOP{
     }
 
     @Override
-    public Stream<Link> getRisingLinks(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<Link> getRisingLinks(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Link>> query = Listings.getRisingLinks(getClient(), Link::from);
 
         for(Parameter param : params)
@@ -88,7 +87,7 @@ public class FrontPage extends FrontPageTOP{
     }
 
     @Override
-    public Stream<Link> getTopLinks(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<Link> getTopLinks(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Link>> query = Listings.getTopLinks(getClient(), Link::from);
 
         for(Parameter param : params)
@@ -100,7 +99,7 @@ public class FrontPage extends FrontPageTOP{
     //    Search                                                                                                      //
     //----------------------------------------------------------------------------------------------------------------//
     @Override
-    public Listing<Thing> getSearch(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Listing<Thing> getSearch(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Listing<Thing>> query = Search.getSearch(getClient());
 
         for(Parameter param : params)

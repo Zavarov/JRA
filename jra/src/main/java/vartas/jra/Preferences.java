@@ -1,7 +1,6 @@
 package vartas.jra;
 
 import vartas.jra.endpoints.Account;
-import vartas.jra.exceptions.HttpException;
 import vartas.jra.models.FakeAccount;
 import vartas.jra.models.Messaging;
 import vartas.jra.query.QueryGet;
@@ -26,7 +25,7 @@ public class Preferences extends PreferencesTOP{
     //    Account                                                                                                     //
     //----------------------------------------------------------------------------------------------------------------//
     @Override
-    public Stream<FakeAccount> getBlocked(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<FakeAccount> getBlocked(Parameter... params) throws InterruptedException, IOException {
         QueryGet<List<FakeAccount>> query = Account.getPreferencesBlocked(getClient());
 
         for(Parameter param : params)
@@ -36,7 +35,7 @@ public class Preferences extends PreferencesTOP{
     }
 
     @Override
-    public Stream<FakeAccount> getFriends(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<FakeAccount> getFriends(Parameter... params) throws InterruptedException, IOException {
         QueryGet<List<FakeAccount>> query = Account.getPreferencesFriends(getClient());
 
         for(Parameter param : params)
@@ -46,7 +45,7 @@ public class Preferences extends PreferencesTOP{
     }
 
     @Override
-    public Messaging getMessaging(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Messaging getMessaging(Parameter... params) throws InterruptedException, IOException {
         QueryGet<Messaging> query = Account.getPreferencesMessaging(getClient());
 
         for(Parameter param : params)
@@ -56,7 +55,7 @@ public class Preferences extends PreferencesTOP{
     }
 
     @Override
-    public Stream<FakeAccount> getTrusted(Parameter... params) throws InterruptedException, IOException, HttpException {
+    public Stream<FakeAccount> getTrusted(Parameter... params) throws InterruptedException, IOException {
         QueryGet<List<FakeAccount>> query = Account.getPreferencesTrusted(getClient());
 
         for(Parameter param : params)

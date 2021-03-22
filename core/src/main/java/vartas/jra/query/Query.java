@@ -2,7 +2,6 @@ package vartas.jra.query;
 
 import vartas.jra.AbstractClient;
 import vartas.jra.endpoints.Endpoint;
-import vartas.jra.exceptions.HttpException;
 import vartas.jra.http.APIRequest;
 
 import java.io.IOException;
@@ -75,9 +74,8 @@ public abstract class Query <T, Q extends Query<T,Q>> {
     /**
      * Executes the request and extracts the expected data type from the JSON response.
      * @return An instance of the requested data.
-     * @throws IOException If an exception occurred during the request.
-     * @throws HttpException If the request got rejected by the server.
+     * @throws IOException If the request couldn't be completed.
      * @throws InterruptedException If the query got interrupted while waiting to be executed.
      */
-    public abstract T query() throws IOException, HttpException, InterruptedException;
+    public abstract T query() throws IOException, InterruptedException;
 }

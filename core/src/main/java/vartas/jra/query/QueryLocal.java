@@ -1,7 +1,5 @@
 package vartas.jra.query;
 
-import vartas.jra.exceptions.HttpException;
-
 import java.io.IOException;
 
 public class QueryLocal<Q> extends Query<Q, QueryLocal<Q>>{
@@ -18,7 +16,7 @@ public class QueryLocal<Q> extends Query<Q, QueryLocal<Q>>{
     }
 
     @Override
-    public Q query() throws IOException, HttpException, InterruptedException {
+    public Q query() throws IOException, InterruptedException {
         return value;
     }
 }
