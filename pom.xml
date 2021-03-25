@@ -28,6 +28,7 @@
     <modules>
         <module>core</module>
         <module>jra</module>
+        <module>listener</module>
     </modules>
 
     <properties>
