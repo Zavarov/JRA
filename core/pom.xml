@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>JRA</artifactId>
-        <groupId>vartas.jra</groupId>
+        <groupId>net.zav.jra</groupId>
         <version>3.4-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -104,7 +104,7 @@
                             <mainClass>${generator.main}</mainClass>
                             <arguments>
                                 <argument>${generator.config}</argument>
-                                <argument>vartas.jra.AbstractClient</argument>
+                                <argument>net.zav.jra.AbstractClient</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -121,26 +121,26 @@
                             <mainClass>${generator.main}</mainClass>
                             <arguments>
                                 <argument>${generator.config}</argument>
-                                <argument>vartas.jra.models.AbstractAccount</argument>
-                                <argument>vartas.jra.models.AbstractComment</argument>
-                                <argument>vartas.jra.models.AbstractLink</argument>
-                                <argument>vartas.jra.models.AbstractPreferences</argument>
-                                <argument>vartas.jra.models.AbstractSubreddit</argument>
-                                <argument>vartas.jra.models.Created</argument>
-                                <argument>vartas.jra.models.Duplicate</argument>
-                                <argument>vartas.jra.models.Karma</argument>
-                                <argument>vartas.jra.models.Listing</argument>
-                                <argument>vartas.jra.models.Messaging</argument>
-                                <argument>vartas.jra.models.Rule</argument>
-                                <argument>vartas.jra.models.Snowflake</argument>
-                                <argument>vartas.jra.models.Submission</argument>
-                                <argument>vartas.jra.models.SubredditSettings</argument>
-                                <argument>vartas.jra.models.Thing</argument>
-                                <argument>vartas.jra.models.TrendingSubreddits</argument>
-                                <argument>vartas.jra.models.Trophy</argument>
-                                <argument>vartas.jra.models.Types</argument>
-                                <argument>vartas.jra.models.Votable</argument>
-                                <argument>vartas.jra.models.VotableCreated</argument>
+                                <argument>net.zav.jra.models.AbstractAccount</argument>
+                                <argument>net.zav.jra.models.AbstractComment</argument>
+                                <argument>net.zav.jra.models.AbstractLink</argument>
+                                <argument>net.zav.jra.models.AbstractPreferences</argument>
+                                <argument>net.zav.jra.models.AbstractSubreddit</argument>
+                                <argument>net.zav.jra.models.Created</argument>
+                                <argument>net.zav.jra.models.Duplicate</argument>
+                                <argument>net.zav.jra.models.Karma</argument>
+                                <argument>net.zav.jra.models.Listing</argument>
+                                <argument>net.zav.jra.models.Messaging</argument>
+                                <argument>net.zav.jra.models.Rule</argument>
+                                <argument>net.zav.jra.models.Snowflake</argument>
+                                <argument>net.zav.jra.models.Submission</argument>
+                                <argument>net.zav.jra.models.SubredditSettings</argument>
+                                <argument>net.zav.jra.models.Thing</argument>
+                                <argument>net.zav.jra.models.TrendingSubreddits</argument>
+                                <argument>net.zav.jra.models.Trophy</argument>
+                                <argument>net.zav.jra.models.Types</argument>
+                                <argument>net.zav.jra.models.Votable</argument>
+                                <argument>net.zav.jra.models.VotableCreated</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -157,7 +157,7 @@
                             <mainClass>${generator.main}</mainClass>
                             <arguments>
                                 <argument>${generator.config}</argument>
-                                <argument>vartas.jra.exceptions.Exceptions</argument>
+                                <argument>net.zav.jra.exceptions.Exceptions</argument>
                             </arguments>
                         </configuration>
                     </execution>

@@ -1,0 +1,156 @@
+package net.zav.jra.models;
+
+import java.awt.Color.Color;
+import java.lang.Integer.Integer;
+import java.lang.Object.Object;
+import java.lang.String.String;
+import java.util.List.List;
+import java.util.Map.Map;
+import java.util.Optional.Optional;
+
+import net.zav.jra.AbstractClient.AbstractClient;
+import net.zav.jra.models.Snowflake.Snowflake;
+import net.zav.jra.query.QueryGet.QueryGet;
+
+/**
+ * The Reddit API according to their specification
+ * See more at: https://github.com/reddit-archive/reddit/wiki/JSON
+ */
+public classdiagram AbstractSubreddit {
+    public abstract class AbstractSubreddit extends Snowflake{
+        /**
+         * Number of users active in last 15 minutes.
+         */
+        <<key="accounts_active">>
+        - Optional<Integer> accountsActive;
+        /**
+         * Full URL to the banner image, or empty.
+         */
+        <<key="banner_img">>
+        - Optional<String> bannerImage;
+        /**
+         * Number of minutes the subreddit initially hides comment scores.
+         */
+        <<key="comment_score_hide_mins">>
+        - int commentScoreHideMinutes;
+        /**
+         * Sidebar text.
+         */
+        <<key="description">>
+        - String description;
+        /**
+         * Sidebar text, escaped HTML format.
+         */
+        <<key="description_html">>
+        - Optional<String> descriptionHtml;
+        /**
+         * Human name of the subreddit
+         */
+        <<key="display_name">>
+        - String displayName;
+        /**
+         * Full URL to the header image, or empty.
+         */
+        <<key="header_img">>
+        - Optional<String> headerImage;
+        /**
+         * Width and height of the header image, or empty.
+         */
+        <<key="header_size">>
+        - List<Integer> headerSize;
+        /**
+         * Description of header image shown on hover, or empty.
+         */
+        <<key="header_title">>
+        - Optional<String> headerTitle;
+        //------------------------------------------------------------------------------------------------------------//
+        //  Undocumented                                                                                              //
+        //------------------------------------------------------------------------------------------------------------//
+        <<key="icon_img">>
+        - Optional<String> iconImage;
+        /**
+         * Whether the subreddit is marked as NSFW.
+         */
+        <<key="over18">>
+        - boolean over18;
+        /**
+         * Description shown in subreddit search results?
+         */
+        <<key="public_description">>
+        - String publicDescription;
+        /**
+         * Whether the subreddit's traffic page is publicly-accessible.
+         */
+        <<key="public_traffic">>
+        - boolean publicTraffic;
+        /**
+         * The number of redditors subscribed to this subreddit.
+         */
+        <<key="subscribers">>
+        - long subscribers;
+        /**
+         * The type of submissions the subreddit allows - one of "any", "link" or "self".
+         */
+        <<key="submission_type">>
+        - String submissionType;
+        /**
+         * The subreddit's custom label for the submit link button, if any.
+         * Empty is no custom label is set.
+         */
+        <<key="submit_link_label">>
+        - Optional<String> submitLinkLabel;
+        /**
+         * The subreddit's custom label for the submit text button, if any.
+         * Empty is no custom label is set.
+         */
+        <<key="submit_text_label">>
+        - Optional<String> submitTextLabel;
+        /**
+         * The subreddit's type - one of "public", "private", "restricted", or in very special cases "gold_restricted"
+         * or "archived".
+         */
+        <<key="subreddit_type">>
+        - String subredditType;
+        /**
+         * Title of the main page.
+         */
+        <<key="title">>
+        - String title;
+        /**
+         * The relative URL of the subreddit. Ex: "/r/pics/".
+         */
+        <<key="url">>
+        - String url;
+        /**
+         * Whether the logged-in user is banned from the subreddit.
+         * Empty in case of an user-less login.
+         */
+        <<key="user_is_banned">>
+        - Optional<Boolean> userIsBanned;
+        /**
+         * Whether the logged-in user is an approved submitter in the subreddit.
+         * Empty in case of an user-less login.
+         */
+        <<key="user_is_contributor">>
+        - Optional<Boolean> userIsContributor;
+        /**
+         * Whether the logged-in user is a moderator of the subreddit.
+         * Empty in case of an user-less login.
+         */
+        <<key="user_is_moderator">>
+        - Optional<Boolean> userIsModerator;
+        /**
+         * Whether the logged-in user is subscribed to the subreddit.
+         * Empty in case of an user-less login.
+         */
+        <<key="user_is_subscriber">>
+        - Optional<Boolean> userIsSubscriber;
+    }
+
+    public class FakeSubreddit{
+        <<ignore>>
+        - String name;
+
+        - Map<String, Object> data;
+    }
+}
