@@ -29,7 +29,7 @@ public class JSONMessagingTest extends AbstractJSONTest{
         assertThat(accounts).hasSize(1);
         account = accounts.get(0);
 
-        assertThat(account.getData("date")).isEqualTo(1.612556744E9);
+        assertThat(account.getData("date")).isEqualTo(1612556744);
         assertThat(account.getData("name")).isEqualTo("Jimbo");
         assertThat(account.getData("rel_id")).isEqualTo("r9_aabbcc");
         assertThat(account.getData("id")).isEqualTo("t2_ccddee");
@@ -38,7 +38,7 @@ public class JSONMessagingTest extends AbstractJSONTest{
         assertThat(accounts).hasSize(1);
         account = accounts.get(0);
 
-        assertThat(account.getData("date")).isEqualTo(1.522543721E9);
+        assertThat(account.getData("date")).isEqualTo(1522543721);
         assertThat(account.getData("name")).isEqualTo("Citrine");
         assertThat(account.getData("rel_id")).isEqualTo("r9_ddeeff");
         assertThat(account.getData("id")).isEqualTo("t2_ffgghh");

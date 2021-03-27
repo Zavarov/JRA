@@ -27,7 +27,7 @@ public class JSONUserListTest extends AbstractJSONTest{
 
         FakeAccount value = userList.getData(0);
 
-        assertThat(value.getData("date")).isEqualTo(1.234567890E9);
+        assertThat(value.getData("date")).isEqualTo(1234567890);
         assertThat(value.getData("name")).isEqualTo("Bernkastel");
         assertThat(value.getData("rel_id")).isEqualTo("r9_abcdefg");
         assertThat(value.getData("id")).isEqualTo("t2_124567");
@@ -42,7 +42,7 @@ public class JSONUserListTest extends AbstractJSONTest{
 
         FakeAccount value = JSONFakeAccount.fromJson(new FakeAccount(), data.getJSONObject(0));
 
-        assertThat(value.getData("date")).isEqualTo(1.234567890E9);
+        assertThat(value.getData("date")).isEqualTo(1234567890);
         assertThat(value.getData("name")).isEqualTo("Bernkastel");
         assertThat(value.getData("rel_id")).isEqualTo("r9_abcdefg");
         assertThat(value.getData("id")).isEqualTo("t2_124567");
