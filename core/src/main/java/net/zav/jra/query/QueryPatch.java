@@ -15,10 +15,6 @@ public class QueryPatch<Q> extends QueryBase<Q, QueryPatch<Q>>{
         this.body = body;
     }
 
-    public QueryPatch(Function<String, Q> mapper, AbstractClient client, Endpoint endpoint, Object... args) {
-        this(mapper, client, endpoint, APIRequest.BodyType.FORM, args);
-    }
-
     @Override
     protected QueryPatch<Q> getRealThis() {
         return this;
