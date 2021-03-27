@@ -1,0 +1,15 @@
+{
+  "subreddits":
+  [
+    {
+      "active_user_count": 105,
+      "icon_img": "https://b.thumbs.redditmedia.com/7GVLmrH9CdZeqXceSEWkmL8_DSUKRGUfwMxnUNh8D8A.png",
+      "key_color": "#222222",
+      "name": "redditdev",
+      "subscriber_count": 53262,
+      "is_chat_post_feature_enabled": true,
+      "allow_chat_post_creation": false,
+      "allow_images": false
+    }
+  ]
+}

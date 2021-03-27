@@ -2,45 +2,54 @@ package net.zav.jra.mock;
 
 import net.zav.jra.AbstractClient;
 import net.zav.jra.Token;
-import net.zav.jra.UserAgent;
-import net.zav.jra._factory.AbstractClientFactory;
-import net.zav.jra._json.JSONToken;
-import net.zav.jra.exceptions.HttpException;
-import net.zav.jra.exceptions.RateLimiterException;
-import net.zav.jra.http.APIAuthentication;
+import net.zav.jra._factory.TokenFactory;
+import net.zav.jra._factory.UserAgentFactory;
+import net.zav.jra.exceptions.ForbiddenException;
+import net.zav.jra.exceptions.NotFoundException;
+import okhttp3.*;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
+import java.net.HttpURLConnection;
 
 public class ClientMock extends AbstractClient {
-    private final String account;    @Nonnull
-    private final String password;
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    public String json = null;
+    public int code = HttpURLConnection.HTTP_OK;
 
-    public ClientMock(
-            @Nonnull UserAgent userAgent,
-            @Nonnull String id,
-            @Nonnull String secret,
-            @Nonnull String account,
-            @Nonnull String password
-    ){
-        AbstractClientFactory.create(() -> this, userAgent, Base64.getEncoder().encodeToString((id+":"+secret).getBytes(StandardCharsets.UTF_8)));
-        this.account = account;
-        this.password = password;
+    public ClientMock(){
+        setUserAgent(UserAgentFactory.create("linux", "Client", "net.zav.jra", "Zavarov"));
+        setToken(TokenFactory.create(Token::new, "12345", 60));
     }
 
     @Override
-    public synchronized void login(@Nonnull Duration duration) throws IOException, HttpException, RateLimiterException, InterruptedException {
-        APIAuthentication request = new APIAuthentication.Builder(ACCESS_TOKEN, getCredentials(), this)
-                .addParameter("grant_type", GrantType.PASSWORD)
-                .addParameter("username", account)
-                .addParameter("password", password)
-                .addParameter("duration", duration)
-                .build();
+    public synchronized void login(@Nonnull Duration duration) {
+        throw new UnsupportedOperationException();
+    }
 
-        String response = request.post();
+    @Override
+    public Response request(Request request) throws IOException {
+        return execute(request);
+    }
+    @Override
+    public Response execute(Request request) throws IOException {
+        assert json != null;
 
-        setToken(JSONToken.fromJson(new Token(), response));
+        switch(code){
+            case HttpURLConnection.HTTP_FORBIDDEN:
+                throw new ForbiddenException();
+            case HttpURLConnection.HTTP_NOT_FOUND:
+                throw new NotFoundException();
+            case HttpURLConnection.HTTP_OK:
+                ResponseBody body = ResponseBody.create(json, JSON);
+                return new Response.Builder()
+                        .request(request)
+                        .protocol(Protocol.HTTP_1_0)
+                        .message("")
+                        .code(code)
+                        .body(body).build();
+            default:
+                throw new IllegalArgumentException("Invalid HTTP Code " + code);
+        }
     }
 }

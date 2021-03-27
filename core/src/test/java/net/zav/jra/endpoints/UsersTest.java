@@ -1,157 +1,179 @@
 package net.zav.jra.endpoints;
 
-import net.zav.jra.AbstractClient;
 import net.zav.jra.AbstractTest;
-import net.zav.jra.exceptions.HttpException;
 import net.zav.jra.mock.AccountMock;
+import net.zav.jra.mock.ClientMock;
 import net.zav.jra.mock.CommentMock;
 import net.zav.jra.mock.LinkMock;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class UsersTest extends AbstractTest {
-    static AbstractClient client;
-    static String self;
+    static final String self = "self";
 
-    @BeforeAll
-    public static void setUpAll() throws IOException, HttpException, InterruptedException {
-        client = getScript(UsersTest.class.getSimpleName());
-        client.login(AbstractClient.Duration.TEMPORARY);
-        self = getConfig().getString("account");
-    }
+    ClientMock client;
 
-    @AfterAll
-    public static void tearDownAll() throws InterruptedException, IOException, HttpException {
-        client.logout();
+    @BeforeEach
+    public void setUp() {
+        TARGET_PATH = JSON_PATH.resolve("Users");
+        client = new ClientMock();
     }
 
     //------------------------------------------------------------------------------------------------------------------
 
-    //@Test
-    public void testPostBlock() throws InterruptedException, IOException, HttpException {
-        Assertions.assertThat(Users.postBlockUser(client).query()).isNotNull();
+    @Test
+    public void testPostBlock() throws InterruptedException, IOException {
+        client.json = "{}";
+        assertThat(Users.postBlockUser(client).query()).isEqualTo(client.json);
     }
 
-    //@Test
-    public void testPostFriend() throws InterruptedException, IOException, HttpException {
-        Assertions.assertThat(Users.postFriend(client).query()).isNotNull();
-    }
-
-    //@Test
-    public void testPostSubredditFriend(String subreddit) throws InterruptedException, IOException, HttpException {
-        Assertions.assertThat(Users.postFriend(client, subreddit).query()).isNotNull();
-    }
-
-    //@Test
-    public void testPostReportUser() throws InterruptedException, IOException, HttpException {
-        //Don't report users just for testing the endpoint
-        //assertThat(Users.postReportUser(client).query()).isNotNull();
-        throw new UnsupportedEncodingException();
-    }
-
-    //@Test
-    public void testSetPermission() throws InterruptedException, IOException, HttpException {
-        Assertions.assertThat(Users.postSetPermission(client).query()).isNotNull();
-    }
-
-    //@Test
-    public void testPostSubredditSetPermission(String subreddit) throws InterruptedException, IOException, HttpException {
-        Assertions.assertThat(Users.postSetPermission(client, subreddit).query()).isNotNull();
-    }
-
-    //@Test
-    public void testPostUnfriend() throws InterruptedException, IOException, HttpException {
-        Assertions.assertThat(Users.postUnfriend(client).query()).isNotNull();
-    }
-
-    //@Test
-    public void testPostSubredditUnfriend(String subreddit) throws InterruptedException, IOException, HttpException {
-        Assertions.assertThat(Users.postUnfriend(client, subreddit).query()).isNotNull();
+    @Test
+    public void testPostFriend() throws InterruptedException, IOException {
+        client.json = "{}";
+        assertThat(Users.postFriend(client).query()).isEqualTo(client.json);
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"t2_1qwk"})
-    public void testGetUserDataByAccountIds(String ids) throws InterruptedException, IOException, HttpException {
-        Assertions.assertThat(Users.getUserDataByAccountIds(client).setParameter("ids", ids).query()).isNotNull();
+    public void testPostSubredditFriend(String subreddit) throws InterruptedException, IOException {
+        client.json = "{}";
+        assertThat(Users.postFriend(client, subreddit).query()).isEqualTo(client.json);
+    }
+
+    @Test
+    public void testPostReportUser() throws InterruptedException, IOException {
+        client.json = "{}";
+        assertThat(Users.postReportUser(client).query()).isEqualTo(client.json);
+    }
+
+    @Test
+    public void testSetPermission() throws InterruptedException, IOException {
+        client.json = "{}";
+        assertThat(Users.postSetPermission(client).query()).isEqualTo(client.json);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"t2_1qwk"})
+    public void testPostSubredditSetPermission(String subreddit) throws InterruptedException, IOException {
+        client.json = "{}";
+        assertThat(Users.postSetPermission(client, subreddit).query()).isEqualTo(client.json);
+    }
+
+    @Test
+    public void testPostUnfriend() throws InterruptedException, IOException {
+        client.json = "{}";
+        assertThat(Users.postUnfriend(client).query()).isEqualTo(client.json);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"t2_1qwk"})
+    public void testPostSubredditUnfriend(String subreddit) throws InterruptedException, IOException {
+        client.json = "{}";
+        assertThat(Users.postUnfriend(client, subreddit).query()).isEqualTo(client.json);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"t2_1qwk"})
+    public void testGetUserDataByAccountIds(String ids) throws InterruptedException, IOException {
+        client.json = readJson("UserData.json");
+        assertThat(Users.getUserDataByAccountIds(client).setParameter("ids", ids).query()).isNotNull();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"Reddit"})
-    public void getUsernameAvailable(String name) throws InterruptedException, IOException, HttpException {
-        Assertions.assertThat(Users.getUsernameAvailable(client).setParameter("user", name).query()).isNotNull();
+    public void testGetUsernameAvailable(String name) throws InterruptedException, IOException {
+        client.json = readJson("Boolean.json");
+        assertThat(Users.getUsernameAvailable(client).setParameter("user", name).query()).isTrue();
     }
 
-    //@Test
-    public void testDeleteMeFriends(String username) throws InterruptedException, IOException, HttpException {
-        Assertions.assertThat(Users.deleteMeFriends(client, username).query()).isNotNull();
+
+    @ParameterizedTest
+    @ValueSource(strings = {"Reddit"})
+    public void testDeleteMeFriends(String username) throws InterruptedException, IOException {
+        client.json = "null";
+        assertThat(Users.deleteMeFriends(client, username).query()).isEqualTo(client.json);
     }
 
-    //@Test
-    public void testGetMeFriends(String username) throws InterruptedException, IOException, HttpException {
-        Assertions.assertThat(Users.getMeFriends(client, username).query()).isNotNull();
+    @ParameterizedTest
+    @ValueSource(strings = {"Zavarov"})
+    public void testGetMeFriends(String username) throws InterruptedException, IOException {
+        client.json = "{}";
+        assertThat(Users.getMeFriends(client, username).query()).isEqualTo(client.json);
     }
 
-    //@Test
-    public void testPutMeFriends(String username) throws InterruptedException, IOException, HttpException {
-        Assertions.assertThat(Users.putMeFriends(client, username).query()).isNotNull();
+
+    @ParameterizedTest
+    @ValueSource(strings = {"Reddit"})
+    public void testPutMeFriends(String username) throws InterruptedException, IOException {
+        client.json = "{}";
+        assertThat(Users.putMeFriends(client, username).query()).isEqualTo(client.json);
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"Reddit"})
-    public void testGetTrophies(String username) throws InterruptedException, IOException, HttpException {
-        Assertions.assertThat(Users.getTrophies(client, username).query()).isNotNull();
+    public void testGetTrophies(String username) throws InterruptedException, IOException {
+        client.json = readJson("TrophyList.json");
+        assertThat(Users.getTrophies(client, username).query()).hasSize(2);
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"Reddit"})
-    public void testGetAccount(String username) throws InterruptedException, IOException, HttpException {
-        Assertions.assertThat(Users.getAccount(client, AccountMock::new, username).query()).isNotNull();
+    public void testGetAccount(String username) throws InterruptedException, IOException {
+        client.json = readJson("Account.json");
+        assertThat(Users.getAccount(client, AccountMock::new, username).query()).isNotNull();
     }
 
     @Test
-    public void testGetComments() throws InterruptedException, IOException, HttpException {
-        Assertions.assertThat(Users.getComments(client, CommentMock::from, self).query()).isNotNull();
+    public void testGetComments() throws InterruptedException, IOException {
+        client.json = readJson("Listing.json");
+        assertThat(Users.getComments(client, CommentMock::from, self).query()).isNotNull();
     }
 
     @Test
-    public void testGetDownvoted() throws InterruptedException, IOException, HttpException {
-        Assertions.assertThat(Users.getDownvoted(client, self).query()).isNotNull();
+    public void testGetDownvoted() throws InterruptedException, IOException {
+        client.json = readJson("Listing.json");
+        assertThat(Users.getDownvoted(client, self).query()).isNotNull();
     }
 
     @Test
-    public void testGetGilded() throws InterruptedException, IOException, HttpException {
-        Assertions.assertThat(Users.getGilded(client, self).query()).isNotNull();
+    public void testGetGilded() throws InterruptedException, IOException {
+        client.json = readJson("Listing.json");
+        assertThat(Users.getGilded(client, self).query()).isNotNull();
     }
 
     @Test
-    public void testGetHidden() throws InterruptedException, IOException, HttpException {
-        Assertions.assertThat(Users.getHidden(client, self).query()).isNotNull();
+    public void testGetHidden() throws InterruptedException, IOException {
+        client.json = readJson("Listing.json");
+        assertThat(Users.getHidden(client, self).query()).isNotNull();
     }
 
     @Test
-    public void testGetOverview() throws InterruptedException, IOException, HttpException {
-        Assertions.assertThat(Users.getOverview(client, self).query()).isNotNull();
+    public void testGetOverview() throws InterruptedException, IOException {
+        client.json = readJson("Listing.json");
+        assertThat(Users.getOverview(client, self).query()).isNotNull();
     }
 
     @Test
-    public void testGetSaved() throws InterruptedException, IOException, HttpException {
-        Assertions.assertThat(Users.getSaved(client, self).query()).isNotNull();
+    public void testGetSaved() throws InterruptedException, IOException {
+        client.json = readJson("Listing.json");
+        assertThat(Users.getSaved(client, self).query()).isNotNull();
     }
 
     @Test
-    public void testGetSubmitted() throws InterruptedException, IOException, HttpException {
-        Assertions.assertThat(Users.getSubmitted(client, LinkMock::from, self).query()).isNotNull();
+    public void testGetSubmitted() throws InterruptedException, IOException {
+        client.json = readJson("Listing.json");
+        assertThat(Users.getSubmitted(client, LinkMock::from, self).query()).isNotNull();
     }
 
     @Test
-    public void testGetUpvoted() throws InterruptedException, IOException, HttpException {
-        Assertions.assertThat(Users.getUpvoted(client, self).query()).isNotNull();
+    public void testGetUpvoted() throws InterruptedException, IOException {
+        client.json = readJson("Listing.json");
+        assertThat(Users.getUpvoted(client, self).query()).isNotNull();
     }
 }

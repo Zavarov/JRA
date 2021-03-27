@@ -1,0 +1,176 @@
+{
+  "site_rules": [
+    "Spam",
+    "Personal and confidential information",
+    "Threatening, harassing, or inciting violence"
+  ],
+  "rules": [
+    {
+      "violation_reason": "Relevance",
+      "kind": "link",
+      "description": "Posts must directly relate to Reddit's API, API libraries, or Reddit's source code. Ideas for changes belong in /r/ideasfortheadmins; bug reports should be posted to /r/bugs; general Reddit questions should be made in /r/help; and requests for bots should be made to /r/requestabot.",
+      "short_name": "Relevance",
+      "description_html": "&lt;!-- SC_OFF --&gt;&lt;div class=\"md\"&gt;&lt;p&gt;Posts must directly relate to Reddit&amp;#39;s API, API libraries, or Reddit&amp;#39;s source code. Ideas for changes belong in &lt;a href=\"/r/ideasfortheadmins\"&gt;/r/ideasfortheadmins&lt;/a&gt;; bug reports should be posted to &lt;a href=\"/r/bugs\"&gt;/r/bugs&lt;/a&gt;; general Reddit questions should be made in &lt;a href=\"/r/help\"&gt;/r/help&lt;/a&gt;; and requests for bots should be made to &lt;a href=\"/r/requestabot\"&gt;/r/requestabot&lt;/a&gt;.&lt;/p&gt;\n&lt;/div&gt;&lt;!-- SC_ON --&gt;",
+      "created_utc": 1.465977513E9,
+      "priority": 0
+    },
+    {
+      "violation_reason": "Unproductive response",
+      "kind": "comment",
+      "description": "Comments should be productive and helpful, not condescending. If you can't help answer someone's question or direct them to an appropriate subreddit, you should not comment at all.",
+      "short_name": "Unproductive response",
+      "description_html": "&lt;!-- SC_OFF --&gt;&lt;div class=\"md\"&gt;&lt;p&gt;Comments should be productive and helpful, not condescending. If you can&amp;#39;t help answer someone&amp;#39;s question or direct them to an appropriate subreddit, you should not comment at all.&lt;/p&gt;\n&lt;/div&gt;&lt;!-- SC_ON --&gt;",
+      "created_utc": 1.465977814E9,
+      "priority": 1
+    },
+    {
+      "violation_reason": "Language specific",
+      "kind": "link",
+      "description": "Posts should not ask questions that could otherwise be answered in a language-specific subreddit. For example, questions like, \"how do I install PRAW?\" are better asked in /r/learnpython, as the question can be generalized to, \"how do I install a package?\".",
+      "short_name": "Language specific",
+      "description_html": "&lt;!-- SC_OFF --&gt;&lt;div class=\"md\"&gt;&lt;p&gt;Posts should not ask questions that could otherwise be answered in a language-specific subreddit. For example, questions like, &amp;quot;how do I install PRAW?&amp;quot; are better asked in &lt;a href=\"/r/learnpython\"&gt;/r/learnpython&lt;/a&gt;, as the question can be generalized to, &amp;quot;how do I install a package?&amp;quot;.&lt;/p&gt;\n&lt;/div&gt;&lt;!-- SC_ON --&gt;",
+      "created_utc": 1.514607739E9,
+      "priority": 2
+    },
+    {
+      "violation_reason": "Not a testing ground",
+      "kind": "all",
+      "description": "r/redditdev is not the right place to test your bots &amp; scripts. Please create your own private subreddit, or use /r/test.",
+      "short_name": "Not a testing ground",
+      "description_html": "&lt;!-- SC_OFF --&gt;&lt;div class=\"md\"&gt;&lt;p&gt;&lt;a href=\"/r/redditdev\"&gt;r/redditdev&lt;/a&gt; is not the right place to test your bots &amp;amp; scripts. Please create your own private subreddit, or use &lt;a href=\"/r/test\"&gt;/r/test&lt;/a&gt;.&lt;/p&gt;\n&lt;/div&gt;&lt;!-- SC_ON --&gt;",
+      "created_utc": 1.592349861E9,
+      "priority": 3
+    }
+  ],
+  "site_rules_flow": [
+    {
+      "reasonTextToShow": "This is spam",
+      "reasonText": "This is spam"
+    },
+    {
+      "reasonTextToShow": "This is misinformation",
+      "reasonText": "This is misinformation"
+    },
+    {
+      "reasonTextToShow": "This is abusive or harassing",
+      "reasonText": "",
+      "nextStepReasons": [
+        {
+          "reasonTextToShow": "It's targeted harassment",
+          "reasonText": "",
+          "nextStepReasons": [
+            {
+              "reasonTextToShow": "At me",
+              "reasonText": "It's targeted harassment at me"
+            },
+            {
+              "reasonTextToShow": "At someone else",
+              "reasonText": "It's targeted harassment at someone else"
+            }
+          ],
+          "nextStepHeader": "Who is the harassment targeted at?"
+        },
+        {
+          "reasonTextToShow": "It threatens violence or physical harm",
+          "reasonText": "",
+          "nextStepReasons": [
+            {
+              "reasonTextToShow": "At me",
+              "reasonText": "It threatens violence or physical harm at me"
+            },
+            {
+              "reasonTextToShow": "At someone else",
+              "reasonText": "It threatens violence or physical harm at someone else"
+            }
+          ],
+          "nextStepHeader": "Who is the threat directed at?"
+        },
+        {
+          "reasonTextToShow": "It's promoting hate based on identity or vulnerability",
+          "reasonText": "It's promoting hate based on identity or vulnerability"
+        },
+        {
+          "reasonTextToShow": "It's rude, vulgar or offensive",
+          "reasonText": "It's rude, vulgar or offensive"
+        },
+        {
+          "reasonTextToShow": "It's abusing the report button",
+          "isAbuseOfReportButton": true,
+          "notesInputTitle": "Additional information (optional)",
+          "reasonText": "It's abusing the report button",
+          "canWriteNotes": true
+        }
+      ],
+      "nextStepHeader": "In what way?"
+    },
+    {
+      "reasonTextToShow": "Other issues",
+      "reasonText": "",
+      "nextStepReasons": [
+        {
+          "reasonTextToShow": "It infringes my copyright",
+          "complaintButtonText": "File a complaint",
+          "complaintPageTitle": "File a complaint?",
+          "reasonText": "It infringes my copyright",
+          "complaintPrompt": "If you think content on Reddit violates your intellectual property, please file a complaint at the link below:",
+          "fileComplaint": true,
+          "complaintUrl": "https://www.reddit.com/api/report_redirect?thing=%25%28thing%29s&amp;reason_code=COPYRIGHT&amp;feature=from_r2"
+        },
+        {
+          "reasonTextToShow": "It infringes my trademark rights",
+          "complaintButtonText": "File a complaint",
+          "complaintPageTitle": "File a complaint?",
+          "reasonText": "It infringes my trademark rights",
+          "complaintPrompt": "If you think content on Reddit violates your intellectual property, please file a complaint at the link below:",
+          "fileComplaint": true,
+          "complaintUrl": "https://www.reddit.com/api/report_redirect?thing=%25%28thing%29s&amp;reason_code=TRADEMARK&amp;feature=from_r2"
+        },
+        {
+          "reasonTextToShow": "It's personal and confidential information",
+          "reasonText": "It's personal and confidential information"
+        },
+        {
+          "reasonTextToShow": "It's sexual or suggestive content involving minors",
+          "reasonText": "It's sexual or suggestive content involving minors"
+        },
+        {
+          "reasonTextToShow": "It's involuntary pornography",
+          "reasonText": "",
+          "nextStepReasons": [
+            {
+              "reasonTextToShow": "I appear in the image",
+              "reasonText": "It's involuntary pornography and i appear in it"
+            },
+            {
+              "reasonTextToShow": "I do not appear in the image",
+              "reasonText": "It's involuntary pornography and i do not appear in it"
+            }
+          ],
+          "nextStepHeader": "Do you appear in the image?"
+        },
+        {
+          "reasonTextToShow": "It's a transaction for prohibited goods or services",
+          "reasonText": "It's a transaction for prohibited goods or services"
+        },
+        {
+          "reasonTextToShow": "Report this content under NetzDG",
+          "complaintButtonText": "File a complaint",
+          "complaintPageTitle": "File a complaint?",
+          "reasonText": "Report this content under NetzDG",
+          "complaintPrompt": "This reporting procedure is only available for people in Germany. If you are in Germany and would like to report this content under the German Netzwerkdurchsetzungsgesetz (NetzDG) law you may file a complaint by clicking the link below.",
+          "fileComplaint": true,
+          "complaintUrl": "https://www.reddit.com/api/report_redirect?thing=%25%28thing%29s&amp;reason_code=NETZDG&amp;feature=from_r2"
+        },
+        {
+          "reasonTextToShow": "Someone is considering suicide or serious self-harm.",
+          "reasonText": "Someone is considering suicide or serious self-harm.",
+          "canSpecifyUsernames": true,
+          "oneUsername": true,
+          "usernamesInputTitle": "Username",
+          "requestCrisisSupport": true
+        }
+      ],
+      "nextStepHeader": "What issue?"
+    }
+  ]
+}

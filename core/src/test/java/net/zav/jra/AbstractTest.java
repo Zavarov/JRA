@@ -1,30 +1,16 @@
 package net.zav.jra;
 
-import net.zav.jra._factory.UserAgentFactory;
-import net.zav.jra.mock.ClientMock;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public abstract class AbstractTest {
-    protected static JSONObject getConfig() throws IOException {
-        String content = Files.readString(Paths.get("src", "test", "resources", "config.json"));
-        return new JSONObject(content);
-    }
+    protected static final Path JSON_PATH = Paths.get("src", "test", "resources", "json");
+    protected Path TARGET_PATH;
 
-    protected static AbstractClient getScript(String version) throws IOException {
-        JSONObject config = getConfig();
-
-        String platform = config.getString("platform");
-        String author = config.getString("name");
-        String id = config.getString("id");
-        String secret = config.getString("secret");
-        String account = config.getString("account");
-        String password = config.getString("password");
-        UserAgent userAgent = UserAgentFactory.create(platform, AbstractTest.class.getPackageName(), version, author);
-
-        return new ClientMock(userAgent, id, secret, account, password);
+    public String readJson(String fileName) throws IOException {
+        assert TARGET_PATH != null;
+        return Files.readString(TARGET_PATH.resolve(fileName));
     }
 }
