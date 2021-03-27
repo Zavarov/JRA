@@ -53,10 +53,10 @@
                 <!-- Include project version -->
                 <configuration>
                     <archive>
-                        <manifaest>
+                        <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                        </manifaest>
+                        </manifest>
                     </archive>
                 </configuration>
             </plugin>
