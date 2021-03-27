@@ -225,12 +225,7 @@ public abstract class AbstractClient extends AbstractClientTOP{
         //On February 15th 2021, the refresh response will contain a new refresh token.
         //Until then, we reuse the initial token.
         //@see https://redd.it/kvzaot
-        String refreshToken = orElseThrowToken().orElseThrowRefreshToken();
-
         setToken(JSONToken.fromJson(new Token(), response));
-        //#TODO Remove after February 15th 2021
-        if(orElseThrowToken().isEmptyRefreshToken())
-            orElseThrowToken().setRefreshToken(refreshToken);
     }
 
     //----------------------------------------------------------------------------------------------------------------//
@@ -293,6 +288,7 @@ public abstract class AbstractClient extends AbstractClientTOP{
      * See https://www.reddit.com/api/v1/scopes for more.
      */
     @Nonnull
+    @SuppressWarnings("unused")
     public enum Scope {
         /**
          * Spend my reddit gold creddits on giving gold to other users.
