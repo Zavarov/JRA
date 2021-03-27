@@ -64,7 +64,7 @@ public enum Endpoint {
     GET_ME_KARMA("api","v1","me","karma"),
     /**
      * Return the preference settings of the logged in user.<p>
-     * This endpoint is a {@link Preferences}.
+     * This endpoint is an {@link AbstractPreferences}.
      * @see <a href="https://www.reddit.com/dev/api#GET_api_v1_me_prefs">here</a>
      */
     GET_ME_PREFS("api","v1","me","prefs"),
@@ -245,18 +245,6 @@ public enum Endpoint {
      */
     GET_SUBREDDIT_COMMENTS("r","{subreddit}","comments","{article}"),
     /**
-     * TODO What does it do?
-     * @see #GET_SORT
-     * @see <a href="https://www.reddit.com/dev/api#GET_controversial">here</a>
-     */
-    GET_CONTROVERSIAL("controversial"),
-    /**
-     * TODO What does it do?
-     * @see #GET_SUBREDDIT_SORT
-     * @see <a href="https://www.reddit.com/dev/api#GET_controversial">here</a>
-     */
-    GET_SUBREDDIT_CONTROVERSIAL("r","{subreddit}","controversial"),
-    /**
      * Return a list of other submissions of the same URL
      *
      * @see <a href="https://www.reddit.com/dev/api#GET_duplicates_{article}">here</a>
@@ -316,18 +304,6 @@ public enum Endpoint {
      * Get all links.<p>
      * In case the user is logged in, the links will be fetched from all subscribed subreddits, otherwise from the
      * frontpage.<p>
-     * @see <a href="https://www.reddit.com/dev/api#GET_top">here</a>
-     */
-    GET_TOP("top"),
-    /**
-     * Get all links from the specified subreddit.
-     * @see <a href="https://www.reddit.com/dev/api#GET_top">here</a>
-     */
-    GET_SUBREDDIT_TOP("r","{subreddit}","top"),
-    /**
-     * Get all links.<p>
-     * In case the user is logged in, the links will be fetched from all subscribed subreddits, otherwise from the
-     * frontpage.<p>
      * {@code sort} indicates the order in which the links are sorted.
      * @see <a href="https://www.reddit.com/dev/api#GET_{sort}">here</a>
      */
@@ -338,6 +314,30 @@ public enum Endpoint {
      * @see <a href="https://www.reddit.com/dev/api#GET_{sort}">here</a>
      */
     GET_SUBREDDIT_SORT("r","{subreddit}","{sort}"),
+    /**
+     * Get all links.<p>
+     * In case the user is logged in, the links will be fetched from all subscribed subreddits, otherwise from the
+     * frontpage.<p>
+     * @see <a href="https://www.reddit.com/dev/api#GET_top">here</a>
+     */
+    GET_TOP(GET_SORT.getPath("top")),
+    /**
+     * Get all links from the specified subreddit.
+     * @see <a href="https://www.reddit.com/dev/api#GET_top">here</a>
+     */
+    GET_SUBREDDIT_TOP(GET_SUBREDDIT_SORT.getPath("{subreddit}", "top")),
+    /**
+     * TODO What does it do?
+     * @see #GET_SORT
+     * @see <a href="https://www.reddit.com/dev/api#GET_controversial">here</a>
+     */
+    GET_CONTROVERSIAL(GET_SORT.getPath("controversial")),
+    /**
+     * TODO What does it do?
+     * @see #GET_SUBREDDIT_SORT
+     * @see <a href="https://www.reddit.com/dev/api#GET_controversial">here</a>
+     */
+    GET_SUBREDDIT_CONTROVERSIAL(GET_SUBREDDIT_SORT.getPath("{subreddit}", "controversial")),
 
     //----------------------------------------------------------------------------------------------------------------//
     //                                                                                                                //
@@ -1506,55 +1506,55 @@ public enum Endpoint {
      */
     GET_USER_USERNAME_TROHPIES("api","v1","user","{username}","trophies"),
     /**
+     * TODO What does it do?
+     * @see <a href="https://www.reddit.com/dev/api#GET_user_{username}_{where}">here</a>
+     */
+    GET_USER_USERNAME_WHERE("user","{username}","{where}"),
+    /**
      * Return information about the user, including karma and gold status.
      * @see <a href="https://www.reddit.com/dev/api/oauth#GET_user_{username}_about">here</a>
      */
-    GET_USER_USERNAME_ABOUT("user","{username}","about"),
+    GET_USER_USERNAME_ABOUT(GET_USER_USERNAME_WHERE.getPath("{username}","about")),
     /**
      * TODO What does it do?
      * @see <a href="https://www.reddit.com/dev/api#GET_user_{username}_comments">here</a>
      */
-    GET_USER_USERNAME_COMMENTS("user","{username}","comments"),
+    GET_USER_USERNAME_COMMENTS(GET_USER_USERNAME_WHERE.getPath("{username}","comments")),
     /**
      * TODO What does it do?
      * @see <a href="https://www.reddit.com/dev/api#GET_user_{username}_downvoted">here</a>
      */
-    GET_USER_USERNAME_DOWNVOTED("user","{username}","downvoted"),
+    GET_USER_USERNAME_DOWNVOTED(GET_USER_USERNAME_WHERE.getPath("{username}","downvoted")),
     /**
      * TODO What does it do?
      * @see <a href="https://www.reddit.com/dev/api#GET_user_{username}_gilded">here</a>
      */
-    GET_USER_USERNAME_GILDED("user","{username}","gilded"),
+    GET_USER_USERNAME_GILDED(GET_USER_USERNAME_WHERE.getPath("{username}","gilded")),
     /**
      * TODO What does it do?
      * @see <a href="https://www.reddit.com/dev/api#GET_user_{username}_hidden">here</a>
      */
-    GET_USER_USERNAME_HIDDEN("user","{username}","hidden"),
+    GET_USER_USERNAME_HIDDEN(GET_USER_USERNAME_WHERE.getPath("{username}","hidden")),
     /**
      * TODO What does it do?
      * @see <a href="https://www.reddit.com/dev/api#GET_user_{username}_overview">here</a>
      */
-    GET_USER_USERNAME_OVERVIEW("user","{username}","overview"),
+    GET_USER_USERNAME_OVERVIEW(GET_USER_USERNAME_WHERE.getPath("{username}","overview")),
     /**
      * TODO What does it do?
      * @see <a href="https://www.reddit.com/dev/api#GET_user_{username}_saved">here</a>
      */
-    GET_USER_USERNAME_SAVED("user","{username}","saved"),
+    GET_USER_USERNAME_SAVED(GET_USER_USERNAME_WHERE.getPath("{username}","saved")),
     /**
      * TODO What does it do?
      * @see <a href="https://www.reddit.com/dev/api#GET_user_{username}_submitted">here</a>
      */
-    GET_USER_USERNAME_SUBMITTED("user","{username}","submitted"),
+    GET_USER_USERNAME_SUBMITTED(GET_USER_USERNAME_WHERE.getPath("{username}","submitted")),
     /**
      * TODO What does it do?
      * @see <a href="https://www.reddit.com/dev/api#GET_user_{username}_upvoted">here</a>
      */
-    GET_USER_USERNAME_UPVOTED("user","{username}","upvoted"),
-    /**
-     * TODO What does it do?
-     * @see <a href="https://www.reddit.com/dev/api#GET_user_{username}_{where}">here</a>
-     */
-    GET_USER_USERNAME_WHERE("user","{username}","{where}");
+    GET_USER_USERNAME_UPVOTED(GET_USER_USERNAME_WHERE.getPath("{username}","upvoted"));
 
     //----------------------------------------------------------------------------------------------------------------//
     //                                                                                                                //
