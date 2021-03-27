@@ -22,7 +22,7 @@
     <parent>
         <artifactId>JRA</artifactId>
         <groupId>proj.zav.jra</groupId>
-        <version>3.4-SNAPSHOT</version>
+        <version>0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
