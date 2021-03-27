@@ -176,7 +176,7 @@ public abstract class Listings {
      * Fetches a random {@link Submission} from the {@link AbstractSubreddit Subreddit}.<p>
      * The {@link Submission} corresponds to one of the current top links.
      * @return A random {@link Submission}.
-     * @see #getTopLinks(AbstractClient, Function, String)
+     * @see #getRandomSubmission(AbstractClient, Function, String)
      * @see Endpoint#GET_SUBREDDIT_RANDOM
      */
     @Nonnull
@@ -192,7 +192,7 @@ public abstract class Listings {
     /**
      * The {@link AbstractLink Link} is chosen randomly from the {@code top} links.
      * @return A randomly fetched link.
-     * @see #getTopLinks(AbstractClient, Function)
+     * @see #getRandomSubmission(AbstractClient, Function)
      * @see Endpoint#GET_RANDOM
      */
     @Nonnull
