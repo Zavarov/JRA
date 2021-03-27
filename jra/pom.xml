@@ -21,7 +21,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>JRA</artifactId>
-        <groupId>net.zav.jra</groupId>
+        <groupId>proj.zav.jra</groupId>
         <version>3.4-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -43,7 +43,7 @@
         </dependency>
 
         <dependency>
-            <groupId>net.zav.jra</groupId>
+            <groupId>proj.zav.jra</groupId>
             <artifactId>core</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -92,7 +92,7 @@
                         <phase>initialize</phase>
                         <configuration>
                             <classifier>${models.classifier}</classifier>
-                            <includeGroupIds>net.zav.jra</includeGroupIds>
+                            <includeGroupIds>proj.zav.jra</includeGroupIds>
                             <includeArtifactIds>core</includeArtifactIds>
                             <includeTypes>jar</includeTypes>
                         </configuration>
@@ -118,14 +118,14 @@
                             <mainClass>${generator.main}</mainClass>
                             <arguments>
                                 <argument>${generator.config}</argument>
-                                <argument>net.zav.jra.Account</argument>
-                                <argument>net.zav.jra.Client</argument>
-                                <argument>net.zav.jra.Comment</argument>
-                                <argument>net.zav.jra.FrontPage</argument>
-                                <argument>net.zav.jra.Link</argument>
-                                <argument>net.zav.jra.Parameter</argument>
-                                <argument>net.zav.jra.Preferences</argument>
-                                <argument>net.zav.jra.Subreddit</argument>
+                                <argument>proj.zav.jra.Account</argument>
+                                <argument>proj.zav.jra.Client</argument>
+                                <argument>proj.zav.jra.Comment</argument>
+                                <argument>proj.zav.jra.FrontPage</argument>
+                                <argument>proj.zav.jra.Link</argument>
+                                <argument>proj.zav.jra.Parameter</argument>
+                                <argument>proj.zav.jra.Preferences</argument>
+                                <argument>proj.zav.jra.Subreddit</argument>
                             </arguments>
                         </configuration>
                     </execution>

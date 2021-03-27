@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>JRA</artifactId>
-        <groupId>net.zav.jra</groupId>
+        <groupId>proj.zav.jra</groupId>
         <version>3.4-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -113,7 +113,7 @@
                             <mainClass>${generator.main}</mainClass>
                             <arguments>
                                 <argument>${generator.config}</argument>
-                                <argument>net.zav.jra.AbstractClient</argument>
+                                <argument>proj.zav.jra.AbstractClient</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -130,26 +130,26 @@
                             <mainClass>${generator.main}</mainClass>
                             <arguments>
                                 <argument>${generator.config}</argument>
-                                <argument>net.zav.jra.models.AbstractAccount</argument>
-                                <argument>net.zav.jra.models.AbstractComment</argument>
-                                <argument>net.zav.jra.models.AbstractLink</argument>
-                                <argument>net.zav.jra.models.AbstractPreferences</argument>
-                                <argument>net.zav.jra.models.AbstractSubreddit</argument>
-                                <argument>net.zav.jra.models.Created</argument>
-                                <argument>net.zav.jra.models.Duplicate</argument>
-                                <argument>net.zav.jra.models.Karma</argument>
-                                <argument>net.zav.jra.models.Listing</argument>
-                                <argument>net.zav.jra.models.Messaging</argument>
-                                <argument>net.zav.jra.models.Rule</argument>
-                                <argument>net.zav.jra.models.Snowflake</argument>
-                                <argument>net.zav.jra.models.Submission</argument>
-                                <argument>net.zav.jra.models.SubredditSettings</argument>
-                                <argument>net.zav.jra.models.Thing</argument>
-                                <argument>net.zav.jra.models.TrendingSubreddits</argument>
-                                <argument>net.zav.jra.models.Trophy</argument>
-                                <argument>net.zav.jra.models.Types</argument>
-                                <argument>net.zav.jra.models.Votable</argument>
-                                <argument>net.zav.jra.models.VotableCreated</argument>
+                                <argument>proj.zav.jra.models.AbstractAccount</argument>
+                                <argument>proj.zav.jra.models.AbstractComment</argument>
+                                <argument>proj.zav.jra.models.AbstractLink</argument>
+                                <argument>proj.zav.jra.models.AbstractPreferences</argument>
+                                <argument>proj.zav.jra.models.AbstractSubreddit</argument>
+                                <argument>proj.zav.jra.models.Created</argument>
+                                <argument>proj.zav.jra.models.Duplicate</argument>
+                                <argument>proj.zav.jra.models.Karma</argument>
+                                <argument>proj.zav.jra.models.Listing</argument>
+                                <argument>proj.zav.jra.models.Messaging</argument>
+                                <argument>proj.zav.jra.models.Rule</argument>
+                                <argument>proj.zav.jra.models.Snowflake</argument>
+                                <argument>proj.zav.jra.models.Submission</argument>
+                                <argument>proj.zav.jra.models.SubredditSettings</argument>
+                                <argument>proj.zav.jra.models.Thing</argument>
+                                <argument>proj.zav.jra.models.TrendingSubreddits</argument>
+                                <argument>proj.zav.jra.models.Trophy</argument>
+                                <argument>proj.zav.jra.models.Types</argument>
+                                <argument>proj.zav.jra.models.Votable</argument>
+                                <argument>proj.zav.jra.models.VotableCreated</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -166,7 +166,7 @@
                             <mainClass>${generator.main}</mainClass>
                             <arguments>
                                 <argument>${generator.config}</argument>
-                                <argument>net.zav.jra.exceptions.Exceptions</argument>
+                                <argument>proj.zav.jra.exceptions.Exceptions</argument>
                             </arguments>
                         </configuration>
                     </execution>

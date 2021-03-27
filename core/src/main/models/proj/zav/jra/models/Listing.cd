@@ -1,0 +1,40 @@
+package proj.zav.jra.models;
+
+import java.lang.String.String;
+import java.lang.Object.Object;
+import java.util.Optional.Optional;
+import java.util.List.List;
+
+public classdiagram Listing {
+    /**
+     * Used to paginate content that is too long to display in one go. Add the query argument before or after with the
+     * value given to get the previous or next page. This is usually used in conjunction with a count argument.
+     * Exception: Unlike the other classes documented on this page, Listing is not a thing subclass, as it inherits
+     * directly from Object. Although it does have data and kind as parameters, it does not have id and name.
+     * A listing's kind will always be Listing and its data will be a List of things.
+     */
+    public abstract class Listing{
+        /**
+         * The fullname of the listing that follows before this page. Empty if there is no previous page.
+         */
+        <<key="before">>
+        - Optional<String> before;
+        /**
+         * The fullname of the listing that follows after this page. Empty if there is no next page.
+         */
+        <<key="after">>
+        - Optional<String> after;
+        /**
+         * This modhash is not the same modhash provided upon login. You do not need to update your user's modhash
+         * everytime you get a new modhash. You can reuse the modhash given upon login.
+         */
+        <<key="modhash">>
+        - Optional<String> modhash;
+        /**
+         * A list of 'things' that this Listing wraps. Despite the description, it may not actually be "Things",
+         * but rather arbitrary junk.
+         */
+        <<key="children">>
+        - List<Object> children;
+    }
+}

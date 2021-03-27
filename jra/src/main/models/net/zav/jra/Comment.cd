@@ -1,9 +1,0 @@
-package net.zav.jra;
-
-import net.zav.jra.models.AbstractComment.AbstractComment;
-
-public classdiagram Comment {
-    public class Comment extends AbstractComment{
-
-    }
-}
