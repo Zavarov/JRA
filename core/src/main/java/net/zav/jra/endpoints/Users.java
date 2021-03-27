@@ -120,17 +120,17 @@ public abstract class Users {
      * Stop being friends with a user.
      * @see Endpoint#DELETE_ME_FRIENDS_USERNAME
      */
-    public static QueryDelete<Void> deleteMeFriends(AbstractClient client, String username) {
-        return new QueryDelete<>(x -> null, client, Endpoint.DELETE_ME_FRIENDS_USERNAME, username);
+    public static QueryDelete<String> deleteMeFriends(AbstractClient client, String username) {
+        return new QueryDelete<>(Function.identity(), client, Endpoint.DELETE_ME_FRIENDS_USERNAME, username);
     }
 
     /**
      * Get information about a specific 'friend', such as notes.
      * @see Endpoint#GET_ME_FRIENDS_USERNAME
      */
-    public static QueryGet<FakeAccount> getMeFriends(AbstractClient client, String username) {
+    public static QueryGet<String> getMeFriends(AbstractClient client, String username) {
         return new QueryGet<>(
-                source -> JSONFakeAccount.fromJson(new FakeAccount(), source),
+                Function.identity(),
                 client,
                 Endpoint.GET_ME_FRIENDS_USERNAME,
                 username
@@ -141,9 +141,9 @@ public abstract class Users {
      * Create or update a "friend" relationship.
      * @see Endpoint#PUT_ME_FRIENDS_USERNAME
      */
-    public static QueryPut<FakeAccount> putMeFriends(AbstractClient client, String username) {
+    public static QueryPut<String> putMeFriends(AbstractClient client, String username) {
         return new QueryPut<>(
-                source -> JSONFakeAccount.fromJson(new FakeAccount(), source),
+                Function.identity(),
                 client,
                 Endpoint.PUT_ME_FRIENDS_USERNAME,
                 username
