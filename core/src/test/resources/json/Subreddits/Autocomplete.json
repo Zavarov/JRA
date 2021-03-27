@@ -1,0 +1,19 @@
+{
+  "subreddits": [
+    {
+      "allowedPostTypes": {
+        "images": false,
+        "spoilers": false,
+        "videos": false,
+        "links": false,
+        "text": true
+      },
+      "name": "redditdev",
+      "primaryColor": "#666666",
+      "icon": "https://b.thumbs.redditmedia.com/7GVLmrH9CdZeqXceSEWkmL8_DSUKRGUfwMxnUNh8D8A.png",
+      "communityIcon": "",
+      "id": "t5_2qizd",
+      "numSubscribers": 53264
+    }
+  ]
+}

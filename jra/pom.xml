@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2020 Zavarov
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -9,11 +26,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>core</artifactId>
+    <artifactId>jra</artifactId>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
         <!-- .. Generator Arguments ................................................................................ -->
         <generator.main>vartas.monticore.cd4code.SimpleMain</generator.main>
         <generator.config>${project.basedir}/src/main/resources/cd4code.json</generator.config>
@@ -26,40 +41,17 @@
             <artifactId>okhttp</artifactId>
             <version>${okhttp.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>proj.zav.jra</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <!-- == DEFAULT BUILD SETTINGS =========================================== -->
     <build>
         <plugins>
-            <!-- create model jar -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven-jar-plugin.version}</version>
-                <executions>
-                    <!-- models -->
-                    <execution>
-                        <id>generate-models</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <classifier>${models.classifier}</classifier>
-                            <classesDirectory>src/main/models</classesDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-                <!-- Include project version -->
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
             <!-- Load the templates for the generator-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -92,6 +84,19 @@
                             <includeTypes>jar</includeTypes>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>unpack-jra</id>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <classifier>${models.classifier}</classifier>
+                            <includeGroupIds>proj.zav.jra</includeGroupIds>
+                            <includeArtifactIds>core</includeArtifactIds>
+                            <includeTypes>jar</includeTypes>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <!-- Code Generation -->
@@ -100,26 +105,9 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>${maven-exec-plugin.version}</version>
                 <executions>
-                    <!-- Generate core classes -->
-                    <execution>
-                        <id>client</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <includeProjectDependencies>false</includeProjectDependencies>
-                            <includePluginDependencies>true</includePluginDependencies>
-                            <mainClass>${generator.main}</mainClass>
-                            <arguments>
-                                <argument>${generator.config}</argument>
-                                <argument>proj.zav.jra.AbstractClient</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
                     <!-- Generate models -->
                     <execution>
-                        <id>types</id>
+                        <id>models</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>java</goal>
@@ -130,43 +118,14 @@
                             <mainClass>${generator.main}</mainClass>
                             <arguments>
                                 <argument>${generator.config}</argument>
-                                <argument>proj.zav.jra.models.AbstractAccount</argument>
-                                <argument>proj.zav.jra.models.AbstractComment</argument>
-                                <argument>proj.zav.jra.models.AbstractLink</argument>
-                                <argument>proj.zav.jra.models.AbstractPreferences</argument>
-                                <argument>proj.zav.jra.models.AbstractSubreddit</argument>
-                                <argument>proj.zav.jra.models.Created</argument>
-                                <argument>proj.zav.jra.models.Duplicate</argument>
-                                <argument>proj.zav.jra.models.Karma</argument>
-                                <argument>proj.zav.jra.models.Listing</argument>
-                                <argument>proj.zav.jra.models.Messaging</argument>
-                                <argument>proj.zav.jra.models.Rule</argument>
-                                <argument>proj.zav.jra.models.Snowflake</argument>
-                                <argument>proj.zav.jra.models.Submission</argument>
-                                <argument>proj.zav.jra.models.SubredditSettings</argument>
-                                <argument>proj.zav.jra.models.Thing</argument>
-                                <argument>proj.zav.jra.models.TrendingSubreddits</argument>
-                                <argument>proj.zav.jra.models.Trophy</argument>
-                                <argument>proj.zav.jra.models.Types</argument>
-                                <argument>proj.zav.jra.models.Votable</argument>
-                                <argument>proj.zav.jra.models.VotableCreated</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <!-- Generate exceptions -->
-                    <execution>
-                        <id>exceptions</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <includeProjectDependencies>false</includeProjectDependencies>
-                            <includePluginDependencies>true</includePluginDependencies>
-                            <mainClass>${generator.main}</mainClass>
-                            <arguments>
-                                <argument>${generator.config}</argument>
-                                <argument>proj.zav.jra.exceptions.Exceptions</argument>
+                                <argument>proj.zav.jra.Account</argument>
+                                <argument>proj.zav.jra.Client</argument>
+                                <argument>proj.zav.jra.Comment</argument>
+                                <argument>proj.zav.jra.FrontPage</argument>
+                                <argument>proj.zav.jra.Link</argument>
+                                <argument>proj.zav.jra.Parameter</argument>
+                                <argument>proj.zav.jra.Preferences</argument>
+                                <argument>proj.zav.jra.Subreddit</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -197,6 +156,20 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <!-- Include the project version in the executable -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.version}</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
     </build>

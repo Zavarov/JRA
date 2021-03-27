@@ -1,24 +1,20 @@
-# reddit
+# JDA (Java Reddit API)
 
-This project implements a Reddit wrapper, allowing an user to access subreddits, submissions and comments.
-Currently, it is only possible to read those instances.
-The backend implementation is done via [JRAW](https://github.com/mattbdean/JRAW), a custom implementation using 
-[pushshift.io](https://pushshift.io/) and via serialization using [JSON](https://en.wikipedia.org/wiki/JSON).
-
-Class diagrams describe the architecture of the program, which are used in combination with [MontiCore](http://www.monticore.de/),
-to generate the corresponding source code.
+JDA provides a simple way to exchange information between a Java application and the Reddit endpoints. 
 
 ### Getting started
 
-The Client class provides the interface the Reddit API and allows access both subreddits and user accounts.
-Each subreddit consists of a collection of submission. It is possible to either request individual submissions by their
-id or several via a time interval. 
+By creating a new instance of the `Client` class and calling the `login` method, the user 
+establishes the initial authentication with the Reddit API.
 
-Each submission has a list of comments. We preserve the tree structure of the comments, which can be
-accessed using the visitor pattern. However, for simplicity, we also provide access to all comments
-at once via an unordered list.
+While not enforced, it is highly recommended to always call the `logout` once the program
+is about to terminate. This not only minimizes the risk of a third party misusing a token
+that has been leaked accidentally, but also makes the life easier for Reddit, since they
+don't have to store the granted tokens longer than necessary.
 
-For code examples of the different functions, please visit the [Wiki](https://github.com/Zavarov/reddit/wiki).
+In order to simply this process, two Client implementation are already provided. ScriptClient
+can be used to create an instance, acting on behalf of a user. The class UserlessClient creates
+an anonymous instance.
 
 ### Installing
 
@@ -27,23 +23,6 @@ In order to install this project, simply execute the maven command:
 ```
 mvn clean install
 ```
-
-## Running the tests
-
-In order to run the tests of the api module, you need to create the json file containing the credentials for your Reddit bot to in api/src/test/resources/config.json.
-
-The template for the file is
-```
-{
-  "name"     : "NAME",
-  "version"  : "VERSION",
-  "clientId" : "CLIENTID",
-  "secret"   : "SECRET"
-}
-```
-
-The tests are done over [r/redditdev](https://www.reddit.com/r/redditdev/) and the submissions over the past day.
-Since those are live values, the results of the tests after every execution may differ.
 
 ## Built With
 

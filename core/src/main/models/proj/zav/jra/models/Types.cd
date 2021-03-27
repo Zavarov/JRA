@@ -1,0 +1,81 @@
+package proj.zav.jra.models;
+
+import java.lang.String.String;
+import java.time.OffsetDateTime.OffsetDateTime;
+import java.time.LocalDateTime.LocalDateTime;
+import java.util.List.List;
+import java.util.Optional.Optional;
+import org.json.JSONObject.JSONObject;
+import proj.zav.jra.models.Votable.Votable;
+import proj.zav.jra.models.VotableCreated.VotableCreated;
+import proj.zav.jra.models.Created.Created;
+
+/**
+ * The Reddit API according to their specification
+ * See more at: https://github.com/reddit-archive/reddit/wiki/JSON
+ */
+public classdiagram Types {
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    //
+    // Data Structures
+    //
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    public abstract class MessageType extends Created{
+        /**
+         * The author of the message.
+         */
+        + abstract String getAuthor();
+        /**
+         * The message itself.
+         */
+        + abstract String getBody();
+        /**
+         * The message itself with HTML formatting.
+         */
+        + abstract String getBodyHtml();
+        /**
+         * if the message is a comment, then the permalink to the comment with ?context=3 appended to the end,
+         * otherwise an empty string.
+         */
+        + abstract String getContext();
+        /**
+         * Either empty or the first message's ID represented as base 10 (wtf).
+         */
+        + abstract Optional<MessageType> getFirstMessage();
+        /**
+         * Either empty or the first message's fullname
+         */
+        + abstract Optional<String> getFirstMessageName();
+        /**
+         * If the message is actually a comment, contains the title of the thread it was posted in.
+         */
+        + abstract String getLinkTitle();
+        /**
+         * ex: "t4_8xwlg"
+         */
+        + abstract String getName();
+        /**
+         * unread? not sure
+         */
+        + abstract String getNew();
+        /**
+         * Empty if no parent is attached
+         */
+        + abstract Optional<String> getParentId();
+        /**
+         * Again, an empty string if there are no replies.
+         */
+        + abstract String getReplies();
+        /**
+         * Subject of message.
+         */
+        + abstract String getSubject();
+        /**
+         * Empty if not a comment.
+         */
+        + abstract Optional<String> getSubreddit();
+
+        + abstract boolean wasComment();
+    }
+}
