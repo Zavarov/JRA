@@ -15,8 +15,6 @@ import net.zav.jra.FrontPage.FrontPage;
 import net.zav.jra.Link.Link;
 import net.zav.jra.Parameter.Parameter;
 
-import net.zav.jra.exceptions.HttpException.HttpException;
-
 import net.zav.jra.models.Account.FakeAccount;
 import net.zav.jra.models.Duplicate.Duplicate;
 import net.zav.jra.models.Listing.Listing;
@@ -29,32 +27,32 @@ public classdiagram Client {
     public abstract class Client extends AbstractClient {
         + abstract FrontPage getFrontPage();
         //Account
-        + abstract SelfAccount getMe(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract SelfAccount getMe(Parameter[] params) throws InterruptedException, IOException;
         //Listings
-        + abstract TrendingSubreddits getTrendingSubreddits(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Stream<Link> getLinksById(String[] names, Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Submission getComments(String article, Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Duplicate getDuplicates(String article, Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract TrendingSubreddits getTrendingSubreddits(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Stream<Link> getLinksById(String[] names, Parameter[] params) throws InterruptedException, IOException;
+        + abstract Submission getComments(String article, Parameter[] params) throws InterruptedException, IOException;
+        + abstract Duplicate getDuplicates(String article, Parameter[] params) throws InterruptedException, IOException;
         //Subreddits
-        + abstract Stream<String> getSearchRedditNames(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Stream<String> postSearchRedditNames(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Stream<FakeSubreddit> postSearchSubreddits(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract String postSiteAdmin(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Stream<FakeSubreddit> getSubredditAutocomplete(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Listing<Thing> getSubredditAutocompleteV2(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract String postSubscribe(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Subreddit getSubreddit(String name, Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Stream<Subreddit> getSubredditsDefault(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Stream<Subreddit> getSubredditsGold(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Stream<Subreddit> getSubredditsNew(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Stream<Subreddit> getSubredditsPopular(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Stream<Subreddit> getSubredditsSearch(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Stream<Subreddit> getUsersNew(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Stream<Subreddit> getUsersPopular(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Stream<Subreddit> getUsersSearch(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Stream<String> getSearchRedditNames(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Stream<String> postSearchRedditNames(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Stream<FakeSubreddit> postSearchSubreddits(Parameter[] params) throws InterruptedException, IOException;
+        + abstract String postSiteAdmin(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Stream<FakeSubreddit> getSubredditAutocomplete(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Listing<Thing> getSubredditAutocompleteV2(Parameter[] params) throws InterruptedException, IOException;
+        + abstract String postSubscribe(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Subreddit getSubreddit(String name, Parameter[] params) throws InterruptedException, IOException;
+        + abstract Stream<Subreddit> getSubredditsDefault(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Stream<Subreddit> getSubredditsGold(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Stream<Subreddit> getSubredditsNew(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Stream<Subreddit> getSubredditsPopular(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Stream<Subreddit> getSubredditsSearch(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Stream<Subreddit> getUsersNew(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Stream<Subreddit> getUsersPopular(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Stream<Subreddit> getUsersSearch(Parameter[] params) throws InterruptedException, IOException;
         //Users
-        + abstract Map<String, FakeAccount> getUserDataByAccountIds(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract boolean getUsernameAvailable(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Account getAccount(String name, Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Map<String, FakeAccount> getUserDataByAccountIds(Parameter[] params) throws InterruptedException, IOException;
+        + abstract boolean getUsernameAvailable(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Account getAccount(String name, Parameter[] params) throws InterruptedException, IOException;
     }
 }

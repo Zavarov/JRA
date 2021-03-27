@@ -11,8 +11,6 @@ import net.zav.jra.Parameter.Parameter;
 import net.zav.jra.Preferences.Preferences;
 import net.zav.jra.Subreddit.Subreddit;
 
-import net.zav.jra.exceptions.HttpException.HttpException;
-
 import net.zav.jra.models.AbstractAccount.AbstractAccount;
 import net.zav.jra.models.AbstractAccount.AbstractSelfAccount;
 import net.zav.jra.models.AbstractAccount.FakeAccount;
@@ -31,37 +29,37 @@ public classdiagram Account {
         <<ignore>>
         - Client client;
         //Users
-        + abstract String postBlock(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract String postFriend(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract String postReport(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract String postSetPermission(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract String postUnfriend(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract void deleteFriends(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract FakeAccount getFriends(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract FakeAccount putFriends(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Stream<Trophy> getTrophies(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Stream<Comment> getComments(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Listing<Thing> getDownvoted(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Listing<Thing> getGilded(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Listing<Thing> getHidden(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Listing<Thing> getOverview(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Listing<Thing> getSaved(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Stream<Link> getSubmitted(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Listing<Thing> getUpvoted(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract String postBlock(Parameter[] params) throws InterruptedException, IOException;
+        + abstract String postFriend(Parameter[] params) throws InterruptedException, IOException;
+        + abstract String postReport(Parameter[] params) throws InterruptedException, IOException;
+        + abstract String postSetPermission(Parameter[] params) throws InterruptedException, IOException;
+        + abstract String postUnfriend(Parameter[] params) throws InterruptedException, IOException;
+        + abstract String deleteFriends(Parameter[] params) throws InterruptedException, IOException;
+        + abstract String getFriends(Parameter[] params) throws InterruptedException, IOException;
+        + abstract String putFriends(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Stream<Trophy> getTrophies(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Stream<Comment> getComments(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Listing<Thing> getDownvoted(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Listing<Thing> getGilded(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Listing<Thing> getHidden(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Listing<Thing> getOverview(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Listing<Thing> getSaved(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Stream<Link> getSubmitted(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Listing<Thing> getUpvoted(Parameter[] params) throws InterruptedException, IOException;
     }
 
     public abstract class SelfAccount extends AbstractSelfAccount{
         <<ignore>>
         - Client client;
         //Account
-        + abstract Stream<Karma> getKarma(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Preferences getPreferences(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Preferences patchPreferences(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Stream<Trophy> getTrophies(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Stream<Karma> getKarma(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Preferences getPreferences(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Preferences patchPreferences(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Stream<Trophy> getTrophies(Parameter[] params) throws InterruptedException, IOException;
         //Subreddits
-        + abstract Stream<Subreddit> getMineContributor(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Stream<Subreddit> getMineModerator(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Stream<Subreddit> getMineStreams(Parameter[] params) throws InterruptedException, IOException, HttpException;
-        + abstract Stream<Subreddit> getMineSubscriber(Parameter[] params) throws InterruptedException, IOException, HttpException;
+        + abstract Stream<Subreddit> getMineContributor(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Stream<Subreddit> getMineModerator(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Stream<Subreddit> getMineStreams(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Stream<Subreddit> getMineSubscriber(Parameter[] params) throws InterruptedException, IOException;
     }
 }

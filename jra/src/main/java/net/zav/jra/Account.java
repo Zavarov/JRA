@@ -1,7 +1,6 @@
 package net.zav.jra;
 
 import net.zav.jra.endpoints.Users;
-import net.zav.jra.models.FakeAccount;
 import net.zav.jra.models.Listing;
 import net.zav.jra.models.Thing;
 import net.zav.jra.models.Trophy;
@@ -10,12 +9,14 @@ import net.zav.jra.query.QueryGet;
 import net.zav.jra.query.QueryPost;
 import net.zav.jra.query.QueryPut;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Stream;
 
 public class Account extends AccountTOP{
     @Override
+    @Nonnull
     public Account getRealThis() {
         return this;
     }
@@ -80,18 +81,8 @@ public class Account extends AccountTOP{
     }
 
     @Override
-    public void deleteFriends(Parameter... params) throws InterruptedException, IOException {
-        QueryDelete<Void> query = Users.deleteMeFriends(getClient(), getName());
-
-        for(Parameter param : params)
-            query.setParameter(param.getKey(), param.getValue());
-
-        query.query();
-    }
-
-    @Override
-    public FakeAccount getFriends(Parameter... params) throws InterruptedException, IOException {
-        QueryGet<FakeAccount> query = Users.getMeFriends(getClient(), getName());
+    public String deleteFriends(Parameter... params) throws InterruptedException, IOException {
+        QueryDelete<String> query = Users.deleteMeFriends(getClient(), getName());
 
         for(Parameter param : params)
             query.setParameter(param.getKey(), param.getValue());
@@ -100,8 +91,18 @@ public class Account extends AccountTOP{
     }
 
     @Override
-    public FakeAccount putFriends(Parameter... params) throws InterruptedException, IOException {
-        QueryPut<FakeAccount> query = Users.putMeFriends(getClient(), getName());
+    public String getFriends(Parameter... params) throws InterruptedException, IOException {
+        QueryGet<String> query = Users.getMeFriends(getClient(), getName());
+
+        for(Parameter param : params)
+            query.setParameter(param.getKey(), param.getValue());
+
+        return query.query();
+    }
+
+    @Override
+    public String putFriends(Parameter... params) throws InterruptedException, IOException {
+        QueryPut<String> query = Users.putMeFriends(getClient(), getName());
 
         for(Parameter param : params)
             query.setParameter(param.getKey(), param.getValue());
