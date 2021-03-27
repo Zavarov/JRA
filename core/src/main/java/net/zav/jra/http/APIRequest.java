@@ -93,8 +93,6 @@ public class APIRequest {
 
     @Nonnull
     private Request.Builder builder(){
-        assert client.isPresentToken();
-
         String url = url();
 
         Request.Builder builder = new Request.Builder()
