@@ -86,7 +86,9 @@ public class Listing<V> extends ListingTOP implements Iterable<V>{
             }
         }
 
-        public Stream<V> toStream(){
+        //Iterators & Streams can't throw exceptions but we act like they can to match the signature of the Listing methods.
+        @SuppressWarnings("all")
+        public Stream<V> toStream() throws IOException, InterruptedException{
             int characteristics = Spliterator.ORDERED | Spliterator.NONNULL | Spliterator.SORTED | Spliterator.DISTINCT;
             Spliterator<Listing<V>> spliterator = Spliterators.spliteratorUnknownSize(this, characteristics);
 
