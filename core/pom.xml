@@ -50,6 +50,15 @@
                         </configuration>
                     </execution>
                 </executions>
+                <!-- Include project version -->
+                <configuration>
+                    <archive>
+                        <manifaest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifaest>
+                    </archive>
+                </configuration>
             </plugin>
             <!-- Load the templates for the generator-->
             <plugin>
@@ -188,20 +197,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <!-- Include the project version in the executable -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven-jar-plugin.version}</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                        </manifest>
-                    </archive>
-                </configuration>
             </plugin>
         </plugins>
     </build>
