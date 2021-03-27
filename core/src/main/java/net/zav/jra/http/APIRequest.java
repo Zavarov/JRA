@@ -30,10 +30,14 @@ public class APIRequest {
      */
     @Nonnull
     public static final String WWW = "www.reddit.com";
-
+    /**
+     * The underlying client instance used to perform the request.
+     */
     @Nonnull
     private final AbstractClient client;
-
+    /**
+     * The content of the request. May contain serialized JSON objects e.g. to submit new submissions.
+     */
     @Nullable
     private final RequestBody body;
     /**
