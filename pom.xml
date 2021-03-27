@@ -125,13 +125,21 @@
         </dependency>
     </dependencies>
 
-    <distributionManagement>
+    <!-- == GitHub Repositories =========================================== -->
+
+    <repositories>
         <repository>
             <id>github</id>
-            <name>GitHub Zavarov Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/zavarov/jra</url>
+            <url>https://maven.pkg.github.com/zavarov/monticore-commons</url>
         </repository>
-    </distributionManagement>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/zavarov/monticore-commons</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <!-- == DEFAULT BUILD SETTINGS =========================================== -->
 
