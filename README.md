@@ -12,6 +12,10 @@ is about to terminate. This not only minimizes the risk of a third party misusin
 that has been leaked accidentally, but also makes the life easier for Reddit, since they
 don't have to store the granted tokens longer than necessary.
 
+In order to simply this process, two Client implementation are already provided. ScriptClient
+can be used to create an instance, acting on behalf of a user. The class UserlessClient creates
+an anonymous instance.
+
 ### Installing
 
 In order to install this project, simply execute the maven command:
