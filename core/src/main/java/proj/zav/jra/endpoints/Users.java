@@ -24,7 +24,7 @@ public abstract class Users {
      * For blocking an user account.
      * @param client The client performing the request.
      * @return The jQuery response.
-     * @see Endpoint#POST_BLOCK_USER;
+     * @see Endpoint#POST_BLOCK_USER
      */
     public static QueryPost<String> postBlockUser(AbstractClient client) {
         return new QueryPost<>(Function.identity(), client, Endpoint.POST_BLOCK_USER);

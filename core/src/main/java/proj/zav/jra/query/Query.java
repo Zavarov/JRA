@@ -67,9 +67,13 @@ public abstract class Query <T, Q extends Query<T,Q>> {
     }
 
     /**
-     * Updates the host for all requests.<p>
+     * <p>
+     * Updates the host address for all requests. It is the web address implementing the individual endpoints.
+     * </p>
+     * <p>
      * Default is {@link APIRequest#OAUTH2}.
-     * @param host
+     * </p>
+     * @param host The new host address.
      */
     public void setHost(String host){
         this.host = host;
