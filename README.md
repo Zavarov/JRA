@@ -1,3 +1,5 @@
+[![Java CI with Maven](https://github.com/Zavarov/JRA/actions/workflows/maven.yml/badge.svg)](https://github.com/Zavarov/JRA/actions/workflows/maven.yml)
+
 # JDA (Java Reddit API)
 
 JDA provides a simple way to exchange information between a Java application and the Reddit endpoints. 
