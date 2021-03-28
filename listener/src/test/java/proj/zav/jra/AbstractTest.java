@@ -1,7 +1,7 @@
-package proj.zav.jra;
+package zav.jra;
 
 import org.json.JSONObject;
-import proj.zav.jra._factory.UserAgentFactory;
+import zav.jra._factory.UserAgentFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;

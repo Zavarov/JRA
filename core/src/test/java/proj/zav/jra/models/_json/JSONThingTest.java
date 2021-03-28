@@ -1,10 +1,10 @@
-package proj.zav.jra.models._json;
+package zav.jra.models._json;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import proj.zav.jra.models.Kind;
-import proj.zav.jra.models.Thing;
+import zav.jra.models.Kind;
+import zav.jra.models.Thing;
 
 import java.io.IOException;
 

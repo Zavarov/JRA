@@ -1,11 +1,11 @@
-package proj.zav.jra.endpoints;
+package zav.jra.endpoints;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import proj.zav.jra.AbstractTest;
-import proj.zav.jra.mock.ClientMock;
-import proj.zav.jra.mock.PreferencesMock;
-import proj.zav.jra.mock.SelfAccountMock;
+import zav.jra.AbstractTest;
+import zav.jra.mock.ClientMock;
+import zav.jra.mock.PreferencesMock;
+import zav.jra.mock.SelfAccountMock;
 
 import java.io.IOException;
 

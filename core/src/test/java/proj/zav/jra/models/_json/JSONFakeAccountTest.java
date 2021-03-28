@@ -1,9 +1,9 @@
-package proj.zav.jra.models._json;
+package zav.jra.models._json;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import proj.zav.jra.models.FakeAccount;
+import zav.jra.models.FakeAccount;
 
 import java.io.IOException;
 import java.math.BigDecimal;

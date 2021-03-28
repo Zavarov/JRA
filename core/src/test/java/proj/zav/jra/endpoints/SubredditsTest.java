@@ -1,14 +1,14 @@
-package proj.zav.jra.endpoints;
+package zav.jra.endpoints;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import proj.zav.jra.AbstractTest;
-import proj.zav.jra.mock.ClientMock;
-import proj.zav.jra.mock.LinkMock;
-import proj.zav.jra.mock.SubredditMock;
+import zav.jra.AbstractTest;
+import zav.jra.mock.ClientMock;
+import zav.jra.mock.LinkMock;
+import zav.jra.mock.SubredditMock;
 
 import java.io.IOException;
 

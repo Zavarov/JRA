@@ -1,11 +1,11 @@
-package proj.zav.jra.models._json;
+package zav.jra.models._json;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import proj.zav.jra.models.Karma;
-import proj.zav.jra.models.KarmaList;
+import zav.jra.models.Karma;
+import zav.jra.models.KarmaList;
 
 import java.io.IOException;
 

@@ -1,6 +1,6 @@
-package proj.zav.jra.mock;
+package zav.jra.mock;
 
-import proj.zav.jra.models.AbstractPreferences;
+import zav.jra.models.AbstractPreferences;
 
 public class PreferencesMock extends AbstractPreferences {
 }

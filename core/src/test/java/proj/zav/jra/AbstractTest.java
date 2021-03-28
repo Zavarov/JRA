@@ -1,4 +1,4 @@
-package proj.zav.jra;
+package zav.jra;
 
 import java.io.IOException;
 import java.nio.file.Files;

@@ -1,12 +1,12 @@
-package proj.zav.jra.mock;
+package zav.jra.mock;
 
 import okhttp3.*;
-import proj.zav.jra.AbstractClient;
-import proj.zav.jra.Token;
-import proj.zav.jra._factory.TokenFactory;
-import proj.zav.jra._factory.UserAgentFactory;
-import proj.zav.jra.exceptions.ForbiddenException;
-import proj.zav.jra.exceptions.NotFoundException;
+import zav.jra.AbstractClient;
+import zav.jra.Token;
+import zav.jra._factory.TokenFactory;
+import zav.jra._factory.UserAgentFactory;
+import zav.jra.exceptions.ForbiddenException;
+import zav.jra.exceptions.NotFoundException;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class ClientMock extends AbstractClient {
     public int code = HttpURLConnection.HTTP_OK;
 
     public ClientMock(){
-        setUserAgent(UserAgentFactory.create("linux", "Client", "proj.zav.jra", "Zavarov"));
+        setUserAgent(UserAgentFactory.create("linux", "Client", "zav.jra", "Zavarov"));
         setToken(TokenFactory.create(Token::new, "12345", 60));
     }
 

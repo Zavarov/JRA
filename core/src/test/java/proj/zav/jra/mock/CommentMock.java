@@ -1,9 +1,9 @@
-package proj.zav.jra.mock;
+package zav.jra.mock;
 
-import proj.zav.jra.models.AbstractComment;
-import proj.zav.jra.models.Kind;
-import proj.zav.jra.models.Thing;
-import proj.zav.jra.models._json.JSONAbstractComment;
+import zav.jra.models.AbstractComment;
+import zav.jra.models.Kind;
+import zav.jra.models.Thing;
+import zav.jra.models._json.JSONAbstractComment;
 
 public class CommentMock extends AbstractComment {
     public static CommentMock from(Thing thing){

@@ -1,9 +1,9 @@
-package proj.zav.jra.mock;
+package zav.jra.mock;
 
-import proj.zav.jra.models.AbstractLink;
-import proj.zav.jra.models.Kind;
-import proj.zav.jra.models.Thing;
-import proj.zav.jra.models._json.JSONAbstractLink;
+import zav.jra.models.AbstractLink;
+import zav.jra.models.Kind;
+import zav.jra.models.Thing;
+import zav.jra.models._json.JSONAbstractLink;
 
 public class LinkMock extends AbstractLink {
     public static LinkMock from(Thing thing){

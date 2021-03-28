@@ -1,4 +1,4 @@
-package proj.zav.jra.models._json;
+package zav.jra.models._json;
 
 import java.io.IOException;
 import java.nio.file.Files;

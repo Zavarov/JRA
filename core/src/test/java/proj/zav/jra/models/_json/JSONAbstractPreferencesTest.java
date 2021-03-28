@@ -1,10 +1,10 @@
-package proj.zav.jra.models._json;
+package zav.jra.models._json;
 
 import org.assertj.core.api.Assertions;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import proj.zav.jra.mock.PreferencesMock;
+import zav.jra.mock.PreferencesMock;
 
 import java.io.IOException;
 

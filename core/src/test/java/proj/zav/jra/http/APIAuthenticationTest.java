@@ -1,9 +1,9 @@
-package proj.zav.jra.http;
+package zav.jra.http;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import proj.zav.jra.AbstractClient;
-import proj.zav.jra.mock.ClientMock;
+import zav.jra.AbstractClient;
+import zav.jra.mock.ClientMock;
 
 import java.io.IOException;
 

@@ -1,8 +1,8 @@
-package proj.zav.jra.mock;
+package zav.jra.mock;
 
 import org.jetbrains.annotations.NotNull;
-import proj.zav.jra.Link;
-import proj.zav.jra.listener.SubredditListener;
+import zav.jra.Link;
+import zav.jra.listener.SubredditListener;
 
 public class SubredditListenerMock implements SubredditListener {
     @Override

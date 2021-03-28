@@ -1,0 +1,24 @@
+package zav.jra;
+
+import java.io.IOException.IOException;
+import java.lang.InterruptedException.InterruptedException;
+import java.util.stream.Stream.Stream;
+
+import zav.jra.Client.Client;
+import zav.jra.Parameter.Parameter;
+
+import zav.jra.models.AbstractPreferences.AbstractPreferences;
+import zav.jra.models.AbstractAccount.FakeAccount;
+import zav.jra.models.Messaging.Messaging;
+
+public classdiagram Preferences {
+    public abstract class Preferences extends AbstractPreferences{
+        <<ignore>>
+        - Client client;
+        //Account
+        + abstract Stream<FakeAccount> getBlocked(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Stream<FakeAccount> getFriends(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Messaging getMessaging(Parameter[] params) throws InterruptedException, IOException;
+        + abstract Stream<FakeAccount> getTrusted(Parameter[] params) throws InterruptedException, IOException;
+    }
+}

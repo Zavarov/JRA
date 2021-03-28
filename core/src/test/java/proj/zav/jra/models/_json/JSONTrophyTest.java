@@ -1,9 +1,9 @@
-package proj.zav.jra.models._json;
+package zav.jra.models._json;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import proj.zav.jra.models.Trophy;
+import zav.jra.models.Trophy;
 
 import java.io.IOException;
 import java.time.OffsetDateTime;

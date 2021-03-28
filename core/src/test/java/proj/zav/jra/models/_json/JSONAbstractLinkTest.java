@@ -1,10 +1,10 @@
-package proj.zav.jra.models._json;
+package zav.jra.models._json;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import proj.zav.jra.mock.LinkMock;
-import proj.zav.jra.models.AbstractLink;
+import zav.jra.mock.LinkMock;
+import zav.jra.models.AbstractLink;
 
 import java.io.IOException;
 import java.time.OffsetDateTime;

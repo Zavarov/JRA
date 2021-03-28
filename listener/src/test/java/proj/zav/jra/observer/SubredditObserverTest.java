@@ -1,13 +1,13 @@
-package proj.zav.jra.observer;
+package zav.jra.observer;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import proj.zav.jra.AbstractClient;
-import proj.zav.jra.AbstractTest;
-import proj.zav.jra.Client;
-import proj.zav.jra.Subreddit;
-import proj.zav.jra.mock.SubredditListenerMock;
+import zav.jra.AbstractClient;
+import zav.jra.AbstractTest;
+import zav.jra.Client;
+import zav.jra.Subreddit;
+import zav.jra.mock.SubredditListenerMock;
 
 import java.io.IOException;
 

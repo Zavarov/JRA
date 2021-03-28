@@ -1,13 +1,13 @@
-package proj.zav.jra.models._json;
+package zav.jra.models._json;
 
 import com.google.common.collect.Lists;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import proj.zav.jra.models.Kind;
-import proj.zav.jra.models.Listing;
-import proj.zav.jra.models.Thing;
+import zav.jra.models.Kind;
+import zav.jra.models.Listing;
+import zav.jra.models.Thing;
 
 import java.io.IOException;
 import java.util.List;

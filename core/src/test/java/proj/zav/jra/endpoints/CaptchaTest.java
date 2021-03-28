@@ -1,10 +1,10 @@
-package proj.zav.jra.endpoints;
+package zav.jra.endpoints;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import proj.zav.jra.AbstractTest;
-import proj.zav.jra.exceptions.ForbiddenException;
-import proj.zav.jra.mock.ClientMock;
+import zav.jra.AbstractTest;
+import zav.jra.exceptions.ForbiddenException;
+import zav.jra.mock.ClientMock;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

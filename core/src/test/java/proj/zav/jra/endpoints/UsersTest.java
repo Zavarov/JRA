@@ -1,14 +1,14 @@
-package proj.zav.jra.endpoints;
+package zav.jra.endpoints;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import proj.zav.jra.AbstractTest;
-import proj.zav.jra.mock.AccountMock;
-import proj.zav.jra.mock.ClientMock;
-import proj.zav.jra.mock.CommentMock;
-import proj.zav.jra.mock.LinkMock;
+import zav.jra.AbstractTest;
+import zav.jra.mock.AccountMock;
+import zav.jra.mock.ClientMock;
+import zav.jra.mock.CommentMock;
+import zav.jra.mock.LinkMock;
 
 import java.io.IOException;
 

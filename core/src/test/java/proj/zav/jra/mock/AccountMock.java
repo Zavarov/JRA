@@ -1,6 +1,6 @@
-package proj.zav.jra.mock;
+package zav.jra.mock;
 
-import proj.zav.jra.models.AbstractAccount;
+import zav.jra.models.AbstractAccount;
 
 public class AccountMock extends AbstractAccount {
 }

@@ -1,9 +1,0 @@
-package proj.zav.jra;
-
-import proj.zav.jra.models.AbstractLink.AbstractLink;
-
-public classdiagram Link {
-    public class Link extends AbstractLink{
-
-    }
-}
