@@ -11,6 +11,7 @@ import javax.annotation.Nonnull;
 public abstract class Search {
     /**
      * Provides access to the search function for links.
+     * @param client The client performing the request.
      * @return A list of things.
      * @see Endpoint#GET_SEARCH
      */
@@ -25,6 +26,8 @@ public abstract class Search {
 
     /**
      * Provides access to the search function for links.
+     * @param client The client performing the request.
+     * @param subreddit The subreddit within which is searched.
      * @return A list of things.
      * @see Endpoint#GET_SUBREDDIT_SEARCH
      */

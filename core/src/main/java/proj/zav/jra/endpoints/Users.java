@@ -22,6 +22,8 @@ import java.util.function.Supplier;
 public abstract class Users {
     /**
      * For blocking an user account.
+     * @param client The client performing the request.
+     * @return The jQuery response.
      * @see Endpoint#POST_BLOCK_USER;
      */
     public static QueryPost<String> postBlockUser(AbstractClient client) {
@@ -29,6 +31,8 @@ public abstract class Users {
     }
     /**
      * Create a relationship between a user and another user or subreddit.
+     * @param client The client performing the request.
+     * @return The jQuery response.
      * @see Endpoint#POST_FRIEND
      */
     public static QueryPost<String> postFriend(AbstractClient client) {
@@ -36,6 +40,9 @@ public abstract class Users {
     }
     /**
      * Create a relationship between a user and another user or subreddit.
+     * @param client The client performing the request.
+     * @param subreddit The subreddit that is modified.
+     * @return The jQuery response.
      * @see Endpoint#POST_SUBREDDIT_FRIEND
      */
     public static QueryPost<String> postFriend(AbstractClient client, String subreddit) {
@@ -44,6 +51,8 @@ public abstract class Users {
 
     /**
      * Report a user. Reporting a user brings it to the attention of a Reddit admin.
+     * @param client The client performing the request.
+     * @return The jQuery response.
      * @see Endpoint#POST_REPORT_USER
      */
     public static QueryPost<String> postReportUser(AbstractClient client) {
@@ -52,6 +61,8 @@ public abstract class Users {
 
     /**
      * TODO Doc
+     * @param client The client performing the request.
+     * @return The jQuery response.
      * @see Endpoint#POST_SETPERMISSION
      */
     public static QueryPost<String> postSetPermission(AbstractClient client) {
@@ -60,6 +71,9 @@ public abstract class Users {
 
     /**
      * TODO Doc
+     * @param client The client performing the request.
+     * @param subreddit The subreddit that is modified.
+     * @return The jQuery response.
      * @see Endpoint#POST_SUBREDDIT_SETPERMISSION
      */
     public static QueryPost<String> postSetPermission(AbstractClient client, String subreddit) {
@@ -68,6 +82,8 @@ public abstract class Users {
 
     /**
      * Remove a relationship between a user and another user or subreddit.
+     * @param client The client performing the request.
+     * @return The jQuery response.
      * @see Endpoint#POST_UNFRIEND
      */
     public static QueryPost<String> postUnfriend(AbstractClient client) {
@@ -76,6 +92,9 @@ public abstract class Users {
 
     /**
      * Remove a relationship between a user and another user or subreddit.
+     * @param client The client performing the request.
+     * @param subreddit The subreddit whose relationship is modified.
+     * @return The jQuery response.
      * @see Endpoint#POST_SUBREDDIT_UNFRIEND
      */
     public static QueryPost<String> postUnfriend(AbstractClient client, String subreddit) {
@@ -84,6 +103,8 @@ public abstract class Users {
 
     /**
      * TODO Doc
+     * @param client The client performing the request.
+     * @return A mapping associating each user with their user data.
      * @see Endpoint#GET_USER_DATA_BY_ACCOUNT_IDS
      */
     public static QueryGet<Map<String, FakeAccount>> getUserDataByAccountIds(AbstractClient client) {
@@ -105,7 +126,10 @@ public abstract class Users {
     }
 
     /**
-     * Check whether a username is available for registration.
+     * Check whether a username is available for registration. The name has to be specified as a parameter in the
+     * {@link QueryGet Query}.
+     * @param client The client performing the request.
+     * @return {@code true}, if the username is available. Otherwise false.
      * @see Endpoint#GET_USERNAME_AVAILABLE
      */
     public static QueryGet<Boolean> getUsernameAvailable(AbstractClient client) {
@@ -118,6 +142,9 @@ public abstract class Users {
 
     /**
      * Stop being friends with a user.
+     * @param client The client performing the request.
+     * @param username The name of the specified user.
+     * @return The jQuery response.
      * @see Endpoint#DELETE_ME_FRIENDS_USERNAME
      */
     public static QueryDelete<String> deleteMeFriends(AbstractClient client, String username) {
@@ -126,6 +153,9 @@ public abstract class Users {
 
     /**
      * Get information about a specific 'friend', such as notes.
+     * @param client The client performing the request.
+     * @param username The name of the specified user.
+     * @return The jQuery response.
      * @see Endpoint#GET_ME_FRIENDS_USERNAME
      */
     public static QueryGet<String> getMeFriends(AbstractClient client, String username) {
@@ -139,6 +169,9 @@ public abstract class Users {
 
     /**
      * Create or update a "friend" relationship.
+     * @param client The client performing the request.
+     * @param username The name of the specified user.
+     * @return The jQuery response.
      * @see Endpoint#PUT_ME_FRIENDS_USERNAME
      */
     public static QueryPut<String> putMeFriends(AbstractClient client, String username) {
@@ -152,6 +185,9 @@ public abstract class Users {
 
     /**
      * Return a list of trophies for the a given user.
+     * @param client The client performing the request.
+     * @param username The name of the specified user.
+     * @return A {@link List} of trophies.
      * @see Endpoint#GET_USER_USERNAME_TROHPIES
      */
     @Nonnull
@@ -166,6 +202,11 @@ public abstract class Users {
 
     /**
      * Return information about the user, including karma and gold status.
+     * @param client The client performing the request.
+     * @param username The name of the specified user.
+     * @param supplier A supplier for a fresh account instance.
+     * @param <T> The target type.
+     * @return An account instance for the specified user.
      * @see Endpoint#GET_USER_USERNAME_ABOUT
      */
     @Nonnull
@@ -179,7 +220,12 @@ public abstract class Users {
     }
 
     /**
-     * TODO Doc
+     * Retrieves all comments submitted by the specified user.
+     * @param client The client performing the request.
+     * @param username The name of the specified user.
+     * @param mapper A mapper function processing the Things contained by the {@link Listing}.
+     * @param <T> The target type.
+     * @return A {@link Listing} of comments.
      * @see Endpoint#GET_USER_USERNAME_COMMENTS
      */
     @Nonnull
@@ -193,7 +239,10 @@ public abstract class Users {
     }
 
     /**
-     * TODO Doc
+     * Retrieves all links/comments downvoted by the specified user.
+     * @param client The client performing the request.
+     * @param username The name of the specified user.
+     * @return A {@link Listing} of Things.
      * @see Endpoint#GET_USER_USERNAME_DOWNVOTED
      */
     @Nonnull
@@ -207,7 +256,10 @@ public abstract class Users {
     }
 
     /**
-     * TODO Doc
+     * Retrieves all links/comments gilded by the specified user.
+     * @param client The client performing the request.
+     * @param username The name of the specified user.
+     * @return A {@link Listing} of Things.
      * @see Endpoint#GET_USER_USERNAME_GILDED
      */
     @Nonnull
@@ -221,7 +273,10 @@ public abstract class Users {
     }
 
     /**
-     * TODO Doc
+     * Retrieves all links/comments hidden by the specified user.
+     * @param client The client performing the request.
+     * @param username The name of the specified user.
+     * @return A {@link Listing} of Things.
      * @see Endpoint#GET_USER_USERNAME_HIDDEN
      */
     @Nonnull
@@ -237,6 +292,9 @@ public abstract class Users {
 
     /**
      * TODO Doc
+     * @param client The client performing the request.
+     * @param username The name of the specified user.
+     * @return A {@link Listing} of Things.
      * @see Endpoint#GET_USER_USERNAME_OVERVIEW
      */
     @Nonnull
@@ -250,7 +308,10 @@ public abstract class Users {
     }
 
     /**
-     * TODO Doc
+     * Retrieves all links/comments saved by the specified user.
+     * @param client The client performing the request.
+     * @param username The name of the specified user.
+     * @return A {@link Listing} of Things.
      * @see Endpoint#GET_USER_USERNAME_SAVED
      */
     @Nonnull
@@ -264,7 +325,12 @@ public abstract class Users {
     }
 
     /**
-     * TODO Doc
+     * Retrieves all links submitted by the specified user.
+     * @param client The client performing the request.
+     * @param username The name of the specified user.
+     * @param mapper A mapper function processing the Things contained by the {@link Listing}.
+     * @param <T> The target type.
+     * @return A {@link Listing} of links.
      * @see Endpoint#GET_USER_USERNAME_SUBMITTED
      */
     @Nonnull
@@ -277,10 +343,10 @@ public abstract class Users {
         );
     }
     /**
-     * TODO Doc
-     * @param client
-     * @param username
-     * @return
+     * Retrieves all links/comments upvoted by the specified user.
+     * @param client The client performing the request.
+     * @param username The name of the specified user.
+     * @return A {@link Listing} of Things.
      * @see Endpoint#GET_USER_USERNAME_UPVOTED
      */
     @Nonnull

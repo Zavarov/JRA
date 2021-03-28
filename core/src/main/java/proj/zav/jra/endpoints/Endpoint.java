@@ -113,7 +113,7 @@ public enum Endpoint {
      *     <tr><th>{@code sr_detail}</th><th>(optional) expand subreddits</th></tr>
      *     <caption>Supported Arguments</caption>
      * </table>
-     * @see <a href="https://www.reddit.com/dev/api#GET_prefs_{where}">here</a>
+     * @see <a href="https://www.reddit.com/dev/api#GET_prefs_%28where%29">here</a>
      */
     GET_PREFS_WHERE("prefs","{where}"),
     /**
@@ -1156,7 +1156,7 @@ public enum Endpoint {
      * </p>
      * <p>
      * This text is set by the subreddit moderators and intended to be displayed on the submission form.
-     * See also: /api/site_admin.<p>
+     * See also: /api/site_admin.
      * </p>
      * @see <a href="https://www.reddit.com/dev/api#GET_api_submit_text">here</a>
      */
@@ -1324,7 +1324,7 @@ public enum Endpoint {
      * immediately, but will take effect the next time the stylesheet is saved.
      * </p>
      * <p>
-     * See also: /api/delete_sr_img, /api/delete_sr_header, /api/delete_sr_icon, and /api/delete_sr_banner.<p>
+     * See also: /api/delete_sr_img, /api/delete_sr_header, /api/delete_sr_icon, and /api/delete_sr_banner.
      * </p>
      * <table>
      *     <tr><th>{@code file}</th><th>file upload with maximum size of 500 KiB</th></tr>

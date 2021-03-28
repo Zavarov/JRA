@@ -39,6 +39,7 @@ public abstract class Listings {
      * Links sorted by {code best} have the highest ration between upvotes and downvotes.
      * @param client The client performing the request.
      * @param mapper A mapper function processing the Things contained by the {@link Listing}.
+     * @param <T> The target type.
      * @return A list of links.
      * @see Endpoint#GET_BEST
      */
@@ -56,6 +57,7 @@ public abstract class Listings {
      * @param client The client performing the request.
      * @param mapper A mapper function processing the Things contained by the {@link Listing}.
      * @param names A sequence of {@link AbstractLink Link} fullnames.
+     * @param <T> The target type.
      * @return A list of links with the specified fullnames.
      * @see Endpoint#GET_BY_ID
      */
