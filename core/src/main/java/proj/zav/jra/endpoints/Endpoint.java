@@ -201,7 +201,7 @@ public enum Endpoint {
 
     /**
      * <p>
-     * Check whether ReCAPTCHAs are needed for API methods.<p>
+     * Check whether ReCAPTCHAs are needed for API methods.
      * </p>
      * <p>
      * This endpoint returns a boolean.
@@ -271,7 +271,7 @@ public enum Endpoint {
      * <p>
      * {@code names} is a list of fullnames for links separated by commas or spaces.
      * </p>
-     * @see <a href="https://www.reddit.com/dev/api#GET_by_id_{names}">here</a>
+     * @see <a href="https://www.reddit.com/dev/api#GET_by_id_%28names%29">here</a>
      */
     GET_BY_ID("by_id","{names}"),
     /**
@@ -292,7 +292,7 @@ public enum Endpoint {
      * TODO see also /api/morechildren
      * TODO see also /api/comment
      * @see #GET_SUBREDDIT_COMMENTS
-     * @see <a href="https://www.reddit.com/dev/api#GET_comments_{article}">here</a>
+     * @see <a href="https://www.reddit.com/dev/api#GET_comments_%28article%29">here</a>
      */
     GET_COMMENTS("comments","{article}"),
     /**
@@ -313,13 +313,13 @@ public enum Endpoint {
      * TODO see also /api/morechildren
      * TODO see also /api/comment
      * @see #GET_COMMENTS
-     * @see <a href="https://www.reddit.com/dev/api#GET_comments_{article}">here</a>
+     * @see <a href="https://www.reddit.com/dev/api#GET_comments_%28article%29">here</a>
      */
     GET_SUBREDDIT_COMMENTS("r","{subreddit}","comments","{article}"),
     /**
      * Return a list of other submissions of the same URL.
      *
-     * @see <a href="https://www.reddit.com/dev/api#GET_duplicates_{article}">here</a>
+     * @see <a href="https://www.reddit.com/dev/api#GET_duplicates_%28article%29">here</a>
      */
     GET_DUPLICATES("duplicates","{article}"),
     /**
@@ -516,7 +516,7 @@ public enum Endpoint {
      *     <tr><th>{@code user}</th><th>A valid, existing reddit username</th></tr>
      *     <caption>Supported Arguments</caption>
      * </table>
-     * @see <a href="https://www.reddit.com/dev/api#GET_about_{where}">here</a>
+     * @see <a href="https://www.reddit.com/dev/api#GET_about_%28where%29">here</a>
      */
     GET_SUBREDDIT_ABOUT_WHERE("r","{subreddit}","about","{where}"),
     /**
@@ -536,7 +536,7 @@ public enum Endpoint {
      *     <tr><th>{@code user}</th><th>A valid, existing reddit username</th></tr>
      *     <caption>Supported Arguments</caption>
      * </table>
-     * @see <a href="https://www.reddit.com/dev/api#GET_about_{where}">here</a>
+     * @see <a href="https://www.reddit.com/dev/api#GET_about_%28where%29">here</a>
      */
     GET_ABOUT_WHERE("about","{where}"),
     /**
@@ -931,7 +931,7 @@ public enum Endpoint {
      *     <tr><th>{@code srnames}</th><th>comma-delimited list of subreddit names</th></tr>
      *     <caption>Supported Arguments</caption>
      * </table>
-     * @see <a href="https://www.reddit.com/dev/api#GET_api_recommend_sr_{srnames}">here</a>
+     * @see <a href="https://www.reddit.com/dev/api#GET_api_recommend_sr_%28srnames%29">here</a>
      */
     @Deprecated
     GET_RECOMMEND_SUBREDDITS("api","recommend","sr","{srnames}"),
@@ -1155,7 +1155,7 @@ public enum Endpoint {
      * Get the submission text for the subreddit.
      * </p>
      * <p>
-     * This text is set by the subreddit moderators and intended to be displayed on the submission form.<p>
+     * This text is set by the subreddit moderators and intended to be displayed on the submission form.
      * See also: /api/site_admin.<p>
      * </p>
      * @see <a href="https://www.reddit.com/dev/api#GET_api_submit_text">here</a>
@@ -1166,7 +1166,7 @@ public enum Endpoint {
      * Get the submission text for the subreddit.
      * </p>
      * <p>
-     * This text is set by the subreddit moderators and intended to be displayed on the submission form.<p>
+     * This text is set by the subreddit moderators and intended to be displayed on the submission form.
      * See also: /api/site_admin.
      * </p>
      * @see <a href="https://www.reddit.com/dev/api#GET_api_submit_text">here</a>
@@ -1422,7 +1422,7 @@ public enum Endpoint {
      * Data includes the subscriber count, description, and header image.
      * </p>
      * <p>
-     * This endpoint is a {@link AbstractSubreddit Subreddit}.<p>
+     * This endpoint is a {@link AbstractSubreddit Subreddit}.
      * </p>
      * @see <a href="https://www.reddit.com/dev/api#GET_r_%28subreddit%29_about">here</a>
      */
@@ -1524,7 +1524,7 @@ public enum Endpoint {
      * activity of the subreddit and the position of the subreddits can shift around. {@code new} sorts the subreddits
      * based on their creation date, newest first.
      * </p>
-     * @see <a href="https://www.reddit.com/dev/api#GET_subreddits_{where}">here</a>
+     * @see <a href="https://www.reddit.com/dev/api#GET_subreddits_%28where%29">here</a>
      */
     GET_SUBREDDITS_WHERE("subreddits","{where}"),
     /**
@@ -1651,7 +1651,7 @@ public enum Endpoint {
      *     <tr><th>{@code sr_detail}</th><th>(optional) expand subreddits</th></tr>
      *     <caption>Supported Arguments</caption>
      * </table>
-     * @see <a href="https://www.reddit.com/dev/api#GET_subreddits_mine_{where}">here</a>
+     * @see <a href="https://www.reddit.com/dev/api#GET_subreddits_mine_%28where%29">here</a>
      */
     GET_SUBREDDITS_MINE_WHERE("subreddits","mine","{where}"),
     /**
@@ -1749,7 +1749,7 @@ public enum Endpoint {
      *     <tr><th>{@code sr_detail}</th><th>(optional) expand subreddits</th></tr>
      *     <caption>Supported Arguments</caption>
      * </table>
-     * @see <a href="https://www.reddit.com/dev/api#GET_users_{where}">here</a>
+     * @see <a href="https://www.reddit.com/dev/api#GET_users_%28where%29">here</a>
      */
     GET_USERS_WHERE("users","{where}"),
     /**
