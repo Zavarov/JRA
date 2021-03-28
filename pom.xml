@@ -141,6 +141,14 @@
         </pluginRepository>
     </pluginRepositories>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Zavarov Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/Zavarov/JRA</url>
+        </repository>
+    </distributionManagement>
+
     <!-- == DEFAULT BUILD SETTINGS =========================================== -->
 
     <build>
