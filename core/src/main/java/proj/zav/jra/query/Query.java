@@ -23,9 +23,13 @@ public abstract class Query <T, Q extends Query<T,Q>> {
      */
     protected final Endpoint endpoint;
     /**
-     * Arguments for potential wildcards in the endpoint.<p>
+     * <p>
+     * Arguments for potential wildcards in the endpoint.
+     * </p>
+     * <p>
      * E.g the endpoint {@link Endpoint#GET_SUBREDDIT_ABOUT} with the argument {@code RedditDev} results in the
      * qualified endpoint {@code /r/RedditDev/about}.
+     * </p>
      */
     protected final Object[] args;
     /**
@@ -51,7 +55,7 @@ public abstract class Query <T, Q extends Query<T,Q>> {
     protected abstract Q getRealThis();
 
     /**
-     *
+     * Default constructor for creating new queries.
      * @param client The client executing the query.
      * @param endpoint The endpoint the query is directed to.
      * @param args Potential arguments quantifying wildcards in the endpoint.
@@ -62,6 +66,11 @@ public abstract class Query <T, Q extends Query<T,Q>> {
         this.args = args;
     }
 
+    /**
+     * Updates the host for all requests.<p>
+     * Default is {@link APIRequest#OAUTH2}.
+     * @param host
+     */
     public void setHost(String host){
         this.host = host;
     }

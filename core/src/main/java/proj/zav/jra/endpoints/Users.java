@@ -276,9 +276,11 @@ public abstract class Users {
                 username
         );
     }
-
     /**
      * TODO Doc
+     * @param client
+     * @param username
+     * @return
      * @see Endpoint#GET_USER_USERNAME_UPVOTED
      */
     @Nonnull

@@ -10,12 +10,15 @@ import java.io.IOException;
 import java.util.*;
 
 /**
+ * <p>
  * The authentication is used to register or deregister this application with the Reddit. The access token gained during
  * the registration is required for any further API requests. While it is not required to explicitly deregister the
- * access when it is no longer required, it is good practice to always do this when terminating the program.<p>
-
+ * access when it is no longer required, it is good practice to always do this when terminating the program.
+ * </p>
+ * <p>
  * This prevents third parties from misuse the token should it be accidentally leaked but also informs Reddit that it
  * can be safely removed from their database.
+ * </p>
  */
 @Nonnull
 public class APIAuthentication {

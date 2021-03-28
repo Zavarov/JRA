@@ -17,9 +17,10 @@ import java.util.function.Supplier;
 public abstract class Account {
     /**
      * Returns the {@link AbstractSelfAccount SelfAccount} of the client.
-     * @param supplier Provides the account instance.
      * @param client The client instance performing the API request.
-     * @return An instance of the {@link AbstractSelfAccount SelfAccount} of the currently logged-in user.
+     * @param supplier Provides the SelfAccount instance.
+     * @param <T> The type of SelfAccount implementation.
+     * @return A SelfAccount instance of the currently logged-in user.
      * @see Endpoint#GET_ME
      */
     @Nonnull
@@ -95,6 +96,8 @@ public abstract class Account {
      * Those settings contain information such as the default {@link AbstractComment Comment} sort, whether nightmode is
      * enabled or whether they should be notified via email upon mentions or responses.
      * @param client The client instance performing the API request.
+     * @param supplier Provides the Preferences instance.
+     * @param <T> The type of Preferences implementation.
      * @return An instance of the user preferences.
      * @see Endpoint#GET_ME_PREFS
      */
@@ -110,6 +113,8 @@ public abstract class Account {
     /**
      * Updates the preferences of this {@link Account}.
      * @param client The client instance performing the API request.
+     * @param supplier Provides the Preferences instance.
+     * @param <T> The type of Preferences implementation.
      * @return An instance of the updated user preferences.
      * @see Endpoint#GET_ME_PREFS
      */
