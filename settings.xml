@@ -20,7 +20,7 @@
         <repository>
           <id>github</id>
           <name>GitHub Zavarov Apache Maven Packages</name>
-          <url>https://maven.pkg.github.com/zavarov/JRA</url>
+          <url>https://maven.pkg.github.com/zavarov/jra</url>
         </repository>
       </repositories>
     </profile>

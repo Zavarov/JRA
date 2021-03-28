@@ -22,12 +22,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>proj.zav.jra</groupId>
-    <artifactId>JRA</artifactId>
+    <artifactId>jra</artifactId>
     <packaging>pom</packaging>
     <version>0.1.0-SNAPSHOT</version>
     <modules>
         <module>core</module>
-        <module>jra</module>
+        <module>impl</module>
         <module>listener</module>
     </modules>
 
@@ -145,7 +145,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Zavarov Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/Zavarov/JRA</url>
+            <url>https://maven.pkg.github.com/zavarov/jra</url>
         </repository>
     </distributionManagement>
 
