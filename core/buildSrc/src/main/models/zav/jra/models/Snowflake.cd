@@ -1,0 +1,17 @@
+package zav.jra.models;
+
+import java.lang.String.String;
+
+public classdiagram Snowflake {
+    public abstract class Snowflake{
+        /**
+         * ID of the thing; prepend the kind to get fullname.
+         * e.g. t2_ in case of an accounts.
+         */
+        <<key="id">>
+        - String id;
+
+        <<key="name">>
+        - String name;
+    }
+}

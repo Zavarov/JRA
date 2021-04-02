@@ -1,0 +1,13 @@
+package zav.jra.models;
+
+import java.util.List.List;
+
+import zav.jra.models.AbstractLink.AbstractLink;
+import zav.jra.models.Thing.Thing;
+
+public classdiagram Submission {
+    public class Submission {
+        private AbstractLink link;
+        private List<Thing> comments;
+    }
+}

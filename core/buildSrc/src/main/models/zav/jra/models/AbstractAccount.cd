@@ -1,0 +1,149 @@
+package zav.jra.models;
+
+import java.lang.Boolean.Boolean;
+import java.lang.Integer.Integer;
+import java.lang.String.String;
+import java.util.Map.Map;
+import java.util.List.List;
+import java.util.Optional.Optional;
+
+import zav.jra.AbstractClient.AbstractClient;
+import zav.jra.models.Created.Created;
+import zav.jra.query.QueryGet.QueryGet;
+
+public classdiagram AbstractAccount {
+    public abstract class AbstractAccount extends Created{
+        /**
+         * User's comment karma.
+         */
+        <<key="comment_karma">>
+        - int commentKarma;
+        /**
+         * User has unread mail? Empty if not your account.
+         */
+        <<key="has_mail">>
+        - Optional<Boolean> hasMail;
+        /**
+         * User has unread mod mail? Empty if not your account.
+         */
+        <<key="has_mod_mail">>
+        - Optional<Boolean> hasModMail;
+        /**
+         * User has provided an email address and got it verified?
+         */
+        <<key="has_verified_email">>
+        - boolean hasVerifiedEmail;
+        /**
+         * Number of unread messages in the inbox. Empty if not your account.
+         */
+        <<key="inbox_count">>
+        - Optional<Integer> inboxCount;
+        /**
+         * Whether the logged-in user has this user set as a friend.
+         */
+        <<key="is_friend">>
+        - boolean isFriend;
+        /**
+         * Reddit gold status.
+         */
+        <<key="is_gold">>
+        - boolean isGoldMember;
+        /**
+         * Whether this account moderates any subreddits.
+         */
+        <<key="is_mod">>
+        - boolean isMod;
+        /**
+         * User's link karma.
+         */
+        <<key="link_karma">>
+        - int linkKarma;
+        /**
+         * Current modhash. Empty if not your account.
+         */
+        <<key="modhash">>
+        - Optional<String> modHash;
+        /**
+         * Whether this account is set to be over 18.
+         */
+        <<key="over_18">>
+        - Optional<Boolean> over18;
+        /**
+         * Whether this account is subscribed to at least one subreddit.
+         */
+        <<key="has_subscribed">>
+        - boolean hasSubscribed;
+        /**
+         * How much karma has been gained by giving awards to other users.
+         */
+         <<key="awarder_karma">>
+        - Optional<Integer> awarderKarma;
+        /**
+         * How much karma has been received from awards given by other users.
+         */
+         <<key="awardee_karma">>
+        - Optional<Integer> awardeeKarma;
+        /**
+         * The URL of the profile picture.
+         */
+        <<key="icon_img">>
+        - String iconImage;
+        /**
+         * The link and comment karma combined.
+         */
+        <<key="total_karma">>
+        - Optional<Integer> totalKarma;
+        /**
+         * Is this user verified? e.g. via email.
+         */
+        <<key="verified">>
+        - boolean verified;
+        /**
+         * Is this user a Reddit employee?
+         */
+        <<key="is_employee">>
+        - boolean isEmployee;
+        /**
+         * Does the user accept chat requests?
+         */
+        <<key="accept_chats">>
+        - Optional<Boolean> acceptChats;
+        /**
+         * Does the user accept private messages?
+         */
+        <<key="accept_pms">>
+        - Optional<Boolean> acceptPrivateMessages;
+    }
+
+    public abstract class AbstractSelfAccount{
+        <<key="over_18">>
+        - boolean over18;
+        <<key="comment_karma">>
+        - int commentKarma;
+        <<key="id">>
+        - String id;
+        <<key="created_utc">>
+        - double createdUtc;
+        <<key="num_friends">>
+        - int numberOfFriends;
+        <<key="created">>
+        - double created;
+        <<key="total_karma">>
+        - int totalKarma;
+        <<key="link_karma">>
+        - int linkKarma;
+        <<key="icon_img">>
+        - String iconImage;
+    }
+
+    public class FakeAccount{
+        <<ignore>>
+        - String name;
+
+        - Map<String, Object> data;
+    }
+
+    public class UserList{
+        - List<FakeAccount> data;
+    }
+}

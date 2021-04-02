@@ -39,10 +39,7 @@
         <guava.version>30.1.1-jre</guava.version>
         <commons-text.version>1.9</commons-text.version>
         <okhttp.version>4.10.0-RC1</okhttp.version>
-
-        <!-- .. Generator .......................................................................................... -->
-
-        <cd4code.version>2.4</cd4code.version>
+        <log4j.version>2.14.1</log4j.version>
 
         <!-- Test -->
         <junit.version>5.7.1</junit.version>
@@ -51,8 +48,6 @@
         <!-- .. Plugins ............................................................................................ -->
 
         <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
-        <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
-        <maven-exec-plugin.version>3.0.0</maven-exec-plugin.version>
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <maven-builder-helper-plugin.version>3.2.0</maven-builder-helper-plugin.version>
@@ -95,11 +90,21 @@
         </dependency>
 
         <dependency>
-            <groupId>vartas.monticore-commons</groupId>
-            <artifactId>cd4code</artifactId>
-            <version>${cd4code.version}</version>
-            <classifier>${templates.classifier}</classifier>
-            <scope>provided</scope>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j.version}</version>
         </dependency>
 
         <!-- Test Libraries         -->
@@ -126,20 +131,6 @@
     </dependencies>
 
     <!-- == GitHub Repositories =========================================== -->
-
-    <repositories>
-        <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/zavarov/monticore-commons</url>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/zavarov/monticore-commons</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <distributionManagement>
         <repository>
