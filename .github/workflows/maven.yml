@@ -20,7 +20,13 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.11
+    - name: Generate Sources
+      env:
+        GITHUB_ACCOUNT: ${{ github.actor }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: bash gradle.sh
     - name: Build with Maven
       env:
+        GITHUB_ACCOUNT: ${{ github.actor }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: mvn -B package --file pom.xml

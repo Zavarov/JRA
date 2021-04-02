@@ -1,0 +1,52 @@
+apply plugin: 'groovy'
+
+repositories {
+	mavenCentral()
+	maven {
+		url "https://nexus.se.rwth-aachen.de/content/groups/public/"
+	}
+	maven {
+		url "https://maven.pkg.github.com/zavarov/monticore-commons"
+		credentials {
+			username = System.getenv("GITHUB_ACCOUNT")
+			password = System.getenv("GITHUB_TOKEN")
+		}
+	}
+}
+
+configurations {
+    codegen
+}
+
+dependencies {
+	implementation 'org.codehaus.groovy:groovy-all:3.0.7'
+	implementation 'zav.mc:cd4code:2.4.2'
+	codegen ('zav.mc:cd4code:2.4.2:models') {
+		transitive = false
+	}
+	codegen ('zav.mc:cd4code:2.4.2:templates') {
+        transitive = false
+	}
+}
+
+task unpackDependencies(type: Sync) {
+    dependsOn configurations.codegen
+
+    from { // use of closure defers evaluation until execution time
+        configurations.codegen.collect { zipTree(it) }
+    }
+    into "$buildDir/codegen/"
+}
+
+task copyModels(dependsOn: unpackDependencies, type: Copy) {
+	//build <- buildSrc <- jra <- JRA -> core -> buildSrc -> src -> main -> models
+	from "$buildDir/../../../core/buildSrc/src/main/models"
+	into "$buildDir/codegen"
+}
+
+task runScript (dependsOn: copyModels, type: JavaExec) {
+	main = 'zav.mc.gradle.CodeGen'
+	classpath = sourceSets.main.runtimeClasspath
+}
+
+defaultTasks 'runScript'

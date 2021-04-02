@@ -1,8 +1,0 @@
-{
-  "models_path": "core/target/dependency",
-  "local_models_path" : "core/src/main/models",
-  "templates_path" : "core/target/dependency",
-  "local_templates_path" : "core/src/main/resources/templates" ,
-  "sources_directory" : "core/src/main/java",
-  "target_directory" : "core/target/generated-sources/"
-}

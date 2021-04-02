@@ -1,0 +1,11 @@
+package zav.jra.models;
+
+import java.util.List.List;
+import zav.jra.models.Account.FakeAccount;
+
+public classdiagram Messaging {
+    public class Messaging{
+        List<FakeAccount> blocked;
+        List<FakeAccount> trusted;
+    }
+}

@@ -12,12 +12,8 @@
     <artifactId>core</artifactId>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <!-- .. Generator Arguments ................................................................................ -->
-        <generator.main>vartas.monticore.cd4code.SimpleMain</generator.main>
-        <generator.config>${project.basedir}/src/main/resources/cd4code.json</generator.config>
-        <generator.output.directory>${project.basedir}/target/generated-sources/</generator.output.directory>
+        <src.path>${project.basedir}/buildSrc/build/src/main/java</src.path>
+        <model.path>${project.basedir}/buildSrc/src/main/models</model.path>
     </properties>
 
     <dependencies>
@@ -46,140 +42,12 @@
                         </goals>
                         <configuration>
                             <classifier>${models.classifier}</classifier>
-                            <classesDirectory>src/main/models</classesDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-                <!-- Include project version -->
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-            <!-- Load the templates for the generator-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>${maven-dependency-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>unpack-templates</id>
-                        <goals>
-                            <goal>unpack-dependencies</goal>
-                        </goals>
-                        <phase>initialize</phase>
-                        <configuration>
-                            <classifier>${templates.classifier}</classifier>
-                            <includeGroupIds>vartas.monticore-commons</includeGroupIds>
-                            <includeArtifactIds>cd4code</includeArtifactIds>
-                            <includeTypes>jar</includeTypes>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>unpack-models</id>
-                        <goals>
-                            <goal>unpack-dependencies</goal>
-                        </goals>
-                        <phase>initialize</phase>
-                        <configuration>
-                            <classifier>${models.classifier}</classifier>
-                            <includeGroupIds>vartas.monticore-commons</includeGroupIds>
-                            <includeArtifactIds>cd4code</includeArtifactIds>
-                            <includeTypes>jar</includeTypes>
+                            <classesDirectory>${models.path}</classesDirectory>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-            <!-- Code Generation -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>${maven-exec-plugin.version}</version>
-                <executions>
-                    <!-- Generate core classes -->
-                    <execution>
-                        <id>client</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <includeProjectDependencies>false</includeProjectDependencies>
-                            <includePluginDependencies>true</includePluginDependencies>
-                            <mainClass>${generator.main}</mainClass>
-                            <arguments>
-                                <argument>${generator.config}</argument>
-                                <argument>zav.jra.AbstractClient</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <!-- Generate models -->
-                    <execution>
-                        <id>types</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <includeProjectDependencies>false</includeProjectDependencies>
-                            <includePluginDependencies>true</includePluginDependencies>
-                            <mainClass>${generator.main}</mainClass>
-                            <arguments>
-                                <argument>${generator.config}</argument>
-                                <argument>zav.jra.models.AbstractAccount</argument>
-                                <argument>zav.jra.models.AbstractComment</argument>
-                                <argument>zav.jra.models.AbstractLink</argument>
-                                <argument>zav.jra.models.AbstractPreferences</argument>
-                                <argument>zav.jra.models.AbstractSubreddit</argument>
-                                <argument>zav.jra.models.Created</argument>
-                                <argument>zav.jra.models.Duplicate</argument>
-                                <argument>zav.jra.models.Karma</argument>
-                                <argument>zav.jra.models.Listing</argument>
-                                <argument>zav.jra.models.Messaging</argument>
-                                <argument>zav.jra.models.Rule</argument>
-                                <argument>zav.jra.models.Snowflake</argument>
-                                <argument>zav.jra.models.Submission</argument>
-                                <argument>zav.jra.models.SubredditSettings</argument>
-                                <argument>zav.jra.models.Thing</argument>
-                                <argument>zav.jra.models.TrendingSubreddits</argument>
-                                <argument>zav.jra.models.Trophy</argument>
-                                <argument>zav.jra.models.Types</argument>
-                                <argument>zav.jra.models.Votable</argument>
-                                <argument>zav.jra.models.VotableCreated</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <!-- Generate exceptions -->
-                    <execution>
-                        <id>exceptions</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <includeProjectDependencies>false</includeProjectDependencies>
-                            <includePluginDependencies>true</includePluginDependencies>
-                            <mainClass>${generator.main}</mainClass>
-                            <arguments>
-                                <argument>${generator.config}</argument>
-                                <argument>zav.jra.exceptions.Exceptions</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>vartas.monticore-commons</groupId>
-                        <artifactId>cd4code</artifactId>
-                        <version>${cd4code.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <!-- Including the generated source files -->
+            <!-- Include the generated source files -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -192,7 +60,7 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${generator.output.directory}</source>
+                                <source>${src.path}</source>
                             </sources>
                         </configuration>
                     </execution>

@@ -1,7 +1,0 @@
-package java.io;
-
-import java.lang.Exception.Exception;
-
-classdiagram IOException{
-    public class IOException extends Exception{}
-}

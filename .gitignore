@@ -88,3 +88,6 @@ fabric.properties
 **/.idea
 **/*.iml
 **/resources/config.json
+**/buildSrc/.gradle
+**/buildSrc/build
+**/buildSrc/src/main/java
