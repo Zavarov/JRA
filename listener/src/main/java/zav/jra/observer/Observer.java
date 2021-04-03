@@ -7,4 +7,5 @@ public interface Observer <T extends EventListener> {
     boolean removeListener(T listener);
     void notifyListener(T listener);
     void notifyAllListener();
+    int size();
 }

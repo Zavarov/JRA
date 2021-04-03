@@ -21,4 +21,9 @@ public abstract class AbstractObserver <T extends EventListener> implements Obse
     public void notifyAllListener() {
         listeners.forEach(this::notifyListener);
     }
+
+    @Override
+    public int size() {
+        return listeners.size();
+    }
 }

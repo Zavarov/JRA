@@ -28,4 +28,9 @@ public abstract class AbstractObservable <Q extends EventListener, T extends Obs
     public void notifyObserver(T observer) {
         observer.notifyAllListener();
     }
+
+    @Override
+    public int size(){
+        return observers.size();
+    }
 }
