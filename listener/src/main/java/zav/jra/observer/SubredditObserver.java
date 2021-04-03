@@ -12,10 +12,13 @@ import java.util.Collection;
 public class SubredditObserver extends AbstractObserver<SubredditListener>{
     @Nonnull
     private final LinkRequester requester;
+    @Nonnull
+    private final Subreddit subreddit;
     @Nullable
     private Collection<? extends Link> history;
 
     public SubredditObserver(@Nonnull Subreddit subreddit){
+        this.subreddit = subreddit;
         this.requester = new LinkRequester(subreddit);
     }
 
@@ -30,6 +33,6 @@ public class SubredditObserver extends AbstractObserver<SubredditListener>{
     public void notifyListener(SubredditListener listener) {
         //History may be null when a listener is called explicitly instead of via notifyAllListener.
         history = history == null ? requester.next() : history;
-        history.forEach(listener::newLink);
+        history.forEach(link -> listener.newLink(subreddit, link));
     }
 }
