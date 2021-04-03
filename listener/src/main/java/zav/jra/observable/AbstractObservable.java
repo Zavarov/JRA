@@ -23,4 +23,9 @@ public abstract class AbstractObservable <Q extends EventListener, T extends Obs
     public void notifyAllObservers() {
         observers.forEach(this::notifyObserver);
     }
+
+    @Override
+    public void notifyObserver(T observer) {
+        observer.notifyAllListener();
+    }
 }
