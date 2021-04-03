@@ -14,7 +14,7 @@ public class SubredditObserver <T extends SubredditListener> extends AbstractObs
     @Nonnull
     private final LinkRequester requester;
     @Nonnull
-    private final Subreddit subreddit;
+    protected final Subreddit subreddit;
     @Nullable
     private Collection<? extends Link> history;
 
