@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Objects;
 
 public class SubredditObserver <T extends SubredditListener> extends AbstractObserver<T>{
     @Nonnull
@@ -40,5 +41,22 @@ public class SubredditObserver <T extends SubredditListener> extends AbstractObs
         } catch(LinkRequester.IteratorException e){
             throw e.getCause();
         }
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (o == null) {
+            return false;
+        } else if (o instanceof SubredditObserver) {
+            SubredditObserver<?> other = (SubredditObserver<?>)o;
+            return Objects.equals(subreddit.getDisplayName(), other.subreddit.getDisplayName());
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode(){
+        return subreddit.hashCodeDisplayName();
     }
 }
