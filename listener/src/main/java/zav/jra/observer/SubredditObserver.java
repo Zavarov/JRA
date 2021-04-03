@@ -1,25 +1,35 @@
 package zav.jra.observer;
 
+import zav.jra.Link;
 import zav.jra.Subreddit;
 import zav.jra.listener.SubredditListener;
 import zav.jra.requester.LinkRequester;
 
-public class SubredditObserver extends AbstractObserver<SubredditListener>{
-    private final Subreddit subreddit;
-    private final LinkRequester requester;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collection;
 
-    public SubredditObserver(Subreddit subreddit){
-        this.subreddit = subreddit;
+public class SubredditObserver extends AbstractObserver<SubredditListener>{
+    @Nonnull
+    private final LinkRequester requester;
+    @Nullable
+    private Collection<? extends Link> history;
+
+    public SubredditObserver(@Nonnull Subreddit subreddit){
         this.requester = new LinkRequester(subreddit);
     }
 
     @Override
-    public void notifyListener(SubredditListener listener) {
-        checkLinks(listener);
+    public void notifyAllListener() {
+        history = requester.next(); //History is computed once for all listeners
+        super.notifyAllListener();
+        history = null;
     }
 
-    private void checkLinks(SubredditListener listener){
-        requester.peek().forEach(listener::newLink);
-        requester.next();
+    @Override
+    public void notifyListener(SubredditListener listener) {
+        //History may be null when a listener is called explicitly instead of via notifyAllListener.
+        history = history == null ? requester.next() : history;
+        history.forEach(listener::newLink);
     }
 }
