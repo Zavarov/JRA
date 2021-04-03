@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Collection;
 
-public class SubredditObserver extends AbstractObserver<SubredditListener>{
+public class SubredditObserver <T extends SubredditListener> extends AbstractObserver<T>{
     @Nonnull
     private final LinkRequester requester;
     @Nonnull
@@ -31,7 +31,7 @@ public class SubredditObserver extends AbstractObserver<SubredditListener>{
     }
 
     @Override
-    public void notifyListener(SubredditListener listener) throws IOException {
+    public void notifyListener(T listener) throws IOException {
         //History may be null when a listener is called explicitly instead of via notifyAllListener.
         history = history == null ? requester.next() : history;
 

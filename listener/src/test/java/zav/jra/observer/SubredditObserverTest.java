@@ -7,6 +7,7 @@ import zav.jra.AbstractClient;
 import zav.jra.AbstractTest;
 import zav.jra.Client;
 import zav.jra.Subreddit;
+import zav.jra.listener.SubredditListener;
 import zav.jra.mock.SubredditListenerMock;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.io.IOException;
 public class SubredditObserverTest extends AbstractTest {
     private static Client client;
     private static Subreddit subreddit;
-    private SubredditObserver observer;
+    private SubredditObserver<SubredditListener> observer;
     @BeforeAll
     public static void setUpAll() throws IOException, InterruptedException {
         client = getScript("SubredditObserverTest");
@@ -29,7 +30,7 @@ public class SubredditObserverTest extends AbstractTest {
 
     @BeforeEach
     public void setUp(){
-        observer = new SubredditObserver(subreddit);
+        observer = new SubredditObserver<>(subreddit);
         observer.addListener(new SubredditListenerMock());
     }
 
