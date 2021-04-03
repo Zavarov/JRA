@@ -1,5 +1,6 @@
 package zav.jra.observer;
 
+import java.io.IOException;
 import java.util.EventListener;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -18,8 +19,10 @@ public abstract class AbstractObserver <T extends EventListener> implements Obse
     }
 
     @Override
-    public void notifyAllListener() {
-        listeners.forEach(this::notifyListener);
+    public void notifyAllListener() throws IOException {
+        for(T listener : listeners){
+            this.notifyListener(listener);
+        }
     }
 
     @Override

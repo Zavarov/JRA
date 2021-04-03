@@ -2,6 +2,7 @@ package zav.jra.observable;
 
 import zav.jra.observer.Observer;
 
+import java.io.IOException;
 import java.util.EventListener;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -20,12 +21,14 @@ public abstract class AbstractObservable <Q extends EventListener, T extends Obs
     }
 
     @Override
-    public void notifyAllObservers() {
-        observers.forEach(this::notifyObserver);
+    public void notifyAllObservers() throws  IOException{
+        for(T observer : observers){
+            this.notifyObserver(observer);
+        }
     }
 
     @Override
-    public void notifyObserver(T observer) {
+    public void notifyObserver(T observer) throws IOException {
         observer.notifyAllListener();
     }
 

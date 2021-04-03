@@ -29,13 +29,15 @@ public class LinkRequester extends AbstractIterator<Collection<? extends Link>> 
     }
 
     @Override
-    protected Collection<? extends Link> computeNext() {
-        try{
+    protected Collection<? extends Link> computeNext() throws IteratorException{
+        try {
             LOGGER.info("Computing next links.");
             return head == null ? init() : request();
-        }catch(Exception e){
-            LOGGER.error(e.getMessage(), e);
+        } catch(InterruptedException e){
+            LOGGER.warn(e.getMessage(), e);
             return Collections.emptyList();
+        } catch(IOException e) {
+            throw new IteratorException(e);
         }
     }
 
@@ -66,5 +68,18 @@ public class LinkRequester extends AbstractIterator<Collection<? extends Link>> 
         }
 
         return result;
+    }
+
+    public final static class IteratorException extends RuntimeException{
+        private final IOException cause;
+
+        public IteratorException(IOException cause){
+            this.cause = cause;
+        }
+
+        @Override
+        public IOException getCause(){
+            return cause;
+        }
     }
 }

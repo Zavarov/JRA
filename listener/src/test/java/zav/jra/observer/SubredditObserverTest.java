@@ -34,7 +34,7 @@ public class SubredditObserverTest extends AbstractTest {
     }
 
     //@Test
-    public void test() throws InterruptedException {
+    public void test() throws InterruptedException, IOException {
         while(true){
             observer.notifyAllListener();
             Thread.sleep(60000);

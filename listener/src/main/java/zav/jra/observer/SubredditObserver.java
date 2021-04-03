@@ -7,6 +7,7 @@ import zav.jra.requester.LinkRequester;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.util.Collection;
 
 public class SubredditObserver extends AbstractObserver<SubredditListener>{
@@ -23,16 +24,21 @@ public class SubredditObserver extends AbstractObserver<SubredditListener>{
     }
 
     @Override
-    public void notifyAllListener() {
+    public void notifyAllListener() throws IOException{
         history = requester.next(); //History is computed once for all listeners
         super.notifyAllListener();
         history = null;
     }
 
     @Override
-    public void notifyListener(SubredditListener listener) {
+    public void notifyListener(SubredditListener listener) throws IOException {
         //History may be null when a listener is called explicitly instead of via notifyAllListener.
         history = history == null ? requester.next() : history;
-        history.forEach(link -> listener.newLink(subreddit, link));
+
+        try {
+            history.forEach(link -> listener.newLink(subreddit, link));
+        } catch(LinkRequester.IteratorException e){
+            throw e.getCause();
+        }
     }
 }
