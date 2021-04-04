@@ -29,9 +29,10 @@ public class SubredditObserver <T extends SubredditListener> extends AbstractObs
         try {
             history = requester.next(); //History is computed once for all listeners
             super.notifyAllListener();
-            history = null;
         } catch(LinkRequester.IteratorException e){
             throw e.getCause();
+        } finally {
+            history = null; //Clear cache even in case an IOException was thrown.
         }
     }
 
