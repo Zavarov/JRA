@@ -26,17 +26,20 @@ public class SubredditObserver <T extends SubredditListener> extends AbstractObs
 
     @Override
     public void notifyAllListener() throws IOException{
-        history = requester.next(); //History is computed once for all listeners
-        super.notifyAllListener();
-        history = null;
+        try {
+            history = requester.next(); //History is computed once for all listeners
+            super.notifyAllListener();
+            history = null;
+        } catch(LinkRequester.IteratorException e){
+            throw e.getCause();
+        }
     }
 
     @Override
     public void notifyListener(T listener) throws IOException {
-        //History may be null when a listener is called explicitly instead of via notifyAllListener.
-        history = history == null ? requester.next() : history;
-
         try {
+            //History may be null when a listener is called explicitly instead of via notifyAllListener.
+            history = history == null ? requester.next() : history;
             history.forEach(link -> listener.newLink(subreddit, link));
         } catch(LinkRequester.IteratorException e){
             throw e.getCause();
