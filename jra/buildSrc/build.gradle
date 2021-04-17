@@ -33,6 +33,7 @@ task unpackDependencies(type: Sync) {
     dependsOn configurations.codegen
 
     from { // use of closure defers evaluation until execution time
+		exclude "META-INF/**"
         configurations.codegen.collect { zipTree(it) }
     }
     into "$buildDir/codegen/"
