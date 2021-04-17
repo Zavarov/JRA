@@ -26,6 +26,15 @@ public class JSONAbstractLink extends JSONAbstractLinkTOP{
     }
 
     @Override
+    protected void $fromThumbnail(JSONObject source, AbstractLink target){
+        //Bug #5 - Link thumbnails may be "self"
+        String thumbnail = source.optString(THUMBNAIL, null);
+
+        if(thumbnail != null && !thumbnail.equals("self"))
+            target.setThumbnail(thumbnail);
+    }
+
+    @Override
     protected void $fromCreatedUtc(JSONObject source, AbstractLink target){
         double seconds = source.getDouble(CREATEDUTC);
         Instant instant = Instant.ofEpochSecond((long)seconds);

@@ -47,7 +47,7 @@ public class JSONDuplicateTest extends AbstractJSONTest{
         assertThat(source.getSelftextHtml()).contains("<!-- SC_OFF --><div class=\"md\"><p>bla bla bla OAuth2 bla bla bla Modernizing</p>\n</div><!-- SC_ON -->");
         assertThat(source.getSubreddit()).isEqualTo("redditdev");
         assertThat(source.getSubredditId()).isEqualTo("t5_2qizd");
-        assertThat(source.getThumbnail()).contains("self");
+        assertThat(source.getThumbnail()).isEmpty();
         assertThat(source.getTitle()).isEqualTo("OAuth2 API Changes Upcoming");
         assertThat(source.getUrl()).isEqualTo("https://www.reddit.com/r/redditdev/comments/kvzaot/oauth2_api_changes_upcoming/");
         assertThat(source.getEdited()).map(OffsetDateTime::toEpochSecond).contains(1610636014L);
