@@ -1,5 +1,6 @@
 package zav.jra.observer;
 
+import com.google.common.collect.Lists;
 import zav.jra.Link;
 import zav.jra.Subreddit;
 import zav.jra.listener.SubredditListener;
@@ -8,7 +9,7 @@ import zav.jra.requester.LinkRequester;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 public class SubredditObserver <T extends SubredditListener> extends AbstractObserver<T>{
@@ -17,7 +18,7 @@ public class SubredditObserver <T extends SubredditListener> extends AbstractObs
     @Nonnull
     protected final Subreddit subreddit;
     @Nullable
-    private Collection<? extends Link> history;
+    private List<? extends Link> history;
 
     public SubredditObserver(@Nonnull Subreddit subreddit){
         this.subreddit = subreddit;
@@ -41,7 +42,8 @@ public class SubredditObserver <T extends SubredditListener> extends AbstractObs
         try {
             //History may be null when a listener is called explicitly instead of via notifyAllListener.
             history = history == null ? requester.next() : history;
-            history.forEach(link -> listener.newLink(subreddit, link));
+            //Notify the listener starting with the oldest link first
+            Lists.reverse(history).forEach(link -> listener.newLink(subreddit, link));
         } catch(LinkRequester.IteratorException e){
             throw e.getCause();
         }

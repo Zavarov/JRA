@@ -11,12 +11,11 @@ import zav.jra._factory.ParameterFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class LinkRequester extends AbstractIterator<Collection<? extends Link>> {
+public class LinkRequester extends AbstractIterator<List<? extends Link>> {
     @Nonnull
     private static final Logger LOGGER = LoggerFactory.getLogger(LinkRequester.class);
     @Nonnull
@@ -29,7 +28,7 @@ public class LinkRequester extends AbstractIterator<Collection<? extends Link>> 
     }
 
     @Override
-    protected Collection<? extends Link> computeNext() throws IteratorException{
+    protected List<? extends Link> computeNext() throws IteratorException{
         try {
             LOGGER.info("Computing next links for r/{}.", subreddit.getDisplayName());
             return head == null ? init() : request();
@@ -41,7 +40,7 @@ public class LinkRequester extends AbstractIterator<Collection<? extends Link>> 
         }
     }
 
-    private Collection<? extends Link> init() throws InterruptedException, IOException {
+    private List<? extends Link> init() throws InterruptedException, IOException {
         LOGGER.info("Possible first time this requester is used? Retrieve head.");
         List<? extends Link> submissions = subreddit.getNewLinks().limit(1).collect(Collectors.toList());
 
@@ -53,7 +52,7 @@ public class LinkRequester extends AbstractIterator<Collection<? extends Link>> 
         return Collections.emptyList();
     }
 
-    private Collection<? extends Link> request() throws InterruptedException, IOException {
+    private List<? extends Link> request() throws InterruptedException, IOException {
         assert head != null;
         LOGGER.info("Requesting links after {}.", head.getName());
 
