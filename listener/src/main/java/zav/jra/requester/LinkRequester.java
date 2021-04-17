@@ -31,7 +31,7 @@ public class LinkRequester extends AbstractIterator<Collection<? extends Link>> 
     @Override
     protected Collection<? extends Link> computeNext() throws IteratorException{
         try {
-            LOGGER.info("Computing next links.");
+            LOGGER.info("Computing next links for r/{}.", subreddit.getDisplayName());
             return head == null ? init() : request();
         } catch(InterruptedException e){
             LOGGER.warn(e.getMessage(), e);
