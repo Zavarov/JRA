@@ -1,20 +1,27 @@
 package zav.jra;
 
 import okhttp3.Request;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 
 /**
  * This class contains the credentials received after authorization. Those credentials have to be attached
  * to every {@link Request} for authentication.
  */
 public class Token extends TokenTOP {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Token.class);
     /**
      * The token only stores the duration, in which the new access token is valid.<p>
      * Upon receiving a new token, this variable will be updated with the new expiration date.
      */
-    private LocalDateTime expirationDate = LocalDateTime.now();
+    @Nullable
+    private LocalDateTime expirationDate;
 
     /**
      * Sets the duration in second, during which the access token is valid.<p>
@@ -35,6 +42,8 @@ public class Token extends TokenTOP {
      */
     @Override
     public boolean isExpired() {
+        Objects.requireNonNull(expirationDate);
+        LOGGER.info("Token expires in {} minute(s)", ChronoUnit.MINUTES.between(expirationDate, LocalDateTime.now()));
         //In order to prevent using an expired token, a fresh one
         //has to be requested a minute before the current one expires
         return expirationDate.minusMinutes(1).isBefore(LocalDateTime.now());
