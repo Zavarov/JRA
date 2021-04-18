@@ -1,6 +1,7 @@
 package zav.jra.requester;
 
 import com.google.common.collect.AbstractIterator;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zav.jra.Link;
@@ -66,7 +67,8 @@ public class LinkRequester extends AbstractIterator<List<? extends Link>> {
             head = first;
         }
 
-        return result;
+        //Reverse the links so that the oldest link comes first
+        return Lists.reverse(result);
     }
 
     public final static class IteratorException extends RuntimeException{
