@@ -7,6 +7,7 @@ import java.io.IOException.IOException;
 import java.lang.String.String;
 import java.lang.InterruptedException.InterruptedException;
 import java.util.Optional.Optional;
+import java.util.function.Supplier.Supplier;
 
 import zav.jra.AbstractClient.AbstractClient.Scope;
 import zav.jra.AbstractClient.AbstractClient.Duration;
@@ -28,7 +29,7 @@ public classdiagram AbstractClient {
         + abstract void login() throws IOException, HttpException, RateLimiterException, InterruptedException;
         + abstract void logout() throws IOException, HttpException, RateLimiterException, InterruptedException;
         # abstract void refresh() throws IOException, HttpException, RateLimiterException, InterruptedException;
-        + abstract Response request(Request request) throws IOException, HttpException, RateLimiterException, InterruptedException;
+        + abstract Response request(Supplier<Request> request) throws IOException, HttpException, RateLimiterException, InterruptedException;
     }
 
     public abstract class RateLimiter{

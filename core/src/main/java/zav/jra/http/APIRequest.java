@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 @Nonnull
 public class APIRequest {
@@ -106,7 +107,7 @@ public class APIRequest {
     }
 
     @Nonnull
-    private String execute(Request request) throws InterruptedException, IOException {
+    private String execute(Supplier<Request> request) throws InterruptedException, IOException {
         Response response = client.request(request);
         ResponseBody body = response.body();
 
@@ -117,34 +118,34 @@ public class APIRequest {
 
     @Nonnull
     public String get() throws InterruptedException, IOException {
-        Request request = builder().get().build();
+        Supplier<Request> request = () -> builder().get().build();
         return execute(request);
     }
 
     @Nonnull
     public String delete() throws InterruptedException, IOException {
-        Request request = body == null ? builder().delete().build() : builder().delete(body).build();
+        Supplier<Request> request = () -> body == null ? builder().delete().build() : builder().delete(body).build();
         return execute(request);
     }
 
     @Nonnull
     public String put() throws InterruptedException, IOException {
         assert body != null;
-        Request request = builder().put(body).build();
+        Supplier<Request> request = () -> builder().put(body).build();
         return execute(request);
     }
 
     @Nonnull
     public String post() throws InterruptedException, IOException {
         assert body != null;
-        Request request = builder().post(body).build();
+        Supplier<Request> request = () -> builder().post(body).build();
         return execute(request);
     }
 
     @Nonnull
     public String patch() throws InterruptedException, IOException {
         assert body != null;
-        Request request = builder().patch(body).build();
+        Supplier<Request> request = () -> builder().patch(body).build();
         return execute(request);
     }
 

@@ -11,6 +11,7 @@ import zav.jra.exceptions.NotFoundException;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.function.Supplier;
 
 public class ClientMock extends AbstractClient {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -28,8 +29,8 @@ public class ClientMock extends AbstractClient {
     }
 
     @Override
-    public Response request(Request request) throws IOException {
-        return execute(request);
+    public Response request(Supplier<Request> request) throws IOException {
+        return execute(request.get());
     }
     @Override
     public Response execute(Request request) throws IOException {

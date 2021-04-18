@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 public abstract class AbstractClient extends AbstractClientTOP {
     /**
@@ -76,14 +77,15 @@ public abstract class AbstractClient extends AbstractClientTOP {
      * @throws InterruptedException If the query got interrupted while waiting to be executed.
      * @throws IOException If the request couldn't be completed.
      */
-    public synchronized Response request(Request request) throws IOException, InterruptedException {
+    @Override
+    public synchronized Response request(Supplier<Request> request) throws IOException, InterruptedException {
         assert isPresentToken();
 
         //Make sure that the token is still valid
         if(orElseThrowToken().isExpired())
             refresh();
 
-        return execute(request);
+        return execute(request.get());
     }
 
     /**
