@@ -1,5 +1,6 @@
 package zav.jra;
 
+import org.json.JSONObject;
 import zav.jra._factory.ClientFactory;
 import zav.jra._json.JSONToken;
 import zav.jra.http.APIAuthentication;
@@ -54,8 +55,10 @@ public class UserlessClient extends Client{
                 .addParameter("duration", duration)
                 .build();
 
-        String response = request.post();
+        JSONObject response = new JSONObject(request.post());
 
-        setToken(JSONToken.fromJson(new Token(), response));
+        Token accessToken = new Token();
+        setToken(JSONToken.fromJson(accessToken, response));
+        accessToken.setLifetime(response.getInt("expires_in"));
     }
 }

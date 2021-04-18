@@ -3,6 +3,7 @@ package zav.jra;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zav.jra._factory.RateLimiterFactory;
@@ -220,12 +221,11 @@ public abstract class AbstractClient extends AbstractClientTOP {
                 .addParameter("refresh_token", orElseThrowToken().orElseThrowRefreshToken())
                 .build();
 
-        String response = request.post();
+        JSONObject response = new JSONObject(request.post());
 
-        //On February 15th 2021, the refresh response will contain a new refresh token.
-        //Until then, we reuse the initial token.
-        //@see https://redd.it/kvzaot
-        setToken(JSONToken.fromJson(new Token(), response));
+        Token accessToken = new Token();
+        setToken(JSONToken.fromJson(accessToken, response));
+        accessToken.setLifetime(response.getInt("expires_in"));
     }
 
     //----------------------------------------------------------------------------------------------------------------//
