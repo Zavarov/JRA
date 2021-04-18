@@ -164,7 +164,6 @@ public class APIRequest {
         @Nonnull
         private Object[] args = new Object[0];
 
-        @Nonnull
         public Builder(@Nonnull AbstractClient client){
             this.client = client;
         }

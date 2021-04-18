@@ -216,6 +216,7 @@ public abstract class AbstractClient extends AbstractClientTOP {
      */
     @Override
     protected synchronized void refresh() throws IOException, InterruptedException {
+        log.info("Refresh access token.");
         assert isPresentToken() && orElseThrowToken().isPresentRefreshToken();
 
         APIAuthentication request = new APIAuthentication.Builder(ACCESS_TOKEN, getCredentials(), this)
@@ -271,12 +272,10 @@ public abstract class AbstractClient extends AbstractClientTOP {
         /**
          * The access token is required to authenticate the application when using the OAuth2 endpoints.
          */
-        @Nonnull
         ACCESS_TOKEN,
         /**
          * The refresh token is required when requesting a new access token, once the previous one expired.
          */
-        @Nonnull
         REFRESH_TOKEN;
 
         @Override
@@ -295,149 +294,120 @@ public abstract class AbstractClient extends AbstractClientTOP {
         /**
          * Spend my reddit gold creddits on giving gold to other users.
          */
-        @Nonnull
         CREDDITS("creddits"),
         /**
          * Add/remove users to approved user lists and ban/unban or mute/unmute users from subreddits I moderate.
          */
-        @Nonnull
         MODCONTRIBUTORS("modcontributors"),
         /**
          * Access and manage modmail via mod.reddit.com.
          */
-        @Nonnull
         MODMAIL("modmail"),
         /**
          * Manage the configuration, sidebar, and CSS of subreddits I moderate.
          */
-        @Nonnull
         MODCONFIG("modconfig"),
         /**
          * Manage my subreddit subscriptions. Manage \"friends\" - users whose content I follow.
          */
-        @Nonnull
         SUBSCRIBE("subscribe"),
         /**
          * Edit structured styles for a subreddit I moderate.
          */
-        @Nonnull
         STRUCTUREDSTYLES("structuredstyles"),
         /**
          * Submit and change my votes on comments and submissions.
          */
-        @Nonnull
         VOTE("vote"),
         /**
          * Edit wiki pages on my behalf.
          */
-        @Nonnull
         WIKIEDIT("wikiedit"),
         /**
          * Access the list of subreddits I moderate, contribute to, and subscribe to.
          */
-        @Nonnull
         MYSUBREDDITS("mysubreddits"),
         /**
          * Submit links and comments from my account.
          */
-        @Nonnull
         SUBMIT("submit"),
         /**
          * Access the moderation log in subreddits I moderate.
          */
-        @Nonnull
         MODLOG("modlog"),
         /**
          * Approve, remove, mark nsfw, and distinguish content in subreddits I moderate.
          */
-        @Nonnull
         MODPOST("modpost"),
         /**
          * Manage and assign flair in subreddits I moderate.
          */
-        @Nonnull
         MODFLAIR("modflair"),
         /**
          * Save and unsave comments and submissions.
          */
-        @Nonnull
         SAVE("save"),
         /**
          * Invite or remove other moderators from subreddits I moderate.
          */
-        @Nonnull
         MODOTHERS("modothers"),
         /**
          * Access posts and comments through my account.
          */
-        @Nonnull
         READ("read"),
         /**
          * Access my inbox and send private messages to other users.
          */
-        @Nonnull
         PRIVATEMESSAGES("privatemessages"),
         /**
          * Report content for rules violations. Hide &amp; show individual submissions.
          */
-        @Nonnull
         REPORT("report"),
         /**
          * Access my reddit username and signup date.
          */
-        @Nonnull
         IDENTITY("identity"),
         /**
          * Manage settings and contributors of live threads I contribute to.
          */
-        @Nonnull
         LIVEMANAGE("livemanage"),
         /**
          * Update preferences and related account information. Will not have access to your email or password.
          */
-        @Nonnull
         ACCOUNT("account"),
         /**
          * Access traffic stats in subreddits I moderate.
          */
-        @Nonnull
         MODTRAFFIC("modtraffic"),
         /**
          * Read wiki pages through my account.
          */
-        @Nonnull
         WIKIREAD("wikiread"),
         /**
          * Edit and delete my comments and submissions.
          */
-        @Nonnull
         EDIT("edit"),
         /**
          * Change editors and visibility of wiki pages in subreddits I moderate.
          */
-        @Nonnull
         MODWIKI("modwiki"),
         /**
          * Accept invitations to moderate a subreddit. Remove myself as a moderator or contributor of subreddits I moderate
          * or contribute to.
          */
-        @Nonnull
         MODSELF("modself"),
         /**
          * Access my voting history and comments or submissions I've saved or hidden.
          */
-        @Nonnull
         HISTORY("history"),
         /**
          * Select my subreddit flair. Change link flair on my submissions.
          */
-        @Nonnull
         FLAIR("flair"),
 
         /**
          * A wildcard indicating that all scopes are used.
          */
-        @Nonnull
         ANY("*");
 
         /**
@@ -450,7 +420,6 @@ public abstract class AbstractClient extends AbstractClientTOP {
          * Assigns each scope a name. The name matches the one used by Reddit.
          * @param name The name of the scope.
          */
-        @Nonnull
         Scope(@Nonnull String name){
             this.name = name;
         }
