@@ -43,7 +43,7 @@ public class Token extends TokenTOP {
     @Override
     public boolean isExpired() {
         Objects.requireNonNull(expirationDate);
-        LOGGER.info("Token expires in {} minute(s)", ChronoUnit.MINUTES.between(expirationDate, LocalDateTime.now()));
+        LOGGER.info("Token expires in {} minute(s)", ChronoUnit.MINUTES.between(LocalDateTime.now(), expirationDate));
         //In order to prevent using an expired token, a fresh one
         //has to be requested a minute before the current one expires
         return expirationDate.minusMinutes(1).isBefore(LocalDateTime.now());
