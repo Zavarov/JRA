@@ -95,4 +95,9 @@ public class JSONAbstractLink extends JSONAbstractLinkTOP{
         if(!value.isBlank())
             target.setSelftextHtml(StringEscapeUtils.unescapeHtml4(value));
     }
+
+    @Override
+    protected void $fromTitle(JSONObject source, AbstractLink target) {
+        target.setTitle(StringEscapeUtils.unescapeHtml4(source.getString(TITLE)));
+    }
 }

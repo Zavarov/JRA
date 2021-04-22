@@ -3,6 +3,8 @@ package zav.jra.models._json;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import zav.jra.mock.LinkMock;
 import zav.jra.models.AbstractLink;
 
@@ -12,12 +14,12 @@ import java.time.OffsetDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class JSONAbstractLinkTest extends AbstractJSONTest{
-    static String content;
+    static JSONObject content;
     static AbstractLink link;
 
     @BeforeAll
     public static void setUpAll() throws IOException {
-        content = getContent("Link.json");
+        content = new JSONObject(getContent("Link.json"));
         link = JSONAbstractLink.fromJson(new LinkMock(), content);
     }
 
@@ -39,5 +41,14 @@ public class JSONAbstractLinkTest extends AbstractJSONTest{
         assertThat(data.get("media")).isNotNull();
         assertThat(data.get("media_embed")).isNotNull();
         assertThat(data.getString("selftext_html")).isEqualTo("<!-- SC_OFF --><div class=\"md\"><p>bla bla bla OAuth2 bla bla bla Modernizing</p>\n</div><!-- SC_ON -->");
+    }
+
+    @ParameterizedTest
+    @CsvSource({"&amp;,&", "&lt;,<", "&gt;,>", "&quot;,\""})
+    public void testEscapedTitle(String title, String expectedTitle){
+        content.put("title", title);
+        link = JSONAbstractLink.fromJson(new LinkMock(), content);
+
+        assertThat(link.getTitle()).isEqualTo(expectedTitle);
     }
 }
