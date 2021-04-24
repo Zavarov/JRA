@@ -85,7 +85,7 @@ public class JSONDuplicateTest extends AbstractJSONTest{
         assertThat(duplicate.getSelftextHtml()).isEmpty();
         assertThat(duplicate.getSubreddit()).isEqualTo("u_Leading-Foundation12");
         assertThat(duplicate.getSubredditId()).isEqualTo("t5_3qqsfs");
-        assertThat(duplicate.getThumbnail()).contains("nsfw");
+        assertThat(duplicate.getThumbnail()).isEmpty();
         assertThat(duplicate.getTitle()).isEqualTo("0Auth");
         assertThat(duplicate.getUrl()).isEqualTo("/r/redditdev/comments/kvzaot/oauth2_api_changes_upcoming/");
         assertThat(duplicate.getEdited()).isEmpty();
