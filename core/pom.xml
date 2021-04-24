@@ -22,6 +22,12 @@
             <artifactId>okhttp</artifactId>
             <version>${okhttp.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>${validator.version}</version>
+        </dependency>
     </dependencies>
 
     <!-- == DEFAULT BUILD SETTINGS =========================================== -->

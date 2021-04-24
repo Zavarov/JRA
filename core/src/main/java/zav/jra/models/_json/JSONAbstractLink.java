@@ -1,6 +1,7 @@
 package zav.jra.models._json;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.json.JSONObject;
 import zav.jra.models.AbstractLink;
 import zav.jra.models.Kind;
@@ -28,9 +29,11 @@ public class JSONAbstractLink extends JSONAbstractLinkTOP{
     @Override
     protected void $fromThumbnail(JSONObject source, AbstractLink target){
         //Bug #5 - Link thumbnails may be "self"
+        //Bug #8 - Link thumbnaisl may be "default"
         String thumbnail = source.optString(THUMBNAIL, null);
+        UrlValidator validator = new UrlValidator();
 
-        if(thumbnail != null && !thumbnail.equals("self"))
+        if(thumbnail != null && validator.isValid(thumbnail))
             target.setThumbnail(thumbnail);
     }
 
