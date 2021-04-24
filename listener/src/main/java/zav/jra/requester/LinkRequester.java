@@ -1,18 +1,17 @@
 package zav.jra.requester;
 
 import com.google.common.collect.AbstractIterator;
-import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zav.jra.Link;
-import zav.jra.Parameter;
 import zav.jra.Subreddit;
-import zav.jra._factory.ParameterFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,22 +52,32 @@ public class LinkRequester extends AbstractIterator<List<? extends Link>> {
         return Collections.emptyList();
     }
 
-    private List<? extends Link> request() throws InterruptedException, IOException {
+    private List<Link> request() throws InterruptedException, IOException {
         assert head != null;
         LOGGER.info("Requesting links after {}.", head.getName());
 
-        Parameter before = ParameterFactory.create("before", head.getName());
-        List<? extends Link> result = subreddit.getNewLinks(before).collect(Collectors.toList());
+        List<Link> result = new ArrayList<>();
+        Iterator<Link> iterator = subreddit.getNewLinks().iterator();
 
-        if(!result.isEmpty()) {
-            Link first = result.get(0);
-            LOGGER.info("Update 'head' to {}.", first.getName());
-            //Change head to latest submission
-            head = first;
+        while (iterator.hasNext()) {
+            Link link = iterator.next();
+
+            //If the current link is lexicographically larger then the head
+            //Then that means it was created after the head, i.e at a later point in time
+            if (link.getId().compareTo(head.getId()) > 0) {
+                result.add(link);
+            } else {
+                break;
+            }
         }
 
-        //Reverse the links so that the oldest link comes first
-        return Lists.reverse(result);
+        if(!result.isEmpty()) {
+            //Change head to the newest submission
+            head = result.get(0);
+            LOGGER.info("Update 'head' to {}.", head.getName());
+        }
+
+        return result;
     }
 
     public final static class IteratorException extends RuntimeException{

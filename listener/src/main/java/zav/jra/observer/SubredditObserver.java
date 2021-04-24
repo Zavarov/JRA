@@ -43,7 +43,7 @@ public class SubredditObserver <T extends SubredditListener> extends AbstractObs
             //History may be null when a listener is called explicitly instead of via notifyAllListener.
             history = history == null ? requester.next() : history;
             //Notify the listener starting with the oldest link first
-            history.stream().sorted(Comparator.comparing(Link::getCreatedUtc)).forEach(link -> listener.newLink(subreddit, link));
+            history.stream().sorted(Comparator.comparing(Link::getId)).forEach(link -> listener.newLink(subreddit, link));
         } catch(LinkRequester.IteratorException e){
             throw e.getCause();
         }
