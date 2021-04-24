@@ -29,7 +29,7 @@ public class JSONAbstractLink extends JSONAbstractLinkTOP{
     @Override
     protected void $fromThumbnail(JSONObject source, AbstractLink target){
         //Bug #5 - Link thumbnails may be "self"
-        //Bug #8 - Link thumbnaisl may be "default"
+        //Bug #8 - Link thumbnails may be "default"
         String thumbnail = source.optString(THUMBNAIL, null);
         UrlValidator validator = new UrlValidator();
 
